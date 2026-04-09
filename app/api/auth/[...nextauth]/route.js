@@ -1,12 +1,11 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
 
 export const authOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Remove adapter for JWT strategy — not needed and causes conflicts
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -20,15 +19,18 @@ export const authOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-        if (!user || !user.password) return null;
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) return null;
-        if (!user.isActive) throw new Error('Account suspended by admin');
-        if (!user.adminVerified && user.role !== 'ADMIN') throw new Error('Account pending admin verification');
-        // Update last login
-        await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-        return { id: user.id, email: user.email, name: user.name, image: user.image, role: user.role, isPremium: user.isPremium, isVerified: user.isVerified };
+        try {
+          const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+          if (!user || !user.password) return null;
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isValid) return null;
+          if (!user.isActive) throw new Error('Account suspended by admin');
+          await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+          return { id: user.id, email: user.email, name: user.name, image: user.image, role: user.role, isPremium: user.isPremium, isVerified: user.isVerified };
+        } catch (err) {
+          console.error('Auth error:', err.message);
+          throw err;
+        }
       },
     }),
   ],

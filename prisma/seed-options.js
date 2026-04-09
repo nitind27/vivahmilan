@@ -1,9 +1,16 @@
 // Seed default profile options from static data
 // Run: node prisma/seed-options.js
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const mysql = require('mysql2/promise');
 const { randomUUID } = require('crypto');
 
-const conn_config = { host: 'localhost', user: 'root', password: '', database: 'matrimonial' };
+const conn_config = {
+  host:     process.env.DATABASE_HOST,
+  user:     process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  port:     parseInt(process.env.DATABASE_PORT),
+};
 
 // All options to seed
 const OPTIONS = [

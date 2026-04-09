@@ -1,4 +1,5 @@
 // CommonJS seed using mysql2 directly (no Prisma client needed)
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 const { randomUUID } = require('crypto');
@@ -88,10 +89,11 @@ const users = [
 
 async function main() {
   const conn = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'matrimonial',
+    host:     process.env.DATABASE_HOST,
+    user:     process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    port:     parseInt(process.env.DATABASE_PORT),
   });
 
   console.log('🌱 Seeding database...\n');
