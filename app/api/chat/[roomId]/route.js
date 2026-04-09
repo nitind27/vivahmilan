@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
+import { saveFile } from '@/lib/upload';
 
 // Increase body size limit to 20MB for file uploads
 export const config = {
@@ -68,36 +69,29 @@ export async function POST(req, { params }) {
 
     if (!file && !base64Data) return NextResponse.json({ error: 'No file' }, { status: 400 });
 
-    let dataUrl;
+    let fileUrl;
     let fileName;
     let fileSize;
-    let mimeType;
 
-    if (base64Data) {
-      // Client already compressed and sent base64
-      dataUrl = base64Data;
-      fileName = formData.get('fileName') || 'image.jpg';
-      fileSize = parseInt(formData.get('fileSize') || '0');
-      mimeType = formData.get('mimeType') || 'image/jpeg';
-    } else {
-      // Document or fallback
+    if (file) {
       const maxSize = 15 * 1024 * 1024;
-      if (file.size > maxSize) {
-        return NextResponse.json({ error: 'Max file size: 15MB' }, { status: 400 });
-      }
-      const bytes = await file.arrayBuffer();
-      const base64 = Buffer.from(bytes).toString('base64');
-      dataUrl = `data:${file.type};base64,${base64}`;
+      if (file.size > maxSize) return NextResponse.json({ error: 'Max file size: 15MB' }, { status: 400 });
+      const saved = await saveFile(file, 'chat', session.user.id);
+      fileUrl = saved.url;
       fileName = file.name;
       fileSize = file.size;
-      mimeType = file.type;
+    } else {
+      // base64 fallback from client (compressed image)
+      fileUrl = base64Data;
+      fileName = formData.get('fileName') || 'image.jpg';
+      fileSize = parseInt(formData.get('fileSize') || '0');
     }
 
     messageData = {
       ...messageData,
       content: fileName,
       type,
-      fileUrl: dataUrl,
+      fileUrl,
       fileName,
       fileSize,
     };

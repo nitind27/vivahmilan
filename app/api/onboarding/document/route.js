@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { saveFile, deleteFile } from '@/lib/upload';
 
 export const maxDuration = 30;
 
@@ -16,12 +17,18 @@ export async function POST(req) {
 
   if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Max 5MB' }, { status: 400 });
 
-  const bytes = await file.arrayBuffer();
-  const dataUrl = `data:${file.type};base64,${Buffer.from(bytes).toString('base64')}`;
+  const existing = await prisma.document.findFirst({
+    where: { userId: user.id, type: docType, status: 'PENDING' },
+  });
+  if (existing) {
+    await deleteFile(existing.url);
+    await prisma.document.delete({ where: { id: existing.id } });
+  }
 
-  await prisma.document.deleteMany({ where: { userId: user.id, type: docType, status: 'PENDING' } });
+  const { url } = await saveFile(file, 'documents', user.id);
+
   const doc = await prisma.document.create({
-    data: { userId: user.id, type: docType, url: dataUrl, status: 'PENDING' },
+    data: { userId: user.id, type: docType, url, status: 'PENDING' },
   });
 
   return NextResponse.json({ id: doc.id, type: doc.type, status: doc.status });
