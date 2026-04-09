@@ -1,0 +1,941 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import {
+  Users, Star, Shield, Flag, MessageCircle, TrendingUp,
+  UserCheck, AlertTriangle, Settings, Bell, Search,
+  CheckCircle, XCircle, Ban, Eye, Edit2, Trash2,
+  DollarSign, BarChart2, Heart, LogOut, ChevronDown,
+  RefreshCw, Mail, Phone, Calendar, MapPin, Lock, Unlock, FileText
+} from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { format } from 'date-fns';
+import toast from 'react-hot-toast';
+
+const TABS = [
+  { id: 'overview',      label: 'Overview',       icon: BarChart2 },
+  { id: 'pending',       label: 'Pending Approval', icon: UserCheck, badge: 'pendingAdminVerify' },
+  { id: 'users',         label: 'All Users',       icon: Users },
+  { id: 'verifications', label: 'ID Verifications', icon: Shield, badge: 'pendingVerifications' },
+  { id: 'reports',       label: 'Reports',         icon: Flag, badge: 'pendingReports' },
+  { id: 'subscriptions', label: 'Subscriptions',   icon: Star },
+  { id: 'plans',         label: 'Plan Config',     icon: Settings },
+  { id: 'options',       label: 'Profile Options', icon: Edit2 },
+];
+
+const DEFAULT_PERMISSIONS = {
+  canChat: false,
+  interestLimit: 5,
+  canSeeContact: false,
+  canBoostProfile: false,
+  canSeeWhoViewed: false,
+  unlimitedInterests: false,
+  aiMatchScore: false,
+};
+
+const PLAN_PERMISSIONS = {
+  FREE:     { canChat: false, interestLimit: 5,  canSeeContact: false, canBoostProfile: false, canSeeWhoViewed: false, unlimitedInterests: false, aiMatchScore: false },
+  SILVER:   { canChat: false, interestLimit: 50, canSeeContact: true,  canBoostProfile: false, canSeeWhoViewed: true,  unlimitedInterests: false, aiMatchScore: false },
+  GOLD:     { canChat: true,  interestLimit: -1, canSeeContact: true,  canBoostProfile: true,  canSeeWhoViewed: true,  unlimitedInterests: true,  aiMatchScore: false },
+  PLATINUM: { canChat: true,  interestLimit: -1, canSeeContact: true,  canBoostProfile: true,  canSeeWhoViewed: true,  unlimitedInterests: true,  aiMatchScore: true  },
+};
+
+// ── Stat Card ─────────────────────────────────────────────────────────────────
+function StatCard({ icon: Icon, label, value, color, bg, sub }) {
+  return (
+    <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+      <div className={`w-10 h-10 ${bg} rounded-xl flex items-center justify-center mb-3`}>
+        <Icon className={`w-5 h-5 ${color}`} />
+      </div>
+      <p className="text-2xl font-bold text-white">{value ?? '—'}</p>
+      <p className="text-gray-400 text-sm mt-0.5">{label}</p>
+      {sub && <p className="text-xs text-gray-500 mt-1">{sub}</p>}
+    </div>
+  );
+}
+
+// ── Toggle ────────────────────────────────────────────────────────────────────
+function Toggle({ value, onChange, label }) {
+  return (
+    <label className="flex items-center gap-2 cursor-pointer">
+      <div onClick={() => onChange(!value)}
+        className={`w-10 h-5 rounded-full transition-all relative ${value ? 'bg-pink-500' : 'bg-gray-600'}`}>
+        <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${value ? 'left-5' : 'left-0.5'}`} />
+      </div>
+      {label && <span className="text-sm text-gray-300">{label}</span>}
+    </label>
+  );
+}
+
+// ── Pending Approval Tab ──────────────────────────────────────────────────────
+function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
+  const [selected, setSelected] = useState(null);
+
+  const p = selected?.profile || {};
+  const age = p.dob ? Math.floor((Date.now() - new Date(p.dob)) / 31557600000) : null;
+
+  return (
+    <div>
+      <p className="text-gray-400 text-sm mb-4">{pendingUsers.length} users waiting for admin approval.</p>
+      {pendingUsers.length === 0 ? (
+        <div className="text-center py-16 text-gray-500"><UserCheck className="w-12 h-12 mx-auto mb-3 text-gray-700" /><p>No pending approvals</p></div>
+      ) : (
+        <div className="space-y-3">
+          {pendingUsers.map(u => (
+            <div key={u.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700 flex items-center gap-4">
+              {/* Avatar */}
+              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                {u.image ? <img src={u.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-xl">{u.name?.[0]}</span>}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-white">{u.name}</p>
+                <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400 mt-0.5">
+                  <span>{u.email}</span>
+                  {u.phone && <span>{u.phone}</span>}
+                  {u.profile?.city && <span>📍 {u.profile.city}, {u.profile.country}</span>}
+                  <span>📅 {format(new Date(u.createdAt), 'dd MMM yyyy')}</span>
+                </div>
+                <div className="flex gap-2 mt-1.5">
+                  {u.documents?.length > 0 && <span className="text-xs bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">{u.documents.length} doc(s)</span>}
+                  {u.profile?.religion && <span className="text-xs bg-purple-900/30 text-purple-400 px-2 py-0.5 rounded-full">{u.profile.religion}</span>}
+                  {u.profile?.gender && <span className="text-xs bg-pink-900/30 text-pink-400 px-2 py-0.5 rounded-full">{u.profile.gender}</span>}
+                </div>
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <button onClick={() => setSelected(u)} className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-xs transition-colors flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5" /> View
+                </button>
+                <button onClick={() => onApprove(u.id)} className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-medium transition-colors flex items-center gap-1">
+                  <CheckCircle className="w-3.5 h-3.5" /> Approve
+                </button>
+                <button onClick={() => onReject(u.id)} className="px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-xs transition-colors flex items-center gap-1">
+                  <XCircle className="w-3.5 h-3.5" /> Reject
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── User Detail Modal ── */}
+      {selected && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
+          <div className="bg-gray-900 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700 shadow-2xl" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="gradient-bg p-5 rounded-t-3xl flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/20 flex items-center justify-center flex-shrink-0">
+                {selected.image ? <img src={selected.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-2xl">{selected.name?.[0]}</span>}
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-white">{selected.name}</h2>
+                <p className="text-white/70 text-sm">{selected.email}</p>
+              </div>
+              <button onClick={() => setSelected(null)} className="text-white/60 hover:text-white text-2xl leading-none">×</button>
+            </div>
+
+            <div className="p-5 space-y-5">
+              {/* Basic Info */}
+              <Section title="Basic Information">
+                <Grid items={[
+                  { label: 'Phone', value: selected.phone || '—' },
+                  { label: 'Gender', value: p.gender || '—' },
+                  { label: 'Age', value: age ? `${age} years` : '—' },
+                  { label: 'DOB', value: p.dob ? format(new Date(p.dob), 'dd MMM yyyy') : '—' },
+                  { label: 'Height', value: p.height ? `${p.height} cm` : '—' },
+                  { label: 'Marital Status', value: p.maritalStatus?.replace(/_/g, ' ') || '—' },
+                  { label: 'Registered', value: format(new Date(selected.createdAt), 'dd MMM yyyy, h:mm a') },
+                ]} />
+              </Section>
+
+              {/* Religion */}
+              <Section title="Religion & Community">
+                <Grid items={[
+                  { label: 'Religion', value: p.religion || '—' },
+                  { label: 'Caste', value: p.caste || '—' },
+                  { label: 'Sub-Caste', value: p.subCaste || '—' },
+                  { label: 'Gotra', value: p.gotra || '—' },
+                  { label: 'Mother Tongue', value: p.motherTongue || '—' },
+                  { label: 'Manglik', value: p.manglik || '—' },
+                ]} />
+              </Section>
+
+              {/* Location */}
+              <Section title="Location">
+                <Grid items={[
+                  { label: 'Country', value: p.country || '—' },
+                  { label: 'State', value: p.state || '—' },
+                  { label: 'City', value: p.city || '—' },
+                ]} />
+              </Section>
+
+              {/* Career */}
+              <Section title="Education & Career">
+                <Grid items={[
+                  { label: 'Education', value: p.education || '—' },
+                  { label: 'Profession', value: p.profession || '—' },
+                  { label: 'Income', value: p.income || '—' },
+                ]} />
+              </Section>
+
+              {/* About */}
+              {p.aboutMe && (
+                <Section title="About Me">
+                  <p className="text-sm text-gray-300 leading-relaxed">{p.aboutMe}</p>
+                </Section>
+              )}
+
+              {/* Photos */}
+              {(selected.photos?.length > 0 || selected.image) && (
+                <Section title="Profile Photos">
+                  <div className="flex gap-2 flex-wrap">
+                    {/* Main image */}
+                    {selected.image && (
+                      <div className="relative">
+                        <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-700">
+                          <img src={selected.image} alt="Main" className="w-full h-full object-cover" />
+                        </div>
+                        <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs px-1.5 py-0.5 rounded-full">Main</span>
+                      </div>
+                    )}
+                    {/* Other photos */}
+                    {selected.photos?.filter(ph => !ph.isMain).map((ph, i) => (
+                      <div key={i} className="w-24 h-24 rounded-xl overflow-hidden bg-gray-700">
+                        <img src={ph.url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+              )}
+
+              {/* Documents */}
+              <Section title="Uploaded Documents">
+                {selected.documents?.length > 0 ? (
+                  <div className="space-y-4">
+                    {selected.documents.map(doc => (
+                      <div key={doc.id} className="bg-gray-750 rounded-xl border border-gray-600 overflow-hidden">
+                        {/* Doc header */}
+                        <div className="flex items-center justify-between px-4 py-2.5 bg-gray-700">
+                          <div className="flex items-center gap-2">
+                            <FileText className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm font-semibold text-white">{doc.type}</span>
+                          </div>
+                          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                            doc.status === 'APPROVED' ? 'bg-green-900/50 text-green-300' :
+                            doc.status === 'REJECTED' ? 'bg-red-900/50 text-red-300' :
+                            'bg-yellow-900/50 text-yellow-300'
+                          }`}>
+                            {doc.status === 'PENDING' ? '⏳ Pending Review' : doc.status === 'APPROVED' ? '✅ Approved' : '❌ Rejected'}
+                          </span>
+                        </div>
+                        {/* Doc preview */}
+                        {doc.url ? (
+                          doc.url.startsWith('data:image') ? (
+                            <div className="p-3 bg-gray-800">
+                              <img
+                                src={doc.url}
+                                alt={doc.type}
+                                className="w-full max-h-64 object-contain rounded-lg bg-gray-900"
+                                style={{ imageRendering: 'auto' }}
+                              />
+                              <a href={doc.url} download={`${doc.type.replace(/ /g, '_')}.jpg`}
+                                className="mt-2 flex items-center gap-1.5 text-xs text-pink-400 hover:text-pink-300 transition-colors">
+                                ⬇ Download Image
+                              </a>
+                            </div>
+                          ) : doc.url.startsWith('data:application/pdf') ? (
+                            <div className="p-3 bg-gray-800 text-center">
+                              <div className="bg-gray-700 rounded-xl p-6 mb-2">
+                                <FileText className="w-12 h-12 text-red-400 mx-auto mb-2" />
+                                <p className="text-sm text-gray-300">PDF Document</p>
+                              </div>
+                              <a href={doc.url} target="_blank" rel="noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs bg-red-900/30 text-red-400 hover:bg-red-900/50 px-3 py-1.5 rounded-lg transition-colors">
+                                📄 Open PDF in new tab
+                              </a>
+                            </div>
+                          ) : (
+                            <div className="p-3 bg-gray-800">
+                              <a href={doc.url} target="_blank" rel="noreferrer" className="text-pink-400 text-xs hover:underline">View Document ↗</a>
+                            </div>
+                          )
+                        ) : (
+                          <div className="p-4 bg-gray-800 text-center text-gray-500 text-sm">No preview available</div>
+                        )}
+                        {doc.adminNote && (
+                          <div className="px-4 py-2 bg-gray-700 text-xs text-gray-400">Note: {doc.adminNote}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <FileText className="w-10 h-10 text-gray-600 mx-auto mb-2" />
+                    <p className="text-sm text-gray-500">No documents uploaded yet</p>
+                  </div>
+                )}
+              </Section>
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-2 border-t border-gray-700">
+                <button onClick={() => { onApprove(selected.id); setSelected(null); }}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold transition-colors">
+                  <CheckCircle className="w-5 h-5" /> Approve & Send Email
+                </button>
+                <button onClick={() => { onReject(selected.id); setSelected(null); }}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-2xl font-semibold transition-colors">
+                  <XCircle className="w-5 h-5" /> Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Section({ title, children }) {
+  return (
+    <div>
+      <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{title}</p>
+      <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">{children}</div>
+    </div>
+  );
+}
+
+function Grid({ items }) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {items.map(item => (
+        <div key={item.label}>
+          <p className="text-xs text-gray-500">{item.label}</p>
+          <p className="text-sm text-white font-medium mt-0.5">{item.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Profile Options Tab ───────────────────────────────────────────────────────
+const OPTION_CATEGORIES = [
+  { key: 'religion',      label: 'Religion' },
+  { key: 'caste_Hindu',   label: 'Caste - Hindu' },
+  { key: 'caste_Muslim',  label: 'Caste - Muslim' },
+  { key: 'caste_Christian', label: 'Caste - Christian' },
+  { key: 'caste_Sikh',    label: 'Caste - Sikh' },
+  { key: 'caste_Jain',    label: 'Caste - Jain' },
+  { key: 'gotra',         label: 'Gotra' },
+  { key: 'motherTongue',  label: 'Mother Tongue' },
+  { key: 'education',     label: 'Education' },
+  { key: 'profession',    label: 'Profession' },
+  { key: 'income',        label: 'Income' },
+  { key: 'diet',          label: 'Diet' },
+  { key: 'bodyType',      label: 'Body Type' },
+  { key: 'complexion',    label: 'Complexion' },
+  { key: 'familyType',    label: 'Family Type' },
+  { key: 'familyStatus',  label: 'Family Status' },
+  { key: 'horoscopeSign', label: 'Horoscope Sign (Rashi)' },
+  { key: 'nakshatra',     label: 'Nakshatra' },
+];
+
+function ProfileOptionsTab({ options, category, setCategory, newOpt, setNewOpt, onAdd, onToggle, onDelete }) {
+  const filtered = options.filter(o => o.category === category);
+  const groups = [...new Set(filtered.map(o => o.group).filter(Boolean))];
+  const ungrouped = filtered.filter(o => !o.group);
+  const catLabel = OPTION_CATEGORIES.find(c => c.key === category)?.label || category;
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold">Profile Options Manager</h2>
+          <p className="text-gray-400 text-sm mt-0.5">Add, edit, or disable options that appear in user profile forms</p>
+        </div>
+        <span className="text-xs bg-gray-700 text-gray-300 px-3 py-1.5 rounded-full">{filtered.length} options in {catLabel}</span>
+      </div>
+
+      {/* Category selector */}
+      <div className="flex flex-wrap gap-2">
+        {OPTION_CATEGORIES.map(c => (
+          <button key={c.key} onClick={() => setCategory(c.key)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${category === c.key ? 'gradient-bg text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+            {c.label}
+            <span className="ml-1.5 opacity-60">{options.filter(o => o.category === c.key).length}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Add new option */}
+      <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+        <h3 className="font-semibold mb-4 text-sm text-gray-300">Add New Option to "{catLabel}"</h3>
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Value (stored in DB)</label>
+            <input value={newOpt.value} onChange={e => setNewOpt(p => ({ ...p, value: e.target.value, label: p.label || e.target.value }))}
+              placeholder="e.g. Sharma" className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Display Label</label>
+            <input value={newOpt.label} onChange={e => setNewOpt(p => ({ ...p, label: e.target.value }))}
+              placeholder="e.g. Sharma" className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Group (optional)</label>
+            <input value={newOpt.group} onChange={e => setNewOpt(p => ({ ...p, group: e.target.value }))}
+              placeholder="e.g. Brahmin - UP" list={`groups-${category}`}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+            <datalist id={`groups-${category}`}>{groups.map(g => <option key={g} value={g} />)}</datalist>
+          </div>
+        </div>
+        <button onClick={onAdd} className="mt-3 gradient-bg text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
+          + Add Option
+        </button>
+      </div>
+
+      {/* Options list */}
+      <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+        <div className="px-4 py-3 bg-gray-700/50 flex items-center justify-between">
+          <p className="text-sm font-semibold text-gray-300">{catLabel} Options</p>
+          <p className="text-xs text-gray-500">{filtered.filter(o => o.isActive).length} active / {filtered.length} total</p>
+        </div>
+        <div className="overflow-y-auto" style={{ maxHeight: 500 }}>
+          {filtered.length === 0 ? (
+            <div className="text-center py-10 text-gray-500 text-sm">
+              No options yet. Add some above or run: <code className="bg-gray-700 px-2 py-0.5 rounded text-xs">npm run seed-options</code>
+            </div>
+          ) : (
+            <>
+              {/* Grouped */}
+              {groups.map(group => (
+                <div key={group}>
+                  <div className="px-4 py-2 bg-gray-700/30 text-xs font-bold text-gray-400 uppercase tracking-wider sticky top-0">{group}</div>
+                  {filtered.filter(o => o.group === group).map(opt => (
+                    <OptionRow key={opt.id} opt={opt} onToggle={onToggle} onDelete={onDelete} />
+                  ))}
+                </div>
+              ))}
+              {/* Ungrouped */}
+              {ungrouped.length > 0 && (
+                <>
+                  {groups.length > 0 && <div className="px-4 py-2 bg-gray-700/30 text-xs font-bold text-gray-400 uppercase tracking-wider">Other</div>}
+                  {ungrouped.map(opt => <OptionRow key={opt.id} opt={opt} onToggle={onToggle} onDelete={onDelete} />)}
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OptionRow({ opt, onToggle, onDelete }) {
+  return (
+    <div className={`flex items-center gap-3 px-4 py-2.5 border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors ${!opt.isActive ? 'opacity-40' : ''}`}>
+      <div className="flex-1 min-w-0">
+        <span className="text-sm text-white">{opt.label}</span>
+        {opt.value !== opt.label && <span className="text-xs text-gray-500 ml-2">({opt.value})</span>}
+      </div>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <button onClick={() => onToggle(opt.id, opt.isActive)}
+          className={`text-xs px-2.5 py-1 rounded-lg transition-colors ${opt.isActive ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}>
+          {opt.isActive ? 'Active' : 'Disabled'}
+        </button>
+        <button onClick={() => onDelete(opt.id)} className="p-1.5 text-gray-500 hover:text-red-400 transition-colors">
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Admin Page ───────────────────────────────────────────────────────────
+export default function AdminPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [tab, setTab] = useState('overview');
+  const [stats, setStats] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [verifications, setVerifications] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [editPlan, setEditPlan] = useState(null);
+  const [userFilter, setUserFilter] = useState('all');
+  const [profileOptions, setProfileOptions] = useState([]);
+  const [optCategory, setOptCategory] = useState('religion');
+  const [newOpt, setNewOpt] = useState({ value: '', label: '', group: '' });
+
+  useEffect(() => {
+    if (status === 'unauthenticated') router.push('/login');
+    if (status === 'authenticated' && session?.user?.role !== 'ADMIN') router.push('/dashboard');
+  }, [status, session, router]);
+
+  const loadAll = async () => {
+    setLoading(true);
+    const [s, u, r, v, sub, pl] = await Promise.all([
+      fetch('/api/admin/stats').then(r => r.json()),
+      fetch('/api/admin/users?limit=100').then(r => r.json()),
+      fetch('/api/admin/reports').then(r => r.json()),
+      fetch('/api/admin/verifications').then(r => r.json()),
+      fetch('/api/admin/subscriptions').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/plans').then(r => r.json()).catch(() => []),
+    ]);
+    setStats(s);
+    setUsers(u.users || []);
+    setPendingUsers((u.users || []).filter(u => !u.adminVerified && u.role === 'USER'));
+    setReports(r);
+    setVerifications(v);
+    setSubscriptions(sub);
+    setPlans(pl);
+    // Load profile options
+    fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions).catch(() => {});
+    setLoading(false);  };
+
+  useEffect(() => { if (status === 'authenticated' && session?.user?.role === 'ADMIN') loadAll(); }, [status, session]);
+
+  const updateUser = async (id, data) => {
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+    });
+    if (res.ok) { toast.success('Updated'); loadAll(); } else toast.error('Failed');
+  };
+
+  const deleteUser = async (id, name) => {
+    if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+    await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+    toast.success('User deleted'); loadAll();
+  };
+
+  const handleVerification = async (docId, status) => {
+    await fetch('/api/admin/verifications', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ docId, status }),
+    });
+    toast.success(status === 'APPROVED' ? 'Approved & email sent' : 'Rejected');
+    loadAll();
+  };
+
+  const handleReport = async (reportId, status) => {
+    await fetch('/api/admin/reports', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reportId, status }),
+    });
+    toast.success('Report updated'); loadAll();
+  };
+
+  const savePlan = async () => {
+    if (!editPlan) return;
+    const res = await fetch('/api/admin/plans', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...editPlan, permissions: editPlan.permissions }),
+    });
+    if (res.ok) { toast.success('Plan saved'); setEditPlan(null); loadAll(); } else toast.error('Failed');
+  };
+
+  const filteredUsers = users.filter(u => {
+    const q = search.toLowerCase();
+    const matchSearch = !q || u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q) || u.phone?.includes(q);
+    const matchFilter =
+      userFilter === 'all' ? true :
+      userFilter === 'premium' ? u.isPremium :
+      userFilter === 'pending' ? !u.adminVerified :
+      userFilter === 'blocked' ? !u.isActive :
+      userFilter === 'verified' ? u.verificationBadge : true;
+    return matchSearch && matchFilter;
+  });
+
+  if (loading) return (
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-12 h-12 border-2 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="text-gray-400">Loading admin panel…</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-white flex">
+      {/* ── Sidebar ── */}
+      <aside className="w-64 bg-gray-900 border-r border-gray-800 flex flex-col fixed h-full z-20">
+        <div className="p-5 border-b border-gray-800">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
+              <Heart className="w-4 h-4 text-white fill-white" />
+            </div>
+            <span className="font-bold text-lg">Milan Admin</span>
+          </div>
+          <p className="text-xs text-gray-500">{session?.user?.email}</p>
+        </div>
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {TABS.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${tab === t.id ? 'gradient-bg text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
+              <t.icon className="w-4 h-4 flex-shrink-0" />
+              <span className="flex-1 text-left">{t.label}</span>
+              {t.badge && stats?.[t.badge] > 0 && (
+                <span className="bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{stats[t.badge]}</span>
+              )}
+            </button>
+          ))}
+        </nav>
+        <div className="p-3 border-t border-gray-800 space-y-1">
+          <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
+            <Eye className="w-4 h-4" /> View Site
+          </Link>
+          <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-900/20 transition-all">
+            <LogOut className="w-4 h-4" /> Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* ── Main Content ── */}
+      <main className="flex-1 ml-64 p-6 overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold capitalize">{TABS.find(t => t.id === tab)?.label}</h1>
+            <p className="text-gray-500 text-sm mt-0.5">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+          </div>
+          <button onClick={loadAll} className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
+            <RefreshCw className="w-4 h-4" /> Refresh
+          </button>
+        </div>
+
+        {/* ── OVERVIEW ── */}
+        {tab === 'overview' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard icon={Users} label="Total Users" value={stats?.totalUsers} color="text-blue-400" bg="bg-blue-900/20" sub={`+${stats?.newUsersToday} today`} />
+              <StatCard icon={Star} label="Premium Users" value={stats?.premiumUsers} color="text-yellow-400" bg="bg-yellow-900/20" sub={`${stats?.activeSubscriptions} active subs`} />
+              <StatCard icon={UserCheck} label="Pending Approval" value={stats?.pendingAdminVerify} color="text-orange-400" bg="bg-orange-900/20" sub="Awaiting admin verify" />
+              <StatCard icon={Flag} label="Pending Reports" value={stats?.pendingReports} color="text-red-400" bg="bg-red-900/20" />
+              <StatCard icon={MessageCircle} label="Total Messages" value={stats?.totalMessages} color="text-purple-400" bg="bg-purple-900/20" />
+              <StatCard icon={Heart} label="Total Interests" value={stats?.totalInterests} color="text-pink-400" bg="bg-pink-900/20" />
+              <StatCard icon={TrendingUp} label="New This Month" value={stats?.newUsersMonth} color="text-green-400" bg="bg-green-900/20" />
+              <StatCard icon={Shield} label="ID Verifications" value={stats?.pendingVerifications} color="text-cyan-400" bg="bg-cyan-900/20" sub="Pending review" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                <h3 className="font-semibold mb-4 text-gray-300">Gender Distribution</h3>
+                <div className="space-y-3">
+                  {[{ label: 'Male', val: stats?.maleUsers, color: 'bg-blue-500' }, { label: 'Female', val: stats?.femaleUsers, color: 'bg-pink-500' }].map(g => (
+                    <div key={g.label}>
+                      <div className="flex justify-between text-sm mb-1"><span className="text-gray-400">{g.label}</span><span className="text-white font-medium">{g.val}</span></div>
+                      <div className="h-2 bg-gray-700 rounded-full"><div className={`h-2 ${g.color} rounded-full`} style={{ width: `${stats?.totalUsers ? (g.val / stats.totalUsers * 100) : 0}%` }} /></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                <h3 className="font-semibold mb-4 text-gray-300">Quick Actions</h3>
+                <div className="space-y-2">
+                  {[
+                    { label: `Approve ${stats?.pendingAdminVerify} pending users`, action: () => setTab('pending'), color: 'bg-orange-900/30 text-orange-400 hover:bg-orange-900/50' },
+                    { label: `Review ${stats?.pendingReports} reports`, action: () => setTab('reports'), color: 'bg-red-900/30 text-red-400 hover:bg-red-900/50' },
+                    { label: `Verify ${stats?.pendingVerifications} documents`, action: () => setTab('verifications'), color: 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50' },
+                    { label: 'Configure subscription plans', action: () => setTab('plans'), color: 'bg-purple-900/30 text-purple-400 hover:bg-purple-900/50' },
+                  ].map(a => (
+                    <button key={a.label} onClick={a.action} className={`w-full text-left px-4 py-2.5 rounded-xl text-sm transition-colors ${a.color}`}>{a.label}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── PENDING APPROVAL ── */}
+        {tab === 'pending' && (
+          <PendingApprovalTab
+            pendingUsers={pendingUsers}
+            onApprove={(id) => updateUser(id, { adminVerified: true })}
+            onReject={(id) => updateUser(id, { isActive: false })}
+          />
+        )}
+
+        {/* ── ALL USERS ── */}
+        {tab === 'users' && (
+          <div>
+            <div className="flex flex-wrap gap-3 mb-4">
+              <div className="relative flex-1 min-w-48">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name, email, phone…"
+                  className="w-full pl-9 pr-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+              </div>
+              <select value={userFilter} onChange={e => setUserFilter(e.target.value)} className="px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-sm focus:outline-none focus:border-pink-500">
+                <option value="all">All Users ({users.length})</option>
+                <option value="pending">Pending Approval</option>
+                <option value="premium">Premium</option>
+                <option value="verified">ID Verified</option>
+                <option value="blocked">Blocked</option>
+              </select>
+            </div>
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-700/50">
+                    <tr>{['Name','Email','Status','Plan','Joined','Actions'].map(h => <th key={h} className="text-left px-4 py-3 text-gray-400 font-medium whitespace-nowrap">{h}</th>)}</tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-700/50">
+                    {filteredUsers.map(u => (
+                      <tr key={u.id} className="hover:bg-gray-700/30 transition-colors">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{u.name?.[0]}</div>
+                            <div>
+                              <p className="font-medium text-white">{u.name}</p>
+                              <p className="text-xs text-gray-500">{u.profile?.city || '—'}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-gray-400">{u.email}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col gap-1">
+                            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${u.isActive ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>{u.isActive ? 'Active' : 'Blocked'}</span>
+                            {!u.adminVerified && <span className="text-xs px-2 py-0.5 rounded-full bg-orange-900/30 text-orange-400 w-fit">Pending</span>}
+                            {u.verificationBadge && <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/30 text-blue-400 w-fit">Verified</span>}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          {u.isPremium ? <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">{u.premiumPlan || 'Premium'}</span> : <span className="text-xs text-gray-500">Free</span>}
+                        </td>
+                        <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(u.createdAt), 'dd MMM yy')}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-1">
+                            {!u.adminVerified && <button onClick={() => updateUser(u.id, { adminVerified: true })} title="Approve" className="p-1.5 bg-green-900/30 text-green-400 rounded-lg hover:bg-green-900/50 transition-colors"><CheckCircle className="w-3.5 h-3.5" /></button>}
+                            <button onClick={() => updateUser(u.id, { isActive: !u.isActive })} title={u.isActive ? 'Block' : 'Unblock'} className={`p-1.5 rounded-lg transition-colors ${u.isActive ? 'bg-red-900/30 text-red-400 hover:bg-red-900/50' : 'bg-green-900/30 text-green-400 hover:bg-green-900/50'}`}>
+                              {u.isActive ? <Ban className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+                            </button>
+                            <button onClick={() => updateUser(u.id, { isPremium: !u.isPremium })} title="Toggle Premium" className="p-1.5 bg-yellow-900/30 text-yellow-400 rounded-lg hover:bg-yellow-900/50 transition-colors"><Star className="w-3.5 h-3.5" /></button>
+                            <button onClick={() => deleteUser(u.id, u.name)} title="Delete" className="p-1.5 bg-red-900/30 text-red-400 rounded-lg hover:bg-red-900/50 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {filteredUsers.length === 0 && <div className="text-center py-10 text-gray-500">No users found</div>}
+            </div>
+          </div>
+        )}
+
+        {/* ── ID VERIFICATIONS ── */}
+        {tab === 'verifications' && (
+          <div>
+            {verifications.length === 0 ? (
+              <div className="text-center py-16 text-gray-500"><Shield className="w-12 h-12 mx-auto mb-3 text-gray-700" /><p>No pending verifications</p></div>
+            ) : (
+              <div className="space-y-4">
+                {verifications.map(doc => (
+                  <div key={doc.id} className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-semibold">{doc.user?.name}</p>
+                        <p className="text-gray-400 text-sm">{doc.user?.email}</p>
+                        <p className="text-gray-500 text-xs mt-1">Document type: {doc.type}</p>
+                        <p className="text-gray-500 text-xs">Submitted: {format(new Date(doc.createdAt), 'dd MMM yyyy, h:mm a')}</p>
+                        {doc.url && <a href={doc.url} target="_blank" rel="noreferrer" className="text-pink-400 text-xs hover:underline mt-1 inline-block">View Document ↗</a>}
+                      </div>
+                      <div className="flex gap-2 flex-shrink-0">
+                        <button onClick={() => handleVerification(doc.id, 'APPROVED')} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-colors">Approve</button>
+                        <button onClick={() => handleVerification(doc.id, 'REJECTED')} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-sm transition-colors">Reject</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── REPORTS ── */}
+        {tab === 'reports' && (
+          <div>
+            {reports.length === 0 ? (
+              <div className="text-center py-16 text-gray-500"><Flag className="w-12 h-12 mx-auto mb-3 text-gray-700" /><p>No reports</p></div>
+            ) : (
+              <div className="space-y-4">
+                {reports.map(r => (
+                  <div key={r.id} className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${r.status === 'PENDING' ? 'bg-yellow-900/30 text-yellow-400' : r.status === 'RESOLVED' ? 'bg-green-900/30 text-green-400' : 'bg-gray-700 text-gray-400'}`}>{r.status}</span>
+                        </div>
+                        <p className="text-sm"><span className="text-gray-400">Reporter:</span> <span className="text-white">{r.reporter?.name}</span> ({r.reporter?.email})</p>
+                        <p className="text-sm"><span className="text-gray-400">Target:</span> <span className="text-white">{r.target?.name}</span> ({r.target?.email})</p>
+                        <p className="text-sm mt-2"><span className="text-gray-400">Reason:</span> {r.reason}</p>
+                        {r.details && <p className="text-xs text-gray-500 mt-1">{r.details}</p>}
+                        <p className="text-xs text-gray-600 mt-1">{format(new Date(r.createdAt), 'dd MMM yyyy')}</p>
+                      </div>
+                      {r.status === 'PENDING' && (
+                        <div className="flex flex-col gap-2 flex-shrink-0">
+                          <button onClick={() => handleReport(r.id, 'RESOLVED')} className="px-3 py-1.5 bg-green-900/30 text-green-400 hover:bg-green-900/50 rounded-xl text-xs transition-colors">Resolve</button>
+                          <button onClick={() => updateUser(r.target?.id, { isActive: false })} className="px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-xs transition-colors">Block User</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── SUBSCRIPTIONS ── */}
+        {tab === 'subscriptions' && (
+          <div>
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-700/50">
+                  <tr>{['User','Plan','Amount','Status','Start','End'].map(h => <th key={h} className="text-left px-4 py-3 text-gray-400 font-medium">{h}</th>)}</tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700/50">
+                  {subscriptions.map?.(s => (
+                    <tr key={s.id} className="hover:bg-gray-700/30">
+                      <td className="px-4 py-3 text-white">{s.user?.name || s.userId}</td>
+                      <td className="px-4 py-3"><span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">{s.plan}</span></td>
+                      <td className="px-4 py-3 text-green-400">₹{Number(s.amount).toLocaleString()}</td>
+                      <td className="px-4 py-3"><span className={`text-xs px-2 py-0.5 rounded-full ${s.status === 'ACTIVE' ? 'bg-green-900/30 text-green-400' : 'bg-gray-700 text-gray-400'}`}>{s.status}</span></td>
+                      <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(s.startDate), 'dd MMM yy')}</td>
+                      <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(s.endDate), 'dd MMM yy')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {(!subscriptions?.length) && <div className="text-center py-10 text-gray-500">No subscriptions yet</div>}
+            </div>
+          </div>
+        )}
+
+        {/* ── PLAN CONFIG ── */}
+        {tab === 'plans' && (
+          <div className="space-y-6">
+            <p className="text-gray-400 text-sm">Configure subscription plans, pricing, and permissions. Changes take effect immediately.</p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {['FREE','SILVER','GOLD','PLATINUM'].map(planKey => {
+                const existing = plans.find(p => p.plan === planKey);
+                const perms = existing ? JSON.parse(existing.permissions || '{}') : PLAN_PERMISSIONS[planKey];
+                return (
+                  <div key={planKey} className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-lg">{existing?.displayName || planKey}</h3>
+                      <button onClick={() => setEditPlan({ plan: planKey, displayName: existing?.displayName || planKey, price: existing?.price || 0, currency: existing?.currency || 'INR', durationDays: existing?.durationDays || 30, description: existing?.description || '', isActive: existing?.isActive ?? true, permissions: perms })}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-pink-900/30 text-pink-400 hover:bg-pink-900/50 rounded-xl text-xs transition-colors">
+                        <Edit2 className="w-3 h-3" /> Edit
+                      </button>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between"><span className="text-gray-400">Price</span><span className="text-white font-semibold">₹{Number(existing?.price || 0).toLocaleString()}/{existing?.durationDays || 30}d</span></div>
+                      <div className="flex justify-between"><span className="text-gray-400">Status</span><span className={existing?.isActive !== false ? 'text-green-400' : 'text-red-400'}>{existing?.isActive !== false ? 'Active' : 'Inactive'}</span></div>
+                      <div className="border-t border-gray-700 pt-2 mt-2 space-y-1">
+                        {Object.entries(perms).map(([k, v]) => (
+                          <div key={k} className="flex justify-between text-xs">
+                            <span className="text-gray-500 capitalize">{k.replace(/([A-Z])/g, ' $1')}</span>
+                            <span className={typeof v === 'boolean' ? (v ? 'text-green-400' : 'text-red-400') : 'text-yellow-400'}>
+                              {typeof v === 'boolean' ? (v ? '✓' : '✗') : v === -1 ? 'Unlimited' : v}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Edit Plan Modal */}
+            {editPlan && (
+              <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" onClick={() => setEditPlan(null)}>
+                <div className="bg-gray-800 rounded-3xl p-6 w-full max-w-lg border border-gray-700 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                  <h3 className="font-bold text-xl mb-5">Edit {editPlan.plan} Plan</h3>
+                  <div className="space-y-4">
+                    <div><label className="text-xs text-gray-400 mb-1 block">Display Name</label><input value={editPlan.displayName} onChange={e => setEditPlan(p => ({ ...p, displayName: e.target.value }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div><label className="text-xs text-gray-400 mb-1 block">Price (₹)</label><input type="number" value={editPlan.price} onChange={e => setEditPlan(p => ({ ...p, price: e.target.value }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                      <div><label className="text-xs text-gray-400 mb-1 block">Duration (days)</label><input type="number" value={editPlan.durationDays} onChange={e => setEditPlan(p => ({ ...p, durationDays: parseInt(e.target.value) }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                    </div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Description</label><textarea value={editPlan.description} onChange={e => setEditPlan(p => ({ ...p, description: e.target.value }))} rows={2} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 resize-none" /></div>
+                    <div className="border-t border-gray-700 pt-4">
+                      <p className="text-sm font-semibold mb-3 text-gray-300">Permissions</p>
+                      <div className="space-y-3">
+                        {[
+                          { key: 'canChat', label: 'Can Chat' },
+                          { key: 'canSeeContact', label: 'See Contact Details' },
+                          { key: 'canBoostProfile', label: 'Profile Boost' },
+                          { key: 'canSeeWhoViewed', label: 'See Who Viewed' },
+                          { key: 'unlimitedInterests', label: 'Unlimited Interests' },
+                          { key: 'aiMatchScore', label: 'AI Match Score' },
+                        ].map(p => (
+                          <div key={p.key} className="flex items-center justify-between">
+                            <span className="text-sm text-gray-300">{p.label}</span>
+                            <Toggle value={editPlan.permissions[p.key]} onChange={v => setEditPlan(prev => ({ ...prev, permissions: { ...prev.permissions, [p.key]: v } }))} />
+                          </div>
+                        ))}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-300">Interest Limit (-1 = unlimited)</span>
+                          <input type="number" value={editPlan.permissions.interestLimit} onChange={e => setEditPlan(prev => ({ ...prev, permissions: { ...prev.permissions, interestLimit: parseInt(e.target.value) } }))} className="w-24 px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-sm text-right focus:outline-none focus:border-pink-500" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-300">Plan Active</span>
+                          <Toggle value={editPlan.isActive} onChange={v => setEditPlan(p => ({ ...p, isActive: v }))} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-2">
+                      <button onClick={savePlan} className="flex-1 gradient-bg text-white py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity">Save Plan</button>
+                      <button onClick={() => setEditPlan(null)} className="flex-1 border border-gray-600 py-2.5 rounded-xl text-sm hover:bg-gray-700 transition-colors">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {/* ── PROFILE OPTIONS ── */}
+        {tab === 'options' && (
+          <ProfileOptionsTab
+            options={profileOptions}
+            category={optCategory}
+            setCategory={setOptCategory}
+            newOpt={newOpt}
+            setNewOpt={setNewOpt}
+            onAdd={async () => {
+              if (!newOpt.value || !newOpt.label) { toast.error('Value and label required'); return; }
+              const res = await fetch('/api/profile-options', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ category: optCategory, ...newOpt }),
+              });
+              if (res.ok) {
+                toast.success('Option added');
+                setNewOpt({ value: '', label: '', group: '' });
+                fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions);
+              } else { const d = await res.json(); toast.error(d.error); }
+            }}
+            onToggle={async (id, isActive) => {
+              await fetch('/api/profile-options', {
+                method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, isActive: !isActive }),
+              });
+              fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions);
+            }}
+            onDelete={async (id) => {
+              if (!confirm('Delete this option?')) return;
+              await fetch('/api/profile-options', {
+                method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id }),
+              });
+              toast.success('Deleted');
+              fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions);
+            }}
+          />
+        )}
+      </main>
+    </div>
+  );
+}

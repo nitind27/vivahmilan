@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE `message` ADD COLUMN `fileName` VARCHAR(191) NULL,
+    ADD COLUMN `fileSize` INTEGER NULL,
+    ADD COLUMN `fileUrl` TEXT NULL,
+    ADD COLUMN `latitude` DOUBLE NULL,
+    ADD COLUMN `longitude` DOUBLE NULL,
+    ADD COLUMN `type` ENUM('TEXT', 'IMAGE', 'DOCUMENT', 'LOCATION') NOT NULL DEFAULT 'TEXT';
