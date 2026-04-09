@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { queryOne, execute } from '@/lib/db';
+import { randomUUID } from 'crypto';
 
-// Save onboarding profile data using email (no auth needed — user not yet approved)
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -9,16 +9,12 @@ export async function POST(req) {
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await queryOne('SELECT id, emailVerified, name, phone FROM `user` WHERE email = ?', [email]);
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-
-    // Only allow if email is verified
-    if (!user.emailVerified)
-      return NextResponse.json({ error: 'Email not verified' }, { status: 403 });
+    if (!user.emailVerified) return NextResponse.json({ error: 'Email not verified' }, { status: 403 });
 
     const { name, phone, ...profileData } = data;
 
-    // Sanitize
     const sanitized = {};
     for (const [key, val] of Object.entries(profileData)) {
       if (val === '' || val === undefined || val === null) {
@@ -38,19 +34,30 @@ export async function POST(req) {
     const filled = fields.filter(f => sanitized[f]).length;
     const profileComplete = Math.round((filled / fields.length) * 100);
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        name: name || user.name,
-        phone: phone || user.phone,
-        profile: {
-          upsert: {
-            create: { ...sanitized, profileComplete },
-            update: { ...sanitized, profileComplete },
-          },
-        },
-      },
-    });
+    // Update user name/phone
+    if (name || phone) {
+      await execute(
+        'UPDATE `user` SET name = ?, phone = ?, updatedAt = NOW() WHERE id = ?',
+        [name || user.name, phone || user.phone, user.id]
+      );
+    }
+
+    // Upsert profile
+    const existing = await queryOne('SELECT id FROM profile WHERE userId = ?', [user.id]);
+    if (existing) {
+      const sets = Object.entries(sanitized).map(([k]) => `\`${k}\` = ?`).join(', ');
+      if (sets) {
+        await execute(
+          `UPDATE profile SET ${sets}, profileComplete = ?, updatedAt = NOW() WHERE userId = ?`,
+          [...Object.values(sanitized), profileComplete, user.id]
+        );
+      }
+    } else {
+      const cols = ['id', 'userId', 'profileComplete', 'maritalStatus', 'smoking', 'drinking', 'hidePhone', 'hidePhoto', 'createdAt', 'updatedAt', ...Object.keys(sanitized)];
+      const vals = [randomUUID(), user.id, profileComplete, 'NEVER_MARRIED', 'NO', 'NO', 0, 0, new Date(), new Date(), ...Object.values(sanitized)];
+      const ph = vals.map(() => '?').join(', ');
+      await execute(`INSERT INTO profile (${cols.map(c => `\`${c}\``).join(', ')}) VALUES (${ph})`, vals);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

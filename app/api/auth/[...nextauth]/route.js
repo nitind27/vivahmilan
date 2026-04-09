@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import prisma from '@/lib/prisma';
+import { queryOne } from '@/lib/db';
 
 export const authOptions = {
   // Remove adapter for JWT strategy — not needed and causes conflicts
@@ -20,13 +20,11 @@ export const authOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         try {
-          const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+          const user = await queryOne('SELECT id, email, name, password, role, isActive, isPremium, isVerified FROM `user` WHERE email = ?', [credentials.email]);
           if (!user || !user.password) return null;
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
-          await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-          // Don't include image in token — base64 images cause header too large error
           return { id: user.id, email: user.email, name: user.name, role: user.role, isPremium: user.isPremium, isVerified: user.isVerified };
         } catch (err) {
           console.error('Auth error:', err.message);

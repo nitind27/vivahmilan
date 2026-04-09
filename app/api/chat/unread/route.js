@@ -1,26 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import prisma from '@/lib/prisma';
+import { query, queryOne } from '@/lib/db';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ count: 0 });
+  if (!session) return NextResponse.json({ total: 0, perRoom: {} });
 
-  // Total unread messages across all rooms
-  const count = await prisma.message.count({
-    where: { receiverId: session.user.id, isRead: false },
-  });
+  const row = await queryOne(
+    'SELECT COUNT(*) as cnt FROM message WHERE receiverId = ? AND isRead = 0',
+    [session.user.id]
+  );
+  const total = Number(row?.cnt ?? 0);
 
-  // Per-room unread counts
-  const perRoom = await prisma.message.groupBy({
-    by: ['chatRoomId'],
-    where: { receiverId: session.user.id, isRead: false },
-    _count: { id: true },
-  });
+  const perRoomRows = await query(
+    'SELECT chatRoomId, COUNT(*) as cnt FROM message WHERE receiverId = ? AND isRead = 0 GROUP BY chatRoomId',
+    [session.user.id]
+  );
+  const perRoom = Object.fromEntries(perRoomRows.map(r => [r.chatRoomId, Number(r.cnt)]));
 
-  return NextResponse.json({
-    total: count,
-    perRoom: Object.fromEntries(perRoom.map(r => [r.chatRoomId, r._count.id])),
-  });
+  return NextResponse.json({ total, perRoom });
 }
