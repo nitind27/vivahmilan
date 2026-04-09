@@ -26,7 +26,8 @@ export const authOptions = {
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
           await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-          return { id: user.id, email: user.email, name: user.name, image: user.image, role: user.role, isPremium: user.isPremium, isVerified: user.isVerified };
+          // Don't include image in token — base64 images cause header too large error
+          return { id: user.id, email: user.email, name: user.name, role: user.role, isPremium: user.isPremium, isVerified: user.isVerified };
         } catch (err) {
           console.error('Auth error:', err.message);
           throw err;
@@ -39,10 +40,15 @@ export const authOptions = {
     async jwt({ token, user, trigger, session }) {
       if (user) { token.id = user.id; token.role = user.role; token.isPremium = user.isPremium; token.isVerified = user.isVerified; }
       if (trigger === 'update' && session) { token.isPremium = session.isPremium; token.isVerified = session.isVerified; }
+      // Remove image/picture from token to prevent header too large error
+      delete token.picture;
+      delete token.image;
       return token;
     },
     async session({ session, token }) {
       if (token) { session.user.id = token.id; session.user.role = token.role; session.user.isPremium = token.isPremium; session.user.isVerified = token.isVerified; }
+      // Don't put image in session — fetch it from /api/profile instead
+      delete session.user.image;
       return session;
     },
     async redirect({ url, baseUrl }) {
