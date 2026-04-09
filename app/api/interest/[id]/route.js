@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import prisma from '@/lib/prisma';
+import { queryOne, execute } from '@/lib/db';
+import { randomUUID } from 'crypto';
 import { differenceInYears } from 'date-fns';
 
-// Build a formatted profile card message
 function buildProfileMessage(user, profile, isPremium) {
   const age = profile?.dob ? differenceInYears(new Date(), new Date(profile.dob)) : null;
-
   const lines = [
     `👤 *${user.name}*`,
     age ? `🎂 Age: ${age} years` : null,
@@ -23,7 +22,6 @@ function buildProfileMessage(user, profile, isPremium) {
     profile?.diet ? `🍽 Diet: ${profile.diet}` : null,
     profile?.familyType ? `👨‍👩‍👧 Family: ${profile.familyType}${profile.familyStatus ? ` · ${profile.familyStatus}` : ''}` : null,
     profile?.aboutMe ? `\n💬 About: ${profile.aboutMe}` : null,
-    // Contact details only for premium
     isPremium && user.phone && !profile?.hidePhone ? `\n📞 Phone: ${user.phone}` : null,
     isPremium && user.email ? `📧 Email: ${user.email}` : null,
   ].filter(Boolean);
@@ -31,12 +29,18 @@ function buildProfileMessage(user, profile, isPremium) {
   const header = isPremium
     ? '🌟 *Premium Profile Details*\n━━━━━━━━━━━━━━━━━━━━'
     : '✨ *Profile Details*\n━━━━━━━━━━━━━━━━━━━━';
-
   const footer = isPremium
     ? '\n━━━━━━━━━━━━━━━━━━━━\n✅ Contact details shared (Premium)'
     : '\n━━━━━━━━━━━━━━━━━━━━\n🔒 Upgrade to Premium to see contact details';
 
   return `${header}\n${lines.join('\n')}${footer}`;
+}
+
+async function sendMessage(chatRoomId, senderId, receiverId, content) {
+  await execute(
+    "INSERT INTO message (id, chatRoomId, senderId, receiverId, content, type, isRead, createdAt) VALUES (?, ?, ?, ?, ?, 'TEXT', 0, NOW())",
+    [randomUUID(), chatRoomId, senderId, receiverId, content]
+  );
 }
 
 export async function PATCH(req, { params }) {
@@ -46,101 +50,55 @@ export async function PATCH(req, { params }) {
   const { id } = await params;
   const { status } = await req.json();
 
-  const interest = await prisma.interest.findUnique({ where: { id } });
+  const interest = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);
   if (!interest || interest.receiverId !== session.user.id) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
-  const updated = await prisma.interest.update({ where: { id }, data: { status } });
+  await execute('UPDATE interest SET status = ?, updatedAt = NOW() WHERE id = ?', [status, id]);
 
   if (status === 'ACCEPTED') {
-    // Create chat room
+    // Create or get chat room
     const [a, b] = [interest.senderId, interest.receiverId].sort();
-    const room = await prisma.chatRoom.upsert({
-      where: { userAId_userBId: { userAId: a, userBId: b } },
-      create: { userAId: a, userBId: b },
-      update: {},
-    });
+    let room = await queryOne('SELECT id FROM chatroom WHERE userAId = ? AND userBId = ?', [a, b]);
+    if (!room) {
+      const roomId = randomUUID();
+      await execute(
+        'INSERT INTO chatroom (id, userAId, userBId, createdAt) VALUES (?, ?, ?, NOW())',
+        [roomId, a, b]
+      );
+      room = { id: roomId };
+    }
 
     // Fetch both users with profiles
-    const [sender, receiver] = await Promise.all([
-      prisma.user.findUnique({
-        where: { id: interest.senderId },
-        include: { profile: true },
-      }),
-      prisma.user.findUnique({
-        where: { id: interest.receiverId },
-        include: { profile: true },
-      }),
-    ]);
+    const sender = await queryOne('SELECT * FROM `user` WHERE id = ?', [interest.senderId]);
+    const receiver = await queryOne('SELECT * FROM `user` WHERE id = ?', [interest.receiverId]);
+    const senderProfile = await queryOne('SELECT * FROM profile WHERE userId = ?', [interest.senderId]);
+    const receiverProfile = await queryOne('SELECT * FROM profile WHERE userId = ?', [interest.receiverId]);
 
-    // ── Auto-send profile cards if either user is premium ──────────────────
-
-    // 1. Sender's profile → sent to receiver (if sender is premium)
     if (sender?.isPremium) {
-      const msg = buildProfileMessage(sender, sender.profile, true);
-      await prisma.message.create({
-        data: {
-          chatRoomId: room.id,
-          senderId: interest.senderId,
-          receiverId: interest.receiverId,
-          content: msg,
-          type: 'TEXT',
-        },
-      });
+      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(sender, senderProfile, true));
     }
-
-    // 2. Receiver's profile → sent to sender (if receiver is premium)
     if (receiver?.isPremium) {
-      const msg = buildProfileMessage(receiver, receiver.profile, true);
-      await prisma.message.create({
-        data: {
-          chatRoomId: room.id,
-          senderId: interest.receiverId,
-          receiverId: interest.senderId,
-          content: msg,
-          type: 'TEXT',
-        },
-      });
+      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(receiver, receiverProfile, true));
     }
-
-    // 3. If neither is premium — send basic profile cards (no contact)
     if (!sender?.isPremium && !receiver?.isPremium) {
-      // Sender's basic profile to receiver
-      const senderMsg = buildProfileMessage(sender, sender?.profile, false);
-      await prisma.message.create({
-        data: {
-          chatRoomId: room.id,
-          senderId: interest.senderId,
-          receiverId: interest.receiverId,
-          content: senderMsg,
-          type: 'TEXT',
-        },
-      });
-      // Receiver's basic profile to sender
-      const receiverMsg = buildProfileMessage(receiver, receiver?.profile, false);
-      await prisma.message.create({
-        data: {
-          chatRoomId: room.id,
-          senderId: interest.receiverId,
-          receiverId: interest.senderId,
-          content: receiverMsg,
-          type: 'TEXT',
-        },
-      });
+      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(sender, senderProfile, false));
+      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(receiver, receiverProfile, false));
     }
 
     // Notification to sender
-    await prisma.notification.create({
-      data: {
-        userId: interest.senderId,
-        type: 'INTEREST_ACCEPTED',
-        title: '💕 Interest Accepted!',
-        message: `${session.user.name} accepted your interest. ${sender?.isPremium || receiver?.isPremium ? 'Profile details shared in chat.' : 'Start chatting!'}`,
-        link: `/chat?userId=${session.user.id}`,
-      },
-    });
+    await execute(
+      "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'INTEREST_ACCEPTED', '💕 Interest Accepted!', ?, 0, ?, NOW())",
+      [
+        randomUUID(),
+        interest.senderId,
+        `${session.user.name} accepted your interest. Start chatting!`,
+        `/chat?userId=${session.user.id}`,
+      ]
+    );
   }
 
+  const updated = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);
   return NextResponse.json(updated);
 }
