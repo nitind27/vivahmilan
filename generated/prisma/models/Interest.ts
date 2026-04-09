@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `Interest` model and its related types.
+ * This file exports the `interest` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model Interest
+ * Model interest
  * 
  */
-export type InterestModel = runtime.Types.Result.DefaultSelection<Prisma.$InterestPayload>
+export type interestModel = runtime.Types.Result.DefaultSelection<Prisma.$interestPayload>
 
 export type AggregateInterest = {
   _count: InterestCountAggregateOutputType | null
@@ -89,37 +89,37 @@ export type InterestCountAggregateInputType = {
 
 export type InterestAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Interest to aggregate.
+   * Filter which interest to aggregate.
    */
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Interests to fetch.
+   * Determine the order of interests to fetch.
    */
-  orderBy?: Prisma.InterestOrderByWithRelationInput | Prisma.InterestOrderByWithRelationInput[]
+  orderBy?: Prisma.interestOrderByWithRelationInput | Prisma.interestOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.InterestWhereUniqueInput
+  cursor?: Prisma.interestWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Interests from the position of the cursor.
+   * Take `±n` interests from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Interests.
+   * Skip the first `n` interests.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Interests
+   * Count returned interests
   **/
   _count?: true | InterestCountAggregateInputType
   /**
@@ -147,11 +147,11 @@ export type GetInterestAggregateType<T extends InterestAggregateArgs> = {
 
 
 
-export type InterestGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InterestWhereInput
-  orderBy?: Prisma.InterestOrderByWithAggregationInput | Prisma.InterestOrderByWithAggregationInput[]
+export type interestGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.interestWhereInput
+  orderBy?: Prisma.interestOrderByWithAggregationInput | Prisma.interestOrderByWithAggregationInput[]
   by: Prisma.InterestScalarFieldEnum[] | Prisma.InterestScalarFieldEnum
-  having?: Prisma.InterestScalarWhereWithAggregatesInput
+  having?: Prisma.interestScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: InterestCountAggregateInputType | true
@@ -172,7 +172,7 @@ export type InterestGroupByOutputType = {
   _max: InterestMaxAggregateOutputType | null
 }
 
-export type GetInterestGroupByPayload<T extends InterestGroupByArgs> = Prisma.PrismaPromise<
+export type GetInterestGroupByPayload<T extends interestGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<InterestGroupByOutputType, T['by']> &
       {
@@ -187,22 +187,22 @@ export type GetInterestGroupByPayload<T extends InterestGroupByArgs> = Prisma.Pr
 
 
 
-export type InterestWhereInput = {
-  AND?: Prisma.InterestWhereInput | Prisma.InterestWhereInput[]
-  OR?: Prisma.InterestWhereInput[]
-  NOT?: Prisma.InterestWhereInput | Prisma.InterestWhereInput[]
-  id?: Prisma.StringFilter<"Interest"> | string
-  senderId?: Prisma.StringFilter<"Interest"> | string
-  receiverId?: Prisma.StringFilter<"Interest"> | string
-  status?: Prisma.EnumInterestStatusFilter<"Interest"> | $Enums.InterestStatus
-  message?: Prisma.StringNullableFilter<"Interest"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Interest"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Interest"> | Date | string
-  sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  receiver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+export type interestWhereInput = {
+  AND?: Prisma.interestWhereInput | Prisma.interestWhereInput[]
+  OR?: Prisma.interestWhereInput[]
+  NOT?: Prisma.interestWhereInput | Prisma.interestWhereInput[]
+  id?: Prisma.StringFilter<"interest"> | string
+  senderId?: Prisma.StringFilter<"interest"> | string
+  receiverId?: Prisma.StringFilter<"interest"> | string
+  status?: Prisma.EnumInterestStatusFilter<"interest"> | $Enums.InterestStatus
+  message?: Prisma.StringNullableFilter<"interest"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"interest"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"interest"> | Date | string
+  sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  receiver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }
 
-export type InterestOrderByWithRelationInput = {
+export type interestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   receiverId?: Prisma.SortOrder
@@ -210,28 +210,28 @@ export type InterestOrderByWithRelationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  sender?: Prisma.UserOrderByWithRelationInput
-  receiver?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.InterestOrderByRelevanceInput
+  sender?: Prisma.userOrderByWithRelationInput
+  receiver?: Prisma.userOrderByWithRelationInput
+  _relevance?: Prisma.interestOrderByRelevanceInput
 }
 
-export type InterestWhereUniqueInput = Prisma.AtLeast<{
+export type interestWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  senderId_receiverId?: Prisma.InterestSenderIdReceiverIdCompoundUniqueInput
-  AND?: Prisma.InterestWhereInput | Prisma.InterestWhereInput[]
-  OR?: Prisma.InterestWhereInput[]
-  NOT?: Prisma.InterestWhereInput | Prisma.InterestWhereInput[]
-  senderId?: Prisma.StringFilter<"Interest"> | string
-  receiverId?: Prisma.StringFilter<"Interest"> | string
-  status?: Prisma.EnumInterestStatusFilter<"Interest"> | $Enums.InterestStatus
-  message?: Prisma.StringNullableFilter<"Interest"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Interest"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Interest"> | Date | string
-  sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  receiver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  senderId_receiverId?: Prisma.interestSenderIdReceiverIdCompoundUniqueInput
+  AND?: Prisma.interestWhereInput | Prisma.interestWhereInput[]
+  OR?: Prisma.interestWhereInput[]
+  NOT?: Prisma.interestWhereInput | Prisma.interestWhereInput[]
+  senderId?: Prisma.StringFilter<"interest"> | string
+  receiverId?: Prisma.StringFilter<"interest"> | string
+  status?: Prisma.EnumInterestStatusFilter<"interest"> | $Enums.InterestStatus
+  message?: Prisma.StringNullableFilter<"interest"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"interest"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"interest"> | Date | string
+  sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  receiver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }, "id" | "senderId_receiverId">
 
-export type InterestOrderByWithAggregationInput = {
+export type interestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   receiverId?: Prisma.SortOrder
@@ -239,35 +239,35 @@ export type InterestOrderByWithAggregationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  _count?: Prisma.InterestCountOrderByAggregateInput
-  _max?: Prisma.InterestMaxOrderByAggregateInput
-  _min?: Prisma.InterestMinOrderByAggregateInput
+  _count?: Prisma.interestCountOrderByAggregateInput
+  _max?: Prisma.interestMaxOrderByAggregateInput
+  _min?: Prisma.interestMinOrderByAggregateInput
 }
 
-export type InterestScalarWhereWithAggregatesInput = {
-  AND?: Prisma.InterestScalarWhereWithAggregatesInput | Prisma.InterestScalarWhereWithAggregatesInput[]
-  OR?: Prisma.InterestScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.InterestScalarWhereWithAggregatesInput | Prisma.InterestScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Interest"> | string
-  senderId?: Prisma.StringWithAggregatesFilter<"Interest"> | string
-  receiverId?: Prisma.StringWithAggregatesFilter<"Interest"> | string
-  status?: Prisma.EnumInterestStatusWithAggregatesFilter<"Interest"> | $Enums.InterestStatus
-  message?: Prisma.StringNullableWithAggregatesFilter<"Interest"> | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Interest"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Interest"> | Date | string
+export type interestScalarWhereWithAggregatesInput = {
+  AND?: Prisma.interestScalarWhereWithAggregatesInput | Prisma.interestScalarWhereWithAggregatesInput[]
+  OR?: Prisma.interestScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.interestScalarWhereWithAggregatesInput | Prisma.interestScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"interest"> | string
+  senderId?: Prisma.StringWithAggregatesFilter<"interest"> | string
+  receiverId?: Prisma.StringWithAggregatesFilter<"interest"> | string
+  status?: Prisma.EnumInterestStatusWithAggregatesFilter<"interest"> | $Enums.InterestStatus
+  message?: Prisma.StringNullableWithAggregatesFilter<"interest"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"interest"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"interest"> | Date | string
 }
 
-export type InterestCreateInput = {
+export type interestCreateInput = {
   id?: string
   status?: $Enums.InterestStatus
   message?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  sender: Prisma.UserCreateNestedOneWithoutSentInterestsInput
-  receiver: Prisma.UserCreateNestedOneWithoutReceivedInterestsInput
+  sender: Prisma.userCreateNestedOneWithoutSentInterestsInput
+  receiver: Prisma.userCreateNestedOneWithoutReceivedInterestsInput
 }
 
-export type InterestUncheckedCreateInput = {
+export type interestUncheckedCreateInput = {
   id?: string
   senderId: string
   receiverId: string
@@ -277,17 +277,17 @@ export type InterestUncheckedCreateInput = {
   updatedAt?: Date | string
 }
 
-export type InterestUpdateInput = {
+export type interestUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sender?: Prisma.UserUpdateOneRequiredWithoutSentInterestsNestedInput
-  receiver?: Prisma.UserUpdateOneRequiredWithoutReceivedInterestsNestedInput
+  sender?: Prisma.userUpdateOneRequiredWithoutSentInterestsNestedInput
+  receiver?: Prisma.userUpdateOneRequiredWithoutReceivedInterestsNestedInput
 }
 
-export type InterestUncheckedUpdateInput = {
+export type interestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   receiverId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -297,7 +297,7 @@ export type InterestUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InterestCreateManyInput = {
+export type interestCreateManyInput = {
   id?: string
   senderId: string
   receiverId: string
@@ -307,7 +307,7 @@ export type InterestCreateManyInput = {
   updatedAt?: Date | string
 }
 
-export type InterestUpdateManyMutationInput = {
+export type interestUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -315,7 +315,7 @@ export type InterestUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InterestUncheckedUpdateManyInput = {
+export type interestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   receiverId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -326,27 +326,27 @@ export type InterestUncheckedUpdateManyInput = {
 }
 
 export type InterestListRelationFilter = {
-  every?: Prisma.InterestWhereInput
-  some?: Prisma.InterestWhereInput
-  none?: Prisma.InterestWhereInput
+  every?: Prisma.interestWhereInput
+  some?: Prisma.interestWhereInput
+  none?: Prisma.interestWhereInput
 }
 
-export type InterestOrderByRelationAggregateInput = {
+export type interestOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type InterestOrderByRelevanceInput = {
-  fields: Prisma.InterestOrderByRelevanceFieldEnum | Prisma.InterestOrderByRelevanceFieldEnum[]
+export type interestOrderByRelevanceInput = {
+  fields: Prisma.interestOrderByRelevanceFieldEnum | Prisma.interestOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type InterestSenderIdReceiverIdCompoundUniqueInput = {
+export type interestSenderIdReceiverIdCompoundUniqueInput = {
   senderId: string
   receiverId: string
 }
 
-export type InterestCountOrderByAggregateInput = {
+export type interestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   receiverId?: Prisma.SortOrder
@@ -356,7 +356,7 @@ export type InterestCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type InterestMaxOrderByAggregateInput = {
+export type interestMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   receiverId?: Prisma.SortOrder
@@ -366,7 +366,7 @@ export type InterestMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type InterestMinOrderByAggregateInput = {
+export type interestMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   receiverId?: Prisma.SortOrder
@@ -376,196 +376,104 @@ export type InterestMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type InterestCreateNestedManyWithoutSenderInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutSenderInput, Prisma.InterestUncheckedCreateWithoutSenderInput> | Prisma.InterestCreateWithoutSenderInput[] | Prisma.InterestUncheckedCreateWithoutSenderInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutSenderInput | Prisma.InterestCreateOrConnectWithoutSenderInput[]
-  createMany?: Prisma.InterestCreateManySenderInputEnvelope
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
+export type interestCreateNestedManyWithoutSenderInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutSenderInput, Prisma.interestUncheckedCreateWithoutSenderInput> | Prisma.interestCreateWithoutSenderInput[] | Prisma.interestUncheckedCreateWithoutSenderInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutSenderInput | Prisma.interestCreateOrConnectWithoutSenderInput[]
+  createMany?: Prisma.interestCreateManySenderInputEnvelope
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
 }
 
-export type InterestCreateNestedManyWithoutReceiverInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutReceiverInput, Prisma.InterestUncheckedCreateWithoutReceiverInput> | Prisma.InterestCreateWithoutReceiverInput[] | Prisma.InterestUncheckedCreateWithoutReceiverInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutReceiverInput | Prisma.InterestCreateOrConnectWithoutReceiverInput[]
-  createMany?: Prisma.InterestCreateManyReceiverInputEnvelope
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
+export type interestCreateNestedManyWithoutReceiverInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutReceiverInput, Prisma.interestUncheckedCreateWithoutReceiverInput> | Prisma.interestCreateWithoutReceiverInput[] | Prisma.interestUncheckedCreateWithoutReceiverInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutReceiverInput | Prisma.interestCreateOrConnectWithoutReceiverInput[]
+  createMany?: Prisma.interestCreateManyReceiverInputEnvelope
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
 }
 
-export type InterestUncheckedCreateNestedManyWithoutSenderInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutSenderInput, Prisma.InterestUncheckedCreateWithoutSenderInput> | Prisma.InterestCreateWithoutSenderInput[] | Prisma.InterestUncheckedCreateWithoutSenderInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutSenderInput | Prisma.InterestCreateOrConnectWithoutSenderInput[]
-  createMany?: Prisma.InterestCreateManySenderInputEnvelope
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
+export type interestUncheckedCreateNestedManyWithoutSenderInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutSenderInput, Prisma.interestUncheckedCreateWithoutSenderInput> | Prisma.interestCreateWithoutSenderInput[] | Prisma.interestUncheckedCreateWithoutSenderInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutSenderInput | Prisma.interestCreateOrConnectWithoutSenderInput[]
+  createMany?: Prisma.interestCreateManySenderInputEnvelope
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
 }
 
-export type InterestUncheckedCreateNestedManyWithoutReceiverInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutReceiverInput, Prisma.InterestUncheckedCreateWithoutReceiverInput> | Prisma.InterestCreateWithoutReceiverInput[] | Prisma.InterestUncheckedCreateWithoutReceiverInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutReceiverInput | Prisma.InterestCreateOrConnectWithoutReceiverInput[]
-  createMany?: Prisma.InterestCreateManyReceiverInputEnvelope
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
+export type interestUncheckedCreateNestedManyWithoutReceiverInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutReceiverInput, Prisma.interestUncheckedCreateWithoutReceiverInput> | Prisma.interestCreateWithoutReceiverInput[] | Prisma.interestUncheckedCreateWithoutReceiverInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutReceiverInput | Prisma.interestCreateOrConnectWithoutReceiverInput[]
+  createMany?: Prisma.interestCreateManyReceiverInputEnvelope
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
 }
 
-export type InterestUpdateManyWithoutSenderNestedInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutSenderInput, Prisma.InterestUncheckedCreateWithoutSenderInput> | Prisma.InterestCreateWithoutSenderInput[] | Prisma.InterestUncheckedCreateWithoutSenderInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutSenderInput | Prisma.InterestCreateOrConnectWithoutSenderInput[]
-  upsert?: Prisma.InterestUpsertWithWhereUniqueWithoutSenderInput | Prisma.InterestUpsertWithWhereUniqueWithoutSenderInput[]
-  createMany?: Prisma.InterestCreateManySenderInputEnvelope
-  set?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  disconnect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  delete?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  update?: Prisma.InterestUpdateWithWhereUniqueWithoutSenderInput | Prisma.InterestUpdateWithWhereUniqueWithoutSenderInput[]
-  updateMany?: Prisma.InterestUpdateManyWithWhereWithoutSenderInput | Prisma.InterestUpdateManyWithWhereWithoutSenderInput[]
-  deleteMany?: Prisma.InterestScalarWhereInput | Prisma.InterestScalarWhereInput[]
+export type interestUpdateManyWithoutSenderNestedInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutSenderInput, Prisma.interestUncheckedCreateWithoutSenderInput> | Prisma.interestCreateWithoutSenderInput[] | Prisma.interestUncheckedCreateWithoutSenderInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutSenderInput | Prisma.interestCreateOrConnectWithoutSenderInput[]
+  upsert?: Prisma.interestUpsertWithWhereUniqueWithoutSenderInput | Prisma.interestUpsertWithWhereUniqueWithoutSenderInput[]
+  createMany?: Prisma.interestCreateManySenderInputEnvelope
+  set?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  disconnect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  delete?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  update?: Prisma.interestUpdateWithWhereUniqueWithoutSenderInput | Prisma.interestUpdateWithWhereUniqueWithoutSenderInput[]
+  updateMany?: Prisma.interestUpdateManyWithWhereWithoutSenderInput | Prisma.interestUpdateManyWithWhereWithoutSenderInput[]
+  deleteMany?: Prisma.interestScalarWhereInput | Prisma.interestScalarWhereInput[]
 }
 
-export type InterestUpdateManyWithoutReceiverNestedInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutReceiverInput, Prisma.InterestUncheckedCreateWithoutReceiverInput> | Prisma.InterestCreateWithoutReceiverInput[] | Prisma.InterestUncheckedCreateWithoutReceiverInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutReceiverInput | Prisma.InterestCreateOrConnectWithoutReceiverInput[]
-  upsert?: Prisma.InterestUpsertWithWhereUniqueWithoutReceiverInput | Prisma.InterestUpsertWithWhereUniqueWithoutReceiverInput[]
-  createMany?: Prisma.InterestCreateManyReceiverInputEnvelope
-  set?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  disconnect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  delete?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  update?: Prisma.InterestUpdateWithWhereUniqueWithoutReceiverInput | Prisma.InterestUpdateWithWhereUniqueWithoutReceiverInput[]
-  updateMany?: Prisma.InterestUpdateManyWithWhereWithoutReceiverInput | Prisma.InterestUpdateManyWithWhereWithoutReceiverInput[]
-  deleteMany?: Prisma.InterestScalarWhereInput | Prisma.InterestScalarWhereInput[]
+export type interestUpdateManyWithoutReceiverNestedInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutReceiverInput, Prisma.interestUncheckedCreateWithoutReceiverInput> | Prisma.interestCreateWithoutReceiverInput[] | Prisma.interestUncheckedCreateWithoutReceiverInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutReceiverInput | Prisma.interestCreateOrConnectWithoutReceiverInput[]
+  upsert?: Prisma.interestUpsertWithWhereUniqueWithoutReceiverInput | Prisma.interestUpsertWithWhereUniqueWithoutReceiverInput[]
+  createMany?: Prisma.interestCreateManyReceiverInputEnvelope
+  set?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  disconnect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  delete?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  update?: Prisma.interestUpdateWithWhereUniqueWithoutReceiverInput | Prisma.interestUpdateWithWhereUniqueWithoutReceiverInput[]
+  updateMany?: Prisma.interestUpdateManyWithWhereWithoutReceiverInput | Prisma.interestUpdateManyWithWhereWithoutReceiverInput[]
+  deleteMany?: Prisma.interestScalarWhereInput | Prisma.interestScalarWhereInput[]
 }
 
-export type InterestUncheckedUpdateManyWithoutSenderNestedInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutSenderInput, Prisma.InterestUncheckedCreateWithoutSenderInput> | Prisma.InterestCreateWithoutSenderInput[] | Prisma.InterestUncheckedCreateWithoutSenderInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutSenderInput | Prisma.InterestCreateOrConnectWithoutSenderInput[]
-  upsert?: Prisma.InterestUpsertWithWhereUniqueWithoutSenderInput | Prisma.InterestUpsertWithWhereUniqueWithoutSenderInput[]
-  createMany?: Prisma.InterestCreateManySenderInputEnvelope
-  set?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  disconnect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  delete?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  update?: Prisma.InterestUpdateWithWhereUniqueWithoutSenderInput | Prisma.InterestUpdateWithWhereUniqueWithoutSenderInput[]
-  updateMany?: Prisma.InterestUpdateManyWithWhereWithoutSenderInput | Prisma.InterestUpdateManyWithWhereWithoutSenderInput[]
-  deleteMany?: Prisma.InterestScalarWhereInput | Prisma.InterestScalarWhereInput[]
+export type interestUncheckedUpdateManyWithoutSenderNestedInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutSenderInput, Prisma.interestUncheckedCreateWithoutSenderInput> | Prisma.interestCreateWithoutSenderInput[] | Prisma.interestUncheckedCreateWithoutSenderInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutSenderInput | Prisma.interestCreateOrConnectWithoutSenderInput[]
+  upsert?: Prisma.interestUpsertWithWhereUniqueWithoutSenderInput | Prisma.interestUpsertWithWhereUniqueWithoutSenderInput[]
+  createMany?: Prisma.interestCreateManySenderInputEnvelope
+  set?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  disconnect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  delete?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  update?: Prisma.interestUpdateWithWhereUniqueWithoutSenderInput | Prisma.interestUpdateWithWhereUniqueWithoutSenderInput[]
+  updateMany?: Prisma.interestUpdateManyWithWhereWithoutSenderInput | Prisma.interestUpdateManyWithWhereWithoutSenderInput[]
+  deleteMany?: Prisma.interestScalarWhereInput | Prisma.interestScalarWhereInput[]
 }
 
-export type InterestUncheckedUpdateManyWithoutReceiverNestedInput = {
-  create?: Prisma.XOR<Prisma.InterestCreateWithoutReceiverInput, Prisma.InterestUncheckedCreateWithoutReceiverInput> | Prisma.InterestCreateWithoutReceiverInput[] | Prisma.InterestUncheckedCreateWithoutReceiverInput[]
-  connectOrCreate?: Prisma.InterestCreateOrConnectWithoutReceiverInput | Prisma.InterestCreateOrConnectWithoutReceiverInput[]
-  upsert?: Prisma.InterestUpsertWithWhereUniqueWithoutReceiverInput | Prisma.InterestUpsertWithWhereUniqueWithoutReceiverInput[]
-  createMany?: Prisma.InterestCreateManyReceiverInputEnvelope
-  set?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  disconnect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  delete?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  connect?: Prisma.InterestWhereUniqueInput | Prisma.InterestWhereUniqueInput[]
-  update?: Prisma.InterestUpdateWithWhereUniqueWithoutReceiverInput | Prisma.InterestUpdateWithWhereUniqueWithoutReceiverInput[]
-  updateMany?: Prisma.InterestUpdateManyWithWhereWithoutReceiverInput | Prisma.InterestUpdateManyWithWhereWithoutReceiverInput[]
-  deleteMany?: Prisma.InterestScalarWhereInput | Prisma.InterestScalarWhereInput[]
+export type interestUncheckedUpdateManyWithoutReceiverNestedInput = {
+  create?: Prisma.XOR<Prisma.interestCreateWithoutReceiverInput, Prisma.interestUncheckedCreateWithoutReceiverInput> | Prisma.interestCreateWithoutReceiverInput[] | Prisma.interestUncheckedCreateWithoutReceiverInput[]
+  connectOrCreate?: Prisma.interestCreateOrConnectWithoutReceiverInput | Prisma.interestCreateOrConnectWithoutReceiverInput[]
+  upsert?: Prisma.interestUpsertWithWhereUniqueWithoutReceiverInput | Prisma.interestUpsertWithWhereUniqueWithoutReceiverInput[]
+  createMany?: Prisma.interestCreateManyReceiverInputEnvelope
+  set?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  disconnect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  delete?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  connect?: Prisma.interestWhereUniqueInput | Prisma.interestWhereUniqueInput[]
+  update?: Prisma.interestUpdateWithWhereUniqueWithoutReceiverInput | Prisma.interestUpdateWithWhereUniqueWithoutReceiverInput[]
+  updateMany?: Prisma.interestUpdateManyWithWhereWithoutReceiverInput | Prisma.interestUpdateManyWithWhereWithoutReceiverInput[]
+  deleteMany?: Prisma.interestScalarWhereInput | Prisma.interestScalarWhereInput[]
 }
 
 export type EnumInterestStatusFieldUpdateOperationsInput = {
   set?: $Enums.InterestStatus
 }
 
-export type InterestCreateWithoutSenderInput = {
+export type interestCreateWithoutSenderInput = {
   id?: string
   status?: $Enums.InterestStatus
   message?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  receiver: Prisma.UserCreateNestedOneWithoutReceivedInterestsInput
+  receiver: Prisma.userCreateNestedOneWithoutReceivedInterestsInput
 }
 
-export type InterestUncheckedCreateWithoutSenderInput = {
-  id?: string
-  receiverId: string
-  status?: $Enums.InterestStatus
-  message?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type InterestCreateOrConnectWithoutSenderInput = {
-  where: Prisma.InterestWhereUniqueInput
-  create: Prisma.XOR<Prisma.InterestCreateWithoutSenderInput, Prisma.InterestUncheckedCreateWithoutSenderInput>
-}
-
-export type InterestCreateManySenderInputEnvelope = {
-  data: Prisma.InterestCreateManySenderInput | Prisma.InterestCreateManySenderInput[]
-  skipDuplicates?: boolean
-}
-
-export type InterestCreateWithoutReceiverInput = {
-  id?: string
-  status?: $Enums.InterestStatus
-  message?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  sender: Prisma.UserCreateNestedOneWithoutSentInterestsInput
-}
-
-export type InterestUncheckedCreateWithoutReceiverInput = {
-  id?: string
-  senderId: string
-  status?: $Enums.InterestStatus
-  message?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type InterestCreateOrConnectWithoutReceiverInput = {
-  where: Prisma.InterestWhereUniqueInput
-  create: Prisma.XOR<Prisma.InterestCreateWithoutReceiverInput, Prisma.InterestUncheckedCreateWithoutReceiverInput>
-}
-
-export type InterestCreateManyReceiverInputEnvelope = {
-  data: Prisma.InterestCreateManyReceiverInput | Prisma.InterestCreateManyReceiverInput[]
-  skipDuplicates?: boolean
-}
-
-export type InterestUpsertWithWhereUniqueWithoutSenderInput = {
-  where: Prisma.InterestWhereUniqueInput
-  update: Prisma.XOR<Prisma.InterestUpdateWithoutSenderInput, Prisma.InterestUncheckedUpdateWithoutSenderInput>
-  create: Prisma.XOR<Prisma.InterestCreateWithoutSenderInput, Prisma.InterestUncheckedCreateWithoutSenderInput>
-}
-
-export type InterestUpdateWithWhereUniqueWithoutSenderInput = {
-  where: Prisma.InterestWhereUniqueInput
-  data: Prisma.XOR<Prisma.InterestUpdateWithoutSenderInput, Prisma.InterestUncheckedUpdateWithoutSenderInput>
-}
-
-export type InterestUpdateManyWithWhereWithoutSenderInput = {
-  where: Prisma.InterestScalarWhereInput
-  data: Prisma.XOR<Prisma.InterestUpdateManyMutationInput, Prisma.InterestUncheckedUpdateManyWithoutSenderInput>
-}
-
-export type InterestScalarWhereInput = {
-  AND?: Prisma.InterestScalarWhereInput | Prisma.InterestScalarWhereInput[]
-  OR?: Prisma.InterestScalarWhereInput[]
-  NOT?: Prisma.InterestScalarWhereInput | Prisma.InterestScalarWhereInput[]
-  id?: Prisma.StringFilter<"Interest"> | string
-  senderId?: Prisma.StringFilter<"Interest"> | string
-  receiverId?: Prisma.StringFilter<"Interest"> | string
-  status?: Prisma.EnumInterestStatusFilter<"Interest"> | $Enums.InterestStatus
-  message?: Prisma.StringNullableFilter<"Interest"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Interest"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Interest"> | Date | string
-}
-
-export type InterestUpsertWithWhereUniqueWithoutReceiverInput = {
-  where: Prisma.InterestWhereUniqueInput
-  update: Prisma.XOR<Prisma.InterestUpdateWithoutReceiverInput, Prisma.InterestUncheckedUpdateWithoutReceiverInput>
-  create: Prisma.XOR<Prisma.InterestCreateWithoutReceiverInput, Prisma.InterestUncheckedCreateWithoutReceiverInput>
-}
-
-export type InterestUpdateWithWhereUniqueWithoutReceiverInput = {
-  where: Prisma.InterestWhereUniqueInput
-  data: Prisma.XOR<Prisma.InterestUpdateWithoutReceiverInput, Prisma.InterestUncheckedUpdateWithoutReceiverInput>
-}
-
-export type InterestUpdateManyWithWhereWithoutReceiverInput = {
-  where: Prisma.InterestScalarWhereInput
-  data: Prisma.XOR<Prisma.InterestUpdateManyMutationInput, Prisma.InterestUncheckedUpdateManyWithoutReceiverInput>
-}
-
-export type InterestCreateManySenderInput = {
+export type interestUncheckedCreateWithoutSenderInput = {
   id?: string
   receiverId: string
   status?: $Enums.InterestStatus
@@ -574,7 +482,26 @@ export type InterestCreateManySenderInput = {
   updatedAt?: Date | string
 }
 
-export type InterestCreateManyReceiverInput = {
+export type interestCreateOrConnectWithoutSenderInput = {
+  where: Prisma.interestWhereUniqueInput
+  create: Prisma.XOR<Prisma.interestCreateWithoutSenderInput, Prisma.interestUncheckedCreateWithoutSenderInput>
+}
+
+export type interestCreateManySenderInputEnvelope = {
+  data: Prisma.interestCreateManySenderInput | Prisma.interestCreateManySenderInput[]
+  skipDuplicates?: boolean
+}
+
+export type interestCreateWithoutReceiverInput = {
+  id?: string
+  status?: $Enums.InterestStatus
+  message?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sender: Prisma.userCreateNestedOneWithoutSentInterestsInput
+}
+
+export type interestUncheckedCreateWithoutReceiverInput = {
   id?: string
   senderId: string
   status?: $Enums.InterestStatus
@@ -583,16 +510,89 @@ export type InterestCreateManyReceiverInput = {
   updatedAt?: Date | string
 }
 
-export type InterestUpdateWithoutSenderInput = {
+export type interestCreateOrConnectWithoutReceiverInput = {
+  where: Prisma.interestWhereUniqueInput
+  create: Prisma.XOR<Prisma.interestCreateWithoutReceiverInput, Prisma.interestUncheckedCreateWithoutReceiverInput>
+}
+
+export type interestCreateManyReceiverInputEnvelope = {
+  data: Prisma.interestCreateManyReceiverInput | Prisma.interestCreateManyReceiverInput[]
+  skipDuplicates?: boolean
+}
+
+export type interestUpsertWithWhereUniqueWithoutSenderInput = {
+  where: Prisma.interestWhereUniqueInput
+  update: Prisma.XOR<Prisma.interestUpdateWithoutSenderInput, Prisma.interestUncheckedUpdateWithoutSenderInput>
+  create: Prisma.XOR<Prisma.interestCreateWithoutSenderInput, Prisma.interestUncheckedCreateWithoutSenderInput>
+}
+
+export type interestUpdateWithWhereUniqueWithoutSenderInput = {
+  where: Prisma.interestWhereUniqueInput
+  data: Prisma.XOR<Prisma.interestUpdateWithoutSenderInput, Prisma.interestUncheckedUpdateWithoutSenderInput>
+}
+
+export type interestUpdateManyWithWhereWithoutSenderInput = {
+  where: Prisma.interestScalarWhereInput
+  data: Prisma.XOR<Prisma.interestUpdateManyMutationInput, Prisma.interestUncheckedUpdateManyWithoutSenderInput>
+}
+
+export type interestScalarWhereInput = {
+  AND?: Prisma.interestScalarWhereInput | Prisma.interestScalarWhereInput[]
+  OR?: Prisma.interestScalarWhereInput[]
+  NOT?: Prisma.interestScalarWhereInput | Prisma.interestScalarWhereInput[]
+  id?: Prisma.StringFilter<"interest"> | string
+  senderId?: Prisma.StringFilter<"interest"> | string
+  receiverId?: Prisma.StringFilter<"interest"> | string
+  status?: Prisma.EnumInterestStatusFilter<"interest"> | $Enums.InterestStatus
+  message?: Prisma.StringNullableFilter<"interest"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"interest"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"interest"> | Date | string
+}
+
+export type interestUpsertWithWhereUniqueWithoutReceiverInput = {
+  where: Prisma.interestWhereUniqueInput
+  update: Prisma.XOR<Prisma.interestUpdateWithoutReceiverInput, Prisma.interestUncheckedUpdateWithoutReceiverInput>
+  create: Prisma.XOR<Prisma.interestCreateWithoutReceiverInput, Prisma.interestUncheckedCreateWithoutReceiverInput>
+}
+
+export type interestUpdateWithWhereUniqueWithoutReceiverInput = {
+  where: Prisma.interestWhereUniqueInput
+  data: Prisma.XOR<Prisma.interestUpdateWithoutReceiverInput, Prisma.interestUncheckedUpdateWithoutReceiverInput>
+}
+
+export type interestUpdateManyWithWhereWithoutReceiverInput = {
+  where: Prisma.interestScalarWhereInput
+  data: Prisma.XOR<Prisma.interestUpdateManyMutationInput, Prisma.interestUncheckedUpdateManyWithoutReceiverInput>
+}
+
+export type interestCreateManySenderInput = {
+  id?: string
+  receiverId: string
+  status?: $Enums.InterestStatus
+  message?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type interestCreateManyReceiverInput = {
+  id?: string
+  senderId: string
+  status?: $Enums.InterestStatus
+  message?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type interestUpdateWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  receiver?: Prisma.UserUpdateOneRequiredWithoutReceivedInterestsNestedInput
+  receiver?: Prisma.userUpdateOneRequiredWithoutReceivedInterestsNestedInput
 }
 
-export type InterestUncheckedUpdateWithoutSenderInput = {
+export type interestUncheckedUpdateWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   receiverId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
@@ -601,7 +601,7 @@ export type InterestUncheckedUpdateWithoutSenderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InterestUncheckedUpdateManyWithoutSenderInput = {
+export type interestUncheckedUpdateManyWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   receiverId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
@@ -610,25 +610,16 @@ export type InterestUncheckedUpdateManyWithoutSenderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InterestUpdateWithoutReceiverInput = {
+export type interestUpdateWithoutReceiverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sender?: Prisma.UserUpdateOneRequiredWithoutSentInterestsNestedInput
+  sender?: Prisma.userUpdateOneRequiredWithoutSentInterestsNestedInput
 }
 
-export type InterestUncheckedUpdateWithoutReceiverInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  senderId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type InterestUncheckedUpdateManyWithoutReceiverInput = {
+export type interestUncheckedUpdateWithoutReceiverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
@@ -637,9 +628,18 @@ export type InterestUncheckedUpdateManyWithoutReceiverInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type interestUncheckedUpdateManyWithoutReceiverInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  senderId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInterestStatusFieldUpdateOperationsInput | $Enums.InterestStatus
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
 
 
-export type InterestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+
+export type interestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   senderId?: boolean
   receiverId?: boolean
@@ -647,13 +647,13 @@ export type InterestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   message?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  receiver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  sender?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  receiver?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["interest"]>
 
 
 
-export type InterestSelectScalar = {
+export type interestSelectScalar = {
   id?: boolean
   senderId?: boolean
   receiverId?: boolean
@@ -663,17 +663,17 @@ export type InterestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InterestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "senderId" | "receiverId" | "status" | "message" | "createdAt" | "updatedAt", ExtArgs["result"]["interest"]>
-export type InterestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  receiver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+export type interestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "senderId" | "receiverId" | "status" | "message" | "createdAt" | "updatedAt", ExtArgs["result"]["interest"]>
+export type interestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sender?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  receiver?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
 
-export type $InterestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "Interest"
+export type $interestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "interest"
   objects: {
-    sender: Prisma.$UserPayload<ExtArgs>
-    receiver: Prisma.$UserPayload<ExtArgs>
+    sender: Prisma.$userPayload<ExtArgs>
+    receiver: Prisma.$userPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -687,18 +687,18 @@ export type $InterestPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   composites: {}
 }
 
-export type InterestGetPayload<S extends boolean | null | undefined | InterestDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$InterestPayload, S>
+export type interestGetPayload<S extends boolean | null | undefined | interestDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$interestPayload, S>
 
-export type InterestCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<InterestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type interestCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<interestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: InterestCountAggregateInputType | true
   }
 
-export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Interest'], meta: { name: 'Interest' } }
+export interface interestDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['interest'], meta: { name: 'interest' } }
   /**
    * Find zero or one Interest that matches the filter.
-   * @param {InterestFindUniqueArgs} args - Arguments to find a Interest
+   * @param {interestFindUniqueArgs} args - Arguments to find a Interest
    * @example
    * // Get one Interest
    * const interest = await prisma.interest.findUnique({
@@ -707,12 +707,12 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findUnique<T extends InterestFindUniqueArgs>(args: Prisma.SelectSubset<T, InterestFindUniqueArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends interestFindUniqueArgs>(args: Prisma.SelectSubset<T, interestFindUniqueArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Interest that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {InterestFindUniqueOrThrowArgs} args - Arguments to find a Interest
+   * @param {interestFindUniqueOrThrowArgs} args - Arguments to find a Interest
    * @example
    * // Get one Interest
    * const interest = await prisma.interest.findUniqueOrThrow({
@@ -721,13 +721,13 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findUniqueOrThrow<T extends InterestFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, InterestFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends interestFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, interestFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Interest that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {InterestFindFirstArgs} args - Arguments to find a Interest
+   * @param {interestFindFirstArgs} args - Arguments to find a Interest
    * @example
    * // Get one Interest
    * const interest = await prisma.interest.findFirst({
@@ -736,14 +736,14 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findFirst<T extends InterestFindFirstArgs>(args?: Prisma.SelectSubset<T, InterestFindFirstArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends interestFindFirstArgs>(args?: Prisma.SelectSubset<T, interestFindFirstArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Interest that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {InterestFindFirstOrThrowArgs} args - Arguments to find a Interest
+   * @param {interestFindFirstOrThrowArgs} args - Arguments to find a Interest
    * @example
    * // Get one Interest
    * const interest = await prisma.interest.findFirstOrThrow({
@@ -752,13 +752,13 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findFirstOrThrow<T extends InterestFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, InterestFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends interestFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, interestFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Interests that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {InterestFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {interestFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Interests
    * const interests = await prisma.interest.findMany()
@@ -770,11 +770,11 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * const interestWithIdOnly = await prisma.interest.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends InterestFindManyArgs>(args?: Prisma.SelectSubset<T, InterestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends interestFindManyArgs>(args?: Prisma.SelectSubset<T, interestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Interest.
-   * @param {InterestCreateArgs} args - Arguments to create a Interest.
+   * @param {interestCreateArgs} args - Arguments to create a Interest.
    * @example
    * // Create one Interest
    * const Interest = await prisma.interest.create({
@@ -784,11 +784,11 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  create<T extends InterestCreateArgs>(args: Prisma.SelectSubset<T, InterestCreateArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends interestCreateArgs>(args: Prisma.SelectSubset<T, interestCreateArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Interests.
-   * @param {InterestCreateManyArgs} args - Arguments to create many Interests.
+   * @param {interestCreateManyArgs} args - Arguments to create many Interests.
    * @example
    * // Create many Interests
    * const interest = await prisma.interest.createMany({
@@ -798,11 +798,11 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    *     
    */
-  createMany<T extends InterestCreateManyArgs>(args?: Prisma.SelectSubset<T, InterestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends interestCreateManyArgs>(args?: Prisma.SelectSubset<T, interestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a Interest.
-   * @param {InterestDeleteArgs} args - Arguments to delete one Interest.
+   * @param {interestDeleteArgs} args - Arguments to delete one Interest.
    * @example
    * // Delete one Interest
    * const Interest = await prisma.interest.delete({
@@ -812,11 +812,11 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  delete<T extends InterestDeleteArgs>(args: Prisma.SelectSubset<T, InterestDeleteArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends interestDeleteArgs>(args: Prisma.SelectSubset<T, interestDeleteArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Interest.
-   * @param {InterestUpdateArgs} args - Arguments to update one Interest.
+   * @param {interestUpdateArgs} args - Arguments to update one Interest.
    * @example
    * // Update one Interest
    * const interest = await prisma.interest.update({
@@ -829,11 +829,11 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  update<T extends InterestUpdateArgs>(args: Prisma.SelectSubset<T, InterestUpdateArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends interestUpdateArgs>(args: Prisma.SelectSubset<T, interestUpdateArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Interests.
-   * @param {InterestDeleteManyArgs} args - Arguments to filter Interests to delete.
+   * @param {interestDeleteManyArgs} args - Arguments to filter Interests to delete.
    * @example
    * // Delete a few Interests
    * const { count } = await prisma.interest.deleteMany({
@@ -843,13 +843,13 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  deleteMany<T extends InterestDeleteManyArgs>(args?: Prisma.SelectSubset<T, InterestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends interestDeleteManyArgs>(args?: Prisma.SelectSubset<T, interestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Interests.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {InterestUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {interestUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Interests
    * const interest = await prisma.interest.updateMany({
@@ -862,11 +862,11 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  updateMany<T extends InterestUpdateManyArgs>(args: Prisma.SelectSubset<T, InterestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends interestUpdateManyArgs>(args: Prisma.SelectSubset<T, interestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one Interest.
-   * @param {InterestUpsertArgs} args - Arguments to update or create a Interest.
+   * @param {interestUpsertArgs} args - Arguments to update or create a Interest.
    * @example
    * // Update or create a Interest
    * const interest = await prisma.interest.upsert({
@@ -881,14 +881,14 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  upsert<T extends InterestUpsertArgs>(args: Prisma.SelectSubset<T, InterestUpsertArgs<ExtArgs>>): Prisma.Prisma__InterestClient<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends interestUpsertArgs>(args: Prisma.SelectSubset<T, interestUpsertArgs<ExtArgs>>): Prisma.Prisma__interestClient<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Interests.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {InterestCountArgs} args - Arguments to filter Interests to count.
+   * @param {interestCountArgs} args - Arguments to filter Interests to count.
    * @example
    * // Count the number of Interests
    * const count = await prisma.interest.count({
@@ -897,8 +897,8 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
   **/
-  count<T extends InterestCountArgs>(
-    args?: Prisma.Subset<T, InterestCountArgs>,
+  count<T extends interestCountArgs>(
+    args?: Prisma.Subset<T, interestCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -937,7 +937,7 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * Group by Interest.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {InterestGroupByArgs} args - Group by arguments.
+   * @param {interestGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -952,14 +952,14 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
   **/
   groupBy<
-    T extends InterestGroupByArgs,
+    T extends interestGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: InterestGroupByArgs['orderBy'] }
-      : { orderBy?: InterestGroupByArgs['orderBy'] },
+      ? { orderBy: interestGroupByArgs['orderBy'] }
+      : { orderBy?: interestGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1008,23 +1008,23 @@ export interface InterestDelegate<ExtArgs extends runtime.Types.Extensions.Inter
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, InterestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInterestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, interestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInterestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the Interest model
+ * Fields of the interest model
  */
-readonly fields: InterestFieldRefs;
+readonly fields: interestFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for Interest.
+ * The delegate class that acts as a "Promise-like" for interest.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__InterestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__interestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  sender<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  receiver<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  sender<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  receiver<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1051,377 +1051,377 @@ export interface Prisma__InterestClient<T, Null = never, ExtArgs extends runtime
 
 
 /**
- * Fields of the Interest model
+ * Fields of the interest model
  */
-export interface InterestFieldRefs {
-  readonly id: Prisma.FieldRef<"Interest", 'String'>
-  readonly senderId: Prisma.FieldRef<"Interest", 'String'>
-  readonly receiverId: Prisma.FieldRef<"Interest", 'String'>
-  readonly status: Prisma.FieldRef<"Interest", 'InterestStatus'>
-  readonly message: Prisma.FieldRef<"Interest", 'String'>
-  readonly createdAt: Prisma.FieldRef<"Interest", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Interest", 'DateTime'>
+export interface interestFieldRefs {
+  readonly id: Prisma.FieldRef<"interest", 'String'>
+  readonly senderId: Prisma.FieldRef<"interest", 'String'>
+  readonly receiverId: Prisma.FieldRef<"interest", 'String'>
+  readonly status: Prisma.FieldRef<"interest", 'InterestStatus'>
+  readonly message: Prisma.FieldRef<"interest", 'String'>
+  readonly createdAt: Prisma.FieldRef<"interest", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"interest", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * Interest findUnique
+ * interest findUnique
  */
-export type InterestFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * Filter, which Interest to fetch.
+   * Filter, which interest to fetch.
    */
-  where: Prisma.InterestWhereUniqueInput
+  where: Prisma.interestWhereUniqueInput
 }
 
 /**
- * Interest findUniqueOrThrow
+ * interest findUniqueOrThrow
  */
-export type InterestFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * Filter, which Interest to fetch.
+   * Filter, which interest to fetch.
    */
-  where: Prisma.InterestWhereUniqueInput
+  where: Prisma.interestWhereUniqueInput
 }
 
 /**
- * Interest findFirst
+ * interest findFirst
  */
-export type InterestFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * Filter, which Interest to fetch.
+   * Filter, which interest to fetch.
    */
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Interests to fetch.
+   * Determine the order of interests to fetch.
    */
-  orderBy?: Prisma.InterestOrderByWithRelationInput | Prisma.InterestOrderByWithRelationInput[]
+  orderBy?: Prisma.interestOrderByWithRelationInput | Prisma.interestOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Interests.
+   * Sets the position for searching for interests.
    */
-  cursor?: Prisma.InterestWhereUniqueInput
+  cursor?: Prisma.interestWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Interests from the position of the cursor.
+   * Take `±n` interests from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Interests.
+   * Skip the first `n` interests.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Interests.
+   * Filter by unique combinations of interests.
    */
   distinct?: Prisma.InterestScalarFieldEnum | Prisma.InterestScalarFieldEnum[]
 }
 
 /**
- * Interest findFirstOrThrow
+ * interest findFirstOrThrow
  */
-export type InterestFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * Filter, which Interest to fetch.
+   * Filter, which interest to fetch.
    */
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Interests to fetch.
+   * Determine the order of interests to fetch.
    */
-  orderBy?: Prisma.InterestOrderByWithRelationInput | Prisma.InterestOrderByWithRelationInput[]
+  orderBy?: Prisma.interestOrderByWithRelationInput | Prisma.interestOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Interests.
+   * Sets the position for searching for interests.
    */
-  cursor?: Prisma.InterestWhereUniqueInput
+  cursor?: Prisma.interestWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Interests from the position of the cursor.
+   * Take `±n` interests from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Interests.
+   * Skip the first `n` interests.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Interests.
+   * Filter by unique combinations of interests.
    */
   distinct?: Prisma.InterestScalarFieldEnum | Prisma.InterestScalarFieldEnum[]
 }
 
 /**
- * Interest findMany
+ * interest findMany
  */
-export type InterestFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * Filter, which Interests to fetch.
+   * Filter, which interests to fetch.
    */
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Interests to fetch.
+   * Determine the order of interests to fetch.
    */
-  orderBy?: Prisma.InterestOrderByWithRelationInput | Prisma.InterestOrderByWithRelationInput[]
+  orderBy?: Prisma.interestOrderByWithRelationInput | Prisma.interestOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Interests.
+   * Sets the position for listing interests.
    */
-  cursor?: Prisma.InterestWhereUniqueInput
+  cursor?: Prisma.interestWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Interests from the position of the cursor.
+   * Take `±n` interests from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Interests.
+   * Skip the first `n` interests.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Interests.
+   * Filter by unique combinations of interests.
    */
   distinct?: Prisma.InterestScalarFieldEnum | Prisma.InterestScalarFieldEnum[]
 }
 
 /**
- * Interest create
+ * interest create
  */
-export type InterestCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * The data needed to create a Interest.
+   * The data needed to create a interest.
    */
-  data: Prisma.XOR<Prisma.InterestCreateInput, Prisma.InterestUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.interestCreateInput, Prisma.interestUncheckedCreateInput>
 }
 
 /**
- * Interest createMany
+ * interest createMany
  */
-export type InterestCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Interests.
+   * The data used to create many interests.
    */
-  data: Prisma.InterestCreateManyInput | Prisma.InterestCreateManyInput[]
+  data: Prisma.interestCreateManyInput | Prisma.interestCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Interest update
+ * interest update
  */
-export type InterestUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * The data needed to update a Interest.
+   * The data needed to update a interest.
    */
-  data: Prisma.XOR<Prisma.InterestUpdateInput, Prisma.InterestUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.interestUpdateInput, Prisma.interestUncheckedUpdateInput>
   /**
-   * Choose, which Interest to update.
+   * Choose, which interest to update.
    */
-  where: Prisma.InterestWhereUniqueInput
+  where: Prisma.interestWhereUniqueInput
 }
 
 /**
- * Interest updateMany
+ * interest updateMany
  */
-export type InterestUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Interests.
+   * The data used to update interests.
    */
-  data: Prisma.XOR<Prisma.InterestUpdateManyMutationInput, Prisma.InterestUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.interestUpdateManyMutationInput, Prisma.interestUncheckedUpdateManyInput>
   /**
-   * Filter which Interests to update
+   * Filter which interests to update
    */
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
   /**
-   * Limit how many Interests to update.
+   * Limit how many interests to update.
    */
   limit?: number
 }
 
 /**
- * Interest upsert
+ * interest upsert
  */
-export type InterestUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * The filter to search for the Interest to update in case it exists.
+   * The filter to search for the interest to update in case it exists.
    */
-  where: Prisma.InterestWhereUniqueInput
+  where: Prisma.interestWhereUniqueInput
   /**
-   * In case the Interest found by the `where` argument doesn't exist, create a new Interest with this data.
+   * In case the interest found by the `where` argument doesn't exist, create a new interest with this data.
    */
-  create: Prisma.XOR<Prisma.InterestCreateInput, Prisma.InterestUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.interestCreateInput, Prisma.interestUncheckedCreateInput>
   /**
-   * In case the Interest was found with the provided `where` argument, update it with this data.
+   * In case the interest was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.InterestUpdateInput, Prisma.InterestUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.interestUpdateInput, Prisma.interestUncheckedUpdateInput>
 }
 
 /**
- * Interest delete
+ * interest delete
  */
-export type InterestDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
   /**
-   * Filter which Interest to delete.
+   * Filter which interest to delete.
    */
-  where: Prisma.InterestWhereUniqueInput
+  where: Prisma.interestWhereUniqueInput
 }
 
 /**
- * Interest deleteMany
+ * interest deleteMany
  */
-export type InterestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Interests to delete
+   * Filter which interests to delete
    */
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
   /**
-   * Limit how many Interests to delete.
+   * Limit how many interests to delete.
    */
   limit?: number
 }
 
 /**
- * Interest without action
+ * interest without action
  */
-export type InterestDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type interestDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
+  include?: Prisma.interestInclude<ExtArgs> | null
 }

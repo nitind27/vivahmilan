@@ -18,97 +18,97 @@ export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
 /**
- * Model Account
+ * Model account
  * 
  */
-export type Account = Prisma.AccountModel
+export type account = Prisma.accountModel
 /**
- * Model Session
+ * Model session
  * 
  */
-export type Session = Prisma.SessionModel
+export type session = Prisma.sessionModel
 /**
- * Model VerificationToken
+ * Model verificationtoken
  * 
  */
-export type VerificationToken = Prisma.VerificationTokenModel
+export type verificationtoken = Prisma.verificationtokenModel
 /**
- * Model User
+ * Model user
  * 
  */
-export type User = Prisma.UserModel
+export type user = Prisma.userModel
 /**
- * Model Profile
+ * Model profile
  * 
  */
-export type Profile = Prisma.ProfileModel
+export type profile = Prisma.profileModel
 /**
- * Model Photo
+ * Model photo
  * 
  */
-export type Photo = Prisma.PhotoModel
+export type photo = Prisma.photoModel
 /**
- * Model Interest
+ * Model interest
  * 
  */
-export type Interest = Prisma.InterestModel
+export type interest = Prisma.interestModel
 /**
- * Model ChatRoom
+ * Model chatroom
  * 
  */
-export type ChatRoom = Prisma.ChatRoomModel
+export type chatroom = Prisma.chatroomModel
 /**
- * Model Message
+ * Model message
  * 
  */
-export type Message = Prisma.MessageModel
+export type message = Prisma.messageModel
 /**
- * Model Shortlist
+ * Model shortlist
  * 
  */
-export type Shortlist = Prisma.ShortlistModel
+export type shortlist = Prisma.shortlistModel
 /**
- * Model ProfileView
+ * Model profileview
  * 
  */
-export type ProfileView = Prisma.ProfileViewModel
+export type profileview = Prisma.profileviewModel
 /**
- * Model Notification
+ * Model notification
  * 
  */
-export type Notification = Prisma.NotificationModel
+export type notification = Prisma.notificationModel
 /**
- * Model ProfileOption
+ * Model profileoption
  * 
  */
-export type ProfileOption = Prisma.ProfileOptionModel
+export type profileoption = Prisma.profileoptionModel
 /**
- * Model PlanConfig
+ * Model planconfig
  * 
  */
-export type PlanConfig = Prisma.PlanConfigModel
+export type planconfig = Prisma.planconfigModel
 /**
- * Model Subscription
+ * Model subscription
  * 
  */
-export type Subscription = Prisma.SubscriptionModel
+export type subscription = Prisma.subscriptionModel
 /**
- * Model Document
+ * Model document
  * 
  */
-export type Document = Prisma.DocumentModel
+export type document = Prisma.documentModel
 /**
- * Model Report
+ * Model report
  * 
  */
-export type Report = Prisma.ReportModel
+export type report = Prisma.reportModel
 /**
- * Model Block
+ * Model block
  * 
  */
-export type Block = Prisma.BlockModel
+export type block = Prisma.blockModel
 /**
- * Model OTP
+ * Model otp
  * 
  */
-export type OTP = Prisma.OTPModel
+export type otp = Prisma.otpModel

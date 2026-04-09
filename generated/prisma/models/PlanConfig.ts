@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `PlanConfig` model and its related types.
+ * This file exports the `planconfig` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,30 +13,30 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model PlanConfig
+ * Model planconfig
  * 
  */
-export type PlanConfigModel = runtime.Types.Result.DefaultSelection<Prisma.$PlanConfigPayload>
+export type planconfigModel = runtime.Types.Result.DefaultSelection<Prisma.$planconfigPayload>
 
-export type AggregatePlanConfig = {
-  _count: PlanConfigCountAggregateOutputType | null
-  _avg: PlanConfigAvgAggregateOutputType | null
-  _sum: PlanConfigSumAggregateOutputType | null
-  _min: PlanConfigMinAggregateOutputType | null
-  _max: PlanConfigMaxAggregateOutputType | null
+export type AggregatePlanconfig = {
+  _count: PlanconfigCountAggregateOutputType | null
+  _avg: PlanconfigAvgAggregateOutputType | null
+  _sum: PlanconfigSumAggregateOutputType | null
+  _min: PlanconfigMinAggregateOutputType | null
+  _max: PlanconfigMaxAggregateOutputType | null
 }
 
-export type PlanConfigAvgAggregateOutputType = {
+export type PlanconfigAvgAggregateOutputType = {
   price: runtime.Decimal | null
   durationDays: number | null
 }
 
-export type PlanConfigSumAggregateOutputType = {
+export type PlanconfigSumAggregateOutputType = {
   price: runtime.Decimal | null
   durationDays: number | null
 }
 
-export type PlanConfigMinAggregateOutputType = {
+export type PlanconfigMinAggregateOutputType = {
   id: string | null
   plan: string | null
   displayName: string | null
@@ -50,7 +50,7 @@ export type PlanConfigMinAggregateOutputType = {
   createdAt: Date | null
 }
 
-export type PlanConfigMaxAggregateOutputType = {
+export type PlanconfigMaxAggregateOutputType = {
   id: string | null
   plan: string | null
   displayName: string | null
@@ -64,7 +64,7 @@ export type PlanConfigMaxAggregateOutputType = {
   createdAt: Date | null
 }
 
-export type PlanConfigCountAggregateOutputType = {
+export type PlanconfigCountAggregateOutputType = {
   id: number
   plan: number
   displayName: number
@@ -80,17 +80,17 @@ export type PlanConfigCountAggregateOutputType = {
 }
 
 
-export type PlanConfigAvgAggregateInputType = {
+export type PlanconfigAvgAggregateInputType = {
   price?: true
   durationDays?: true
 }
 
-export type PlanConfigSumAggregateInputType = {
+export type PlanconfigSumAggregateInputType = {
   price?: true
   durationDays?: true
 }
 
-export type PlanConfigMinAggregateInputType = {
+export type PlanconfigMinAggregateInputType = {
   id?: true
   plan?: true
   displayName?: true
@@ -104,7 +104,7 @@ export type PlanConfigMinAggregateInputType = {
   createdAt?: true
 }
 
-export type PlanConfigMaxAggregateInputType = {
+export type PlanconfigMaxAggregateInputType = {
   id?: true
   plan?: true
   displayName?: true
@@ -118,7 +118,7 @@ export type PlanConfigMaxAggregateInputType = {
   createdAt?: true
 }
 
-export type PlanConfigCountAggregateInputType = {
+export type PlanconfigCountAggregateInputType = {
   id?: true
   plan?: true
   displayName?: true
@@ -133,93 +133,93 @@ export type PlanConfigCountAggregateInputType = {
   _all?: true
 }
 
-export type PlanConfigAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PlanconfigAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which PlanConfig to aggregate.
+   * Filter which planconfig to aggregate.
    */
-  where?: Prisma.PlanConfigWhereInput
+  where?: Prisma.planconfigWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of PlanConfigs to fetch.
+   * Determine the order of planconfigs to fetch.
    */
-  orderBy?: Prisma.PlanConfigOrderByWithRelationInput | Prisma.PlanConfigOrderByWithRelationInput[]
+  orderBy?: Prisma.planconfigOrderByWithRelationInput | Prisma.planconfigOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.PlanConfigWhereUniqueInput
+  cursor?: Prisma.planconfigWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` PlanConfigs from the position of the cursor.
+   * Take `±n` planconfigs from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` PlanConfigs.
+   * Skip the first `n` planconfigs.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned PlanConfigs
+   * Count returned planconfigs
   **/
-  _count?: true | PlanConfigCountAggregateInputType
+  _count?: true | PlanconfigCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to average
   **/
-  _avg?: PlanConfigAvgAggregateInputType
+  _avg?: PlanconfigAvgAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to sum
   **/
-  _sum?: PlanConfigSumAggregateInputType
+  _sum?: PlanconfigSumAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the minimum value
   **/
-  _min?: PlanConfigMinAggregateInputType
+  _min?: PlanconfigMinAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the maximum value
   **/
-  _max?: PlanConfigMaxAggregateInputType
+  _max?: PlanconfigMaxAggregateInputType
 }
 
-export type GetPlanConfigAggregateType<T extends PlanConfigAggregateArgs> = {
-      [P in keyof T & keyof AggregatePlanConfig]: P extends '_count' | 'count'
+export type GetPlanconfigAggregateType<T extends PlanconfigAggregateArgs> = {
+      [P in keyof T & keyof AggregatePlanconfig]: P extends '_count' | 'count'
     ? T[P] extends true
       ? number
-      : Prisma.GetScalarType<T[P], AggregatePlanConfig[P]>
-    : Prisma.GetScalarType<T[P], AggregatePlanConfig[P]>
+      : Prisma.GetScalarType<T[P], AggregatePlanconfig[P]>
+    : Prisma.GetScalarType<T[P], AggregatePlanconfig[P]>
 }
 
 
 
 
-export type PlanConfigGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PlanConfigWhereInput
-  orderBy?: Prisma.PlanConfigOrderByWithAggregationInput | Prisma.PlanConfigOrderByWithAggregationInput[]
-  by: Prisma.PlanConfigScalarFieldEnum[] | Prisma.PlanConfigScalarFieldEnum
-  having?: Prisma.PlanConfigScalarWhereWithAggregatesInput
+export type planconfigGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.planconfigWhereInput
+  orderBy?: Prisma.planconfigOrderByWithAggregationInput | Prisma.planconfigOrderByWithAggregationInput[]
+  by: Prisma.PlanconfigScalarFieldEnum[] | Prisma.PlanconfigScalarFieldEnum
+  having?: Prisma.planconfigScalarWhereWithAggregatesInput
   take?: number
   skip?: number
-  _count?: PlanConfigCountAggregateInputType | true
-  _avg?: PlanConfigAvgAggregateInputType
-  _sum?: PlanConfigSumAggregateInputType
-  _min?: PlanConfigMinAggregateInputType
-  _max?: PlanConfigMaxAggregateInputType
+  _count?: PlanconfigCountAggregateInputType | true
+  _avg?: PlanconfigAvgAggregateInputType
+  _sum?: PlanconfigSumAggregateInputType
+  _min?: PlanconfigMinAggregateInputType
+  _max?: PlanconfigMaxAggregateInputType
 }
 
-export type PlanConfigGroupByOutputType = {
+export type PlanconfigGroupByOutputType = {
   id: string
   plan: string
   displayName: string
@@ -231,46 +231,46 @@ export type PlanConfigGroupByOutputType = {
   description: string | null
   updatedAt: Date
   createdAt: Date
-  _count: PlanConfigCountAggregateOutputType | null
-  _avg: PlanConfigAvgAggregateOutputType | null
-  _sum: PlanConfigSumAggregateOutputType | null
-  _min: PlanConfigMinAggregateOutputType | null
-  _max: PlanConfigMaxAggregateOutputType | null
+  _count: PlanconfigCountAggregateOutputType | null
+  _avg: PlanconfigAvgAggregateOutputType | null
+  _sum: PlanconfigSumAggregateOutputType | null
+  _min: PlanconfigMinAggregateOutputType | null
+  _max: PlanconfigMaxAggregateOutputType | null
 }
 
-export type GetPlanConfigGroupByPayload<T extends PlanConfigGroupByArgs> = Prisma.PrismaPromise<
+export type GetPlanconfigGroupByPayload<T extends planconfigGroupByArgs> = Prisma.PrismaPromise<
   Array<
-    Prisma.PickEnumerable<PlanConfigGroupByOutputType, T['by']> &
+    Prisma.PickEnumerable<PlanconfigGroupByOutputType, T['by']> &
       {
-        [P in ((keyof T) & (keyof PlanConfigGroupByOutputType))]: P extends '_count'
+        [P in ((keyof T) & (keyof PlanconfigGroupByOutputType))]: P extends '_count'
           ? T[P] extends boolean
             ? number
-            : Prisma.GetScalarType<T[P], PlanConfigGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], PlanConfigGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], PlanconfigGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], PlanconfigGroupByOutputType[P]>
       }
     >
   >
 
 
 
-export type PlanConfigWhereInput = {
-  AND?: Prisma.PlanConfigWhereInput | Prisma.PlanConfigWhereInput[]
-  OR?: Prisma.PlanConfigWhereInput[]
-  NOT?: Prisma.PlanConfigWhereInput | Prisma.PlanConfigWhereInput[]
-  id?: Prisma.StringFilter<"PlanConfig"> | string
-  plan?: Prisma.StringFilter<"PlanConfig"> | string
-  displayName?: Prisma.StringFilter<"PlanConfig"> | string
-  price?: Prisma.DecimalFilter<"PlanConfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: Prisma.StringFilter<"PlanConfig"> | string
-  durationDays?: Prisma.IntFilter<"PlanConfig"> | number
-  isActive?: Prisma.BoolFilter<"PlanConfig"> | boolean
-  permissions?: Prisma.StringFilter<"PlanConfig"> | string
-  description?: Prisma.StringNullableFilter<"PlanConfig"> | string | null
-  updatedAt?: Prisma.DateTimeFilter<"PlanConfig"> | Date | string
-  createdAt?: Prisma.DateTimeFilter<"PlanConfig"> | Date | string
+export type planconfigWhereInput = {
+  AND?: Prisma.planconfigWhereInput | Prisma.planconfigWhereInput[]
+  OR?: Prisma.planconfigWhereInput[]
+  NOT?: Prisma.planconfigWhereInput | Prisma.planconfigWhereInput[]
+  id?: Prisma.StringFilter<"planconfig"> | string
+  plan?: Prisma.StringFilter<"planconfig"> | string
+  displayName?: Prisma.StringFilter<"planconfig"> | string
+  price?: Prisma.DecimalFilter<"planconfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"planconfig"> | string
+  durationDays?: Prisma.IntFilter<"planconfig"> | number
+  isActive?: Prisma.BoolFilter<"planconfig"> | boolean
+  permissions?: Prisma.StringFilter<"planconfig"> | string
+  description?: Prisma.StringNullableFilter<"planconfig"> | string | null
+  updatedAt?: Prisma.DateTimeFilter<"planconfig"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"planconfig"> | Date | string
 }
 
-export type PlanConfigOrderByWithRelationInput = {
+export type planconfigOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
@@ -282,27 +282,27 @@ export type PlanConfigOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _relevance?: Prisma.PlanConfigOrderByRelevanceInput
+  _relevance?: Prisma.planconfigOrderByRelevanceInput
 }
 
-export type PlanConfigWhereUniqueInput = Prisma.AtLeast<{
+export type planconfigWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   plan?: string
-  AND?: Prisma.PlanConfigWhereInput | Prisma.PlanConfigWhereInput[]
-  OR?: Prisma.PlanConfigWhereInput[]
-  NOT?: Prisma.PlanConfigWhereInput | Prisma.PlanConfigWhereInput[]
-  displayName?: Prisma.StringFilter<"PlanConfig"> | string
-  price?: Prisma.DecimalFilter<"PlanConfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: Prisma.StringFilter<"PlanConfig"> | string
-  durationDays?: Prisma.IntFilter<"PlanConfig"> | number
-  isActive?: Prisma.BoolFilter<"PlanConfig"> | boolean
-  permissions?: Prisma.StringFilter<"PlanConfig"> | string
-  description?: Prisma.StringNullableFilter<"PlanConfig"> | string | null
-  updatedAt?: Prisma.DateTimeFilter<"PlanConfig"> | Date | string
-  createdAt?: Prisma.DateTimeFilter<"PlanConfig"> | Date | string
+  AND?: Prisma.planconfigWhereInput | Prisma.planconfigWhereInput[]
+  OR?: Prisma.planconfigWhereInput[]
+  NOT?: Prisma.planconfigWhereInput | Prisma.planconfigWhereInput[]
+  displayName?: Prisma.StringFilter<"planconfig"> | string
+  price?: Prisma.DecimalFilter<"planconfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"planconfig"> | string
+  durationDays?: Prisma.IntFilter<"planconfig"> | number
+  isActive?: Prisma.BoolFilter<"planconfig"> | boolean
+  permissions?: Prisma.StringFilter<"planconfig"> | string
+  description?: Prisma.StringNullableFilter<"planconfig"> | string | null
+  updatedAt?: Prisma.DateTimeFilter<"planconfig"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"planconfig"> | Date | string
 }, "id" | "plan">
 
-export type PlanConfigOrderByWithAggregationInput = {
+export type planconfigOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
@@ -314,31 +314,31 @@ export type PlanConfigOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _count?: Prisma.PlanConfigCountOrderByAggregateInput
-  _avg?: Prisma.PlanConfigAvgOrderByAggregateInput
-  _max?: Prisma.PlanConfigMaxOrderByAggregateInput
-  _min?: Prisma.PlanConfigMinOrderByAggregateInput
-  _sum?: Prisma.PlanConfigSumOrderByAggregateInput
+  _count?: Prisma.planconfigCountOrderByAggregateInput
+  _avg?: Prisma.planconfigAvgOrderByAggregateInput
+  _max?: Prisma.planconfigMaxOrderByAggregateInput
+  _min?: Prisma.planconfigMinOrderByAggregateInput
+  _sum?: Prisma.planconfigSumOrderByAggregateInput
 }
 
-export type PlanConfigScalarWhereWithAggregatesInput = {
-  AND?: Prisma.PlanConfigScalarWhereWithAggregatesInput | Prisma.PlanConfigScalarWhereWithAggregatesInput[]
-  OR?: Prisma.PlanConfigScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.PlanConfigScalarWhereWithAggregatesInput | Prisma.PlanConfigScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"PlanConfig"> | string
-  plan?: Prisma.StringWithAggregatesFilter<"PlanConfig"> | string
-  displayName?: Prisma.StringWithAggregatesFilter<"PlanConfig"> | string
-  price?: Prisma.DecimalWithAggregatesFilter<"PlanConfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: Prisma.StringWithAggregatesFilter<"PlanConfig"> | string
-  durationDays?: Prisma.IntWithAggregatesFilter<"PlanConfig"> | number
-  isActive?: Prisma.BoolWithAggregatesFilter<"PlanConfig"> | boolean
-  permissions?: Prisma.StringWithAggregatesFilter<"PlanConfig"> | string
-  description?: Prisma.StringNullableWithAggregatesFilter<"PlanConfig"> | string | null
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PlanConfig"> | Date | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"PlanConfig"> | Date | string
+export type planconfigScalarWhereWithAggregatesInput = {
+  AND?: Prisma.planconfigScalarWhereWithAggregatesInput | Prisma.planconfigScalarWhereWithAggregatesInput[]
+  OR?: Prisma.planconfigScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.planconfigScalarWhereWithAggregatesInput | Prisma.planconfigScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"planconfig"> | string
+  plan?: Prisma.StringWithAggregatesFilter<"planconfig"> | string
+  displayName?: Prisma.StringWithAggregatesFilter<"planconfig"> | string
+  price?: Prisma.DecimalWithAggregatesFilter<"planconfig"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringWithAggregatesFilter<"planconfig"> | string
+  durationDays?: Prisma.IntWithAggregatesFilter<"planconfig"> | number
+  isActive?: Prisma.BoolWithAggregatesFilter<"planconfig"> | boolean
+  permissions?: Prisma.StringWithAggregatesFilter<"planconfig"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"planconfig"> | string | null
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"planconfig"> | Date | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"planconfig"> | Date | string
 }
 
-export type PlanConfigCreateInput = {
+export type planconfigCreateInput = {
   id?: string
   plan: string
   displayName: string
@@ -352,7 +352,7 @@ export type PlanConfigCreateInput = {
   createdAt?: Date | string
 }
 
-export type PlanConfigUncheckedCreateInput = {
+export type planconfigUncheckedCreateInput = {
   id?: string
   plan: string
   displayName: string
@@ -366,7 +366,7 @@ export type PlanConfigUncheckedCreateInput = {
   createdAt?: Date | string
 }
 
-export type PlanConfigUpdateInput = {
+export type planconfigUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -380,7 +380,7 @@ export type PlanConfigUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type PlanConfigUncheckedUpdateInput = {
+export type planconfigUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -394,7 +394,7 @@ export type PlanConfigUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type PlanConfigCreateManyInput = {
+export type planconfigCreateManyInput = {
   id?: string
   plan: string
   displayName: string
@@ -408,7 +408,7 @@ export type PlanConfigCreateManyInput = {
   createdAt?: Date | string
 }
 
-export type PlanConfigUpdateManyMutationInput = {
+export type planconfigUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -422,7 +422,7 @@ export type PlanConfigUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type PlanConfigUncheckedUpdateManyInput = {
+export type planconfigUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -436,13 +436,13 @@ export type PlanConfigUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type PlanConfigOrderByRelevanceInput = {
-  fields: Prisma.PlanConfigOrderByRelevanceFieldEnum | Prisma.PlanConfigOrderByRelevanceFieldEnum[]
+export type planconfigOrderByRelevanceInput = {
+  fields: Prisma.planconfigOrderByRelevanceFieldEnum | Prisma.planconfigOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type PlanConfigCountOrderByAggregateInput = {
+export type planconfigCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
@@ -456,12 +456,12 @@ export type PlanConfigCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type PlanConfigAvgOrderByAggregateInput = {
+export type planconfigAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   durationDays?: Prisma.SortOrder
 }
 
-export type PlanConfigMaxOrderByAggregateInput = {
+export type planconfigMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
@@ -475,7 +475,7 @@ export type PlanConfigMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type PlanConfigMinOrderByAggregateInput = {
+export type planconfigMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
@@ -489,7 +489,7 @@ export type PlanConfigMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type PlanConfigSumOrderByAggregateInput = {
+export type planconfigSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   durationDays?: Prisma.SortOrder
 }
@@ -504,7 +504,7 @@ export type DecimalFieldUpdateOperationsInput = {
 
 
 
-export type PlanConfigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type planconfigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   plan?: boolean
   displayName?: boolean
@@ -516,11 +516,11 @@ export type PlanConfigSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   description?: boolean
   updatedAt?: boolean
   createdAt?: boolean
-}, ExtArgs["result"]["planConfig"]>
+}, ExtArgs["result"]["planconfig"]>
 
 
 
-export type PlanConfigSelectScalar = {
+export type planconfigSelectScalar = {
   id?: boolean
   plan?: boolean
   displayName?: boolean
@@ -534,10 +534,10 @@ export type PlanConfigSelectScalar = {
   createdAt?: boolean
 }
 
-export type PlanConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plan" | "displayName" | "price" | "currency" | "durationDays" | "isActive" | "permissions" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["planConfig"]>
+export type planconfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plan" | "displayName" | "price" | "currency" | "durationDays" | "isActive" | "permissions" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["planconfig"]>
 
-export type $PlanConfigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "PlanConfig"
+export type $planconfigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "planconfig"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -551,143 +551,143 @@ export type $PlanConfigPayload<ExtArgs extends runtime.Types.Extensions.Internal
     description: string | null
     updatedAt: Date
     createdAt: Date
-  }, ExtArgs["result"]["planConfig"]>
+  }, ExtArgs["result"]["planconfig"]>
   composites: {}
 }
 
-export type PlanConfigGetPayload<S extends boolean | null | undefined | PlanConfigDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload, S>
+export type planconfigGetPayload<S extends boolean | null | undefined | planconfigDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$planconfigPayload, S>
 
-export type PlanConfigCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<PlanConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-    select?: PlanConfigCountAggregateInputType | true
+export type planconfigCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<planconfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: PlanconfigCountAggregateInputType | true
   }
 
-export interface PlanConfigDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PlanConfig'], meta: { name: 'PlanConfig' } }
+export interface planconfigDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['planconfig'], meta: { name: 'planconfig' } }
   /**
-   * Find zero or one PlanConfig that matches the filter.
-   * @param {PlanConfigFindUniqueArgs} args - Arguments to find a PlanConfig
+   * Find zero or one Planconfig that matches the filter.
+   * @param {planconfigFindUniqueArgs} args - Arguments to find a Planconfig
    * @example
-   * // Get one PlanConfig
-   * const planConfig = await prisma.planConfig.findUnique({
+   * // Get one Planconfig
+   * const planconfig = await prisma.planconfig.findUnique({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUnique<T extends PlanConfigFindUniqueArgs>(args: Prisma.SelectSubset<T, PlanConfigFindUniqueArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends planconfigFindUniqueArgs>(args: Prisma.SelectSubset<T, planconfigFindUniqueArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find one PlanConfig that matches the filter or throw an error with `error.code='P2025'`
+   * Find one Planconfig that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {PlanConfigFindUniqueOrThrowArgs} args - Arguments to find a PlanConfig
+   * @param {planconfigFindUniqueOrThrowArgs} args - Arguments to find a Planconfig
    * @example
-   * // Get one PlanConfig
-   * const planConfig = await prisma.planConfig.findUniqueOrThrow({
+   * // Get one Planconfig
+   * const planconfig = await prisma.planconfig.findUniqueOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUniqueOrThrow<T extends PlanConfigFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, PlanConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends planconfigFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, planconfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first PlanConfig that matches the filter.
+   * Find the first Planconfig that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigFindFirstArgs} args - Arguments to find a PlanConfig
+   * @param {planconfigFindFirstArgs} args - Arguments to find a Planconfig
    * @example
-   * // Get one PlanConfig
-   * const planConfig = await prisma.planConfig.findFirst({
+   * // Get one Planconfig
+   * const planconfig = await prisma.planconfig.findFirst({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirst<T extends PlanConfigFindFirstArgs>(args?: Prisma.SelectSubset<T, PlanConfigFindFirstArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends planconfigFindFirstArgs>(args?: Prisma.SelectSubset<T, planconfigFindFirstArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first PlanConfig that matches the filter or
+   * Find the first Planconfig that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigFindFirstOrThrowArgs} args - Arguments to find a PlanConfig
+   * @param {planconfigFindFirstOrThrowArgs} args - Arguments to find a Planconfig
    * @example
-   * // Get one PlanConfig
-   * const planConfig = await prisma.planConfig.findFirstOrThrow({
+   * // Get one Planconfig
+   * const planconfig = await prisma.planconfig.findFirstOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirstOrThrow<T extends PlanConfigFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, PlanConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends planconfigFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, planconfigFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find zero or more PlanConfigs that matches the filter.
+   * Find zero or more Planconfigs that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {planconfigFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
-   * // Get all PlanConfigs
-   * const planConfigs = await prisma.planConfig.findMany()
+   * // Get all Planconfigs
+   * const planconfigs = await prisma.planconfig.findMany()
    * 
-   * // Get first 10 PlanConfigs
-   * const planConfigs = await prisma.planConfig.findMany({ take: 10 })
+   * // Get first 10 Planconfigs
+   * const planconfigs = await prisma.planconfig.findMany({ take: 10 })
    * 
    * // Only select the `id`
-   * const planConfigWithIdOnly = await prisma.planConfig.findMany({ select: { id: true } })
+   * const planconfigWithIdOnly = await prisma.planconfig.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends PlanConfigFindManyArgs>(args?: Prisma.SelectSubset<T, PlanConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends planconfigFindManyArgs>(args?: Prisma.SelectSubset<T, planconfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
-   * Create a PlanConfig.
-   * @param {PlanConfigCreateArgs} args - Arguments to create a PlanConfig.
+   * Create a Planconfig.
+   * @param {planconfigCreateArgs} args - Arguments to create a Planconfig.
    * @example
-   * // Create one PlanConfig
-   * const PlanConfig = await prisma.planConfig.create({
+   * // Create one Planconfig
+   * const Planconfig = await prisma.planconfig.create({
    *   data: {
-   *     // ... data to create a PlanConfig
+   *     // ... data to create a Planconfig
    *   }
    * })
    * 
    */
-  create<T extends PlanConfigCreateArgs>(args: Prisma.SelectSubset<T, PlanConfigCreateArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends planconfigCreateArgs>(args: Prisma.SelectSubset<T, planconfigCreateArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Create many PlanConfigs.
-   * @param {PlanConfigCreateManyArgs} args - Arguments to create many PlanConfigs.
+   * Create many Planconfigs.
+   * @param {planconfigCreateManyArgs} args - Arguments to create many Planconfigs.
    * @example
-   * // Create many PlanConfigs
-   * const planConfig = await prisma.planConfig.createMany({
+   * // Create many Planconfigs
+   * const planconfig = await prisma.planconfig.createMany({
    *   data: [
    *     // ... provide data here
    *   ]
    * })
    *     
    */
-  createMany<T extends PlanConfigCreateManyArgs>(args?: Prisma.SelectSubset<T, PlanConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends planconfigCreateManyArgs>(args?: Prisma.SelectSubset<T, planconfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Delete a PlanConfig.
-   * @param {PlanConfigDeleteArgs} args - Arguments to delete one PlanConfig.
+   * Delete a Planconfig.
+   * @param {planconfigDeleteArgs} args - Arguments to delete one Planconfig.
    * @example
-   * // Delete one PlanConfig
-   * const PlanConfig = await prisma.planConfig.delete({
+   * // Delete one Planconfig
+   * const Planconfig = await prisma.planconfig.delete({
    *   where: {
-   *     // ... filter to delete one PlanConfig
+   *     // ... filter to delete one Planconfig
    *   }
    * })
    * 
    */
-  delete<T extends PlanConfigDeleteArgs>(args: Prisma.SelectSubset<T, PlanConfigDeleteArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends planconfigDeleteArgs>(args: Prisma.SelectSubset<T, planconfigDeleteArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Update one PlanConfig.
-   * @param {PlanConfigUpdateArgs} args - Arguments to update one PlanConfig.
+   * Update one Planconfig.
+   * @param {planconfigUpdateArgs} args - Arguments to update one Planconfig.
    * @example
-   * // Update one PlanConfig
-   * const planConfig = await prisma.planConfig.update({
+   * // Update one Planconfig
+   * const planconfig = await prisma.planconfig.update({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -697,30 +697,30 @@ export interface PlanConfigDelegate<ExtArgs extends runtime.Types.Extensions.Int
    * })
    * 
    */
-  update<T extends PlanConfigUpdateArgs>(args: Prisma.SelectSubset<T, PlanConfigUpdateArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends planconfigUpdateArgs>(args: Prisma.SelectSubset<T, planconfigUpdateArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Delete zero or more PlanConfigs.
-   * @param {PlanConfigDeleteManyArgs} args - Arguments to filter PlanConfigs to delete.
+   * Delete zero or more Planconfigs.
+   * @param {planconfigDeleteManyArgs} args - Arguments to filter Planconfigs to delete.
    * @example
-   * // Delete a few PlanConfigs
-   * const { count } = await prisma.planConfig.deleteMany({
+   * // Delete a few Planconfigs
+   * const { count } = await prisma.planconfig.deleteMany({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    * 
    */
-  deleteMany<T extends PlanConfigDeleteManyArgs>(args?: Prisma.SelectSubset<T, PlanConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends planconfigDeleteManyArgs>(args?: Prisma.SelectSubset<T, planconfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Update zero or more PlanConfigs.
+   * Update zero or more Planconfigs.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {planconfigUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
-   * // Update many PlanConfigs
-   * const planConfig = await prisma.planConfig.updateMany({
+   * // Update many Planconfigs
+   * const planconfig = await prisma.planconfig.updateMany({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -730,56 +730,56 @@ export interface PlanConfigDelegate<ExtArgs extends runtime.Types.Extensions.Int
    * })
    * 
    */
-  updateMany<T extends PlanConfigUpdateManyArgs>(args: Prisma.SelectSubset<T, PlanConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends planconfigUpdateManyArgs>(args: Prisma.SelectSubset<T, planconfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create or update one PlanConfig.
-   * @param {PlanConfigUpsertArgs} args - Arguments to update or create a PlanConfig.
+   * Create or update one Planconfig.
+   * @param {planconfigUpsertArgs} args - Arguments to update or create a Planconfig.
    * @example
-   * // Update or create a PlanConfig
-   * const planConfig = await prisma.planConfig.upsert({
+   * // Update or create a Planconfig
+   * const planconfig = await prisma.planconfig.upsert({
    *   create: {
-   *     // ... data to create a PlanConfig
+   *     // ... data to create a Planconfig
    *   },
    *   update: {
    *     // ... in case it already exists, update
    *   },
    *   where: {
-   *     // ... the filter for the PlanConfig we want to update
+   *     // ... the filter for the Planconfig we want to update
    *   }
    * })
    */
-  upsert<T extends PlanConfigUpsertArgs>(args: Prisma.SelectSubset<T, PlanConfigUpsertArgs<ExtArgs>>): Prisma.Prisma__PlanConfigClient<runtime.Types.Result.GetResult<Prisma.$PlanConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends planconfigUpsertArgs>(args: Prisma.SelectSubset<T, planconfigUpsertArgs<ExtArgs>>): Prisma.Prisma__planconfigClient<runtime.Types.Result.GetResult<Prisma.$planconfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
-   * Count the number of PlanConfigs.
+   * Count the number of Planconfigs.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigCountArgs} args - Arguments to filter PlanConfigs to count.
+   * @param {planconfigCountArgs} args - Arguments to filter Planconfigs to count.
    * @example
-   * // Count the number of PlanConfigs
-   * const count = await prisma.planConfig.count({
+   * // Count the number of Planconfigs
+   * const count = await prisma.planconfig.count({
    *   where: {
-   *     // ... the filter for the PlanConfigs we want to count
+   *     // ... the filter for the Planconfigs we want to count
    *   }
    * })
   **/
-  count<T extends PlanConfigCountArgs>(
-    args?: Prisma.Subset<T, PlanConfigCountArgs>,
+  count<T extends planconfigCountArgs>(
+    args?: Prisma.Subset<T, planconfigCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], PlanConfigCountAggregateOutputType>
+        : Prisma.GetScalarType<T['select'], PlanconfigCountAggregateOutputType>
       : number
   >
 
   /**
-   * Allows you to perform aggregations operations on a PlanConfig.
+   * Allows you to perform aggregations operations on a Planconfig.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+   * @param {PlanconfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
    * @example
    * // Ordered by age ascending
    * // Where email contains prisma.io
@@ -799,13 +799,13 @@ export interface PlanConfigDelegate<ExtArgs extends runtime.Types.Extensions.Int
    *   take: 10,
    * })
   **/
-  aggregate<T extends PlanConfigAggregateArgs>(args: Prisma.Subset<T, PlanConfigAggregateArgs>): Prisma.PrismaPromise<GetPlanConfigAggregateType<T>>
+  aggregate<T extends PlanconfigAggregateArgs>(args: Prisma.Subset<T, PlanconfigAggregateArgs>): Prisma.PrismaPromise<GetPlanconfigAggregateType<T>>
 
   /**
-   * Group by PlanConfig.
+   * Group by Planconfig.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {PlanConfigGroupByArgs} args - Group by arguments.
+   * @param {planconfigGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -820,14 +820,14 @@ export interface PlanConfigDelegate<ExtArgs extends runtime.Types.Extensions.Int
    * 
   **/
   groupBy<
-    T extends PlanConfigGroupByArgs,
+    T extends planconfigGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: PlanConfigGroupByArgs['orderBy'] }
-      : { orderBy?: PlanConfigGroupByArgs['orderBy'] },
+      ? { orderBy: planconfigGroupByArgs['orderBy'] }
+      : { orderBy?: planconfigGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -876,20 +876,20 @@ export interface PlanConfigDelegate<ExtArgs extends runtime.Types.Extensions.Int
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, PlanConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlanConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, planconfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlanconfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the PlanConfig model
+ * Fields of the planconfig model
  */
-readonly fields: PlanConfigFieldRefs;
+readonly fields: planconfigFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for PlanConfig.
+ * The delegate class that acts as a "Promise-like" for planconfig.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__PlanConfigClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__planconfigClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -917,341 +917,341 @@ export interface Prisma__PlanConfigClient<T, Null = never, ExtArgs extends runti
 
 
 /**
- * Fields of the PlanConfig model
+ * Fields of the planconfig model
  */
-export interface PlanConfigFieldRefs {
-  readonly id: Prisma.FieldRef<"PlanConfig", 'String'>
-  readonly plan: Prisma.FieldRef<"PlanConfig", 'String'>
-  readonly displayName: Prisma.FieldRef<"PlanConfig", 'String'>
-  readonly price: Prisma.FieldRef<"PlanConfig", 'Decimal'>
-  readonly currency: Prisma.FieldRef<"PlanConfig", 'String'>
-  readonly durationDays: Prisma.FieldRef<"PlanConfig", 'Int'>
-  readonly isActive: Prisma.FieldRef<"PlanConfig", 'Boolean'>
-  readonly permissions: Prisma.FieldRef<"PlanConfig", 'String'>
-  readonly description: Prisma.FieldRef<"PlanConfig", 'String'>
-  readonly updatedAt: Prisma.FieldRef<"PlanConfig", 'DateTime'>
-  readonly createdAt: Prisma.FieldRef<"PlanConfig", 'DateTime'>
+export interface planconfigFieldRefs {
+  readonly id: Prisma.FieldRef<"planconfig", 'String'>
+  readonly plan: Prisma.FieldRef<"planconfig", 'String'>
+  readonly displayName: Prisma.FieldRef<"planconfig", 'String'>
+  readonly price: Prisma.FieldRef<"planconfig", 'Decimal'>
+  readonly currency: Prisma.FieldRef<"planconfig", 'String'>
+  readonly durationDays: Prisma.FieldRef<"planconfig", 'Int'>
+  readonly isActive: Prisma.FieldRef<"planconfig", 'Boolean'>
+  readonly permissions: Prisma.FieldRef<"planconfig", 'String'>
+  readonly description: Prisma.FieldRef<"planconfig", 'String'>
+  readonly updatedAt: Prisma.FieldRef<"planconfig", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"planconfig", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * PlanConfig findUnique
+ * planconfig findUnique
  */
-export type PlanConfigFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * Filter, which PlanConfig to fetch.
+   * Filter, which planconfig to fetch.
    */
-  where: Prisma.PlanConfigWhereUniqueInput
+  where: Prisma.planconfigWhereUniqueInput
 }
 
 /**
- * PlanConfig findUniqueOrThrow
+ * planconfig findUniqueOrThrow
  */
-export type PlanConfigFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * Filter, which PlanConfig to fetch.
+   * Filter, which planconfig to fetch.
    */
-  where: Prisma.PlanConfigWhereUniqueInput
+  where: Prisma.planconfigWhereUniqueInput
 }
 
 /**
- * PlanConfig findFirst
+ * planconfig findFirst
  */
-export type PlanConfigFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * Filter, which PlanConfig to fetch.
+   * Filter, which planconfig to fetch.
    */
-  where?: Prisma.PlanConfigWhereInput
+  where?: Prisma.planconfigWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of PlanConfigs to fetch.
+   * Determine the order of planconfigs to fetch.
    */
-  orderBy?: Prisma.PlanConfigOrderByWithRelationInput | Prisma.PlanConfigOrderByWithRelationInput[]
+  orderBy?: Prisma.planconfigOrderByWithRelationInput | Prisma.planconfigOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for PlanConfigs.
+   * Sets the position for searching for planconfigs.
    */
-  cursor?: Prisma.PlanConfigWhereUniqueInput
+  cursor?: Prisma.planconfigWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` PlanConfigs from the position of the cursor.
+   * Take `±n` planconfigs from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` PlanConfigs.
+   * Skip the first `n` planconfigs.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of PlanConfigs.
+   * Filter by unique combinations of planconfigs.
    */
-  distinct?: Prisma.PlanConfigScalarFieldEnum | Prisma.PlanConfigScalarFieldEnum[]
+  distinct?: Prisma.PlanconfigScalarFieldEnum | Prisma.PlanconfigScalarFieldEnum[]
 }
 
 /**
- * PlanConfig findFirstOrThrow
+ * planconfig findFirstOrThrow
  */
-export type PlanConfigFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * Filter, which PlanConfig to fetch.
+   * Filter, which planconfig to fetch.
    */
-  where?: Prisma.PlanConfigWhereInput
+  where?: Prisma.planconfigWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of PlanConfigs to fetch.
+   * Determine the order of planconfigs to fetch.
    */
-  orderBy?: Prisma.PlanConfigOrderByWithRelationInput | Prisma.PlanConfigOrderByWithRelationInput[]
+  orderBy?: Prisma.planconfigOrderByWithRelationInput | Prisma.planconfigOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for PlanConfigs.
+   * Sets the position for searching for planconfigs.
    */
-  cursor?: Prisma.PlanConfigWhereUniqueInput
+  cursor?: Prisma.planconfigWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` PlanConfigs from the position of the cursor.
+   * Take `±n` planconfigs from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` PlanConfigs.
+   * Skip the first `n` planconfigs.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of PlanConfigs.
+   * Filter by unique combinations of planconfigs.
    */
-  distinct?: Prisma.PlanConfigScalarFieldEnum | Prisma.PlanConfigScalarFieldEnum[]
+  distinct?: Prisma.PlanconfigScalarFieldEnum | Prisma.PlanconfigScalarFieldEnum[]
 }
 
 /**
- * PlanConfig findMany
+ * planconfig findMany
  */
-export type PlanConfigFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * Filter, which PlanConfigs to fetch.
+   * Filter, which planconfigs to fetch.
    */
-  where?: Prisma.PlanConfigWhereInput
+  where?: Prisma.planconfigWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of PlanConfigs to fetch.
+   * Determine the order of planconfigs to fetch.
    */
-  orderBy?: Prisma.PlanConfigOrderByWithRelationInput | Prisma.PlanConfigOrderByWithRelationInput[]
+  orderBy?: Prisma.planconfigOrderByWithRelationInput | Prisma.planconfigOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing PlanConfigs.
+   * Sets the position for listing planconfigs.
    */
-  cursor?: Prisma.PlanConfigWhereUniqueInput
+  cursor?: Prisma.planconfigWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` PlanConfigs from the position of the cursor.
+   * Take `±n` planconfigs from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` PlanConfigs.
+   * Skip the first `n` planconfigs.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of PlanConfigs.
+   * Filter by unique combinations of planconfigs.
    */
-  distinct?: Prisma.PlanConfigScalarFieldEnum | Prisma.PlanConfigScalarFieldEnum[]
+  distinct?: Prisma.PlanconfigScalarFieldEnum | Prisma.PlanconfigScalarFieldEnum[]
 }
 
 /**
- * PlanConfig create
+ * planconfig create
  */
-export type PlanConfigCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * The data needed to create a PlanConfig.
+   * The data needed to create a planconfig.
    */
-  data: Prisma.XOR<Prisma.PlanConfigCreateInput, Prisma.PlanConfigUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.planconfigCreateInput, Prisma.planconfigUncheckedCreateInput>
 }
 
 /**
- * PlanConfig createMany
+ * planconfig createMany
  */
-export type PlanConfigCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many PlanConfigs.
+   * The data used to create many planconfigs.
    */
-  data: Prisma.PlanConfigCreateManyInput | Prisma.PlanConfigCreateManyInput[]
+  data: Prisma.planconfigCreateManyInput | Prisma.planconfigCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * PlanConfig update
+ * planconfig update
  */
-export type PlanConfigUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * The data needed to update a PlanConfig.
+   * The data needed to update a planconfig.
    */
-  data: Prisma.XOR<Prisma.PlanConfigUpdateInput, Prisma.PlanConfigUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.planconfigUpdateInput, Prisma.planconfigUncheckedUpdateInput>
   /**
-   * Choose, which PlanConfig to update.
+   * Choose, which planconfig to update.
    */
-  where: Prisma.PlanConfigWhereUniqueInput
+  where: Prisma.planconfigWhereUniqueInput
 }
 
 /**
- * PlanConfig updateMany
+ * planconfig updateMany
  */
-export type PlanConfigUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update PlanConfigs.
+   * The data used to update planconfigs.
    */
-  data: Prisma.XOR<Prisma.PlanConfigUpdateManyMutationInput, Prisma.PlanConfigUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.planconfigUpdateManyMutationInput, Prisma.planconfigUncheckedUpdateManyInput>
   /**
-   * Filter which PlanConfigs to update
+   * Filter which planconfigs to update
    */
-  where?: Prisma.PlanConfigWhereInput
+  where?: Prisma.planconfigWhereInput
   /**
-   * Limit how many PlanConfigs to update.
+   * Limit how many planconfigs to update.
    */
   limit?: number
 }
 
 /**
- * PlanConfig upsert
+ * planconfig upsert
  */
-export type PlanConfigUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * The filter to search for the PlanConfig to update in case it exists.
+   * The filter to search for the planconfig to update in case it exists.
    */
-  where: Prisma.PlanConfigWhereUniqueInput
+  where: Prisma.planconfigWhereUniqueInput
   /**
-   * In case the PlanConfig found by the `where` argument doesn't exist, create a new PlanConfig with this data.
+   * In case the planconfig found by the `where` argument doesn't exist, create a new planconfig with this data.
    */
-  create: Prisma.XOR<Prisma.PlanConfigCreateInput, Prisma.PlanConfigUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.planconfigCreateInput, Prisma.planconfigUncheckedCreateInput>
   /**
-   * In case the PlanConfig was found with the provided `where` argument, update it with this data.
+   * In case the planconfig was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.PlanConfigUpdateInput, Prisma.PlanConfigUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.planconfigUpdateInput, Prisma.planconfigUncheckedUpdateInput>
 }
 
 /**
- * PlanConfig delete
+ * planconfig delete
  */
-export type PlanConfigDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
   /**
-   * Filter which PlanConfig to delete.
+   * Filter which planconfig to delete.
    */
-  where: Prisma.PlanConfigWhereUniqueInput
+  where: Prisma.planconfigWhereUniqueInput
 }
 
 /**
- * PlanConfig deleteMany
+ * planconfig deleteMany
  */
-export type PlanConfigDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which PlanConfigs to delete
+   * Filter which planconfigs to delete
    */
-  where?: Prisma.PlanConfigWhereInput
+  where?: Prisma.planconfigWhereInput
   /**
-   * Limit how many PlanConfigs to delete.
+   * Limit how many planconfigs to delete.
    */
   limit?: number
 }
 
 /**
- * PlanConfig without action
+ * planconfig without action
  */
-export type PlanConfigDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type planconfigDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the PlanConfig
+   * Select specific fields to fetch from the planconfig
    */
-  select?: Prisma.PlanConfigSelect<ExtArgs> | null
+  select?: Prisma.planconfigSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the PlanConfig
+   * Omit specific fields from the planconfig
    */
-  omit?: Prisma.PlanConfigOmit<ExtArgs> | null
+  omit?: Prisma.planconfigOmit<ExtArgs> | null
 }

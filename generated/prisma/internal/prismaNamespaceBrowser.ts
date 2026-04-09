@@ -51,25 +51,25 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Account: 'Account',
-  Session: 'Session',
-  VerificationToken: 'VerificationToken',
-  User: 'User',
-  Profile: 'Profile',
-  Photo: 'Photo',
-  Interest: 'Interest',
-  ChatRoom: 'ChatRoom',
-  Message: 'Message',
-  Shortlist: 'Shortlist',
-  ProfileView: 'ProfileView',
-  Notification: 'Notification',
-  ProfileOption: 'ProfileOption',
-  PlanConfig: 'PlanConfig',
-  Subscription: 'Subscription',
-  Document: 'Document',
-  Report: 'Report',
-  Block: 'Block',
-  OTP: 'OTP'
+  account: 'account',
+  session: 'session',
+  verificationtoken: 'verificationtoken',
+  user: 'user',
+  profile: 'profile',
+  photo: 'photo',
+  interest: 'interest',
+  chatroom: 'chatroom',
+  message: 'message',
+  shortlist: 'shortlist',
+  profileview: 'profileview',
+  notification: 'notification',
+  profileoption: 'profileoption',
+  planconfig: 'planconfig',
+  subscription: 'subscription',
+  document: 'document',
+  report: 'report',
+  block: 'block',
+  otp: 'otp'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -116,13 +116,13 @@ export const SessionScalarFieldEnum = {
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
-export const VerificationTokenScalarFieldEnum = {
+export const VerificationtokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
   expires: 'expires'
 } as const
 
-export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+export type VerificationtokenScalarFieldEnum = (typeof VerificationtokenScalarFieldEnum)[keyof typeof VerificationtokenScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -231,14 +231,14 @@ export const InterestScalarFieldEnum = {
 export type InterestScalarFieldEnum = (typeof InterestScalarFieldEnum)[keyof typeof InterestScalarFieldEnum]
 
 
-export const ChatRoomScalarFieldEnum = {
+export const ChatroomScalarFieldEnum = {
   id: 'id',
   userAId: 'userAId',
   userBId: 'userBId',
   createdAt: 'createdAt'
 } as const
 
-export type ChatRoomScalarFieldEnum = (typeof ChatRoomScalarFieldEnum)[keyof typeof ChatRoomScalarFieldEnum]
+export type ChatroomScalarFieldEnum = (typeof ChatroomScalarFieldEnum)[keyof typeof ChatroomScalarFieldEnum]
 
 
 export const MessageScalarFieldEnum = {
@@ -272,14 +272,14 @@ export const ShortlistScalarFieldEnum = {
 export type ShortlistScalarFieldEnum = (typeof ShortlistScalarFieldEnum)[keyof typeof ShortlistScalarFieldEnum]
 
 
-export const ProfileViewScalarFieldEnum = {
+export const ProfileviewScalarFieldEnum = {
   id: 'id',
   viewerId: 'viewerId',
   viewedId: 'viewedId',
   createdAt: 'createdAt'
 } as const
 
-export type ProfileViewScalarFieldEnum = (typeof ProfileViewScalarFieldEnum)[keyof typeof ProfileViewScalarFieldEnum]
+export type ProfileviewScalarFieldEnum = (typeof ProfileviewScalarFieldEnum)[keyof typeof ProfileviewScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -296,7 +296,7 @@ export const NotificationScalarFieldEnum = {
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
-export const ProfileOptionScalarFieldEnum = {
+export const ProfileoptionScalarFieldEnum = {
   id: 'id',
   category: 'category',
   value: 'value',
@@ -307,10 +307,10 @@ export const ProfileOptionScalarFieldEnum = {
   createdAt: 'createdAt'
 } as const
 
-export type ProfileOptionScalarFieldEnum = (typeof ProfileOptionScalarFieldEnum)[keyof typeof ProfileOptionScalarFieldEnum]
+export type ProfileoptionScalarFieldEnum = (typeof ProfileoptionScalarFieldEnum)[keyof typeof ProfileoptionScalarFieldEnum]
 
 
-export const PlanConfigScalarFieldEnum = {
+export const PlanconfigScalarFieldEnum = {
   id: 'id',
   plan: 'plan',
   displayName: 'displayName',
@@ -324,7 +324,7 @@ export const PlanConfigScalarFieldEnum = {
   createdAt: 'createdAt'
 } as const
 
-export type PlanConfigScalarFieldEnum = (typeof PlanConfigScalarFieldEnum)[keyof typeof PlanConfigScalarFieldEnum]
+export type PlanconfigScalarFieldEnum = (typeof PlanconfigScalarFieldEnum)[keyof typeof PlanconfigScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {
@@ -381,7 +381,7 @@ export const BlockScalarFieldEnum = {
 export type BlockScalarFieldEnum = (typeof BlockScalarFieldEnum)[keyof typeof BlockScalarFieldEnum]
 
 
-export const OTPScalarFieldEnum = {
+export const OtpScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   code: 'code',
@@ -391,7 +391,7 @@ export const OTPScalarFieldEnum = {
   createdAt: 'createdAt'
 } as const
 
-export type OTPScalarFieldEnum = (typeof OTPScalarFieldEnum)[keyof typeof OTPScalarFieldEnum]
+export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -410,7 +410,7 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
-export const AccountOrderByRelevanceFieldEnum = {
+export const accountOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   type: 'type',
@@ -424,27 +424,27 @@ export const AccountOrderByRelevanceFieldEnum = {
   session_state: 'session_state'
 } as const
 
-export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
+export type accountOrderByRelevanceFieldEnum = (typeof accountOrderByRelevanceFieldEnum)[keyof typeof accountOrderByRelevanceFieldEnum]
 
 
-export const SessionOrderByRelevanceFieldEnum = {
+export const sessionOrderByRelevanceFieldEnum = {
   id: 'id',
   sessionToken: 'sessionToken',
   userId: 'userId'
 } as const
 
-export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
+export type sessionOrderByRelevanceFieldEnum = (typeof sessionOrderByRelevanceFieldEnum)[keyof typeof sessionOrderByRelevanceFieldEnum]
 
 
-export const VerificationTokenOrderByRelevanceFieldEnum = {
+export const verificationtokenOrderByRelevanceFieldEnum = {
   identifier: 'identifier',
   token: 'token'
 } as const
 
-export type VerificationTokenOrderByRelevanceFieldEnum = (typeof VerificationTokenOrderByRelevanceFieldEnum)[keyof typeof VerificationTokenOrderByRelevanceFieldEnum]
+export type verificationtokenOrderByRelevanceFieldEnum = (typeof verificationtokenOrderByRelevanceFieldEnum)[keyof typeof verificationtokenOrderByRelevanceFieldEnum]
 
 
-export const UserOrderByRelevanceFieldEnum = {
+export const userOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
@@ -454,10 +454,10 @@ export const UserOrderByRelevanceFieldEnum = {
   premiumPlan: 'premiumPlan'
 } as const
 
-export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+export type userOrderByRelevanceFieldEnum = (typeof userOrderByRelevanceFieldEnum)[keyof typeof userOrderByRelevanceFieldEnum]
 
 
-export const ProfileOrderByRelevanceFieldEnum = {
+export const profileOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   religion: 'religion',
@@ -490,39 +490,39 @@ export const ProfileOrderByRelevanceFieldEnum = {
   amritdhari: 'amritdhari'
 } as const
 
-export type ProfileOrderByRelevanceFieldEnum = (typeof ProfileOrderByRelevanceFieldEnum)[keyof typeof ProfileOrderByRelevanceFieldEnum]
+export type profileOrderByRelevanceFieldEnum = (typeof profileOrderByRelevanceFieldEnum)[keyof typeof profileOrderByRelevanceFieldEnum]
 
 
-export const PhotoOrderByRelevanceFieldEnum = {
+export const photoOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   url: 'url',
   publicId: 'publicId'
 } as const
 
-export type PhotoOrderByRelevanceFieldEnum = (typeof PhotoOrderByRelevanceFieldEnum)[keyof typeof PhotoOrderByRelevanceFieldEnum]
+export type photoOrderByRelevanceFieldEnum = (typeof photoOrderByRelevanceFieldEnum)[keyof typeof photoOrderByRelevanceFieldEnum]
 
 
-export const InterestOrderByRelevanceFieldEnum = {
+export const interestOrderByRelevanceFieldEnum = {
   id: 'id',
   senderId: 'senderId',
   receiverId: 'receiverId',
   message: 'message'
 } as const
 
-export type InterestOrderByRelevanceFieldEnum = (typeof InterestOrderByRelevanceFieldEnum)[keyof typeof InterestOrderByRelevanceFieldEnum]
+export type interestOrderByRelevanceFieldEnum = (typeof interestOrderByRelevanceFieldEnum)[keyof typeof interestOrderByRelevanceFieldEnum]
 
 
-export const ChatRoomOrderByRelevanceFieldEnum = {
+export const chatroomOrderByRelevanceFieldEnum = {
   id: 'id',
   userAId: 'userAId',
   userBId: 'userBId'
 } as const
 
-export type ChatRoomOrderByRelevanceFieldEnum = (typeof ChatRoomOrderByRelevanceFieldEnum)[keyof typeof ChatRoomOrderByRelevanceFieldEnum]
+export type chatroomOrderByRelevanceFieldEnum = (typeof chatroomOrderByRelevanceFieldEnum)[keyof typeof chatroomOrderByRelevanceFieldEnum]
 
 
-export const MessageOrderByRelevanceFieldEnum = {
+export const messageOrderByRelevanceFieldEnum = {
   id: 'id',
   chatRoomId: 'chatRoomId',
   senderId: 'senderId',
@@ -533,28 +533,28 @@ export const MessageOrderByRelevanceFieldEnum = {
   locationType: 'locationType'
 } as const
 
-export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
+export type messageOrderByRelevanceFieldEnum = (typeof messageOrderByRelevanceFieldEnum)[keyof typeof messageOrderByRelevanceFieldEnum]
 
 
-export const ShortlistOrderByRelevanceFieldEnum = {
+export const shortlistOrderByRelevanceFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
   targetId: 'targetId'
 } as const
 
-export type ShortlistOrderByRelevanceFieldEnum = (typeof ShortlistOrderByRelevanceFieldEnum)[keyof typeof ShortlistOrderByRelevanceFieldEnum]
+export type shortlistOrderByRelevanceFieldEnum = (typeof shortlistOrderByRelevanceFieldEnum)[keyof typeof shortlistOrderByRelevanceFieldEnum]
 
 
-export const ProfileViewOrderByRelevanceFieldEnum = {
+export const profileviewOrderByRelevanceFieldEnum = {
   id: 'id',
   viewerId: 'viewerId',
   viewedId: 'viewedId'
 } as const
 
-export type ProfileViewOrderByRelevanceFieldEnum = (typeof ProfileViewOrderByRelevanceFieldEnum)[keyof typeof ProfileViewOrderByRelevanceFieldEnum]
+export type profileviewOrderByRelevanceFieldEnum = (typeof profileviewOrderByRelevanceFieldEnum)[keyof typeof profileviewOrderByRelevanceFieldEnum]
 
 
-export const NotificationOrderByRelevanceFieldEnum = {
+export const notificationOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   title: 'title',
@@ -562,10 +562,10 @@ export const NotificationOrderByRelevanceFieldEnum = {
   link: 'link'
 } as const
 
-export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
+export type notificationOrderByRelevanceFieldEnum = (typeof notificationOrderByRelevanceFieldEnum)[keyof typeof notificationOrderByRelevanceFieldEnum]
 
 
-export const ProfileOptionOrderByRelevanceFieldEnum = {
+export const profileoptionOrderByRelevanceFieldEnum = {
   id: 'id',
   category: 'category',
   value: 'value',
@@ -573,10 +573,10 @@ export const ProfileOptionOrderByRelevanceFieldEnum = {
   group: 'group'
 } as const
 
-export type ProfileOptionOrderByRelevanceFieldEnum = (typeof ProfileOptionOrderByRelevanceFieldEnum)[keyof typeof ProfileOptionOrderByRelevanceFieldEnum]
+export type profileoptionOrderByRelevanceFieldEnum = (typeof profileoptionOrderByRelevanceFieldEnum)[keyof typeof profileoptionOrderByRelevanceFieldEnum]
 
 
-export const PlanConfigOrderByRelevanceFieldEnum = {
+export const planconfigOrderByRelevanceFieldEnum = {
   id: 'id',
   plan: 'plan',
   displayName: 'displayName',
@@ -585,20 +585,20 @@ export const PlanConfigOrderByRelevanceFieldEnum = {
   description: 'description'
 } as const
 
-export type PlanConfigOrderByRelevanceFieldEnum = (typeof PlanConfigOrderByRelevanceFieldEnum)[keyof typeof PlanConfigOrderByRelevanceFieldEnum]
+export type planconfigOrderByRelevanceFieldEnum = (typeof planconfigOrderByRelevanceFieldEnum)[keyof typeof planconfigOrderByRelevanceFieldEnum]
 
 
-export const SubscriptionOrderByRelevanceFieldEnum = {
+export const subscriptionOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   currency: 'currency',
   paymentId: 'paymentId'
 } as const
 
-export type SubscriptionOrderByRelevanceFieldEnum = (typeof SubscriptionOrderByRelevanceFieldEnum)[keyof typeof SubscriptionOrderByRelevanceFieldEnum]
+export type subscriptionOrderByRelevanceFieldEnum = (typeof subscriptionOrderByRelevanceFieldEnum)[keyof typeof subscriptionOrderByRelevanceFieldEnum]
 
 
-export const DocumentOrderByRelevanceFieldEnum = {
+export const documentOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   type: 'type',
@@ -607,10 +607,10 @@ export const DocumentOrderByRelevanceFieldEnum = {
   adminNote: 'adminNote'
 } as const
 
-export type DocumentOrderByRelevanceFieldEnum = (typeof DocumentOrderByRelevanceFieldEnum)[keyof typeof DocumentOrderByRelevanceFieldEnum]
+export type documentOrderByRelevanceFieldEnum = (typeof documentOrderByRelevanceFieldEnum)[keyof typeof documentOrderByRelevanceFieldEnum]
 
 
-export const ReportOrderByRelevanceFieldEnum = {
+export const reportOrderByRelevanceFieldEnum = {
   id: 'id',
   reporterId: 'reporterId',
   targetId: 'targetId',
@@ -618,23 +618,23 @@ export const ReportOrderByRelevanceFieldEnum = {
   details: 'details'
 } as const
 
-export type ReportOrderByRelevanceFieldEnum = (typeof ReportOrderByRelevanceFieldEnum)[keyof typeof ReportOrderByRelevanceFieldEnum]
+export type reportOrderByRelevanceFieldEnum = (typeof reportOrderByRelevanceFieldEnum)[keyof typeof reportOrderByRelevanceFieldEnum]
 
 
-export const BlockOrderByRelevanceFieldEnum = {
+export const blockOrderByRelevanceFieldEnum = {
   id: 'id',
   blockerId: 'blockerId',
   blockedId: 'blockedId'
 } as const
 
-export type BlockOrderByRelevanceFieldEnum = (typeof BlockOrderByRelevanceFieldEnum)[keyof typeof BlockOrderByRelevanceFieldEnum]
+export type blockOrderByRelevanceFieldEnum = (typeof blockOrderByRelevanceFieldEnum)[keyof typeof blockOrderByRelevanceFieldEnum]
 
 
-export const OTPOrderByRelevanceFieldEnum = {
+export const otpOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   code: 'code'
 } as const
 
-export type OTPOrderByRelevanceFieldEnum = (typeof OTPOrderByRelevanceFieldEnum)[keyof typeof OTPOrderByRelevanceFieldEnum]
+export type otpOrderByRelevanceFieldEnum = (typeof otpOrderByRelevanceFieldEnum)[keyof typeof otpOrderByRelevanceFieldEnum]
 

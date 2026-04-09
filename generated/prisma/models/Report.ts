@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `Report` model and its related types.
+ * This file exports the `report` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model Report
+ * Model report
  * 
  */
-export type ReportModel = runtime.Types.Result.DefaultSelection<Prisma.$ReportPayload>
+export type reportModel = runtime.Types.Result.DefaultSelection<Prisma.$reportPayload>
 
 export type AggregateReport = {
   _count: ReportCountAggregateOutputType | null
@@ -89,37 +89,37 @@ export type ReportCountAggregateInputType = {
 
 export type ReportAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Report to aggregate.
+   * Filter which report to aggregate.
    */
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Reports to fetch.
+   * Determine the order of reports to fetch.
    */
-  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  orderBy?: Prisma.reportOrderByWithRelationInput | Prisma.reportOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.ReportWhereUniqueInput
+  cursor?: Prisma.reportWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Reports from the position of the cursor.
+   * Take `±n` reports from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Reports.
+   * Skip the first `n` reports.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Reports
+   * Count returned reports
   **/
   _count?: true | ReportCountAggregateInputType
   /**
@@ -147,11 +147,11 @@ export type GetReportAggregateType<T extends ReportAggregateArgs> = {
 
 
 
-export type ReportGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReportWhereInput
-  orderBy?: Prisma.ReportOrderByWithAggregationInput | Prisma.ReportOrderByWithAggregationInput[]
+export type reportGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.reportWhereInput
+  orderBy?: Prisma.reportOrderByWithAggregationInput | Prisma.reportOrderByWithAggregationInput[]
   by: Prisma.ReportScalarFieldEnum[] | Prisma.ReportScalarFieldEnum
-  having?: Prisma.ReportScalarWhereWithAggregatesInput
+  having?: Prisma.reportScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: ReportCountAggregateInputType | true
@@ -172,7 +172,7 @@ export type ReportGroupByOutputType = {
   _max: ReportMaxAggregateOutputType | null
 }
 
-export type GetReportGroupByPayload<T extends ReportGroupByArgs> = Prisma.PrismaPromise<
+export type GetReportGroupByPayload<T extends reportGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ReportGroupByOutputType, T['by']> &
       {
@@ -187,22 +187,22 @@ export type GetReportGroupByPayload<T extends ReportGroupByArgs> = Prisma.Prisma
 
 
 
-export type ReportWhereInput = {
-  AND?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
-  OR?: Prisma.ReportWhereInput[]
-  NOT?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
-  id?: Prisma.StringFilter<"Report"> | string
-  reporterId?: Prisma.StringFilter<"Report"> | string
-  targetId?: Prisma.StringFilter<"Report"> | string
-  reason?: Prisma.StringFilter<"Report"> | string
-  details?: Prisma.StringNullableFilter<"Report"> | string | null
-  status?: Prisma.EnumReportStatusFilter<"Report"> | $Enums.ReportStatus
-  createdAt?: Prisma.DateTimeFilter<"Report"> | Date | string
-  reporter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  target?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+export type reportWhereInput = {
+  AND?: Prisma.reportWhereInput | Prisma.reportWhereInput[]
+  OR?: Prisma.reportWhereInput[]
+  NOT?: Prisma.reportWhereInput | Prisma.reportWhereInput[]
+  id?: Prisma.StringFilter<"report"> | string
+  reporterId?: Prisma.StringFilter<"report"> | string
+  targetId?: Prisma.StringFilter<"report"> | string
+  reason?: Prisma.StringFilter<"report"> | string
+  details?: Prisma.StringNullableFilter<"report"> | string | null
+  status?: Prisma.EnumReportStatusFilter<"report"> | $Enums.ReportStatus
+  createdAt?: Prisma.DateTimeFilter<"report"> | Date | string
+  reporter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  target?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }
 
-export type ReportOrderByWithRelationInput = {
+export type reportOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   reporterId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -210,27 +210,27 @@ export type ReportOrderByWithRelationInput = {
   details?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  reporter?: Prisma.UserOrderByWithRelationInput
-  target?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.ReportOrderByRelevanceInput
+  reporter?: Prisma.userOrderByWithRelationInput
+  target?: Prisma.userOrderByWithRelationInput
+  _relevance?: Prisma.reportOrderByRelevanceInput
 }
 
-export type ReportWhereUniqueInput = Prisma.AtLeast<{
+export type reportWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  AND?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
-  OR?: Prisma.ReportWhereInput[]
-  NOT?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
-  reporterId?: Prisma.StringFilter<"Report"> | string
-  targetId?: Prisma.StringFilter<"Report"> | string
-  reason?: Prisma.StringFilter<"Report"> | string
-  details?: Prisma.StringNullableFilter<"Report"> | string | null
-  status?: Prisma.EnumReportStatusFilter<"Report"> | $Enums.ReportStatus
-  createdAt?: Prisma.DateTimeFilter<"Report"> | Date | string
-  reporter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  target?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  AND?: Prisma.reportWhereInput | Prisma.reportWhereInput[]
+  OR?: Prisma.reportWhereInput[]
+  NOT?: Prisma.reportWhereInput | Prisma.reportWhereInput[]
+  reporterId?: Prisma.StringFilter<"report"> | string
+  targetId?: Prisma.StringFilter<"report"> | string
+  reason?: Prisma.StringFilter<"report"> | string
+  details?: Prisma.StringNullableFilter<"report"> | string | null
+  status?: Prisma.EnumReportStatusFilter<"report"> | $Enums.ReportStatus
+  createdAt?: Prisma.DateTimeFilter<"report"> | Date | string
+  reporter?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  target?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }, "id">
 
-export type ReportOrderByWithAggregationInput = {
+export type reportOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   reporterId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -238,35 +238,35 @@ export type ReportOrderByWithAggregationInput = {
   details?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _count?: Prisma.ReportCountOrderByAggregateInput
-  _max?: Prisma.ReportMaxOrderByAggregateInput
-  _min?: Prisma.ReportMinOrderByAggregateInput
+  _count?: Prisma.reportCountOrderByAggregateInput
+  _max?: Prisma.reportMaxOrderByAggregateInput
+  _min?: Prisma.reportMinOrderByAggregateInput
 }
 
-export type ReportScalarWhereWithAggregatesInput = {
-  AND?: Prisma.ReportScalarWhereWithAggregatesInput | Prisma.ReportScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ReportScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.ReportScalarWhereWithAggregatesInput | Prisma.ReportScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Report"> | string
-  reporterId?: Prisma.StringWithAggregatesFilter<"Report"> | string
-  targetId?: Prisma.StringWithAggregatesFilter<"Report"> | string
-  reason?: Prisma.StringWithAggregatesFilter<"Report"> | string
-  details?: Prisma.StringNullableWithAggregatesFilter<"Report"> | string | null
-  status?: Prisma.EnumReportStatusWithAggregatesFilter<"Report"> | $Enums.ReportStatus
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Report"> | Date | string
+export type reportScalarWhereWithAggregatesInput = {
+  AND?: Prisma.reportScalarWhereWithAggregatesInput | Prisma.reportScalarWhereWithAggregatesInput[]
+  OR?: Prisma.reportScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.reportScalarWhereWithAggregatesInput | Prisma.reportScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"report"> | string
+  reporterId?: Prisma.StringWithAggregatesFilter<"report"> | string
+  targetId?: Prisma.StringWithAggregatesFilter<"report"> | string
+  reason?: Prisma.StringWithAggregatesFilter<"report"> | string
+  details?: Prisma.StringNullableWithAggregatesFilter<"report"> | string | null
+  status?: Prisma.EnumReportStatusWithAggregatesFilter<"report"> | $Enums.ReportStatus
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"report"> | Date | string
 }
 
-export type ReportCreateInput = {
+export type reportCreateInput = {
   id?: string
   reason: string
   details?: string | null
   status?: $Enums.ReportStatus
   createdAt?: Date | string
-  reporter: Prisma.UserCreateNestedOneWithoutReportsMadeInput
-  target: Prisma.UserCreateNestedOneWithoutReportsReceivedInput
+  reporter: Prisma.userCreateNestedOneWithoutReportsMadeInput
+  target: Prisma.userCreateNestedOneWithoutReportsReceivedInput
 }
 
-export type ReportUncheckedCreateInput = {
+export type reportUncheckedCreateInput = {
   id?: string
   reporterId: string
   targetId: string
@@ -276,17 +276,17 @@ export type ReportUncheckedCreateInput = {
   createdAt?: Date | string
 }
 
-export type ReportUpdateInput = {
+export type reportUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  reporter?: Prisma.UserUpdateOneRequiredWithoutReportsMadeNestedInput
-  target?: Prisma.UserUpdateOneRequiredWithoutReportsReceivedNestedInput
+  reporter?: Prisma.userUpdateOneRequiredWithoutReportsMadeNestedInput
+  target?: Prisma.userUpdateOneRequiredWithoutReportsReceivedNestedInput
 }
 
-export type ReportUncheckedUpdateInput = {
+export type reportUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reporterId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -296,7 +296,7 @@ export type ReportUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ReportCreateManyInput = {
+export type reportCreateManyInput = {
   id?: string
   reporterId: string
   targetId: string
@@ -306,7 +306,7 @@ export type ReportCreateManyInput = {
   createdAt?: Date | string
 }
 
-export type ReportUpdateManyMutationInput = {
+export type reportUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -314,7 +314,7 @@ export type ReportUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ReportUncheckedUpdateManyInput = {
+export type reportUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reporterId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -325,22 +325,22 @@ export type ReportUncheckedUpdateManyInput = {
 }
 
 export type ReportListRelationFilter = {
-  every?: Prisma.ReportWhereInput
-  some?: Prisma.ReportWhereInput
-  none?: Prisma.ReportWhereInput
+  every?: Prisma.reportWhereInput
+  some?: Prisma.reportWhereInput
+  none?: Prisma.reportWhereInput
 }
 
-export type ReportOrderByRelationAggregateInput = {
+export type reportOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ReportOrderByRelevanceInput = {
-  fields: Prisma.ReportOrderByRelevanceFieldEnum | Prisma.ReportOrderByRelevanceFieldEnum[]
+export type reportOrderByRelevanceInput = {
+  fields: Prisma.reportOrderByRelevanceFieldEnum | Prisma.reportOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type ReportCountOrderByAggregateInput = {
+export type reportCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reporterId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -350,7 +350,7 @@ export type ReportCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ReportMaxOrderByAggregateInput = {
+export type reportMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reporterId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -360,7 +360,7 @@ export type ReportMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ReportMinOrderByAggregateInput = {
+export type reportMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reporterId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
@@ -370,196 +370,104 @@ export type ReportMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ReportCreateNestedManyWithoutReporterInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutReporterInput, Prisma.ReportUncheckedCreateWithoutReporterInput> | Prisma.ReportCreateWithoutReporterInput[] | Prisma.ReportUncheckedCreateWithoutReporterInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReporterInput | Prisma.ReportCreateOrConnectWithoutReporterInput[]
-  createMany?: Prisma.ReportCreateManyReporterInputEnvelope
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+export type reportCreateNestedManyWithoutReporterInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutReporterInput, Prisma.reportUncheckedCreateWithoutReporterInput> | Prisma.reportCreateWithoutReporterInput[] | Prisma.reportUncheckedCreateWithoutReporterInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutReporterInput | Prisma.reportCreateOrConnectWithoutReporterInput[]
+  createMany?: Prisma.reportCreateManyReporterInputEnvelope
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
 }
 
-export type ReportCreateNestedManyWithoutTargetInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutTargetInput, Prisma.ReportUncheckedCreateWithoutTargetInput> | Prisma.ReportCreateWithoutTargetInput[] | Prisma.ReportUncheckedCreateWithoutTargetInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTargetInput | Prisma.ReportCreateOrConnectWithoutTargetInput[]
-  createMany?: Prisma.ReportCreateManyTargetInputEnvelope
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+export type reportCreateNestedManyWithoutTargetInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutTargetInput, Prisma.reportUncheckedCreateWithoutTargetInput> | Prisma.reportCreateWithoutTargetInput[] | Prisma.reportUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutTargetInput | Prisma.reportCreateOrConnectWithoutTargetInput[]
+  createMany?: Prisma.reportCreateManyTargetInputEnvelope
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
 }
 
-export type ReportUncheckedCreateNestedManyWithoutReporterInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutReporterInput, Prisma.ReportUncheckedCreateWithoutReporterInput> | Prisma.ReportCreateWithoutReporterInput[] | Prisma.ReportUncheckedCreateWithoutReporterInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReporterInput | Prisma.ReportCreateOrConnectWithoutReporterInput[]
-  createMany?: Prisma.ReportCreateManyReporterInputEnvelope
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+export type reportUncheckedCreateNestedManyWithoutReporterInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutReporterInput, Prisma.reportUncheckedCreateWithoutReporterInput> | Prisma.reportCreateWithoutReporterInput[] | Prisma.reportUncheckedCreateWithoutReporterInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutReporterInput | Prisma.reportCreateOrConnectWithoutReporterInput[]
+  createMany?: Prisma.reportCreateManyReporterInputEnvelope
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
 }
 
-export type ReportUncheckedCreateNestedManyWithoutTargetInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutTargetInput, Prisma.ReportUncheckedCreateWithoutTargetInput> | Prisma.ReportCreateWithoutTargetInput[] | Prisma.ReportUncheckedCreateWithoutTargetInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTargetInput | Prisma.ReportCreateOrConnectWithoutTargetInput[]
-  createMany?: Prisma.ReportCreateManyTargetInputEnvelope
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+export type reportUncheckedCreateNestedManyWithoutTargetInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutTargetInput, Prisma.reportUncheckedCreateWithoutTargetInput> | Prisma.reportCreateWithoutTargetInput[] | Prisma.reportUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutTargetInput | Prisma.reportCreateOrConnectWithoutTargetInput[]
+  createMany?: Prisma.reportCreateManyTargetInputEnvelope
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
 }
 
-export type ReportUpdateManyWithoutReporterNestedInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutReporterInput, Prisma.ReportUncheckedCreateWithoutReporterInput> | Prisma.ReportCreateWithoutReporterInput[] | Prisma.ReportUncheckedCreateWithoutReporterInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReporterInput | Prisma.ReportCreateOrConnectWithoutReporterInput[]
-  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutReporterInput | Prisma.ReportUpsertWithWhereUniqueWithoutReporterInput[]
-  createMany?: Prisma.ReportCreateManyReporterInputEnvelope
-  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  update?: Prisma.ReportUpdateWithWhereUniqueWithoutReporterInput | Prisma.ReportUpdateWithWhereUniqueWithoutReporterInput[]
-  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutReporterInput | Prisma.ReportUpdateManyWithWhereWithoutReporterInput[]
-  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+export type reportUpdateManyWithoutReporterNestedInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutReporterInput, Prisma.reportUncheckedCreateWithoutReporterInput> | Prisma.reportCreateWithoutReporterInput[] | Prisma.reportUncheckedCreateWithoutReporterInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutReporterInput | Prisma.reportCreateOrConnectWithoutReporterInput[]
+  upsert?: Prisma.reportUpsertWithWhereUniqueWithoutReporterInput | Prisma.reportUpsertWithWhereUniqueWithoutReporterInput[]
+  createMany?: Prisma.reportCreateManyReporterInputEnvelope
+  set?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  disconnect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  delete?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  update?: Prisma.reportUpdateWithWhereUniqueWithoutReporterInput | Prisma.reportUpdateWithWhereUniqueWithoutReporterInput[]
+  updateMany?: Prisma.reportUpdateManyWithWhereWithoutReporterInput | Prisma.reportUpdateManyWithWhereWithoutReporterInput[]
+  deleteMany?: Prisma.reportScalarWhereInput | Prisma.reportScalarWhereInput[]
 }
 
-export type ReportUpdateManyWithoutTargetNestedInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutTargetInput, Prisma.ReportUncheckedCreateWithoutTargetInput> | Prisma.ReportCreateWithoutTargetInput[] | Prisma.ReportUncheckedCreateWithoutTargetInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTargetInput | Prisma.ReportCreateOrConnectWithoutTargetInput[]
-  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutTargetInput | Prisma.ReportUpsertWithWhereUniqueWithoutTargetInput[]
-  createMany?: Prisma.ReportCreateManyTargetInputEnvelope
-  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  update?: Prisma.ReportUpdateWithWhereUniqueWithoutTargetInput | Prisma.ReportUpdateWithWhereUniqueWithoutTargetInput[]
-  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutTargetInput | Prisma.ReportUpdateManyWithWhereWithoutTargetInput[]
-  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+export type reportUpdateManyWithoutTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutTargetInput, Prisma.reportUncheckedCreateWithoutTargetInput> | Prisma.reportCreateWithoutTargetInput[] | Prisma.reportUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutTargetInput | Prisma.reportCreateOrConnectWithoutTargetInput[]
+  upsert?: Prisma.reportUpsertWithWhereUniqueWithoutTargetInput | Prisma.reportUpsertWithWhereUniqueWithoutTargetInput[]
+  createMany?: Prisma.reportCreateManyTargetInputEnvelope
+  set?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  disconnect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  delete?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  update?: Prisma.reportUpdateWithWhereUniqueWithoutTargetInput | Prisma.reportUpdateWithWhereUniqueWithoutTargetInput[]
+  updateMany?: Prisma.reportUpdateManyWithWhereWithoutTargetInput | Prisma.reportUpdateManyWithWhereWithoutTargetInput[]
+  deleteMany?: Prisma.reportScalarWhereInput | Prisma.reportScalarWhereInput[]
 }
 
-export type ReportUncheckedUpdateManyWithoutReporterNestedInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutReporterInput, Prisma.ReportUncheckedCreateWithoutReporterInput> | Prisma.ReportCreateWithoutReporterInput[] | Prisma.ReportUncheckedCreateWithoutReporterInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReporterInput | Prisma.ReportCreateOrConnectWithoutReporterInput[]
-  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutReporterInput | Prisma.ReportUpsertWithWhereUniqueWithoutReporterInput[]
-  createMany?: Prisma.ReportCreateManyReporterInputEnvelope
-  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  update?: Prisma.ReportUpdateWithWhereUniqueWithoutReporterInput | Prisma.ReportUpdateWithWhereUniqueWithoutReporterInput[]
-  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutReporterInput | Prisma.ReportUpdateManyWithWhereWithoutReporterInput[]
-  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+export type reportUncheckedUpdateManyWithoutReporterNestedInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutReporterInput, Prisma.reportUncheckedCreateWithoutReporterInput> | Prisma.reportCreateWithoutReporterInput[] | Prisma.reportUncheckedCreateWithoutReporterInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutReporterInput | Prisma.reportCreateOrConnectWithoutReporterInput[]
+  upsert?: Prisma.reportUpsertWithWhereUniqueWithoutReporterInput | Prisma.reportUpsertWithWhereUniqueWithoutReporterInput[]
+  createMany?: Prisma.reportCreateManyReporterInputEnvelope
+  set?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  disconnect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  delete?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  update?: Prisma.reportUpdateWithWhereUniqueWithoutReporterInput | Prisma.reportUpdateWithWhereUniqueWithoutReporterInput[]
+  updateMany?: Prisma.reportUpdateManyWithWhereWithoutReporterInput | Prisma.reportUpdateManyWithWhereWithoutReporterInput[]
+  deleteMany?: Prisma.reportScalarWhereInput | Prisma.reportScalarWhereInput[]
 }
 
-export type ReportUncheckedUpdateManyWithoutTargetNestedInput = {
-  create?: Prisma.XOR<Prisma.ReportCreateWithoutTargetInput, Prisma.ReportUncheckedCreateWithoutTargetInput> | Prisma.ReportCreateWithoutTargetInput[] | Prisma.ReportUncheckedCreateWithoutTargetInput[]
-  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTargetInput | Prisma.ReportCreateOrConnectWithoutTargetInput[]
-  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutTargetInput | Prisma.ReportUpsertWithWhereUniqueWithoutTargetInput[]
-  createMany?: Prisma.ReportCreateManyTargetInputEnvelope
-  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
-  update?: Prisma.ReportUpdateWithWhereUniqueWithoutTargetInput | Prisma.ReportUpdateWithWhereUniqueWithoutTargetInput[]
-  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutTargetInput | Prisma.ReportUpdateManyWithWhereWithoutTargetInput[]
-  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+export type reportUncheckedUpdateManyWithoutTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.reportCreateWithoutTargetInput, Prisma.reportUncheckedCreateWithoutTargetInput> | Prisma.reportCreateWithoutTargetInput[] | Prisma.reportUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.reportCreateOrConnectWithoutTargetInput | Prisma.reportCreateOrConnectWithoutTargetInput[]
+  upsert?: Prisma.reportUpsertWithWhereUniqueWithoutTargetInput | Prisma.reportUpsertWithWhereUniqueWithoutTargetInput[]
+  createMany?: Prisma.reportCreateManyTargetInputEnvelope
+  set?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  disconnect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  delete?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  connect?: Prisma.reportWhereUniqueInput | Prisma.reportWhereUniqueInput[]
+  update?: Prisma.reportUpdateWithWhereUniqueWithoutTargetInput | Prisma.reportUpdateWithWhereUniqueWithoutTargetInput[]
+  updateMany?: Prisma.reportUpdateManyWithWhereWithoutTargetInput | Prisma.reportUpdateManyWithWhereWithoutTargetInput[]
+  deleteMany?: Prisma.reportScalarWhereInput | Prisma.reportScalarWhereInput[]
 }
 
 export type EnumReportStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReportStatus
 }
 
-export type ReportCreateWithoutReporterInput = {
+export type reportCreateWithoutReporterInput = {
   id?: string
   reason: string
   details?: string | null
   status?: $Enums.ReportStatus
   createdAt?: Date | string
-  target: Prisma.UserCreateNestedOneWithoutReportsReceivedInput
+  target: Prisma.userCreateNestedOneWithoutReportsReceivedInput
 }
 
-export type ReportUncheckedCreateWithoutReporterInput = {
-  id?: string
-  targetId: string
-  reason: string
-  details?: string | null
-  status?: $Enums.ReportStatus
-  createdAt?: Date | string
-}
-
-export type ReportCreateOrConnectWithoutReporterInput = {
-  where: Prisma.ReportWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReportCreateWithoutReporterInput, Prisma.ReportUncheckedCreateWithoutReporterInput>
-}
-
-export type ReportCreateManyReporterInputEnvelope = {
-  data: Prisma.ReportCreateManyReporterInput | Prisma.ReportCreateManyReporterInput[]
-  skipDuplicates?: boolean
-}
-
-export type ReportCreateWithoutTargetInput = {
-  id?: string
-  reason: string
-  details?: string | null
-  status?: $Enums.ReportStatus
-  createdAt?: Date | string
-  reporter: Prisma.UserCreateNestedOneWithoutReportsMadeInput
-}
-
-export type ReportUncheckedCreateWithoutTargetInput = {
-  id?: string
-  reporterId: string
-  reason: string
-  details?: string | null
-  status?: $Enums.ReportStatus
-  createdAt?: Date | string
-}
-
-export type ReportCreateOrConnectWithoutTargetInput = {
-  where: Prisma.ReportWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReportCreateWithoutTargetInput, Prisma.ReportUncheckedCreateWithoutTargetInput>
-}
-
-export type ReportCreateManyTargetInputEnvelope = {
-  data: Prisma.ReportCreateManyTargetInput | Prisma.ReportCreateManyTargetInput[]
-  skipDuplicates?: boolean
-}
-
-export type ReportUpsertWithWhereUniqueWithoutReporterInput = {
-  where: Prisma.ReportWhereUniqueInput
-  update: Prisma.XOR<Prisma.ReportUpdateWithoutReporterInput, Prisma.ReportUncheckedUpdateWithoutReporterInput>
-  create: Prisma.XOR<Prisma.ReportCreateWithoutReporterInput, Prisma.ReportUncheckedCreateWithoutReporterInput>
-}
-
-export type ReportUpdateWithWhereUniqueWithoutReporterInput = {
-  where: Prisma.ReportWhereUniqueInput
-  data: Prisma.XOR<Prisma.ReportUpdateWithoutReporterInput, Prisma.ReportUncheckedUpdateWithoutReporterInput>
-}
-
-export type ReportUpdateManyWithWhereWithoutReporterInput = {
-  where: Prisma.ReportScalarWhereInput
-  data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutReporterInput>
-}
-
-export type ReportScalarWhereInput = {
-  AND?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
-  OR?: Prisma.ReportScalarWhereInput[]
-  NOT?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
-  id?: Prisma.StringFilter<"Report"> | string
-  reporterId?: Prisma.StringFilter<"Report"> | string
-  targetId?: Prisma.StringFilter<"Report"> | string
-  reason?: Prisma.StringFilter<"Report"> | string
-  details?: Prisma.StringNullableFilter<"Report"> | string | null
-  status?: Prisma.EnumReportStatusFilter<"Report"> | $Enums.ReportStatus
-  createdAt?: Prisma.DateTimeFilter<"Report"> | Date | string
-}
-
-export type ReportUpsertWithWhereUniqueWithoutTargetInput = {
-  where: Prisma.ReportWhereUniqueInput
-  update: Prisma.XOR<Prisma.ReportUpdateWithoutTargetInput, Prisma.ReportUncheckedUpdateWithoutTargetInput>
-  create: Prisma.XOR<Prisma.ReportCreateWithoutTargetInput, Prisma.ReportUncheckedCreateWithoutTargetInput>
-}
-
-export type ReportUpdateWithWhereUniqueWithoutTargetInput = {
-  where: Prisma.ReportWhereUniqueInput
-  data: Prisma.XOR<Prisma.ReportUpdateWithoutTargetInput, Prisma.ReportUncheckedUpdateWithoutTargetInput>
-}
-
-export type ReportUpdateManyWithWhereWithoutTargetInput = {
-  where: Prisma.ReportScalarWhereInput
-  data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutTargetInput>
-}
-
-export type ReportCreateManyReporterInput = {
+export type reportUncheckedCreateWithoutReporterInput = {
   id?: string
   targetId: string
   reason: string
@@ -568,7 +476,26 @@ export type ReportCreateManyReporterInput = {
   createdAt?: Date | string
 }
 
-export type ReportCreateManyTargetInput = {
+export type reportCreateOrConnectWithoutReporterInput = {
+  where: Prisma.reportWhereUniqueInput
+  create: Prisma.XOR<Prisma.reportCreateWithoutReporterInput, Prisma.reportUncheckedCreateWithoutReporterInput>
+}
+
+export type reportCreateManyReporterInputEnvelope = {
+  data: Prisma.reportCreateManyReporterInput | Prisma.reportCreateManyReporterInput[]
+  skipDuplicates?: boolean
+}
+
+export type reportCreateWithoutTargetInput = {
+  id?: string
+  reason: string
+  details?: string | null
+  status?: $Enums.ReportStatus
+  createdAt?: Date | string
+  reporter: Prisma.userCreateNestedOneWithoutReportsMadeInput
+}
+
+export type reportUncheckedCreateWithoutTargetInput = {
   id?: string
   reporterId: string
   reason: string
@@ -577,16 +504,89 @@ export type ReportCreateManyTargetInput = {
   createdAt?: Date | string
 }
 
-export type ReportUpdateWithoutReporterInput = {
+export type reportCreateOrConnectWithoutTargetInput = {
+  where: Prisma.reportWhereUniqueInput
+  create: Prisma.XOR<Prisma.reportCreateWithoutTargetInput, Prisma.reportUncheckedCreateWithoutTargetInput>
+}
+
+export type reportCreateManyTargetInputEnvelope = {
+  data: Prisma.reportCreateManyTargetInput | Prisma.reportCreateManyTargetInput[]
+  skipDuplicates?: boolean
+}
+
+export type reportUpsertWithWhereUniqueWithoutReporterInput = {
+  where: Prisma.reportWhereUniqueInput
+  update: Prisma.XOR<Prisma.reportUpdateWithoutReporterInput, Prisma.reportUncheckedUpdateWithoutReporterInput>
+  create: Prisma.XOR<Prisma.reportCreateWithoutReporterInput, Prisma.reportUncheckedCreateWithoutReporterInput>
+}
+
+export type reportUpdateWithWhereUniqueWithoutReporterInput = {
+  where: Prisma.reportWhereUniqueInput
+  data: Prisma.XOR<Prisma.reportUpdateWithoutReporterInput, Prisma.reportUncheckedUpdateWithoutReporterInput>
+}
+
+export type reportUpdateManyWithWhereWithoutReporterInput = {
+  where: Prisma.reportScalarWhereInput
+  data: Prisma.XOR<Prisma.reportUpdateManyMutationInput, Prisma.reportUncheckedUpdateManyWithoutReporterInput>
+}
+
+export type reportScalarWhereInput = {
+  AND?: Prisma.reportScalarWhereInput | Prisma.reportScalarWhereInput[]
+  OR?: Prisma.reportScalarWhereInput[]
+  NOT?: Prisma.reportScalarWhereInput | Prisma.reportScalarWhereInput[]
+  id?: Prisma.StringFilter<"report"> | string
+  reporterId?: Prisma.StringFilter<"report"> | string
+  targetId?: Prisma.StringFilter<"report"> | string
+  reason?: Prisma.StringFilter<"report"> | string
+  details?: Prisma.StringNullableFilter<"report"> | string | null
+  status?: Prisma.EnumReportStatusFilter<"report"> | $Enums.ReportStatus
+  createdAt?: Prisma.DateTimeFilter<"report"> | Date | string
+}
+
+export type reportUpsertWithWhereUniqueWithoutTargetInput = {
+  where: Prisma.reportWhereUniqueInput
+  update: Prisma.XOR<Prisma.reportUpdateWithoutTargetInput, Prisma.reportUncheckedUpdateWithoutTargetInput>
+  create: Prisma.XOR<Prisma.reportCreateWithoutTargetInput, Prisma.reportUncheckedCreateWithoutTargetInput>
+}
+
+export type reportUpdateWithWhereUniqueWithoutTargetInput = {
+  where: Prisma.reportWhereUniqueInput
+  data: Prisma.XOR<Prisma.reportUpdateWithoutTargetInput, Prisma.reportUncheckedUpdateWithoutTargetInput>
+}
+
+export type reportUpdateManyWithWhereWithoutTargetInput = {
+  where: Prisma.reportScalarWhereInput
+  data: Prisma.XOR<Prisma.reportUpdateManyMutationInput, Prisma.reportUncheckedUpdateManyWithoutTargetInput>
+}
+
+export type reportCreateManyReporterInput = {
+  id?: string
+  targetId: string
+  reason: string
+  details?: string | null
+  status?: $Enums.ReportStatus
+  createdAt?: Date | string
+}
+
+export type reportCreateManyTargetInput = {
+  id?: string
+  reporterId: string
+  reason: string
+  details?: string | null
+  status?: $Enums.ReportStatus
+  createdAt?: Date | string
+}
+
+export type reportUpdateWithoutReporterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  target?: Prisma.UserUpdateOneRequiredWithoutReportsReceivedNestedInput
+  target?: Prisma.userUpdateOneRequiredWithoutReportsReceivedNestedInput
 }
 
-export type ReportUncheckedUpdateWithoutReporterInput = {
+export type reportUncheckedUpdateWithoutReporterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
@@ -595,7 +595,7 @@ export type ReportUncheckedUpdateWithoutReporterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ReportUncheckedUpdateManyWithoutReporterInput = {
+export type reportUncheckedUpdateManyWithoutReporterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
@@ -604,25 +604,16 @@ export type ReportUncheckedUpdateManyWithoutReporterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ReportUpdateWithoutTargetInput = {
+export type reportUpdateWithoutTargetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  reporter?: Prisma.UserUpdateOneRequiredWithoutReportsMadeNestedInput
+  reporter?: Prisma.userUpdateOneRequiredWithoutReportsMadeNestedInput
 }
 
-export type ReportUncheckedUpdateWithoutTargetInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  reporterId?: Prisma.StringFieldUpdateOperationsInput | string
-  reason?: Prisma.StringFieldUpdateOperationsInput | string
-  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ReportUncheckedUpdateManyWithoutTargetInput = {
+export type reportUncheckedUpdateWithoutTargetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reporterId?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
@@ -631,9 +622,18 @@ export type ReportUncheckedUpdateManyWithoutTargetInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type reportUncheckedUpdateManyWithoutTargetInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reporterId?: Prisma.StringFieldUpdateOperationsInput | string
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
 
 
-export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+
+export type reportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   reporterId?: boolean
   targetId?: boolean
@@ -641,13 +641,13 @@ export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   details?: boolean
   status?: boolean
   createdAt?: boolean
-  reporter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  target?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  reporter?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  target?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["report"]>
 
 
 
-export type ReportSelectScalar = {
+export type reportSelectScalar = {
   id?: boolean
   reporterId?: boolean
   targetId?: boolean
@@ -657,17 +657,17 @@ export type ReportSelectScalar = {
   createdAt?: boolean
 }
 
-export type ReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reporterId" | "targetId" | "reason" | "details" | "status" | "createdAt", ExtArgs["result"]["report"]>
-export type ReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  reporter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  target?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+export type reportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reporterId" | "targetId" | "reason" | "details" | "status" | "createdAt", ExtArgs["result"]["report"]>
+export type reportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reporter?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  target?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
 
-export type $ReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "Report"
+export type $reportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "report"
   objects: {
-    reporter: Prisma.$UserPayload<ExtArgs>
-    target: Prisma.$UserPayload<ExtArgs>
+    reporter: Prisma.$userPayload<ExtArgs>
+    target: Prisma.$userPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -681,18 +681,18 @@ export type $ReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   composites: {}
 }
 
-export type ReportGetPayload<S extends boolean | null | undefined | ReportDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ReportPayload, S>
+export type reportGetPayload<S extends boolean | null | undefined | reportDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$reportPayload, S>
 
-export type ReportCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<ReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type reportCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<reportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: ReportCountAggregateInputType | true
   }
 
-export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Report'], meta: { name: 'Report' } }
+export interface reportDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['report'], meta: { name: 'report' } }
   /**
    * Find zero or one Report that matches the filter.
-   * @param {ReportFindUniqueArgs} args - Arguments to find a Report
+   * @param {reportFindUniqueArgs} args - Arguments to find a Report
    * @example
    * // Get one Report
    * const report = await prisma.report.findUnique({
@@ -701,12 +701,12 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   }
    * })
    */
-  findUnique<T extends ReportFindUniqueArgs>(args: Prisma.SelectSubset<T, ReportFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends reportFindUniqueArgs>(args: Prisma.SelectSubset<T, reportFindUniqueArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Report that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {ReportFindUniqueOrThrowArgs} args - Arguments to find a Report
+   * @param {reportFindUniqueOrThrowArgs} args - Arguments to find a Report
    * @example
    * // Get one Report
    * const report = await prisma.report.findUniqueOrThrow({
@@ -715,13 +715,13 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   }
    * })
    */
-  findUniqueOrThrow<T extends ReportFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends reportFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, reportFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Report that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ReportFindFirstArgs} args - Arguments to find a Report
+   * @param {reportFindFirstArgs} args - Arguments to find a Report
    * @example
    * // Get one Report
    * const report = await prisma.report.findFirst({
@@ -730,14 +730,14 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   }
    * })
    */
-  findFirst<T extends ReportFindFirstArgs>(args?: Prisma.SelectSubset<T, ReportFindFirstArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends reportFindFirstArgs>(args?: Prisma.SelectSubset<T, reportFindFirstArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Report that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ReportFindFirstOrThrowArgs} args - Arguments to find a Report
+   * @param {reportFindFirstOrThrowArgs} args - Arguments to find a Report
    * @example
    * // Get one Report
    * const report = await prisma.report.findFirstOrThrow({
@@ -746,13 +746,13 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   }
    * })
    */
-  findFirstOrThrow<T extends ReportFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ReportFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends reportFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, reportFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Reports that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ReportFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {reportFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Reports
    * const reports = await prisma.report.findMany()
@@ -764,11 +764,11 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * const reportWithIdOnly = await prisma.report.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends ReportFindManyArgs>(args?: Prisma.SelectSubset<T, ReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends reportFindManyArgs>(args?: Prisma.SelectSubset<T, reportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Report.
-   * @param {ReportCreateArgs} args - Arguments to create a Report.
+   * @param {reportCreateArgs} args - Arguments to create a Report.
    * @example
    * // Create one Report
    * const Report = await prisma.report.create({
@@ -778,11 +778,11 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * })
    * 
    */
-  create<T extends ReportCreateArgs>(args: Prisma.SelectSubset<T, ReportCreateArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends reportCreateArgs>(args: Prisma.SelectSubset<T, reportCreateArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Reports.
-   * @param {ReportCreateManyArgs} args - Arguments to create many Reports.
+   * @param {reportCreateManyArgs} args - Arguments to create many Reports.
    * @example
    * // Create many Reports
    * const report = await prisma.report.createMany({
@@ -792,11 +792,11 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * })
    *     
    */
-  createMany<T extends ReportCreateManyArgs>(args?: Prisma.SelectSubset<T, ReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends reportCreateManyArgs>(args?: Prisma.SelectSubset<T, reportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a Report.
-   * @param {ReportDeleteArgs} args - Arguments to delete one Report.
+   * @param {reportDeleteArgs} args - Arguments to delete one Report.
    * @example
    * // Delete one Report
    * const Report = await prisma.report.delete({
@@ -806,11 +806,11 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * })
    * 
    */
-  delete<T extends ReportDeleteArgs>(args: Prisma.SelectSubset<T, ReportDeleteArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends reportDeleteArgs>(args: Prisma.SelectSubset<T, reportDeleteArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Report.
-   * @param {ReportUpdateArgs} args - Arguments to update one Report.
+   * @param {reportUpdateArgs} args - Arguments to update one Report.
    * @example
    * // Update one Report
    * const report = await prisma.report.update({
@@ -823,11 +823,11 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * })
    * 
    */
-  update<T extends ReportUpdateArgs>(args: Prisma.SelectSubset<T, ReportUpdateArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends reportUpdateArgs>(args: Prisma.SelectSubset<T, reportUpdateArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Reports.
-   * @param {ReportDeleteManyArgs} args - Arguments to filter Reports to delete.
+   * @param {reportDeleteManyArgs} args - Arguments to filter Reports to delete.
    * @example
    * // Delete a few Reports
    * const { count } = await prisma.report.deleteMany({
@@ -837,13 +837,13 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * })
    * 
    */
-  deleteMany<T extends ReportDeleteManyArgs>(args?: Prisma.SelectSubset<T, ReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends reportDeleteManyArgs>(args?: Prisma.SelectSubset<T, reportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Reports.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ReportUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {reportUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Reports
    * const report = await prisma.report.updateMany({
@@ -856,11 +856,11 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * })
    * 
    */
-  updateMany<T extends ReportUpdateManyArgs>(args: Prisma.SelectSubset<T, ReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends reportUpdateManyArgs>(args: Prisma.SelectSubset<T, reportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one Report.
-   * @param {ReportUpsertArgs} args - Arguments to update or create a Report.
+   * @param {reportUpsertArgs} args - Arguments to update or create a Report.
    * @example
    * // Update or create a Report
    * const report = await prisma.report.upsert({
@@ -875,14 +875,14 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   }
    * })
    */
-  upsert<T extends ReportUpsertArgs>(args: Prisma.SelectSubset<T, ReportUpsertArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends reportUpsertArgs>(args: Prisma.SelectSubset<T, reportUpsertArgs<ExtArgs>>): Prisma.Prisma__reportClient<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Reports.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ReportCountArgs} args - Arguments to filter Reports to count.
+   * @param {reportCountArgs} args - Arguments to filter Reports to count.
    * @example
    * // Count the number of Reports
    * const count = await prisma.report.count({
@@ -891,8 +891,8 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   }
    * })
   **/
-  count<T extends ReportCountArgs>(
-    args?: Prisma.Subset<T, ReportCountArgs>,
+  count<T extends reportCountArgs>(
+    args?: Prisma.Subset<T, reportCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -931,7 +931,7 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * Group by Report.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ReportGroupByArgs} args - Group by arguments.
+   * @param {reportGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -946,14 +946,14 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * 
   **/
   groupBy<
-    T extends ReportGroupByArgs,
+    T extends reportGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ReportGroupByArgs['orderBy'] }
-      : { orderBy?: ReportGroupByArgs['orderBy'] },
+      ? { orderBy: reportGroupByArgs['orderBy'] }
+      : { orderBy?: reportGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1002,23 +1002,23 @@ export interface ReportDelegate<ExtArgs extends runtime.Types.Extensions.Interna
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, ReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, reportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the Report model
+ * Fields of the report model
  */
-readonly fields: ReportFieldRefs;
+readonly fields: reportFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for Report.
+ * The delegate class that acts as a "Promise-like" for report.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__ReportClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__reportClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  reporter<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  target<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  reporter<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  target<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1045,377 +1045,377 @@ export interface Prisma__ReportClient<T, Null = never, ExtArgs extends runtime.T
 
 
 /**
- * Fields of the Report model
+ * Fields of the report model
  */
-export interface ReportFieldRefs {
-  readonly id: Prisma.FieldRef<"Report", 'String'>
-  readonly reporterId: Prisma.FieldRef<"Report", 'String'>
-  readonly targetId: Prisma.FieldRef<"Report", 'String'>
-  readonly reason: Prisma.FieldRef<"Report", 'String'>
-  readonly details: Prisma.FieldRef<"Report", 'String'>
-  readonly status: Prisma.FieldRef<"Report", 'ReportStatus'>
-  readonly createdAt: Prisma.FieldRef<"Report", 'DateTime'>
+export interface reportFieldRefs {
+  readonly id: Prisma.FieldRef<"report", 'String'>
+  readonly reporterId: Prisma.FieldRef<"report", 'String'>
+  readonly targetId: Prisma.FieldRef<"report", 'String'>
+  readonly reason: Prisma.FieldRef<"report", 'String'>
+  readonly details: Prisma.FieldRef<"report", 'String'>
+  readonly status: Prisma.FieldRef<"report", 'ReportStatus'>
+  readonly createdAt: Prisma.FieldRef<"report", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * Report findUnique
+ * report findUnique
  */
-export type ReportFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * Filter, which Report to fetch.
+   * Filter, which report to fetch.
    */
-  where: Prisma.ReportWhereUniqueInput
+  where: Prisma.reportWhereUniqueInput
 }
 
 /**
- * Report findUniqueOrThrow
+ * report findUniqueOrThrow
  */
-export type ReportFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * Filter, which Report to fetch.
+   * Filter, which report to fetch.
    */
-  where: Prisma.ReportWhereUniqueInput
+  where: Prisma.reportWhereUniqueInput
 }
 
 /**
- * Report findFirst
+ * report findFirst
  */
-export type ReportFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * Filter, which Report to fetch.
+   * Filter, which report to fetch.
    */
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Reports to fetch.
+   * Determine the order of reports to fetch.
    */
-  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  orderBy?: Prisma.reportOrderByWithRelationInput | Prisma.reportOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Reports.
+   * Sets the position for searching for reports.
    */
-  cursor?: Prisma.ReportWhereUniqueInput
+  cursor?: Prisma.reportWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Reports from the position of the cursor.
+   * Take `±n` reports from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Reports.
+   * Skip the first `n` reports.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Reports.
+   * Filter by unique combinations of reports.
    */
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**
- * Report findFirstOrThrow
+ * report findFirstOrThrow
  */
-export type ReportFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * Filter, which Report to fetch.
+   * Filter, which report to fetch.
    */
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Reports to fetch.
+   * Determine the order of reports to fetch.
    */
-  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  orderBy?: Prisma.reportOrderByWithRelationInput | Prisma.reportOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Reports.
+   * Sets the position for searching for reports.
    */
-  cursor?: Prisma.ReportWhereUniqueInput
+  cursor?: Prisma.reportWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Reports from the position of the cursor.
+   * Take `±n` reports from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Reports.
+   * Skip the first `n` reports.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Reports.
+   * Filter by unique combinations of reports.
    */
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**
- * Report findMany
+ * report findMany
  */
-export type ReportFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * Filter, which Reports to fetch.
+   * Filter, which reports to fetch.
    */
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Reports to fetch.
+   * Determine the order of reports to fetch.
    */
-  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  orderBy?: Prisma.reportOrderByWithRelationInput | Prisma.reportOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Reports.
+   * Sets the position for listing reports.
    */
-  cursor?: Prisma.ReportWhereUniqueInput
+  cursor?: Prisma.reportWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Reports from the position of the cursor.
+   * Take `±n` reports from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Reports.
+   * Skip the first `n` reports.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Reports.
+   * Filter by unique combinations of reports.
    */
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**
- * Report create
+ * report create
  */
-export type ReportCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * The data needed to create a Report.
+   * The data needed to create a report.
    */
-  data: Prisma.XOR<Prisma.ReportCreateInput, Prisma.ReportUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.reportCreateInput, Prisma.reportUncheckedCreateInput>
 }
 
 /**
- * Report createMany
+ * report createMany
  */
-export type ReportCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Reports.
+   * The data used to create many reports.
    */
-  data: Prisma.ReportCreateManyInput | Prisma.ReportCreateManyInput[]
+  data: Prisma.reportCreateManyInput | Prisma.reportCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Report update
+ * report update
  */
-export type ReportUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * The data needed to update a Report.
+   * The data needed to update a report.
    */
-  data: Prisma.XOR<Prisma.ReportUpdateInput, Prisma.ReportUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.reportUpdateInput, Prisma.reportUncheckedUpdateInput>
   /**
-   * Choose, which Report to update.
+   * Choose, which report to update.
    */
-  where: Prisma.ReportWhereUniqueInput
+  where: Prisma.reportWhereUniqueInput
 }
 
 /**
- * Report updateMany
+ * report updateMany
  */
-export type ReportUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Reports.
+   * The data used to update reports.
    */
-  data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.reportUpdateManyMutationInput, Prisma.reportUncheckedUpdateManyInput>
   /**
-   * Filter which Reports to update
+   * Filter which reports to update
    */
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
   /**
-   * Limit how many Reports to update.
+   * Limit how many reports to update.
    */
   limit?: number
 }
 
 /**
- * Report upsert
+ * report upsert
  */
-export type ReportUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * The filter to search for the Report to update in case it exists.
+   * The filter to search for the report to update in case it exists.
    */
-  where: Prisma.ReportWhereUniqueInput
+  where: Prisma.reportWhereUniqueInput
   /**
-   * In case the Report found by the `where` argument doesn't exist, create a new Report with this data.
+   * In case the report found by the `where` argument doesn't exist, create a new report with this data.
    */
-  create: Prisma.XOR<Prisma.ReportCreateInput, Prisma.ReportUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.reportCreateInput, Prisma.reportUncheckedCreateInput>
   /**
-   * In case the Report was found with the provided `where` argument, update it with this data.
+   * In case the report was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.ReportUpdateInput, Prisma.ReportUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.reportUpdateInput, Prisma.reportUncheckedUpdateInput>
 }
 
 /**
- * Report delete
+ * report delete
  */
-export type ReportDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
   /**
-   * Filter which Report to delete.
+   * Filter which report to delete.
    */
-  where: Prisma.ReportWhereUniqueInput
+  where: Prisma.reportWhereUniqueInput
 }
 
 /**
- * Report deleteMany
+ * report deleteMany
  */
-export type ReportDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Reports to delete
+   * Filter which reports to delete
    */
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
   /**
-   * Limit how many Reports to delete.
+   * Limit how many reports to delete.
    */
   limit?: number
 }
 
 /**
- * Report without action
+ * report without action
  */
-export type ReportDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type reportDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
+  include?: Prisma.reportInclude<ExtArgs> | null
 }

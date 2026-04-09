@@ -7,9 +7,7 @@ datasource db {
   provider = "mysql"
 }
 
-// ─── NextAuth required tables ───────────────────────────────────────────────
-
-model Account {
+model account {
   id                String  @id @default(cuid())
   userId            String
   type              String
@@ -22,20 +20,20 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
-model Session {
+model session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model VerificationToken {
+model verificationtoken {
   identifier String
   token      String   @unique
   expires    DateTime
@@ -43,9 +41,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ─── Core User ───────────────────────────────────────────────────────────────
-
-model User {
+model user {
   id                String    @id @default(cuid())
   name              String?
   email             String?   @unique
@@ -57,7 +53,7 @@ model User {
   role              Role      @default(USER)
   isActive          Boolean   @default(true)
   isVerified        Boolean   @default(false)
-  adminVerified     Boolean   @default(false)  // admin must approve
+  adminVerified     Boolean   @default(false)
   verificationBadge Boolean   @default(false)
   isPremium         Boolean   @default(false)
   premiumExpiry     DateTime?
@@ -69,28 +65,28 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  accounts     Account[]
-  sessions     Session[]
-  profile      Profile?
-  photos       Photo[]
-  sentInterests     Interest[] @relation("SentInterests")
-  receivedInterests Interest[] @relation("ReceivedInterests")
-  sentMessages      Message[]  @relation("SentMessages")
-  receivedMessages  Message[]  @relation("ReceivedMessages")
-  chatRoomsA        ChatRoom[] @relation("ChatRoomUserA")
-  chatRoomsB        ChatRoom[] @relation("ChatRoomUserB")
-  shortlisted       Shortlist[] @relation("ShortlistOwner")
-  shortlistedBy     Shortlist[] @relation("ShortlistTarget")
-  viewedProfiles    ProfileView[] @relation("Viewer")
-  profileViews      ProfileView[] @relation("Viewed")
-  notifications     Notification[]
-  subscriptions     Subscription[]
-  documents         Document[]
-  reportsMade       Report[]   @relation("ReportMaker")
-  reportsReceived   Report[]   @relation("ReportTarget")
-  blockedUsers      Block[]    @relation("Blocker")
-  blockedBy         Block[]    @relation("Blocked")
-  otps              OTP[]
+  accounts          account[]
+  sessions          session[]
+  profile           profile?
+  photos            photo[]
+  sentInterests     interest[]    @relation("SentInterests")
+  receivedInterests interest[]    @relation("ReceivedInterests")
+  sentMessages      message[]     @relation("SentMessages")
+  receivedMessages  message[]     @relation("ReceivedMessages")
+  chatRoomsA        chatroom[]    @relation("ChatRoomUserA")
+  chatRoomsB        chatroom[]    @relation("ChatRoomUserB")
+  shortlisted       shortlist[]   @relation("ShortlistOwner")
+  shortlistedBy     shortlist[]   @relation("ShortlistTarget")
+  viewedProfiles    profileview[] @relation("Viewer")
+  profileViews      profileview[] @relation("Viewed")
+  notifications     notification[]
+  subscriptions     subscription[]
+  documents         document[]
+  reportsMade       report[]      @relation("ReportMaker")
+  reportsReceived   report[]      @relation("ReportTarget")
+  blockedUsers      block[]       @relation("Blocker")
+  blockedBy         block[]       @relation("Blocked")
+  otps              otp[]
 }
 
 enum Role {
@@ -98,15 +94,13 @@ enum Role {
   ADMIN
 }
 
-// ─── Profile ─────────────────────────────────────────────────────────────────
-
-model Profile {
-  id               String    @id @default(cuid())
-  userId           String    @unique
+model profile {
+  id               String        @id @default(cuid())
+  userId           String        @unique
   gender           Gender?
   dob              DateTime?
-  height           Int?      // in cm
-  weight           Int?      // in kg
+  height           Int?
+  weight           Int?
   religion         String?
   caste            String?
   subCaste         String?
@@ -119,20 +113,18 @@ model Profile {
   country          String?
   state            String?
   city             String?
-  aboutMe          String?   @db.Text
+  aboutMe          String?       @db.Text
   maritalStatus    MaritalStatus @default(NEVER_MARRIED)
-  smoking          Lifestyle @default(NO)
-  drinking         Lifestyle @default(NO)
+  smoking          Lifestyle     @default(NO)
+  drinking         Lifestyle     @default(NO)
   diet             String?
   complexion       String?
   bodyType         String?
-  // Family
   fatherOccupation String?
   motherOccupation String?
   siblings         Int?
   familyType       String?
   familyStatus     String?
-  // Partner prefs
   partnerAgeMin    Int?
   partnerAgeMax    Int?
   partnerHeightMin Int?
@@ -140,20 +132,18 @@ model Profile {
   partnerReligion  String?
   partnerEducation String?
   partnerLocation  String?
-  // Horoscope
   horoscopeSign    String?
   nakshatra        String?
-  manglik          String?   @default("No")
-  kundliMatch      String?   @default("Not Required")
+  manglik          String?       @default("No")
+  kundliMatch      String?       @default("Not Required")
   amritdhari       String?
-  // Privacy
-  hidePhone        Boolean   @default(false)
-  hidePhoto        Boolean   @default(false)
-  profileComplete  Int       @default(0)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  hidePhone        Boolean       @default(false)
+  hidePhoto        Boolean       @default(false)
+  profileComplete  Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Gender {
@@ -175,9 +165,7 @@ enum Lifestyle {
   YES
 }
 
-// ─── Photos ──────────────────────────────────────────────────────────────────
-
-model Photo {
+model photo {
   id        String   @id @default(cuid())
   userId    String
   url       String   @db.Text
@@ -185,12 +173,10 @@ model Photo {
   isMain    Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ─── Interest / Connection ───────────────────────────────────────────────────
-
-model Interest {
+model interest {
   id         String         @id @default(cuid())
   senderId   String
   receiverId String
@@ -199,8 +185,8 @@ model Interest {
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 
-  sender   User @relation("SentInterests", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver User @relation("ReceivedInterests", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender   user @relation("SentInterests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver user @relation("ReceivedInterests", fields: [receiverId], references: [id], onDelete: Cascade)
 
   @@unique([senderId, receiverId])
 }
@@ -211,41 +197,39 @@ enum InterestStatus {
   REJECTED
 }
 
-// ─── Chat ────────────────────────────────────────────────────────────────────
-
-model ChatRoom {
+model chatroom {
   id        String    @id @default(cuid())
   userAId   String
   userBId   String
   createdAt DateTime  @default(now())
-  messages  Message[]
+  messages  message[]
 
-  userA User @relation("ChatRoomUserA", fields: [userAId], references: [id], onDelete: Cascade)
-  userB User @relation("ChatRoomUserB", fields: [userBId], references: [id], onDelete: Cascade)
+  userA user @relation("ChatRoomUserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB user @relation("ChatRoomUserB", fields: [userBId], references: [id], onDelete: Cascade)
 
   @@unique([userAId, userBId])
 }
 
-model Message {
-  id         String      @id @default(cuid())
-  chatRoomId String
-  senderId   String
-  receiverId String
-  content    String      @db.Text
-  type       MessageType @default(TEXT)
-  fileUrl    String?     @db.LongText
-  fileName   String?
-  fileSize   Int?
-  latitude   Float?
-  longitude  Float?
-  locationType String? // 'current' | 'live'
-  locationExpiry DateTime? // for live location expiry
-  isRead     Boolean     @default(false)
-  createdAt  DateTime    @default(now())
+model message {
+  id             String      @id @default(cuid())
+  chatRoomId     String
+  senderId       String
+  receiverId     String
+  content        String      @db.Text
+  type           MessageType @default(TEXT)
+  fileUrl        String?     @db.LongText
+  fileName       String?
+  fileSize       Int?
+  latitude       Float?
+  longitude      Float?
+  locationType   String?
+  locationExpiry DateTime?
+  isRead         Boolean     @default(false)
+  createdAt      DateTime    @default(now())
 
-  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
-  sender   User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  chatRoom chatroom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  sender   user     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver user     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
 }
 
 enum MessageType {
@@ -255,37 +239,31 @@ enum MessageType {
   LOCATION
 }
 
-// ─── Shortlist ───────────────────────────────────────────────────────────────
-
-model Shortlist {
+model shortlist {
   id        String   @id @default(cuid())
   ownerId   String
   targetId  String
   createdAt DateTime @default(now())
 
-  owner  User @relation("ShortlistOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  target User @relation("ShortlistTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  owner  user @relation("ShortlistOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  target user @relation("ShortlistTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@unique([ownerId, targetId])
 }
 
-// ─── Profile Views ───────────────────────────────────────────────────────────
-
-model ProfileView {
+model profileview {
   id        String   @id @default(cuid())
   viewerId  String
   viewedId  String
   createdAt DateTime @default(now())
 
-  viewer User @relation("Viewer", fields: [viewerId], references: [id], onDelete: Cascade)
-  viewed User @relation("Viewed", fields: [viewedId], references: [id], onDelete: Cascade)
+  viewer user @relation("Viewer", fields: [viewerId], references: [id], onDelete: Cascade)
+  viewed user @relation("Viewed", fields: [viewedId], references: [id], onDelete: Cascade)
 
   @@unique([viewerId, viewedId])
 }
 
-// ─── Notifications ───────────────────────────────────────────────────────────
-
-model Notification {
+model notification {
   id        String           @id @default(cuid())
   userId    String
   type      NotificationType
@@ -295,7 +273,7 @@ model Notification {
   link      String?
   createdAt DateTime         @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum NotificationType {
@@ -308,13 +286,12 @@ enum NotificationType {
   SYSTEM
 }
 
-// ─── Dynamic Profile Options (admin configurable) ────────────────────────────
-model ProfileOption {
+model profileoption {
   id        String   @id @default(cuid())
-  category  String   // 'religion' | 'caste_Hindu' | 'caste_Muslim' | 'gotra' | 'motherTongue' | 'education' | 'profession' | 'income' | 'diet' | 'bodyType' | 'complexion' | 'familyType' | 'familyStatus' | 'maritalStatus'
+  category  String
   value     String
   label     String
-  group     String?  // sub-group like 'Brahmin - UP/Bihar'
+  group     String?
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -323,25 +300,21 @@ model ProfileOption {
   @@index([category, isActive])
 }
 
-// ─── Subscription Plan Config (admin configurable) ───────────────────────────
-model PlanConfig {
-  id          String   @id @default(cuid())
-  plan        String   @unique  // SILVER | GOLD | PLATINUM | FREE
-  displayName String
-  price       Decimal  @db.Decimal(10, 2)
-  currency    String   @default("INR")
-  durationDays Int     @default(30)
-  isActive    Boolean  @default(true)
-  // Permissions as JSON string
-  permissions String   @db.Text  // JSON: { canChat, interestLimit, canSeeContact, ... }
-  description String?  @db.Text
-  updatedAt   DateTime @updatedAt
-  createdAt   DateTime @default(now())
+model planconfig {
+  id           String   @id @default(cuid())
+  plan         String   @unique
+  displayName  String
+  price        Decimal  @db.Decimal(10, 2)
+  currency     String   @default("INR")
+  durationDays Int      @default(30)
+  isActive     Boolean  @default(true)
+  permissions  String   @db.Text
+  description  String?  @db.Text
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
 }
 
-// ─── Subscription ────────────────────────────────────────────────────────────
-
-model Subscription {
+model subscription {
   id        String             @id @default(cuid())
   userId    String
   plan      SubscriptionPlan
@@ -353,7 +326,7 @@ model Subscription {
   endDate   DateTime
   createdAt DateTime           @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum SubscriptionPlan {
@@ -368,20 +341,18 @@ enum SubscriptionStatus {
   CANCELLED
 }
 
-// ─── Document Verification ───────────────────────────────────────────────────
+model document {
+  id        String             @id @default(cuid())
+  userId    String
+  type      String
+  url       String             @db.Text
+  publicId  String?
+  status    VerificationStatus @default(PENDING)
+  adminNote String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
-model Document {
-  id         String           @id @default(cuid())
-  userId     String
-  type       String
-  url        String           @db.Text
-  publicId   String?
-  status     VerificationStatus @default(PENDING)
-  adminNote  String?
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum VerificationStatus {
@@ -390,9 +361,7 @@ enum VerificationStatus {
   REJECTED
 }
 
-// ─── Report ──────────────────────────────────────────────────────────────────
-
-model Report {
+model report {
   id         String       @id @default(cuid())
   reporterId String
   targetId   String
@@ -401,8 +370,8 @@ model Report {
   status     ReportStatus @default(PENDING)
   createdAt  DateTime     @default(now())
 
-  reporter User @relation("ReportMaker", fields: [reporterId], references: [id], onDelete: Cascade)
-  target   User @relation("ReportTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  reporter user @relation("ReportMaker", fields: [reporterId], references: [id], onDelete: Cascade)
+  target   user @relation("ReportTarget", fields: [targetId], references: [id], onDelete: Cascade)
 }
 
 enum ReportStatus {
@@ -411,23 +380,19 @@ enum ReportStatus {
   RESOLVED
 }
 
-// ─── Block ───────────────────────────────────────────────────────────────────
-
-model Block {
+model block {
   id        String   @id @default(cuid())
   blockerId String
   blockedId String
   createdAt DateTime @default(now())
 
-  blocker User @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
-  blocked User @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  blocker user @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked user @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
 
   @@unique([blockerId, blockedId])
 }
 
-// ─── OTP ─────────────────────────────────────────────────────────────────────
-
-model OTP {
+model otp {
   id        String   @id @default(cuid())
   userId    String
   code      String
@@ -436,7 +401,7 @@ model OTP {
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum OTPType {

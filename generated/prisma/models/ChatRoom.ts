@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `ChatRoom` model and its related types.
+ * This file exports the `chatroom` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,32 +13,32 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model ChatRoom
+ * Model chatroom
  * 
  */
-export type ChatRoomModel = runtime.Types.Result.DefaultSelection<Prisma.$ChatRoomPayload>
+export type chatroomModel = runtime.Types.Result.DefaultSelection<Prisma.$chatroomPayload>
 
-export type AggregateChatRoom = {
-  _count: ChatRoomCountAggregateOutputType | null
-  _min: ChatRoomMinAggregateOutputType | null
-  _max: ChatRoomMaxAggregateOutputType | null
+export type AggregateChatroom = {
+  _count: ChatroomCountAggregateOutputType | null
+  _min: ChatroomMinAggregateOutputType | null
+  _max: ChatroomMaxAggregateOutputType | null
 }
 
-export type ChatRoomMinAggregateOutputType = {
+export type ChatroomMinAggregateOutputType = {
   id: string | null
   userAId: string | null
   userBId: string | null
   createdAt: Date | null
 }
 
-export type ChatRoomMaxAggregateOutputType = {
+export type ChatroomMaxAggregateOutputType = {
   id: string | null
   userAId: string | null
   userBId: string | null
   createdAt: Date | null
 }
 
-export type ChatRoomCountAggregateOutputType = {
+export type ChatroomCountAggregateOutputType = {
   id: number
   userAId: number
   userBId: number
@@ -47,21 +47,21 @@ export type ChatRoomCountAggregateOutputType = {
 }
 
 
-export type ChatRoomMinAggregateInputType = {
+export type ChatroomMinAggregateInputType = {
   id?: true
   userAId?: true
   userBId?: true
   createdAt?: true
 }
 
-export type ChatRoomMaxAggregateInputType = {
+export type ChatroomMaxAggregateInputType = {
   id?: true
   userAId?: true
   userBId?: true
   createdAt?: true
 }
 
-export type ChatRoomCountAggregateInputType = {
+export type ChatroomCountAggregateInputType = {
   id?: true
   userAId?: true
   userBId?: true
@@ -69,538 +69,538 @@ export type ChatRoomCountAggregateInputType = {
   _all?: true
 }
 
-export type ChatRoomAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ChatroomAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which ChatRoom to aggregate.
+   * Filter which chatroom to aggregate.
    */
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ChatRooms to fetch.
+   * Determine the order of chatrooms to fetch.
    */
-  orderBy?: Prisma.ChatRoomOrderByWithRelationInput | Prisma.ChatRoomOrderByWithRelationInput[]
+  orderBy?: Prisma.chatroomOrderByWithRelationInput | Prisma.chatroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.ChatRoomWhereUniqueInput
+  cursor?: Prisma.chatroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ChatRooms from the position of the cursor.
+   * Take `±n` chatrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ChatRooms.
+   * Skip the first `n` chatrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned ChatRooms
+   * Count returned chatrooms
   **/
-  _count?: true | ChatRoomCountAggregateInputType
+  _count?: true | ChatroomCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the minimum value
   **/
-  _min?: ChatRoomMinAggregateInputType
+  _min?: ChatroomMinAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the maximum value
   **/
-  _max?: ChatRoomMaxAggregateInputType
+  _max?: ChatroomMaxAggregateInputType
 }
 
-export type GetChatRoomAggregateType<T extends ChatRoomAggregateArgs> = {
-      [P in keyof T & keyof AggregateChatRoom]: P extends '_count' | 'count'
+export type GetChatroomAggregateType<T extends ChatroomAggregateArgs> = {
+      [P in keyof T & keyof AggregateChatroom]: P extends '_count' | 'count'
     ? T[P] extends true
       ? number
-      : Prisma.GetScalarType<T[P], AggregateChatRoom[P]>
-    : Prisma.GetScalarType<T[P], AggregateChatRoom[P]>
+      : Prisma.GetScalarType<T[P], AggregateChatroom[P]>
+    : Prisma.GetScalarType<T[P], AggregateChatroom[P]>
 }
 
 
 
 
-export type ChatRoomGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ChatRoomWhereInput
-  orderBy?: Prisma.ChatRoomOrderByWithAggregationInput | Prisma.ChatRoomOrderByWithAggregationInput[]
-  by: Prisma.ChatRoomScalarFieldEnum[] | Prisma.ChatRoomScalarFieldEnum
-  having?: Prisma.ChatRoomScalarWhereWithAggregatesInput
+export type chatroomGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.chatroomWhereInput
+  orderBy?: Prisma.chatroomOrderByWithAggregationInput | Prisma.chatroomOrderByWithAggregationInput[]
+  by: Prisma.ChatroomScalarFieldEnum[] | Prisma.ChatroomScalarFieldEnum
+  having?: Prisma.chatroomScalarWhereWithAggregatesInput
   take?: number
   skip?: number
-  _count?: ChatRoomCountAggregateInputType | true
-  _min?: ChatRoomMinAggregateInputType
-  _max?: ChatRoomMaxAggregateInputType
+  _count?: ChatroomCountAggregateInputType | true
+  _min?: ChatroomMinAggregateInputType
+  _max?: ChatroomMaxAggregateInputType
 }
 
-export type ChatRoomGroupByOutputType = {
+export type ChatroomGroupByOutputType = {
   id: string
   userAId: string
   userBId: string
   createdAt: Date
-  _count: ChatRoomCountAggregateOutputType | null
-  _min: ChatRoomMinAggregateOutputType | null
-  _max: ChatRoomMaxAggregateOutputType | null
+  _count: ChatroomCountAggregateOutputType | null
+  _min: ChatroomMinAggregateOutputType | null
+  _max: ChatroomMaxAggregateOutputType | null
 }
 
-export type GetChatRoomGroupByPayload<T extends ChatRoomGroupByArgs> = Prisma.PrismaPromise<
+export type GetChatroomGroupByPayload<T extends chatroomGroupByArgs> = Prisma.PrismaPromise<
   Array<
-    Prisma.PickEnumerable<ChatRoomGroupByOutputType, T['by']> &
+    Prisma.PickEnumerable<ChatroomGroupByOutputType, T['by']> &
       {
-        [P in ((keyof T) & (keyof ChatRoomGroupByOutputType))]: P extends '_count'
+        [P in ((keyof T) & (keyof ChatroomGroupByOutputType))]: P extends '_count'
           ? T[P] extends boolean
             ? number
-            : Prisma.GetScalarType<T[P], ChatRoomGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], ChatRoomGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], ChatroomGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], ChatroomGroupByOutputType[P]>
       }
     >
   >
 
 
 
-export type ChatRoomWhereInput = {
-  AND?: Prisma.ChatRoomWhereInput | Prisma.ChatRoomWhereInput[]
-  OR?: Prisma.ChatRoomWhereInput[]
-  NOT?: Prisma.ChatRoomWhereInput | Prisma.ChatRoomWhereInput[]
-  id?: Prisma.StringFilter<"ChatRoom"> | string
-  userAId?: Prisma.StringFilter<"ChatRoom"> | string
-  userBId?: Prisma.StringFilter<"ChatRoom"> | string
-  createdAt?: Prisma.DateTimeFilter<"ChatRoom"> | Date | string
+export type chatroomWhereInput = {
+  AND?: Prisma.chatroomWhereInput | Prisma.chatroomWhereInput[]
+  OR?: Prisma.chatroomWhereInput[]
+  NOT?: Prisma.chatroomWhereInput | Prisma.chatroomWhereInput[]
+  id?: Prisma.StringFilter<"chatroom"> | string
+  userAId?: Prisma.StringFilter<"chatroom"> | string
+  userBId?: Prisma.StringFilter<"chatroom"> | string
+  createdAt?: Prisma.DateTimeFilter<"chatroom"> | Date | string
   messages?: Prisma.MessageListRelationFilter
-  userA?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  userB?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  userA?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  userB?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }
 
-export type ChatRoomOrderByWithRelationInput = {
+export type chatroomOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userAId?: Prisma.SortOrder
   userBId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  messages?: Prisma.MessageOrderByRelationAggregateInput
-  userA?: Prisma.UserOrderByWithRelationInput
-  userB?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.ChatRoomOrderByRelevanceInput
+  messages?: Prisma.messageOrderByRelationAggregateInput
+  userA?: Prisma.userOrderByWithRelationInput
+  userB?: Prisma.userOrderByWithRelationInput
+  _relevance?: Prisma.chatroomOrderByRelevanceInput
 }
 
-export type ChatRoomWhereUniqueInput = Prisma.AtLeast<{
+export type chatroomWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userAId_userBId?: Prisma.ChatRoomUserAIdUserBIdCompoundUniqueInput
-  AND?: Prisma.ChatRoomWhereInput | Prisma.ChatRoomWhereInput[]
-  OR?: Prisma.ChatRoomWhereInput[]
-  NOT?: Prisma.ChatRoomWhereInput | Prisma.ChatRoomWhereInput[]
-  userAId?: Prisma.StringFilter<"ChatRoom"> | string
-  userBId?: Prisma.StringFilter<"ChatRoom"> | string
-  createdAt?: Prisma.DateTimeFilter<"ChatRoom"> | Date | string
+  userAId_userBId?: Prisma.chatroomUserAIdUserBIdCompoundUniqueInput
+  AND?: Prisma.chatroomWhereInput | Prisma.chatroomWhereInput[]
+  OR?: Prisma.chatroomWhereInput[]
+  NOT?: Prisma.chatroomWhereInput | Prisma.chatroomWhereInput[]
+  userAId?: Prisma.StringFilter<"chatroom"> | string
+  userBId?: Prisma.StringFilter<"chatroom"> | string
+  createdAt?: Prisma.DateTimeFilter<"chatroom"> | Date | string
   messages?: Prisma.MessageListRelationFilter
-  userA?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  userB?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  userA?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  userB?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }, "id" | "userAId_userBId">
 
-export type ChatRoomOrderByWithAggregationInput = {
+export type chatroomOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userAId?: Prisma.SortOrder
   userBId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _count?: Prisma.ChatRoomCountOrderByAggregateInput
-  _max?: Prisma.ChatRoomMaxOrderByAggregateInput
-  _min?: Prisma.ChatRoomMinOrderByAggregateInput
+  _count?: Prisma.chatroomCountOrderByAggregateInput
+  _max?: Prisma.chatroomMaxOrderByAggregateInput
+  _min?: Prisma.chatroomMinOrderByAggregateInput
 }
 
-export type ChatRoomScalarWhereWithAggregatesInput = {
-  AND?: Prisma.ChatRoomScalarWhereWithAggregatesInput | Prisma.ChatRoomScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ChatRoomScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.ChatRoomScalarWhereWithAggregatesInput | Prisma.ChatRoomScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"ChatRoom"> | string
-  userAId?: Prisma.StringWithAggregatesFilter<"ChatRoom"> | string
-  userBId?: Prisma.StringWithAggregatesFilter<"ChatRoom"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ChatRoom"> | Date | string
+export type chatroomScalarWhereWithAggregatesInput = {
+  AND?: Prisma.chatroomScalarWhereWithAggregatesInput | Prisma.chatroomScalarWhereWithAggregatesInput[]
+  OR?: Prisma.chatroomScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.chatroomScalarWhereWithAggregatesInput | Prisma.chatroomScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"chatroom"> | string
+  userAId?: Prisma.StringWithAggregatesFilter<"chatroom"> | string
+  userBId?: Prisma.StringWithAggregatesFilter<"chatroom"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"chatroom"> | Date | string
 }
 
-export type ChatRoomCreateInput = {
+export type chatroomCreateInput = {
   id?: string
   createdAt?: Date | string
-  messages?: Prisma.MessageCreateNestedManyWithoutChatRoomInput
-  userA: Prisma.UserCreateNestedOneWithoutChatRoomsAInput
-  userB: Prisma.UserCreateNestedOneWithoutChatRoomsBInput
+  messages?: Prisma.messageCreateNestedManyWithoutChatRoomInput
+  userA: Prisma.userCreateNestedOneWithoutChatRoomsAInput
+  userB: Prisma.userCreateNestedOneWithoutChatRoomsBInput
 }
 
-export type ChatRoomUncheckedCreateInput = {
-  id?: string
-  userAId: string
-  userBId: string
-  createdAt?: Date | string
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatRoomInput
-}
-
-export type ChatRoomUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  messages?: Prisma.MessageUpdateManyWithoutChatRoomNestedInput
-  userA?: Prisma.UserUpdateOneRequiredWithoutChatRoomsANestedInput
-  userB?: Prisma.UserUpdateOneRequiredWithoutChatRoomsBNestedInput
-}
-
-export type ChatRoomUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userAId?: Prisma.StringFieldUpdateOperationsInput | string
-  userBId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutChatRoomNestedInput
-}
-
-export type ChatRoomCreateManyInput = {
+export type chatroomUncheckedCreateInput = {
   id?: string
   userAId: string
   userBId: string
   createdAt?: Date | string
+  messages?: Prisma.messageUncheckedCreateNestedManyWithoutChatRoomInput
 }
 
-export type ChatRoomUpdateManyMutationInput = {
+export type chatroomUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.messageUpdateManyWithoutChatRoomNestedInput
+  userA?: Prisma.userUpdateOneRequiredWithoutChatRoomsANestedInput
+  userB?: Prisma.userUpdateOneRequiredWithoutChatRoomsBNestedInput
+}
+
+export type chatroomUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userAId?: Prisma.StringFieldUpdateOperationsInput | string
+  userBId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.messageUncheckedUpdateManyWithoutChatRoomNestedInput
+}
+
+export type chatroomCreateManyInput = {
+  id?: string
+  userAId: string
+  userBId: string
+  createdAt?: Date | string
+}
+
+export type chatroomUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ChatRoomUncheckedUpdateManyInput = {
+export type chatroomUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userAId?: Prisma.StringFieldUpdateOperationsInput | string
   userBId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ChatRoomListRelationFilter = {
-  every?: Prisma.ChatRoomWhereInput
-  some?: Prisma.ChatRoomWhereInput
-  none?: Prisma.ChatRoomWhereInput
+export type ChatroomListRelationFilter = {
+  every?: Prisma.chatroomWhereInput
+  some?: Prisma.chatroomWhereInput
+  none?: Prisma.chatroomWhereInput
 }
 
-export type ChatRoomOrderByRelationAggregateInput = {
+export type chatroomOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ChatRoomOrderByRelevanceInput = {
-  fields: Prisma.ChatRoomOrderByRelevanceFieldEnum | Prisma.ChatRoomOrderByRelevanceFieldEnum[]
+export type chatroomOrderByRelevanceInput = {
+  fields: Prisma.chatroomOrderByRelevanceFieldEnum | Prisma.chatroomOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type ChatRoomUserAIdUserBIdCompoundUniqueInput = {
+export type chatroomUserAIdUserBIdCompoundUniqueInput = {
   userAId: string
   userBId: string
 }
 
-export type ChatRoomCountOrderByAggregateInput = {
+export type chatroomCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userAId?: Prisma.SortOrder
   userBId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ChatRoomMaxOrderByAggregateInput = {
+export type chatroomMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userAId?: Prisma.SortOrder
   userBId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ChatRoomMinOrderByAggregateInput = {
+export type chatroomMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userAId?: Prisma.SortOrder
   userBId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ChatRoomScalarRelationFilter = {
-  is?: Prisma.ChatRoomWhereInput
-  isNot?: Prisma.ChatRoomWhereInput
+export type ChatroomScalarRelationFilter = {
+  is?: Prisma.chatroomWhereInput
+  isNot?: Prisma.chatroomWhereInput
 }
 
-export type ChatRoomCreateNestedManyWithoutUserAInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserAInput, Prisma.ChatRoomUncheckedCreateWithoutUserAInput> | Prisma.ChatRoomCreateWithoutUserAInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserAInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserAInput | Prisma.ChatRoomCreateOrConnectWithoutUserAInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserAInputEnvelope
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
+export type chatroomCreateNestedManyWithoutUserAInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserAInput, Prisma.chatroomUncheckedCreateWithoutUserAInput> | Prisma.chatroomCreateWithoutUserAInput[] | Prisma.chatroomUncheckedCreateWithoutUserAInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserAInput | Prisma.chatroomCreateOrConnectWithoutUserAInput[]
+  createMany?: Prisma.chatroomCreateManyUserAInputEnvelope
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
 }
 
-export type ChatRoomCreateNestedManyWithoutUserBInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserBInput, Prisma.ChatRoomUncheckedCreateWithoutUserBInput> | Prisma.ChatRoomCreateWithoutUserBInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserBInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserBInput | Prisma.ChatRoomCreateOrConnectWithoutUserBInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserBInputEnvelope
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
+export type chatroomCreateNestedManyWithoutUserBInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserBInput, Prisma.chatroomUncheckedCreateWithoutUserBInput> | Prisma.chatroomCreateWithoutUserBInput[] | Prisma.chatroomUncheckedCreateWithoutUserBInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserBInput | Prisma.chatroomCreateOrConnectWithoutUserBInput[]
+  createMany?: Prisma.chatroomCreateManyUserBInputEnvelope
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
 }
 
-export type ChatRoomUncheckedCreateNestedManyWithoutUserAInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserAInput, Prisma.ChatRoomUncheckedCreateWithoutUserAInput> | Prisma.ChatRoomCreateWithoutUserAInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserAInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserAInput | Prisma.ChatRoomCreateOrConnectWithoutUserAInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserAInputEnvelope
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
+export type chatroomUncheckedCreateNestedManyWithoutUserAInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserAInput, Prisma.chatroomUncheckedCreateWithoutUserAInput> | Prisma.chatroomCreateWithoutUserAInput[] | Prisma.chatroomUncheckedCreateWithoutUserAInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserAInput | Prisma.chatroomCreateOrConnectWithoutUserAInput[]
+  createMany?: Prisma.chatroomCreateManyUserAInputEnvelope
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
 }
 
-export type ChatRoomUncheckedCreateNestedManyWithoutUserBInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserBInput, Prisma.ChatRoomUncheckedCreateWithoutUserBInput> | Prisma.ChatRoomCreateWithoutUserBInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserBInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserBInput | Prisma.ChatRoomCreateOrConnectWithoutUserBInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserBInputEnvelope
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
+export type chatroomUncheckedCreateNestedManyWithoutUserBInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserBInput, Prisma.chatroomUncheckedCreateWithoutUserBInput> | Prisma.chatroomCreateWithoutUserBInput[] | Prisma.chatroomUncheckedCreateWithoutUserBInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserBInput | Prisma.chatroomCreateOrConnectWithoutUserBInput[]
+  createMany?: Prisma.chatroomCreateManyUserBInputEnvelope
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
 }
 
-export type ChatRoomUpdateManyWithoutUserANestedInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserAInput, Prisma.ChatRoomUncheckedCreateWithoutUserAInput> | Prisma.ChatRoomCreateWithoutUserAInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserAInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserAInput | Prisma.ChatRoomCreateOrConnectWithoutUserAInput[]
-  upsert?: Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserAInput | Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserAInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserAInputEnvelope
-  set?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  disconnect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  delete?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  update?: Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserAInput | Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserAInput[]
-  updateMany?: Prisma.ChatRoomUpdateManyWithWhereWithoutUserAInput | Prisma.ChatRoomUpdateManyWithWhereWithoutUserAInput[]
-  deleteMany?: Prisma.ChatRoomScalarWhereInput | Prisma.ChatRoomScalarWhereInput[]
+export type chatroomUpdateManyWithoutUserANestedInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserAInput, Prisma.chatroomUncheckedCreateWithoutUserAInput> | Prisma.chatroomCreateWithoutUserAInput[] | Prisma.chatroomUncheckedCreateWithoutUserAInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserAInput | Prisma.chatroomCreateOrConnectWithoutUserAInput[]
+  upsert?: Prisma.chatroomUpsertWithWhereUniqueWithoutUserAInput | Prisma.chatroomUpsertWithWhereUniqueWithoutUserAInput[]
+  createMany?: Prisma.chatroomCreateManyUserAInputEnvelope
+  set?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  disconnect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  delete?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  update?: Prisma.chatroomUpdateWithWhereUniqueWithoutUserAInput | Prisma.chatroomUpdateWithWhereUniqueWithoutUserAInput[]
+  updateMany?: Prisma.chatroomUpdateManyWithWhereWithoutUserAInput | Prisma.chatroomUpdateManyWithWhereWithoutUserAInput[]
+  deleteMany?: Prisma.chatroomScalarWhereInput | Prisma.chatroomScalarWhereInput[]
 }
 
-export type ChatRoomUpdateManyWithoutUserBNestedInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserBInput, Prisma.ChatRoomUncheckedCreateWithoutUserBInput> | Prisma.ChatRoomCreateWithoutUserBInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserBInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserBInput | Prisma.ChatRoomCreateOrConnectWithoutUserBInput[]
-  upsert?: Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserBInput | Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserBInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserBInputEnvelope
-  set?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  disconnect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  delete?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  update?: Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserBInput | Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserBInput[]
-  updateMany?: Prisma.ChatRoomUpdateManyWithWhereWithoutUserBInput | Prisma.ChatRoomUpdateManyWithWhereWithoutUserBInput[]
-  deleteMany?: Prisma.ChatRoomScalarWhereInput | Prisma.ChatRoomScalarWhereInput[]
+export type chatroomUpdateManyWithoutUserBNestedInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserBInput, Prisma.chatroomUncheckedCreateWithoutUserBInput> | Prisma.chatroomCreateWithoutUserBInput[] | Prisma.chatroomUncheckedCreateWithoutUserBInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserBInput | Prisma.chatroomCreateOrConnectWithoutUserBInput[]
+  upsert?: Prisma.chatroomUpsertWithWhereUniqueWithoutUserBInput | Prisma.chatroomUpsertWithWhereUniqueWithoutUserBInput[]
+  createMany?: Prisma.chatroomCreateManyUserBInputEnvelope
+  set?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  disconnect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  delete?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  update?: Prisma.chatroomUpdateWithWhereUniqueWithoutUserBInput | Prisma.chatroomUpdateWithWhereUniqueWithoutUserBInput[]
+  updateMany?: Prisma.chatroomUpdateManyWithWhereWithoutUserBInput | Prisma.chatroomUpdateManyWithWhereWithoutUserBInput[]
+  deleteMany?: Prisma.chatroomScalarWhereInput | Prisma.chatroomScalarWhereInput[]
 }
 
-export type ChatRoomUncheckedUpdateManyWithoutUserANestedInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserAInput, Prisma.ChatRoomUncheckedCreateWithoutUserAInput> | Prisma.ChatRoomCreateWithoutUserAInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserAInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserAInput | Prisma.ChatRoomCreateOrConnectWithoutUserAInput[]
-  upsert?: Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserAInput | Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserAInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserAInputEnvelope
-  set?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  disconnect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  delete?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  update?: Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserAInput | Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserAInput[]
-  updateMany?: Prisma.ChatRoomUpdateManyWithWhereWithoutUserAInput | Prisma.ChatRoomUpdateManyWithWhereWithoutUserAInput[]
-  deleteMany?: Prisma.ChatRoomScalarWhereInput | Prisma.ChatRoomScalarWhereInput[]
+export type chatroomUncheckedUpdateManyWithoutUserANestedInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserAInput, Prisma.chatroomUncheckedCreateWithoutUserAInput> | Prisma.chatroomCreateWithoutUserAInput[] | Prisma.chatroomUncheckedCreateWithoutUserAInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserAInput | Prisma.chatroomCreateOrConnectWithoutUserAInput[]
+  upsert?: Prisma.chatroomUpsertWithWhereUniqueWithoutUserAInput | Prisma.chatroomUpsertWithWhereUniqueWithoutUserAInput[]
+  createMany?: Prisma.chatroomCreateManyUserAInputEnvelope
+  set?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  disconnect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  delete?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  update?: Prisma.chatroomUpdateWithWhereUniqueWithoutUserAInput | Prisma.chatroomUpdateWithWhereUniqueWithoutUserAInput[]
+  updateMany?: Prisma.chatroomUpdateManyWithWhereWithoutUserAInput | Prisma.chatroomUpdateManyWithWhereWithoutUserAInput[]
+  deleteMany?: Prisma.chatroomScalarWhereInput | Prisma.chatroomScalarWhereInput[]
 }
 
-export type ChatRoomUncheckedUpdateManyWithoutUserBNestedInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserBInput, Prisma.ChatRoomUncheckedCreateWithoutUserBInput> | Prisma.ChatRoomCreateWithoutUserBInput[] | Prisma.ChatRoomUncheckedCreateWithoutUserBInput[]
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutUserBInput | Prisma.ChatRoomCreateOrConnectWithoutUserBInput[]
-  upsert?: Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserBInput | Prisma.ChatRoomUpsertWithWhereUniqueWithoutUserBInput[]
-  createMany?: Prisma.ChatRoomCreateManyUserBInputEnvelope
-  set?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  disconnect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  delete?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  connect?: Prisma.ChatRoomWhereUniqueInput | Prisma.ChatRoomWhereUniqueInput[]
-  update?: Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserBInput | Prisma.ChatRoomUpdateWithWhereUniqueWithoutUserBInput[]
-  updateMany?: Prisma.ChatRoomUpdateManyWithWhereWithoutUserBInput | Prisma.ChatRoomUpdateManyWithWhereWithoutUserBInput[]
-  deleteMany?: Prisma.ChatRoomScalarWhereInput | Prisma.ChatRoomScalarWhereInput[]
+export type chatroomUncheckedUpdateManyWithoutUserBNestedInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutUserBInput, Prisma.chatroomUncheckedCreateWithoutUserBInput> | Prisma.chatroomCreateWithoutUserBInput[] | Prisma.chatroomUncheckedCreateWithoutUserBInput[]
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutUserBInput | Prisma.chatroomCreateOrConnectWithoutUserBInput[]
+  upsert?: Prisma.chatroomUpsertWithWhereUniqueWithoutUserBInput | Prisma.chatroomUpsertWithWhereUniqueWithoutUserBInput[]
+  createMany?: Prisma.chatroomCreateManyUserBInputEnvelope
+  set?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  disconnect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  delete?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  connect?: Prisma.chatroomWhereUniqueInput | Prisma.chatroomWhereUniqueInput[]
+  update?: Prisma.chatroomUpdateWithWhereUniqueWithoutUserBInput | Prisma.chatroomUpdateWithWhereUniqueWithoutUserBInput[]
+  updateMany?: Prisma.chatroomUpdateManyWithWhereWithoutUserBInput | Prisma.chatroomUpdateManyWithWhereWithoutUserBInput[]
+  deleteMany?: Prisma.chatroomScalarWhereInput | Prisma.chatroomScalarWhereInput[]
 }
 
-export type ChatRoomCreateNestedOneWithoutMessagesInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutMessagesInput, Prisma.ChatRoomUncheckedCreateWithoutMessagesInput>
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutMessagesInput
-  connect?: Prisma.ChatRoomWhereUniqueInput
+export type chatroomCreateNestedOneWithoutMessagesInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutMessagesInput, Prisma.chatroomUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutMessagesInput
+  connect?: Prisma.chatroomWhereUniqueInput
 }
 
-export type ChatRoomUpdateOneRequiredWithoutMessagesNestedInput = {
-  create?: Prisma.XOR<Prisma.ChatRoomCreateWithoutMessagesInput, Prisma.ChatRoomUncheckedCreateWithoutMessagesInput>
-  connectOrCreate?: Prisma.ChatRoomCreateOrConnectWithoutMessagesInput
-  upsert?: Prisma.ChatRoomUpsertWithoutMessagesInput
-  connect?: Prisma.ChatRoomWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ChatRoomUpdateToOneWithWhereWithoutMessagesInput, Prisma.ChatRoomUpdateWithoutMessagesInput>, Prisma.ChatRoomUncheckedUpdateWithoutMessagesInput>
+export type chatroomUpdateOneRequiredWithoutMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.chatroomCreateWithoutMessagesInput, Prisma.chatroomUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.chatroomCreateOrConnectWithoutMessagesInput
+  upsert?: Prisma.chatroomUpsertWithoutMessagesInput
+  connect?: Prisma.chatroomWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.chatroomUpdateToOneWithWhereWithoutMessagesInput, Prisma.chatroomUpdateWithoutMessagesInput>, Prisma.chatroomUncheckedUpdateWithoutMessagesInput>
 }
 
-export type ChatRoomCreateWithoutUserAInput = {
+export type chatroomCreateWithoutUserAInput = {
   id?: string
   createdAt?: Date | string
-  messages?: Prisma.MessageCreateNestedManyWithoutChatRoomInput
-  userB: Prisma.UserCreateNestedOneWithoutChatRoomsBInput
+  messages?: Prisma.messageCreateNestedManyWithoutChatRoomInput
+  userB: Prisma.userCreateNestedOneWithoutChatRoomsBInput
 }
 
-export type ChatRoomUncheckedCreateWithoutUserAInput = {
+export type chatroomUncheckedCreateWithoutUserAInput = {
   id?: string
   userBId: string
   createdAt?: Date | string
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatRoomInput
+  messages?: Prisma.messageUncheckedCreateNestedManyWithoutChatRoomInput
 }
 
-export type ChatRoomCreateOrConnectWithoutUserAInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserAInput, Prisma.ChatRoomUncheckedCreateWithoutUserAInput>
+export type chatroomCreateOrConnectWithoutUserAInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  create: Prisma.XOR<Prisma.chatroomCreateWithoutUserAInput, Prisma.chatroomUncheckedCreateWithoutUserAInput>
 }
 
-export type ChatRoomCreateManyUserAInputEnvelope = {
-  data: Prisma.ChatRoomCreateManyUserAInput | Prisma.ChatRoomCreateManyUserAInput[]
+export type chatroomCreateManyUserAInputEnvelope = {
+  data: Prisma.chatroomCreateManyUserAInput | Prisma.chatroomCreateManyUserAInput[]
   skipDuplicates?: boolean
 }
 
-export type ChatRoomCreateWithoutUserBInput = {
+export type chatroomCreateWithoutUserBInput = {
   id?: string
   createdAt?: Date | string
-  messages?: Prisma.MessageCreateNestedManyWithoutChatRoomInput
-  userA: Prisma.UserCreateNestedOneWithoutChatRoomsAInput
+  messages?: Prisma.messageCreateNestedManyWithoutChatRoomInput
+  userA: Prisma.userCreateNestedOneWithoutChatRoomsAInput
 }
 
-export type ChatRoomUncheckedCreateWithoutUserBInput = {
+export type chatroomUncheckedCreateWithoutUserBInput = {
   id?: string
   userAId: string
   createdAt?: Date | string
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatRoomInput
+  messages?: Prisma.messageUncheckedCreateNestedManyWithoutChatRoomInput
 }
 
-export type ChatRoomCreateOrConnectWithoutUserBInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserBInput, Prisma.ChatRoomUncheckedCreateWithoutUserBInput>
+export type chatroomCreateOrConnectWithoutUserBInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  create: Prisma.XOR<Prisma.chatroomCreateWithoutUserBInput, Prisma.chatroomUncheckedCreateWithoutUserBInput>
 }
 
-export type ChatRoomCreateManyUserBInputEnvelope = {
-  data: Prisma.ChatRoomCreateManyUserBInput | Prisma.ChatRoomCreateManyUserBInput[]
+export type chatroomCreateManyUserBInputEnvelope = {
+  data: Prisma.chatroomCreateManyUserBInput | Prisma.chatroomCreateManyUserBInput[]
   skipDuplicates?: boolean
 }
 
-export type ChatRoomUpsertWithWhereUniqueWithoutUserAInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  update: Prisma.XOR<Prisma.ChatRoomUpdateWithoutUserAInput, Prisma.ChatRoomUncheckedUpdateWithoutUserAInput>
-  create: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserAInput, Prisma.ChatRoomUncheckedCreateWithoutUserAInput>
+export type chatroomUpsertWithWhereUniqueWithoutUserAInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  update: Prisma.XOR<Prisma.chatroomUpdateWithoutUserAInput, Prisma.chatroomUncheckedUpdateWithoutUserAInput>
+  create: Prisma.XOR<Prisma.chatroomCreateWithoutUserAInput, Prisma.chatroomUncheckedCreateWithoutUserAInput>
 }
 
-export type ChatRoomUpdateWithWhereUniqueWithoutUserAInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  data: Prisma.XOR<Prisma.ChatRoomUpdateWithoutUserAInput, Prisma.ChatRoomUncheckedUpdateWithoutUserAInput>
+export type chatroomUpdateWithWhereUniqueWithoutUserAInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  data: Prisma.XOR<Prisma.chatroomUpdateWithoutUserAInput, Prisma.chatroomUncheckedUpdateWithoutUserAInput>
 }
 
-export type ChatRoomUpdateManyWithWhereWithoutUserAInput = {
-  where: Prisma.ChatRoomScalarWhereInput
-  data: Prisma.XOR<Prisma.ChatRoomUpdateManyMutationInput, Prisma.ChatRoomUncheckedUpdateManyWithoutUserAInput>
+export type chatroomUpdateManyWithWhereWithoutUserAInput = {
+  where: Prisma.chatroomScalarWhereInput
+  data: Prisma.XOR<Prisma.chatroomUpdateManyMutationInput, Prisma.chatroomUncheckedUpdateManyWithoutUserAInput>
 }
 
-export type ChatRoomScalarWhereInput = {
-  AND?: Prisma.ChatRoomScalarWhereInput | Prisma.ChatRoomScalarWhereInput[]
-  OR?: Prisma.ChatRoomScalarWhereInput[]
-  NOT?: Prisma.ChatRoomScalarWhereInput | Prisma.ChatRoomScalarWhereInput[]
-  id?: Prisma.StringFilter<"ChatRoom"> | string
-  userAId?: Prisma.StringFilter<"ChatRoom"> | string
-  userBId?: Prisma.StringFilter<"ChatRoom"> | string
-  createdAt?: Prisma.DateTimeFilter<"ChatRoom"> | Date | string
+export type chatroomScalarWhereInput = {
+  AND?: Prisma.chatroomScalarWhereInput | Prisma.chatroomScalarWhereInput[]
+  OR?: Prisma.chatroomScalarWhereInput[]
+  NOT?: Prisma.chatroomScalarWhereInput | Prisma.chatroomScalarWhereInput[]
+  id?: Prisma.StringFilter<"chatroom"> | string
+  userAId?: Prisma.StringFilter<"chatroom"> | string
+  userBId?: Prisma.StringFilter<"chatroom"> | string
+  createdAt?: Prisma.DateTimeFilter<"chatroom"> | Date | string
 }
 
-export type ChatRoomUpsertWithWhereUniqueWithoutUserBInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  update: Prisma.XOR<Prisma.ChatRoomUpdateWithoutUserBInput, Prisma.ChatRoomUncheckedUpdateWithoutUserBInput>
-  create: Prisma.XOR<Prisma.ChatRoomCreateWithoutUserBInput, Prisma.ChatRoomUncheckedCreateWithoutUserBInput>
+export type chatroomUpsertWithWhereUniqueWithoutUserBInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  update: Prisma.XOR<Prisma.chatroomUpdateWithoutUserBInput, Prisma.chatroomUncheckedUpdateWithoutUserBInput>
+  create: Prisma.XOR<Prisma.chatroomCreateWithoutUserBInput, Prisma.chatroomUncheckedCreateWithoutUserBInput>
 }
 
-export type ChatRoomUpdateWithWhereUniqueWithoutUserBInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  data: Prisma.XOR<Prisma.ChatRoomUpdateWithoutUserBInput, Prisma.ChatRoomUncheckedUpdateWithoutUserBInput>
+export type chatroomUpdateWithWhereUniqueWithoutUserBInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  data: Prisma.XOR<Prisma.chatroomUpdateWithoutUserBInput, Prisma.chatroomUncheckedUpdateWithoutUserBInput>
 }
 
-export type ChatRoomUpdateManyWithWhereWithoutUserBInput = {
-  where: Prisma.ChatRoomScalarWhereInput
-  data: Prisma.XOR<Prisma.ChatRoomUpdateManyMutationInput, Prisma.ChatRoomUncheckedUpdateManyWithoutUserBInput>
+export type chatroomUpdateManyWithWhereWithoutUserBInput = {
+  where: Prisma.chatroomScalarWhereInput
+  data: Prisma.XOR<Prisma.chatroomUpdateManyMutationInput, Prisma.chatroomUncheckedUpdateManyWithoutUserBInput>
 }
 
-export type ChatRoomCreateWithoutMessagesInput = {
+export type chatroomCreateWithoutMessagesInput = {
   id?: string
   createdAt?: Date | string
-  userA: Prisma.UserCreateNestedOneWithoutChatRoomsAInput
-  userB: Prisma.UserCreateNestedOneWithoutChatRoomsBInput
+  userA: Prisma.userCreateNestedOneWithoutChatRoomsAInput
+  userB: Prisma.userCreateNestedOneWithoutChatRoomsBInput
 }
 
-export type ChatRoomUncheckedCreateWithoutMessagesInput = {
+export type chatroomUncheckedCreateWithoutMessagesInput = {
   id?: string
   userAId: string
   userBId: string
   createdAt?: Date | string
 }
 
-export type ChatRoomCreateOrConnectWithoutMessagesInput = {
-  where: Prisma.ChatRoomWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChatRoomCreateWithoutMessagesInput, Prisma.ChatRoomUncheckedCreateWithoutMessagesInput>
+export type chatroomCreateOrConnectWithoutMessagesInput = {
+  where: Prisma.chatroomWhereUniqueInput
+  create: Prisma.XOR<Prisma.chatroomCreateWithoutMessagesInput, Prisma.chatroomUncheckedCreateWithoutMessagesInput>
 }
 
-export type ChatRoomUpsertWithoutMessagesInput = {
-  update: Prisma.XOR<Prisma.ChatRoomUpdateWithoutMessagesInput, Prisma.ChatRoomUncheckedUpdateWithoutMessagesInput>
-  create: Prisma.XOR<Prisma.ChatRoomCreateWithoutMessagesInput, Prisma.ChatRoomUncheckedCreateWithoutMessagesInput>
-  where?: Prisma.ChatRoomWhereInput
+export type chatroomUpsertWithoutMessagesInput = {
+  update: Prisma.XOR<Prisma.chatroomUpdateWithoutMessagesInput, Prisma.chatroomUncheckedUpdateWithoutMessagesInput>
+  create: Prisma.XOR<Prisma.chatroomCreateWithoutMessagesInput, Prisma.chatroomUncheckedCreateWithoutMessagesInput>
+  where?: Prisma.chatroomWhereInput
 }
 
-export type ChatRoomUpdateToOneWithWhereWithoutMessagesInput = {
-  where?: Prisma.ChatRoomWhereInput
-  data: Prisma.XOR<Prisma.ChatRoomUpdateWithoutMessagesInput, Prisma.ChatRoomUncheckedUpdateWithoutMessagesInput>
+export type chatroomUpdateToOneWithWhereWithoutMessagesInput = {
+  where?: Prisma.chatroomWhereInput
+  data: Prisma.XOR<Prisma.chatroomUpdateWithoutMessagesInput, Prisma.chatroomUncheckedUpdateWithoutMessagesInput>
 }
 
-export type ChatRoomUpdateWithoutMessagesInput = {
+export type chatroomUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userA?: Prisma.UserUpdateOneRequiredWithoutChatRoomsANestedInput
-  userB?: Prisma.UserUpdateOneRequiredWithoutChatRoomsBNestedInput
+  userA?: Prisma.userUpdateOneRequiredWithoutChatRoomsANestedInput
+  userB?: Prisma.userUpdateOneRequiredWithoutChatRoomsBNestedInput
 }
 
-export type ChatRoomUncheckedUpdateWithoutMessagesInput = {
+export type chatroomUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userAId?: Prisma.StringFieldUpdateOperationsInput | string
   userBId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ChatRoomCreateManyUserAInput = {
+export type chatroomCreateManyUserAInput = {
   id?: string
   userBId: string
   createdAt?: Date | string
 }
 
-export type ChatRoomCreateManyUserBInput = {
+export type chatroomCreateManyUserBInput = {
   id?: string
   userAId: string
   createdAt?: Date | string
 }
 
-export type ChatRoomUpdateWithoutUserAInput = {
+export type chatroomUpdateWithoutUserAInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  messages?: Prisma.MessageUpdateManyWithoutChatRoomNestedInput
-  userB?: Prisma.UserUpdateOneRequiredWithoutChatRoomsBNestedInput
+  messages?: Prisma.messageUpdateManyWithoutChatRoomNestedInput
+  userB?: Prisma.userUpdateOneRequiredWithoutChatRoomsBNestedInput
 }
 
-export type ChatRoomUncheckedUpdateWithoutUserAInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userBId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutChatRoomNestedInput
-}
-
-export type ChatRoomUncheckedUpdateManyWithoutUserAInput = {
+export type chatroomUncheckedUpdateWithoutUserAInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userBId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.messageUncheckedUpdateManyWithoutChatRoomNestedInput
 }
 
-export type ChatRoomUpdateWithoutUserBInput = {
+export type chatroomUncheckedUpdateManyWithoutUserAInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userBId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type chatroomUpdateWithoutUserBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  messages?: Prisma.MessageUpdateManyWithoutChatRoomNestedInput
-  userA?: Prisma.UserUpdateOneRequiredWithoutChatRoomsANestedInput
+  messages?: Prisma.messageUpdateManyWithoutChatRoomNestedInput
+  userA?: Prisma.userUpdateOneRequiredWithoutChatRoomsANestedInput
 }
 
-export type ChatRoomUncheckedUpdateWithoutUserBInput = {
+export type chatroomUncheckedUpdateWithoutUserBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userAId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutChatRoomNestedInput
+  messages?: Prisma.messageUncheckedUpdateManyWithoutChatRoomNestedInput
 }
 
-export type ChatRoomUncheckedUpdateManyWithoutUserBInput = {
+export type chatroomUncheckedUpdateManyWithoutUserBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userAId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -608,212 +608,212 @@ export type ChatRoomUncheckedUpdateManyWithoutUserBInput = {
 
 
 /**
- * Count Type ChatRoomCountOutputType
+ * Count Type ChatroomCountOutputType
  */
 
-export type ChatRoomCountOutputType = {
+export type ChatroomCountOutputType = {
   messages: number
 }
 
-export type ChatRoomCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  messages?: boolean | ChatRoomCountOutputTypeCountMessagesArgs
+export type ChatroomCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  messages?: boolean | ChatroomCountOutputTypeCountMessagesArgs
 }
 
 /**
- * ChatRoomCountOutputType without action
+ * ChatroomCountOutputType without action
  */
-export type ChatRoomCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ChatroomCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoomCountOutputType
+   * Select specific fields to fetch from the ChatroomCountOutputType
    */
-  select?: Prisma.ChatRoomCountOutputTypeSelect<ExtArgs> | null
+  select?: Prisma.ChatroomCountOutputTypeSelect<ExtArgs> | null
 }
 
 /**
- * ChatRoomCountOutputType without action
+ * ChatroomCountOutputType without action
  */
-export type ChatRoomCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MessageWhereInput
+export type ChatroomCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.messageWhereInput
 }
 
 
-export type ChatRoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type chatroomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userAId?: boolean
   userBId?: boolean
   createdAt?: boolean
-  messages?: boolean | Prisma.ChatRoom$messagesArgs<ExtArgs>
-  userA?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  userB?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  _count?: boolean | Prisma.ChatRoomCountOutputTypeDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["chatRoom"]>
+  messages?: boolean | Prisma.chatroom$messagesArgs<ExtArgs>
+  userA?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  userB?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.ChatroomCountOutputTypeDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["chatroom"]>
 
 
 
-export type ChatRoomSelectScalar = {
+export type chatroomSelectScalar = {
   id?: boolean
   userAId?: boolean
   userBId?: boolean
   createdAt?: boolean
 }
 
-export type ChatRoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userAId" | "userBId" | "createdAt", ExtArgs["result"]["chatRoom"]>
-export type ChatRoomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  messages?: boolean | Prisma.ChatRoom$messagesArgs<ExtArgs>
-  userA?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  userB?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  _count?: boolean | Prisma.ChatRoomCountOutputTypeDefaultArgs<ExtArgs>
+export type chatroomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userAId" | "userBId" | "createdAt", ExtArgs["result"]["chatroom"]>
+export type chatroomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  messages?: boolean | Prisma.chatroom$messagesArgs<ExtArgs>
+  userA?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  userB?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.ChatroomCountOutputTypeDefaultArgs<ExtArgs>
 }
 
-export type $ChatRoomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "ChatRoom"
+export type $chatroomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "chatroom"
   objects: {
-    messages: Prisma.$MessagePayload<ExtArgs>[]
-    userA: Prisma.$UserPayload<ExtArgs>
-    userB: Prisma.$UserPayload<ExtArgs>
+    messages: Prisma.$messagePayload<ExtArgs>[]
+    userA: Prisma.$userPayload<ExtArgs>
+    userB: Prisma.$userPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userAId: string
     userBId: string
     createdAt: Date
-  }, ExtArgs["result"]["chatRoom"]>
+  }, ExtArgs["result"]["chatroom"]>
   composites: {}
 }
 
-export type ChatRoomGetPayload<S extends boolean | null | undefined | ChatRoomDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload, S>
+export type chatroomGetPayload<S extends boolean | null | undefined | chatroomDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$chatroomPayload, S>
 
-export type ChatRoomCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<ChatRoomFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-    select?: ChatRoomCountAggregateInputType | true
+export type chatroomCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<chatroomFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: ChatroomCountAggregateInputType | true
   }
 
-export interface ChatRoomDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatRoom'], meta: { name: 'ChatRoom' } }
+export interface chatroomDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['chatroom'], meta: { name: 'chatroom' } }
   /**
-   * Find zero or one ChatRoom that matches the filter.
-   * @param {ChatRoomFindUniqueArgs} args - Arguments to find a ChatRoom
+   * Find zero or one Chatroom that matches the filter.
+   * @param {chatroomFindUniqueArgs} args - Arguments to find a Chatroom
    * @example
-   * // Get one ChatRoom
-   * const chatRoom = await prisma.chatRoom.findUnique({
+   * // Get one Chatroom
+   * const chatroom = await prisma.chatroom.findUnique({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUnique<T extends ChatRoomFindUniqueArgs>(args: Prisma.SelectSubset<T, ChatRoomFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends chatroomFindUniqueArgs>(args: Prisma.SelectSubset<T, chatroomFindUniqueArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find one ChatRoom that matches the filter or throw an error with `error.code='P2025'`
+   * Find one Chatroom that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {ChatRoomFindUniqueOrThrowArgs} args - Arguments to find a ChatRoom
+   * @param {chatroomFindUniqueOrThrowArgs} args - Arguments to find a Chatroom
    * @example
-   * // Get one ChatRoom
-   * const chatRoom = await prisma.chatRoom.findUniqueOrThrow({
+   * // Get one Chatroom
+   * const chatroom = await prisma.chatroom.findUniqueOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUniqueOrThrow<T extends ChatRoomFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ChatRoomFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends chatroomFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, chatroomFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first ChatRoom that matches the filter.
+   * Find the first Chatroom that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomFindFirstArgs} args - Arguments to find a ChatRoom
+   * @param {chatroomFindFirstArgs} args - Arguments to find a Chatroom
    * @example
-   * // Get one ChatRoom
-   * const chatRoom = await prisma.chatRoom.findFirst({
+   * // Get one Chatroom
+   * const chatroom = await prisma.chatroom.findFirst({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirst<T extends ChatRoomFindFirstArgs>(args?: Prisma.SelectSubset<T, ChatRoomFindFirstArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends chatroomFindFirstArgs>(args?: Prisma.SelectSubset<T, chatroomFindFirstArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first ChatRoom that matches the filter or
+   * Find the first Chatroom that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomFindFirstOrThrowArgs} args - Arguments to find a ChatRoom
+   * @param {chatroomFindFirstOrThrowArgs} args - Arguments to find a Chatroom
    * @example
-   * // Get one ChatRoom
-   * const chatRoom = await prisma.chatRoom.findFirstOrThrow({
+   * // Get one Chatroom
+   * const chatroom = await prisma.chatroom.findFirstOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirstOrThrow<T extends ChatRoomFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ChatRoomFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends chatroomFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, chatroomFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find zero or more ChatRooms that matches the filter.
+   * Find zero or more Chatrooms that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {chatroomFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
-   * // Get all ChatRooms
-   * const chatRooms = await prisma.chatRoom.findMany()
+   * // Get all Chatrooms
+   * const chatrooms = await prisma.chatroom.findMany()
    * 
-   * // Get first 10 ChatRooms
-   * const chatRooms = await prisma.chatRoom.findMany({ take: 10 })
+   * // Get first 10 Chatrooms
+   * const chatrooms = await prisma.chatroom.findMany({ take: 10 })
    * 
    * // Only select the `id`
-   * const chatRoomWithIdOnly = await prisma.chatRoom.findMany({ select: { id: true } })
+   * const chatroomWithIdOnly = await prisma.chatroom.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends ChatRoomFindManyArgs>(args?: Prisma.SelectSubset<T, ChatRoomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends chatroomFindManyArgs>(args?: Prisma.SelectSubset<T, chatroomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
-   * Create a ChatRoom.
-   * @param {ChatRoomCreateArgs} args - Arguments to create a ChatRoom.
+   * Create a Chatroom.
+   * @param {chatroomCreateArgs} args - Arguments to create a Chatroom.
    * @example
-   * // Create one ChatRoom
-   * const ChatRoom = await prisma.chatRoom.create({
+   * // Create one Chatroom
+   * const Chatroom = await prisma.chatroom.create({
    *   data: {
-   *     // ... data to create a ChatRoom
+   *     // ... data to create a Chatroom
    *   }
    * })
    * 
    */
-  create<T extends ChatRoomCreateArgs>(args: Prisma.SelectSubset<T, ChatRoomCreateArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends chatroomCreateArgs>(args: Prisma.SelectSubset<T, chatroomCreateArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Create many ChatRooms.
-   * @param {ChatRoomCreateManyArgs} args - Arguments to create many ChatRooms.
+   * Create many Chatrooms.
+   * @param {chatroomCreateManyArgs} args - Arguments to create many Chatrooms.
    * @example
-   * // Create many ChatRooms
-   * const chatRoom = await prisma.chatRoom.createMany({
+   * // Create many Chatrooms
+   * const chatroom = await prisma.chatroom.createMany({
    *   data: [
    *     // ... provide data here
    *   ]
    * })
    *     
    */
-  createMany<T extends ChatRoomCreateManyArgs>(args?: Prisma.SelectSubset<T, ChatRoomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends chatroomCreateManyArgs>(args?: Prisma.SelectSubset<T, chatroomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Delete a ChatRoom.
-   * @param {ChatRoomDeleteArgs} args - Arguments to delete one ChatRoom.
+   * Delete a Chatroom.
+   * @param {chatroomDeleteArgs} args - Arguments to delete one Chatroom.
    * @example
-   * // Delete one ChatRoom
-   * const ChatRoom = await prisma.chatRoom.delete({
+   * // Delete one Chatroom
+   * const Chatroom = await prisma.chatroom.delete({
    *   where: {
-   *     // ... filter to delete one ChatRoom
+   *     // ... filter to delete one Chatroom
    *   }
    * })
    * 
    */
-  delete<T extends ChatRoomDeleteArgs>(args: Prisma.SelectSubset<T, ChatRoomDeleteArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends chatroomDeleteArgs>(args: Prisma.SelectSubset<T, chatroomDeleteArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Update one ChatRoom.
-   * @param {ChatRoomUpdateArgs} args - Arguments to update one ChatRoom.
+   * Update one Chatroom.
+   * @param {chatroomUpdateArgs} args - Arguments to update one Chatroom.
    * @example
-   * // Update one ChatRoom
-   * const chatRoom = await prisma.chatRoom.update({
+   * // Update one Chatroom
+   * const chatroom = await prisma.chatroom.update({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -823,30 +823,30 @@ export interface ChatRoomDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  update<T extends ChatRoomUpdateArgs>(args: Prisma.SelectSubset<T, ChatRoomUpdateArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends chatroomUpdateArgs>(args: Prisma.SelectSubset<T, chatroomUpdateArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Delete zero or more ChatRooms.
-   * @param {ChatRoomDeleteManyArgs} args - Arguments to filter ChatRooms to delete.
+   * Delete zero or more Chatrooms.
+   * @param {chatroomDeleteManyArgs} args - Arguments to filter Chatrooms to delete.
    * @example
-   * // Delete a few ChatRooms
-   * const { count } = await prisma.chatRoom.deleteMany({
+   * // Delete a few Chatrooms
+   * const { count } = await prisma.chatroom.deleteMany({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    * 
    */
-  deleteMany<T extends ChatRoomDeleteManyArgs>(args?: Prisma.SelectSubset<T, ChatRoomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends chatroomDeleteManyArgs>(args?: Prisma.SelectSubset<T, chatroomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Update zero or more ChatRooms.
+   * Update zero or more Chatrooms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {chatroomUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
-   * // Update many ChatRooms
-   * const chatRoom = await prisma.chatRoom.updateMany({
+   * // Update many Chatrooms
+   * const chatroom = await prisma.chatroom.updateMany({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -856,56 +856,56 @@ export interface ChatRoomDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  updateMany<T extends ChatRoomUpdateManyArgs>(args: Prisma.SelectSubset<T, ChatRoomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends chatroomUpdateManyArgs>(args: Prisma.SelectSubset<T, chatroomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create or update one ChatRoom.
-   * @param {ChatRoomUpsertArgs} args - Arguments to update or create a ChatRoom.
+   * Create or update one Chatroom.
+   * @param {chatroomUpsertArgs} args - Arguments to update or create a Chatroom.
    * @example
-   * // Update or create a ChatRoom
-   * const chatRoom = await prisma.chatRoom.upsert({
+   * // Update or create a Chatroom
+   * const chatroom = await prisma.chatroom.upsert({
    *   create: {
-   *     // ... data to create a ChatRoom
+   *     // ... data to create a Chatroom
    *   },
    *   update: {
    *     // ... in case it already exists, update
    *   },
    *   where: {
-   *     // ... the filter for the ChatRoom we want to update
+   *     // ... the filter for the Chatroom we want to update
    *   }
    * })
    */
-  upsert<T extends ChatRoomUpsertArgs>(args: Prisma.SelectSubset<T, ChatRoomUpsertArgs<ExtArgs>>): Prisma.Prisma__ChatRoomClient<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends chatroomUpsertArgs>(args: Prisma.SelectSubset<T, chatroomUpsertArgs<ExtArgs>>): Prisma.Prisma__chatroomClient<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
-   * Count the number of ChatRooms.
+   * Count the number of Chatrooms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomCountArgs} args - Arguments to filter ChatRooms to count.
+   * @param {chatroomCountArgs} args - Arguments to filter Chatrooms to count.
    * @example
-   * // Count the number of ChatRooms
-   * const count = await prisma.chatRoom.count({
+   * // Count the number of Chatrooms
+   * const count = await prisma.chatroom.count({
    *   where: {
-   *     // ... the filter for the ChatRooms we want to count
+   *     // ... the filter for the Chatrooms we want to count
    *   }
    * })
   **/
-  count<T extends ChatRoomCountArgs>(
-    args?: Prisma.Subset<T, ChatRoomCountArgs>,
+  count<T extends chatroomCountArgs>(
+    args?: Prisma.Subset<T, chatroomCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], ChatRoomCountAggregateOutputType>
+        : Prisma.GetScalarType<T['select'], ChatroomCountAggregateOutputType>
       : number
   >
 
   /**
-   * Allows you to perform aggregations operations on a ChatRoom.
+   * Allows you to perform aggregations operations on a Chatroom.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+   * @param {ChatroomAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
    * @example
    * // Ordered by age ascending
    * // Where email contains prisma.io
@@ -925,13 +925,13 @@ export interface ChatRoomDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   take: 10,
    * })
   **/
-  aggregate<T extends ChatRoomAggregateArgs>(args: Prisma.Subset<T, ChatRoomAggregateArgs>): Prisma.PrismaPromise<GetChatRoomAggregateType<T>>
+  aggregate<T extends ChatroomAggregateArgs>(args: Prisma.Subset<T, ChatroomAggregateArgs>): Prisma.PrismaPromise<GetChatroomAggregateType<T>>
 
   /**
-   * Group by ChatRoom.
+   * Group by Chatroom.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ChatRoomGroupByArgs} args - Group by arguments.
+   * @param {chatroomGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -946,14 +946,14 @@ export interface ChatRoomDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
   **/
   groupBy<
-    T extends ChatRoomGroupByArgs,
+    T extends chatroomGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ChatRoomGroupByArgs['orderBy'] }
-      : { orderBy?: ChatRoomGroupByArgs['orderBy'] },
+      ? { orderBy: chatroomGroupByArgs['orderBy'] }
+      : { orderBy?: chatroomGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1002,24 +1002,24 @@ export interface ChatRoomDelegate<ExtArgs extends runtime.Types.Extensions.Inter
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, ChatRoomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatRoomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, chatroomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatroomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the ChatRoom model
+ * Fields of the chatroom model
  */
-readonly fields: ChatRoomFieldRefs;
+readonly fields: chatroomFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for ChatRoom.
+ * The delegate class that acts as a "Promise-like" for chatroom.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__ChatRoomClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__chatroomClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  messages<T extends Prisma.ChatRoom$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatRoom$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  userA<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  userB<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  messages<T extends Prisma.chatroom$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.chatroom$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$messagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userA<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  userB<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1046,398 +1046,398 @@ export interface Prisma__ChatRoomClient<T, Null = never, ExtArgs extends runtime
 
 
 /**
- * Fields of the ChatRoom model
+ * Fields of the chatroom model
  */
-export interface ChatRoomFieldRefs {
-  readonly id: Prisma.FieldRef<"ChatRoom", 'String'>
-  readonly userAId: Prisma.FieldRef<"ChatRoom", 'String'>
-  readonly userBId: Prisma.FieldRef<"ChatRoom", 'String'>
-  readonly createdAt: Prisma.FieldRef<"ChatRoom", 'DateTime'>
+export interface chatroomFieldRefs {
+  readonly id: Prisma.FieldRef<"chatroom", 'String'>
+  readonly userAId: Prisma.FieldRef<"chatroom", 'String'>
+  readonly userBId: Prisma.FieldRef<"chatroom", 'String'>
+  readonly createdAt: Prisma.FieldRef<"chatroom", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * ChatRoom findUnique
+ * chatroom findUnique
  */
-export type ChatRoomFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * Filter, which ChatRoom to fetch.
+   * Filter, which chatroom to fetch.
    */
-  where: Prisma.ChatRoomWhereUniqueInput
+  where: Prisma.chatroomWhereUniqueInput
 }
 
 /**
- * ChatRoom findUniqueOrThrow
+ * chatroom findUniqueOrThrow
  */
-export type ChatRoomFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * Filter, which ChatRoom to fetch.
+   * Filter, which chatroom to fetch.
    */
-  where: Prisma.ChatRoomWhereUniqueInput
+  where: Prisma.chatroomWhereUniqueInput
 }
 
 /**
- * ChatRoom findFirst
+ * chatroom findFirst
  */
-export type ChatRoomFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * Filter, which ChatRoom to fetch.
+   * Filter, which chatroom to fetch.
    */
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ChatRooms to fetch.
+   * Determine the order of chatrooms to fetch.
    */
-  orderBy?: Prisma.ChatRoomOrderByWithRelationInput | Prisma.ChatRoomOrderByWithRelationInput[]
+  orderBy?: Prisma.chatroomOrderByWithRelationInput | Prisma.chatroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for ChatRooms.
+   * Sets the position for searching for chatrooms.
    */
-  cursor?: Prisma.ChatRoomWhereUniqueInput
+  cursor?: Prisma.chatroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ChatRooms from the position of the cursor.
+   * Take `±n` chatrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ChatRooms.
+   * Skip the first `n` chatrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ChatRooms.
+   * Filter by unique combinations of chatrooms.
    */
-  distinct?: Prisma.ChatRoomScalarFieldEnum | Prisma.ChatRoomScalarFieldEnum[]
+  distinct?: Prisma.ChatroomScalarFieldEnum | Prisma.ChatroomScalarFieldEnum[]
 }
 
 /**
- * ChatRoom findFirstOrThrow
+ * chatroom findFirstOrThrow
  */
-export type ChatRoomFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * Filter, which ChatRoom to fetch.
+   * Filter, which chatroom to fetch.
    */
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ChatRooms to fetch.
+   * Determine the order of chatrooms to fetch.
    */
-  orderBy?: Prisma.ChatRoomOrderByWithRelationInput | Prisma.ChatRoomOrderByWithRelationInput[]
+  orderBy?: Prisma.chatroomOrderByWithRelationInput | Prisma.chatroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for ChatRooms.
+   * Sets the position for searching for chatrooms.
    */
-  cursor?: Prisma.ChatRoomWhereUniqueInput
+  cursor?: Prisma.chatroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ChatRooms from the position of the cursor.
+   * Take `±n` chatrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ChatRooms.
+   * Skip the first `n` chatrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ChatRooms.
+   * Filter by unique combinations of chatrooms.
    */
-  distinct?: Prisma.ChatRoomScalarFieldEnum | Prisma.ChatRoomScalarFieldEnum[]
+  distinct?: Prisma.ChatroomScalarFieldEnum | Prisma.ChatroomScalarFieldEnum[]
 }
 
 /**
- * ChatRoom findMany
+ * chatroom findMany
  */
-export type ChatRoomFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * Filter, which ChatRooms to fetch.
+   * Filter, which chatrooms to fetch.
    */
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ChatRooms to fetch.
+   * Determine the order of chatrooms to fetch.
    */
-  orderBy?: Prisma.ChatRoomOrderByWithRelationInput | Prisma.ChatRoomOrderByWithRelationInput[]
+  orderBy?: Prisma.chatroomOrderByWithRelationInput | Prisma.chatroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing ChatRooms.
+   * Sets the position for listing chatrooms.
    */
-  cursor?: Prisma.ChatRoomWhereUniqueInput
+  cursor?: Prisma.chatroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ChatRooms from the position of the cursor.
+   * Take `±n` chatrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ChatRooms.
+   * Skip the first `n` chatrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ChatRooms.
+   * Filter by unique combinations of chatrooms.
    */
-  distinct?: Prisma.ChatRoomScalarFieldEnum | Prisma.ChatRoomScalarFieldEnum[]
+  distinct?: Prisma.ChatroomScalarFieldEnum | Prisma.ChatroomScalarFieldEnum[]
 }
 
 /**
- * ChatRoom create
+ * chatroom create
  */
-export type ChatRoomCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * The data needed to create a ChatRoom.
+   * The data needed to create a chatroom.
    */
-  data: Prisma.XOR<Prisma.ChatRoomCreateInput, Prisma.ChatRoomUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.chatroomCreateInput, Prisma.chatroomUncheckedCreateInput>
 }
 
 /**
- * ChatRoom createMany
+ * chatroom createMany
  */
-export type ChatRoomCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many ChatRooms.
+   * The data used to create many chatrooms.
    */
-  data: Prisma.ChatRoomCreateManyInput | Prisma.ChatRoomCreateManyInput[]
+  data: Prisma.chatroomCreateManyInput | Prisma.chatroomCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * ChatRoom update
+ * chatroom update
  */
-export type ChatRoomUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * The data needed to update a ChatRoom.
+   * The data needed to update a chatroom.
    */
-  data: Prisma.XOR<Prisma.ChatRoomUpdateInput, Prisma.ChatRoomUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.chatroomUpdateInput, Prisma.chatroomUncheckedUpdateInput>
   /**
-   * Choose, which ChatRoom to update.
+   * Choose, which chatroom to update.
    */
-  where: Prisma.ChatRoomWhereUniqueInput
+  where: Prisma.chatroomWhereUniqueInput
 }
 
 /**
- * ChatRoom updateMany
+ * chatroom updateMany
  */
-export type ChatRoomUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update ChatRooms.
+   * The data used to update chatrooms.
    */
-  data: Prisma.XOR<Prisma.ChatRoomUpdateManyMutationInput, Prisma.ChatRoomUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.chatroomUpdateManyMutationInput, Prisma.chatroomUncheckedUpdateManyInput>
   /**
-   * Filter which ChatRooms to update
+   * Filter which chatrooms to update
    */
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
   /**
-   * Limit how many ChatRooms to update.
+   * Limit how many chatrooms to update.
    */
   limit?: number
 }
 
 /**
- * ChatRoom upsert
+ * chatroom upsert
  */
-export type ChatRoomUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * The filter to search for the ChatRoom to update in case it exists.
+   * The filter to search for the chatroom to update in case it exists.
    */
-  where: Prisma.ChatRoomWhereUniqueInput
+  where: Prisma.chatroomWhereUniqueInput
   /**
-   * In case the ChatRoom found by the `where` argument doesn't exist, create a new ChatRoom with this data.
+   * In case the chatroom found by the `where` argument doesn't exist, create a new chatroom with this data.
    */
-  create: Prisma.XOR<Prisma.ChatRoomCreateInput, Prisma.ChatRoomUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.chatroomCreateInput, Prisma.chatroomUncheckedCreateInput>
   /**
-   * In case the ChatRoom was found with the provided `where` argument, update it with this data.
+   * In case the chatroom was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.ChatRoomUpdateInput, Prisma.ChatRoomUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.chatroomUpdateInput, Prisma.chatroomUncheckedUpdateInput>
 }
 
 /**
- * ChatRoom delete
+ * chatroom delete
  */
-export type ChatRoomDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
   /**
-   * Filter which ChatRoom to delete.
+   * Filter which chatroom to delete.
    */
-  where: Prisma.ChatRoomWhereUniqueInput
+  where: Prisma.chatroomWhereUniqueInput
 }
 
 /**
- * ChatRoom deleteMany
+ * chatroom deleteMany
  */
-export type ChatRoomDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which ChatRooms to delete
+   * Filter which chatrooms to delete
    */
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
   /**
-   * Limit how many ChatRooms to delete.
+   * Limit how many chatrooms to delete.
    */
   limit?: number
 }
 
 /**
- * ChatRoom.messages
+ * chatroom.messages
  */
-export type ChatRoom$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroom$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Message
+   * Select specific fields to fetch from the message
    */
-  select?: Prisma.MessageSelect<ExtArgs> | null
+  select?: Prisma.messageSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Message
+   * Omit specific fields from the message
    */
-  omit?: Prisma.MessageOmit<ExtArgs> | null
+  omit?: Prisma.messageOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  where?: Prisma.MessageWhereInput
-  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
-  cursor?: Prisma.MessageWhereUniqueInput
+  include?: Prisma.messageInclude<ExtArgs> | null
+  where?: Prisma.messageWhereInput
+  orderBy?: Prisma.messageOrderByWithRelationInput | Prisma.messageOrderByWithRelationInput[]
+  cursor?: Prisma.messageWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
 }
 
 /**
- * ChatRoom without action
+ * chatroom without action
  */
-export type ChatRoomDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type chatroomDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
+  include?: Prisma.chatroomInclude<ExtArgs> | null
 }

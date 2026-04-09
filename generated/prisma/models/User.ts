@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `User` model and its related types.
+ * This file exports the `user` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model User
+ * Model user
  * 
  */
-export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayload>
+export type userModel = runtime.Types.Result.DefaultSelection<Prisma.$userPayload>
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
@@ -179,37 +179,37 @@ export type UserCountAggregateInputType = {
 
 export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which User to aggregate.
+   * Filter which user to aggregate.
    */
-  where?: Prisma.UserWhereInput
+  where?: Prisma.userWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Users to fetch.
+   * Determine the order of users to fetch.
    */
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  orderBy?: Prisma.userOrderByWithRelationInput | Prisma.userOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.UserWhereUniqueInput
+  cursor?: Prisma.userWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Users from the position of the cursor.
+   * Take `±n` users from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Users.
+   * Skip the first `n` users.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Users
+   * Count returned users
   **/
   _count?: true | UserCountAggregateInputType
   /**
@@ -237,11 +237,11 @@ export type GetUserAggregateType<T extends UserAggregateArgs> = {
 
 
 
-export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserWhereInput
-  orderBy?: Prisma.UserOrderByWithAggregationInput | Prisma.UserOrderByWithAggregationInput[]
+export type userGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.userWhereInput
+  orderBy?: Prisma.userOrderByWithAggregationInput | Prisma.userOrderByWithAggregationInput[]
   by: Prisma.UserScalarFieldEnum[] | Prisma.UserScalarFieldEnum
-  having?: Prisma.UserScalarWhereWithAggregatesInput
+  having?: Prisma.userScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
@@ -277,7 +277,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends userGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -292,46 +292,46 @@ export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaProm
 
 
 
-export type UserWhereInput = {
-  AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  OR?: Prisma.UserWhereInput[]
-  NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  id?: Prisma.StringFilter<"User"> | string
-  name?: Prisma.StringNullableFilter<"User"> | string | null
-  email?: Prisma.StringNullableFilter<"User"> | string | null
-  emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  image?: Prisma.StringNullableFilter<"User"> | string | null
-  password?: Prisma.StringNullableFilter<"User"> | string | null
-  phone?: Prisma.StringNullableFilter<"User"> | string | null
-  phoneVerified?: Prisma.BoolFilter<"User"> | boolean
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  isActive?: Prisma.BoolFilter<"User"> | boolean
-  isVerified?: Prisma.BoolFilter<"User"> | boolean
-  adminVerified?: Prisma.BoolFilter<"User"> | boolean
-  verificationBadge?: Prisma.BoolFilter<"User"> | boolean
-  isPremium?: Prisma.BoolFilter<"User"> | boolean
-  premiumExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  premiumPlan?: Prisma.StringNullableFilter<"User"> | string | null
-  profileBoost?: Prisma.BoolFilter<"User"> | boolean
-  boostExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  loginOtpEnabled?: Prisma.BoolFilter<"User"> | boolean
-  lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+export type userWhereInput = {
+  AND?: Prisma.userWhereInput | Prisma.userWhereInput[]
+  OR?: Prisma.userWhereInput[]
+  NOT?: Prisma.userWhereInput | Prisma.userWhereInput[]
+  id?: Prisma.StringFilter<"user"> | string
+  name?: Prisma.StringNullableFilter<"user"> | string | null
+  email?: Prisma.StringNullableFilter<"user"> | string | null
+  emailVerified?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  image?: Prisma.StringNullableFilter<"user"> | string | null
+  password?: Prisma.StringNullableFilter<"user"> | string | null
+  phone?: Prisma.StringNullableFilter<"user"> | string | null
+  phoneVerified?: Prisma.BoolFilter<"user"> | boolean
+  role?: Prisma.EnumRoleFilter<"user"> | $Enums.Role
+  isActive?: Prisma.BoolFilter<"user"> | boolean
+  isVerified?: Prisma.BoolFilter<"user"> | boolean
+  adminVerified?: Prisma.BoolFilter<"user"> | boolean
+  verificationBadge?: Prisma.BoolFilter<"user"> | boolean
+  isPremium?: Prisma.BoolFilter<"user"> | boolean
+  premiumExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  premiumPlan?: Prisma.StringNullableFilter<"user"> | string | null
+  profileBoost?: Prisma.BoolFilter<"user"> | boolean
+  boostExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFilter<"user"> | boolean
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
-  profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
+  profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.profileWhereInput> | null
   photos?: Prisma.PhotoListRelationFilter
   sentInterests?: Prisma.InterestListRelationFilter
   receivedInterests?: Prisma.InterestListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   receivedMessages?: Prisma.MessageListRelationFilter
-  chatRoomsA?: Prisma.ChatRoomListRelationFilter
-  chatRoomsB?: Prisma.ChatRoomListRelationFilter
+  chatRoomsA?: Prisma.ChatroomListRelationFilter
+  chatRoomsB?: Prisma.ChatroomListRelationFilter
   shortlisted?: Prisma.ShortlistListRelationFilter
   shortlistedBy?: Prisma.ShortlistListRelationFilter
-  viewedProfiles?: Prisma.ProfileViewListRelationFilter
-  profileViews?: Prisma.ProfileViewListRelationFilter
+  viewedProfiles?: Prisma.ProfileviewListRelationFilter
+  profileViews?: Prisma.ProfileviewListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
@@ -339,10 +339,10 @@ export type UserWhereInput = {
   reportsReceived?: Prisma.ReportListRelationFilter
   blockedUsers?: Prisma.BlockListRelationFilter
   blockedBy?: Prisma.BlockListRelationFilter
-  otps?: Prisma.OTPListRelationFilter
+  otps?: Prisma.OtpListRelationFilter
 }
 
-export type UserOrderByWithRelationInput = {
+export type userOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -365,71 +365,71 @@ export type UserOrderByWithRelationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  accounts?: Prisma.AccountOrderByRelationAggregateInput
-  sessions?: Prisma.SessionOrderByRelationAggregateInput
-  profile?: Prisma.ProfileOrderByWithRelationInput
-  photos?: Prisma.PhotoOrderByRelationAggregateInput
-  sentInterests?: Prisma.InterestOrderByRelationAggregateInput
-  receivedInterests?: Prisma.InterestOrderByRelationAggregateInput
-  sentMessages?: Prisma.MessageOrderByRelationAggregateInput
-  receivedMessages?: Prisma.MessageOrderByRelationAggregateInput
-  chatRoomsA?: Prisma.ChatRoomOrderByRelationAggregateInput
-  chatRoomsB?: Prisma.ChatRoomOrderByRelationAggregateInput
-  shortlisted?: Prisma.ShortlistOrderByRelationAggregateInput
-  shortlistedBy?: Prisma.ShortlistOrderByRelationAggregateInput
-  viewedProfiles?: Prisma.ProfileViewOrderByRelationAggregateInput
-  profileViews?: Prisma.ProfileViewOrderByRelationAggregateInput
-  notifications?: Prisma.NotificationOrderByRelationAggregateInput
-  subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
-  documents?: Prisma.DocumentOrderByRelationAggregateInput
-  reportsMade?: Prisma.ReportOrderByRelationAggregateInput
-  reportsReceived?: Prisma.ReportOrderByRelationAggregateInput
-  blockedUsers?: Prisma.BlockOrderByRelationAggregateInput
-  blockedBy?: Prisma.BlockOrderByRelationAggregateInput
-  otps?: Prisma.OTPOrderByRelationAggregateInput
-  _relevance?: Prisma.UserOrderByRelevanceInput
+  accounts?: Prisma.accountOrderByRelationAggregateInput
+  sessions?: Prisma.sessionOrderByRelationAggregateInput
+  profile?: Prisma.profileOrderByWithRelationInput
+  photos?: Prisma.photoOrderByRelationAggregateInput
+  sentInterests?: Prisma.interestOrderByRelationAggregateInput
+  receivedInterests?: Prisma.interestOrderByRelationAggregateInput
+  sentMessages?: Prisma.messageOrderByRelationAggregateInput
+  receivedMessages?: Prisma.messageOrderByRelationAggregateInput
+  chatRoomsA?: Prisma.chatroomOrderByRelationAggregateInput
+  chatRoomsB?: Prisma.chatroomOrderByRelationAggregateInput
+  shortlisted?: Prisma.shortlistOrderByRelationAggregateInput
+  shortlistedBy?: Prisma.shortlistOrderByRelationAggregateInput
+  viewedProfiles?: Prisma.profileviewOrderByRelationAggregateInput
+  profileViews?: Prisma.profileviewOrderByRelationAggregateInput
+  notifications?: Prisma.notificationOrderByRelationAggregateInput
+  subscriptions?: Prisma.subscriptionOrderByRelationAggregateInput
+  documents?: Prisma.documentOrderByRelationAggregateInput
+  reportsMade?: Prisma.reportOrderByRelationAggregateInput
+  reportsReceived?: Prisma.reportOrderByRelationAggregateInput
+  blockedUsers?: Prisma.blockOrderByRelationAggregateInput
+  blockedBy?: Prisma.blockOrderByRelationAggregateInput
+  otps?: Prisma.otpOrderByRelationAggregateInput
+  _relevance?: Prisma.userOrderByRelevanceInput
 }
 
-export type UserWhereUniqueInput = Prisma.AtLeast<{
+export type userWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
   phone?: string
-  AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  OR?: Prisma.UserWhereInput[]
-  NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  name?: Prisma.StringNullableFilter<"User"> | string | null
-  emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  image?: Prisma.StringNullableFilter<"User"> | string | null
-  password?: Prisma.StringNullableFilter<"User"> | string | null
-  phoneVerified?: Prisma.BoolFilter<"User"> | boolean
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  isActive?: Prisma.BoolFilter<"User"> | boolean
-  isVerified?: Prisma.BoolFilter<"User"> | boolean
-  adminVerified?: Prisma.BoolFilter<"User"> | boolean
-  verificationBadge?: Prisma.BoolFilter<"User"> | boolean
-  isPremium?: Prisma.BoolFilter<"User"> | boolean
-  premiumExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  premiumPlan?: Prisma.StringNullableFilter<"User"> | string | null
-  profileBoost?: Prisma.BoolFilter<"User"> | boolean
-  boostExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  loginOtpEnabled?: Prisma.BoolFilter<"User"> | boolean
-  lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  AND?: Prisma.userWhereInput | Prisma.userWhereInput[]
+  OR?: Prisma.userWhereInput[]
+  NOT?: Prisma.userWhereInput | Prisma.userWhereInput[]
+  name?: Prisma.StringNullableFilter<"user"> | string | null
+  emailVerified?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  image?: Prisma.StringNullableFilter<"user"> | string | null
+  password?: Prisma.StringNullableFilter<"user"> | string | null
+  phoneVerified?: Prisma.BoolFilter<"user"> | boolean
+  role?: Prisma.EnumRoleFilter<"user"> | $Enums.Role
+  isActive?: Prisma.BoolFilter<"user"> | boolean
+  isVerified?: Prisma.BoolFilter<"user"> | boolean
+  adminVerified?: Prisma.BoolFilter<"user"> | boolean
+  verificationBadge?: Prisma.BoolFilter<"user"> | boolean
+  isPremium?: Prisma.BoolFilter<"user"> | boolean
+  premiumExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  premiumPlan?: Prisma.StringNullableFilter<"user"> | string | null
+  profileBoost?: Prisma.BoolFilter<"user"> | boolean
+  boostExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFilter<"user"> | boolean
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
-  profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
+  profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.profileWhereInput> | null
   photos?: Prisma.PhotoListRelationFilter
   sentInterests?: Prisma.InterestListRelationFilter
   receivedInterests?: Prisma.InterestListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   receivedMessages?: Prisma.MessageListRelationFilter
-  chatRoomsA?: Prisma.ChatRoomListRelationFilter
-  chatRoomsB?: Prisma.ChatRoomListRelationFilter
+  chatRoomsA?: Prisma.ChatroomListRelationFilter
+  chatRoomsB?: Prisma.ChatroomListRelationFilter
   shortlisted?: Prisma.ShortlistListRelationFilter
   shortlistedBy?: Prisma.ShortlistListRelationFilter
-  viewedProfiles?: Prisma.ProfileViewListRelationFilter
-  profileViews?: Prisma.ProfileViewListRelationFilter
+  viewedProfiles?: Prisma.ProfileviewListRelationFilter
+  profileViews?: Prisma.ProfileviewListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
@@ -437,10 +437,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reportsReceived?: Prisma.ReportListRelationFilter
   blockedUsers?: Prisma.BlockListRelationFilter
   blockedBy?: Prisma.BlockListRelationFilter
-  otps?: Prisma.OTPListRelationFilter
+  otps?: Prisma.OtpListRelationFilter
 }, "id" | "email" | "phone">
 
-export type UserOrderByWithAggregationInput = {
+export type userOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -463,40 +463,40 @@ export type UserOrderByWithAggregationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  _count?: Prisma.UserCountOrderByAggregateInput
-  _max?: Prisma.UserMaxOrderByAggregateInput
-  _min?: Prisma.UserMinOrderByAggregateInput
+  _count?: Prisma.userCountOrderByAggregateInput
+  _max?: Prisma.userMaxOrderByAggregateInput
+  _min?: Prisma.userMinOrderByAggregateInput
 }
 
-export type UserScalarWhereWithAggregatesInput = {
-  AND?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
-  OR?: Prisma.UserScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"User"> | string
-  name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  phoneVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
-  isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  isVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  adminVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  verificationBadge?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  isPremium?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  premiumExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  premiumPlan?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  profileBoost?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  boostExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  loginOtpEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+export type userScalarWhereWithAggregatesInput = {
+  AND?: Prisma.userScalarWhereWithAggregatesInput | Prisma.userScalarWhereWithAggregatesInput[]
+  OR?: Prisma.userScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.userScalarWhereWithAggregatesInput | Prisma.userScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"user"> | string
+  name?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
+  image?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  password?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  phoneVerified?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  role?: Prisma.EnumRoleWithAggregatesFilter<"user"> | $Enums.Role
+  isActive?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  isVerified?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  adminVerified?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  verificationBadge?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  isPremium?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  premiumExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
+  premiumPlan?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  profileBoost?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  boostExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
+  loginOtpEnabled?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
 }
 
-export type UserCreateInput = {
+export type userCreateInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -519,31 +519,31 @@ export type UserCreateInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateInput = {
+export type userUncheckedCreateInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -566,31 +566,31 @@ export type UserUncheckedCreateInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserUpdateInput = {
+export type userUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -613,31 +613,31 @@ export type UserUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateInput = {
+export type userUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -660,31 +660,31 @@ export type UserUncheckedUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateManyInput = {
+export type userCreateManyInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -709,7 +709,7 @@ export type UserCreateManyInput = {
   updatedAt?: Date | string
 }
 
-export type UserUpdateManyMutationInput = {
+export type userUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -734,7 +734,7 @@ export type UserUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type UserUncheckedUpdateManyInput = {
+export type userUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -760,17 +760,17 @@ export type UserUncheckedUpdateManyInput = {
 }
 
 export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
+  is?: Prisma.userWhereInput
+  isNot?: Prisma.userWhereInput
 }
 
-export type UserOrderByRelevanceInput = {
-  fields: Prisma.UserOrderByRelevanceFieldEnum | Prisma.UserOrderByRelevanceFieldEnum[]
+export type userOrderByRelevanceInput = {
+  fields: Prisma.userOrderByRelevanceFieldEnum | Prisma.userOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type UserCountOrderByAggregateInput = {
+export type userCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -795,7 +795,7 @@ export type UserCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type UserMaxOrderByAggregateInput = {
+export type userMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -820,7 +820,7 @@ export type UserMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type UserMinOrderByAggregateInput = {
+export type userMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -845,32 +845,32 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type UserCreateNestedOneWithoutAccountsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAccountsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutAccountsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutAccountsInput, Prisma.userUncheckedCreateWithoutAccountsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutAccountsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAccountsInput
-  upsert?: Prisma.UserUpsertWithoutAccountsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+export type userUpdateOneRequiredWithoutAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutAccountsInput, Prisma.userUncheckedCreateWithoutAccountsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutAccountsInput
+  upsert?: Prisma.userUpsertWithoutAccountsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutAccountsInput, Prisma.userUpdateWithoutAccountsInput>, Prisma.userUncheckedUpdateWithoutAccountsInput>
 }
 
-export type UserCreateNestedOneWithoutSessionsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutSessionsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSessionsInput, Prisma.userUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSessionsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
-  upsert?: Prisma.UserUpsertWithoutSessionsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+export type userUpdateOneRequiredWithoutSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSessionsInput, Prisma.userUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSessionsInput
+  upsert?: Prisma.userUpsertWithoutSessionsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutSessionsInput, Prisma.userUpdateWithoutSessionsInput>, Prisma.userUncheckedUpdateWithoutSessionsInput>
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -885,287 +885,287 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type UserCreateNestedOneWithoutProfileInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileInput, Prisma.UserUncheckedCreateWithoutProfileInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutProfileInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutProfileInput, Prisma.userUncheckedCreateWithoutProfileInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutProfileInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutProfileNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileInput, Prisma.UserUncheckedCreateWithoutProfileInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileInput
-  upsert?: Prisma.UserUpsertWithoutProfileInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProfileInput, Prisma.UserUpdateWithoutProfileInput>, Prisma.UserUncheckedUpdateWithoutProfileInput>
+export type userUpdateOneRequiredWithoutProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutProfileInput, Prisma.userUncheckedCreateWithoutProfileInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutProfileInput
+  upsert?: Prisma.userUpsertWithoutProfileInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutProfileInput, Prisma.userUpdateWithoutProfileInput>, Prisma.userUncheckedUpdateWithoutProfileInput>
 }
 
-export type UserCreateNestedOneWithoutPhotosInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutPhotosInput, Prisma.UserUncheckedCreateWithoutPhotosInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPhotosInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutPhotosInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutPhotosInput, Prisma.userUncheckedCreateWithoutPhotosInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutPhotosInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutPhotosNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutPhotosInput, Prisma.UserUncheckedCreateWithoutPhotosInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPhotosInput
-  upsert?: Prisma.UserUpsertWithoutPhotosInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPhotosInput, Prisma.UserUpdateWithoutPhotosInput>, Prisma.UserUncheckedUpdateWithoutPhotosInput>
+export type userUpdateOneRequiredWithoutPhotosNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutPhotosInput, Prisma.userUncheckedCreateWithoutPhotosInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutPhotosInput
+  upsert?: Prisma.userUpsertWithoutPhotosInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutPhotosInput, Prisma.userUpdateWithoutPhotosInput>, Prisma.userUncheckedUpdateWithoutPhotosInput>
 }
 
-export type UserCreateNestedOneWithoutSentInterestsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSentInterestsInput, Prisma.UserUncheckedCreateWithoutSentInterestsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentInterestsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutSentInterestsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSentInterestsInput, Prisma.userUncheckedCreateWithoutSentInterestsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSentInterestsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutReceivedInterestsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedInterestsInput, Prisma.UserUncheckedCreateWithoutReceivedInterestsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedInterestsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutReceivedInterestsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReceivedInterestsInput, Prisma.userUncheckedCreateWithoutReceivedInterestsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReceivedInterestsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutSentInterestsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSentInterestsInput, Prisma.UserUncheckedCreateWithoutSentInterestsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentInterestsInput
-  upsert?: Prisma.UserUpsertWithoutSentInterestsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSentInterestsInput, Prisma.UserUpdateWithoutSentInterestsInput>, Prisma.UserUncheckedUpdateWithoutSentInterestsInput>
+export type userUpdateOneRequiredWithoutSentInterestsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSentInterestsInput, Prisma.userUncheckedCreateWithoutSentInterestsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSentInterestsInput
+  upsert?: Prisma.userUpsertWithoutSentInterestsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutSentInterestsInput, Prisma.userUpdateWithoutSentInterestsInput>, Prisma.userUncheckedUpdateWithoutSentInterestsInput>
 }
 
-export type UserUpdateOneRequiredWithoutReceivedInterestsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedInterestsInput, Prisma.UserUncheckedCreateWithoutReceivedInterestsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedInterestsInput
-  upsert?: Prisma.UserUpsertWithoutReceivedInterestsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedInterestsInput, Prisma.UserUpdateWithoutReceivedInterestsInput>, Prisma.UserUncheckedUpdateWithoutReceivedInterestsInput>
+export type userUpdateOneRequiredWithoutReceivedInterestsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReceivedInterestsInput, Prisma.userUncheckedCreateWithoutReceivedInterestsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReceivedInterestsInput
+  upsert?: Prisma.userUpsertWithoutReceivedInterestsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutReceivedInterestsInput, Prisma.userUpdateWithoutReceivedInterestsInput>, Prisma.userUncheckedUpdateWithoutReceivedInterestsInput>
 }
 
-export type UserCreateNestedOneWithoutChatRoomsAInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsAInput, Prisma.UserUncheckedCreateWithoutChatRoomsAInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatRoomsAInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutChatRoomsAInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutChatRoomsAInput, Prisma.userUncheckedCreateWithoutChatRoomsAInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutChatRoomsAInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutChatRoomsBInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsBInput, Prisma.UserUncheckedCreateWithoutChatRoomsBInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatRoomsBInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutChatRoomsBInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutChatRoomsBInput, Prisma.userUncheckedCreateWithoutChatRoomsBInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutChatRoomsBInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutChatRoomsANestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsAInput, Prisma.UserUncheckedCreateWithoutChatRoomsAInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatRoomsAInput
-  upsert?: Prisma.UserUpsertWithoutChatRoomsAInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatRoomsAInput, Prisma.UserUpdateWithoutChatRoomsAInput>, Prisma.UserUncheckedUpdateWithoutChatRoomsAInput>
+export type userUpdateOneRequiredWithoutChatRoomsANestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutChatRoomsAInput, Prisma.userUncheckedCreateWithoutChatRoomsAInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutChatRoomsAInput
+  upsert?: Prisma.userUpsertWithoutChatRoomsAInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutChatRoomsAInput, Prisma.userUpdateWithoutChatRoomsAInput>, Prisma.userUncheckedUpdateWithoutChatRoomsAInput>
 }
 
-export type UserUpdateOneRequiredWithoutChatRoomsBNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsBInput, Prisma.UserUncheckedCreateWithoutChatRoomsBInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatRoomsBInput
-  upsert?: Prisma.UserUpsertWithoutChatRoomsBInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatRoomsBInput, Prisma.UserUpdateWithoutChatRoomsBInput>, Prisma.UserUncheckedUpdateWithoutChatRoomsBInput>
+export type userUpdateOneRequiredWithoutChatRoomsBNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutChatRoomsBInput, Prisma.userUncheckedCreateWithoutChatRoomsBInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutChatRoomsBInput
+  upsert?: Prisma.userUpsertWithoutChatRoomsBInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutChatRoomsBInput, Prisma.userUpdateWithoutChatRoomsBInput>, Prisma.userUncheckedUpdateWithoutChatRoomsBInput>
 }
 
-export type UserCreateNestedOneWithoutSentMessagesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSentMessagesInput, Prisma.UserUncheckedCreateWithoutSentMessagesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentMessagesInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutSentMessagesInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSentMessagesInput, Prisma.userUncheckedCreateWithoutSentMessagesInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSentMessagesInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutReceivedMessagesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedMessagesInput, Prisma.UserUncheckedCreateWithoutReceivedMessagesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedMessagesInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutReceivedMessagesInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReceivedMessagesInput, Prisma.userUncheckedCreateWithoutReceivedMessagesInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReceivedMessagesInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutSentMessagesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSentMessagesInput, Prisma.UserUncheckedCreateWithoutSentMessagesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentMessagesInput
-  upsert?: Prisma.UserUpsertWithoutSentMessagesInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSentMessagesInput, Prisma.UserUpdateWithoutSentMessagesInput>, Prisma.UserUncheckedUpdateWithoutSentMessagesInput>
+export type userUpdateOneRequiredWithoutSentMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSentMessagesInput, Prisma.userUncheckedCreateWithoutSentMessagesInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSentMessagesInput
+  upsert?: Prisma.userUpsertWithoutSentMessagesInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutSentMessagesInput, Prisma.userUpdateWithoutSentMessagesInput>, Prisma.userUncheckedUpdateWithoutSentMessagesInput>
 }
 
-export type UserUpdateOneRequiredWithoutReceivedMessagesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedMessagesInput, Prisma.UserUncheckedCreateWithoutReceivedMessagesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedMessagesInput
-  upsert?: Prisma.UserUpsertWithoutReceivedMessagesInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedMessagesInput, Prisma.UserUpdateWithoutReceivedMessagesInput>, Prisma.UserUncheckedUpdateWithoutReceivedMessagesInput>
+export type userUpdateOneRequiredWithoutReceivedMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReceivedMessagesInput, Prisma.userUncheckedCreateWithoutReceivedMessagesInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReceivedMessagesInput
+  upsert?: Prisma.userUpsertWithoutReceivedMessagesInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutReceivedMessagesInput, Prisma.userUpdateWithoutReceivedMessagesInput>, Prisma.userUncheckedUpdateWithoutReceivedMessagesInput>
 }
 
-export type UserCreateNestedOneWithoutShortlistedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutShortlistedInput, Prisma.UserUncheckedCreateWithoutShortlistedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShortlistedInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutShortlistedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutShortlistedInput, Prisma.userUncheckedCreateWithoutShortlistedInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutShortlistedInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutShortlistedByInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutShortlistedByInput, Prisma.UserUncheckedCreateWithoutShortlistedByInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShortlistedByInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutShortlistedByInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutShortlistedByInput, Prisma.userUncheckedCreateWithoutShortlistedByInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutShortlistedByInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutShortlistedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutShortlistedInput, Prisma.UserUncheckedCreateWithoutShortlistedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShortlistedInput
-  upsert?: Prisma.UserUpsertWithoutShortlistedInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShortlistedInput, Prisma.UserUpdateWithoutShortlistedInput>, Prisma.UserUncheckedUpdateWithoutShortlistedInput>
+export type userUpdateOneRequiredWithoutShortlistedNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutShortlistedInput, Prisma.userUncheckedCreateWithoutShortlistedInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutShortlistedInput
+  upsert?: Prisma.userUpsertWithoutShortlistedInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutShortlistedInput, Prisma.userUpdateWithoutShortlistedInput>, Prisma.userUncheckedUpdateWithoutShortlistedInput>
 }
 
-export type UserUpdateOneRequiredWithoutShortlistedByNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutShortlistedByInput, Prisma.UserUncheckedCreateWithoutShortlistedByInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShortlistedByInput
-  upsert?: Prisma.UserUpsertWithoutShortlistedByInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShortlistedByInput, Prisma.UserUpdateWithoutShortlistedByInput>, Prisma.UserUncheckedUpdateWithoutShortlistedByInput>
+export type userUpdateOneRequiredWithoutShortlistedByNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutShortlistedByInput, Prisma.userUncheckedCreateWithoutShortlistedByInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutShortlistedByInput
+  upsert?: Prisma.userUpsertWithoutShortlistedByInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutShortlistedByInput, Prisma.userUpdateWithoutShortlistedByInput>, Prisma.userUncheckedUpdateWithoutShortlistedByInput>
 }
 
-export type UserCreateNestedOneWithoutViewedProfilesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutViewedProfilesInput, Prisma.UserUncheckedCreateWithoutViewedProfilesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutViewedProfilesInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutViewedProfilesInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutViewedProfilesInput, Prisma.userUncheckedCreateWithoutViewedProfilesInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutViewedProfilesInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutProfileViewsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileViewsInput, Prisma.UserUncheckedCreateWithoutProfileViewsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileViewsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutProfileViewsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutProfileViewsInput, Prisma.userUncheckedCreateWithoutProfileViewsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutProfileViewsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutViewedProfilesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutViewedProfilesInput, Prisma.UserUncheckedCreateWithoutViewedProfilesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutViewedProfilesInput
-  upsert?: Prisma.UserUpsertWithoutViewedProfilesInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutViewedProfilesInput, Prisma.UserUpdateWithoutViewedProfilesInput>, Prisma.UserUncheckedUpdateWithoutViewedProfilesInput>
+export type userUpdateOneRequiredWithoutViewedProfilesNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutViewedProfilesInput, Prisma.userUncheckedCreateWithoutViewedProfilesInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutViewedProfilesInput
+  upsert?: Prisma.userUpsertWithoutViewedProfilesInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutViewedProfilesInput, Prisma.userUpdateWithoutViewedProfilesInput>, Prisma.userUncheckedUpdateWithoutViewedProfilesInput>
 }
 
-export type UserUpdateOneRequiredWithoutProfileViewsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileViewsInput, Prisma.UserUncheckedCreateWithoutProfileViewsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileViewsInput
-  upsert?: Prisma.UserUpsertWithoutProfileViewsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProfileViewsInput, Prisma.UserUpdateWithoutProfileViewsInput>, Prisma.UserUncheckedUpdateWithoutProfileViewsInput>
+export type userUpdateOneRequiredWithoutProfileViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutProfileViewsInput, Prisma.userUncheckedCreateWithoutProfileViewsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutProfileViewsInput
+  upsert?: Prisma.userUpsertWithoutProfileViewsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutProfileViewsInput, Prisma.userUpdateWithoutProfileViewsInput>, Prisma.userUncheckedUpdateWithoutProfileViewsInput>
 }
 
-export type UserCreateNestedOneWithoutNotificationsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutNotificationsInput, Prisma.userUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
-  upsert?: Prisma.UserUpsertWithoutNotificationsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+export type userUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutNotificationsInput, Prisma.userUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.userUpsertWithoutNotificationsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutNotificationsInput, Prisma.userUpdateWithoutNotificationsInput>, Prisma.userUncheckedUpdateWithoutNotificationsInput>
 }
 
-export type UserCreateNestedOneWithoutSubscriptionsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutSubscriptionsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSubscriptionsInput, Prisma.userUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSubscriptionsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutSubscriptionsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionsInput
-  upsert?: Prisma.UserUpsertWithoutSubscriptionsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.UserUpdateWithoutSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
+export type userUpdateOneRequiredWithoutSubscriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutSubscriptionsInput, Prisma.userUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutSubscriptionsInput
+  upsert?: Prisma.userUpsertWithoutSubscriptionsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.userUpdateWithoutSubscriptionsInput>, Prisma.userUncheckedUpdateWithoutSubscriptionsInput>
 }
 
-export type UserCreateNestedOneWithoutDocumentsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDocumentsInput, Prisma.UserUncheckedCreateWithoutDocumentsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDocumentsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutDocumentsInput, Prisma.userUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutDocumentsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDocumentsInput, Prisma.UserUncheckedCreateWithoutDocumentsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDocumentsInput
-  upsert?: Prisma.UserUpsertWithoutDocumentsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDocumentsInput, Prisma.UserUpdateWithoutDocumentsInput>, Prisma.UserUncheckedUpdateWithoutDocumentsInput>
+export type userUpdateOneRequiredWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutDocumentsInput, Prisma.userUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.userUpsertWithoutDocumentsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutDocumentsInput, Prisma.userUpdateWithoutDocumentsInput>, Prisma.userUncheckedUpdateWithoutDocumentsInput>
 }
 
-export type UserCreateNestedOneWithoutReportsMadeInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsMadeInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutReportsMadeInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReportsMadeInput, Prisma.userUncheckedCreateWithoutReportsMadeInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReportsMadeInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutReportsReceivedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsReceivedInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutReportsReceivedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReportsReceivedInput, Prisma.userUncheckedCreateWithoutReportsReceivedInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReportsReceivedInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutReportsMadeNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsMadeInput
-  upsert?: Prisma.UserUpsertWithoutReportsMadeInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportsMadeInput, Prisma.UserUpdateWithoutReportsMadeInput>, Prisma.UserUncheckedUpdateWithoutReportsMadeInput>
+export type userUpdateOneRequiredWithoutReportsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReportsMadeInput, Prisma.userUncheckedCreateWithoutReportsMadeInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReportsMadeInput
+  upsert?: Prisma.userUpsertWithoutReportsMadeInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutReportsMadeInput, Prisma.userUpdateWithoutReportsMadeInput>, Prisma.userUncheckedUpdateWithoutReportsMadeInput>
 }
 
-export type UserUpdateOneRequiredWithoutReportsReceivedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsReceivedInput
-  upsert?: Prisma.UserUpsertWithoutReportsReceivedInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportsReceivedInput, Prisma.UserUpdateWithoutReportsReceivedInput>, Prisma.UserUncheckedUpdateWithoutReportsReceivedInput>
+export type userUpdateOneRequiredWithoutReportsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutReportsReceivedInput, Prisma.userUncheckedCreateWithoutReportsReceivedInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutReportsReceivedInput
+  upsert?: Prisma.userUpsertWithoutReportsReceivedInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutReportsReceivedInput, Prisma.userUpdateWithoutReportsReceivedInput>, Prisma.userUncheckedUpdateWithoutReportsReceivedInput>
 }
 
-export type UserCreateNestedOneWithoutBlockedUsersInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockedUsersInput, Prisma.UserUncheckedCreateWithoutBlockedUsersInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockedUsersInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutBlockedUsersInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutBlockedUsersInput, Prisma.userUncheckedCreateWithoutBlockedUsersInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutBlockedUsersInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutBlockedByInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockedByInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutBlockedByInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutBlockedByInput, Prisma.userUncheckedCreateWithoutBlockedByInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutBlockedByInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutBlockedUsersNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockedUsersInput, Prisma.UserUncheckedCreateWithoutBlockedUsersInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockedUsersInput
-  upsert?: Prisma.UserUpsertWithoutBlockedUsersInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlockedUsersInput, Prisma.UserUpdateWithoutBlockedUsersInput>, Prisma.UserUncheckedUpdateWithoutBlockedUsersInput>
+export type userUpdateOneRequiredWithoutBlockedUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutBlockedUsersInput, Prisma.userUncheckedCreateWithoutBlockedUsersInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutBlockedUsersInput
+  upsert?: Prisma.userUpsertWithoutBlockedUsersInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutBlockedUsersInput, Prisma.userUpdateWithoutBlockedUsersInput>, Prisma.userUncheckedUpdateWithoutBlockedUsersInput>
 }
 
-export type UserUpdateOneRequiredWithoutBlockedByNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlockedByInput
-  upsert?: Prisma.UserUpsertWithoutBlockedByInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlockedByInput, Prisma.UserUpdateWithoutBlockedByInput>, Prisma.UserUncheckedUpdateWithoutBlockedByInput>
+export type userUpdateOneRequiredWithoutBlockedByNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutBlockedByInput, Prisma.userUncheckedCreateWithoutBlockedByInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutBlockedByInput
+  upsert?: Prisma.userUpsertWithoutBlockedByInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutBlockedByInput, Prisma.userUpdateWithoutBlockedByInput>, Prisma.userUncheckedUpdateWithoutBlockedByInput>
 }
 
-export type UserCreateNestedOneWithoutOtpsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutOtpsInput, Prisma.UserUncheckedCreateWithoutOtpsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOtpsInput
-  connect?: Prisma.UserWhereUniqueInput
+export type userCreateNestedOneWithoutOtpsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutOtpsInput, Prisma.userUncheckedCreateWithoutOtpsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutOtpsInput
+  connect?: Prisma.userWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutOtpsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutOtpsInput, Prisma.UserUncheckedCreateWithoutOtpsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOtpsInput
-  upsert?: Prisma.UserUpsertWithoutOtpsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOtpsInput, Prisma.UserUpdateWithoutOtpsInput>, Prisma.UserUncheckedUpdateWithoutOtpsInput>
+export type userUpdateOneRequiredWithoutOtpsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutOtpsInput, Prisma.userUncheckedCreateWithoutOtpsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutOtpsInput
+  upsert?: Prisma.userUpsertWithoutOtpsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutOtpsInput, Prisma.userUpdateWithoutOtpsInput>, Prisma.userUncheckedUpdateWithoutOtpsInput>
 }
 
-export type UserCreateWithoutAccountsInput = {
+export type userCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1188,30 +1188,30 @@ export type UserCreateWithoutAccountsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutAccountsInput = {
+export type userUncheckedCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1234,46 +1234,46 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutAccountsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
+export type userCreateOrConnectWithoutAccountsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutAccountsInput, Prisma.userUncheckedCreateWithoutAccountsInput>
 }
 
-export type UserUpsertWithoutAccountsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutAccountsInput, Prisma.UserUncheckedUpdateWithoutAccountsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutAccountsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutAccountsInput, Prisma.userUncheckedUpdateWithoutAccountsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutAccountsInput, Prisma.userUncheckedCreateWithoutAccountsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutAccountsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutAccountsInput, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+export type userUpdateToOneWithWhereWithoutAccountsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutAccountsInput, Prisma.userUncheckedUpdateWithoutAccountsInput>
 }
 
-export type UserUpdateWithoutAccountsInput = {
+export type userUpdateWithoutAccountsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1296,30 +1296,30 @@ export type UserUpdateWithoutAccountsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutAccountsInput = {
+export type userUncheckedUpdateWithoutAccountsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1342,30 +1342,30 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutSessionsInput = {
+export type userCreateWithoutSessionsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1388,30 +1388,30 @@ export type UserCreateWithoutSessionsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutSessionsInput = {
+export type userUncheckedCreateWithoutSessionsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1434,46 +1434,46 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutSessionsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+export type userCreateOrConnectWithoutSessionsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutSessionsInput, Prisma.userUncheckedCreateWithoutSessionsInput>
 }
 
-export type UserUpsertWithoutSessionsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSessionsInput, Prisma.UserUncheckedUpdateWithoutSessionsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutSessionsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutSessionsInput, Prisma.userUncheckedUpdateWithoutSessionsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutSessionsInput, Prisma.userUncheckedCreateWithoutSessionsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutSessionsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSessionsInput, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+export type userUpdateToOneWithWhereWithoutSessionsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutSessionsInput, Prisma.userUncheckedUpdateWithoutSessionsInput>
 }
 
-export type UserUpdateWithoutSessionsInput = {
+export type userUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1496,30 +1496,30 @@ export type UserUpdateWithoutSessionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutSessionsInput = {
+export type userUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1542,30 +1542,30 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutProfileInput = {
+export type userCreateWithoutProfileInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1588,30 +1588,30 @@ export type UserCreateWithoutProfileInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutProfileInput = {
+export type userUncheckedCreateWithoutProfileInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1634,46 +1634,46 @@ export type UserUncheckedCreateWithoutProfileInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutProfileInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutProfileInput, Prisma.UserUncheckedCreateWithoutProfileInput>
+export type userCreateOrConnectWithoutProfileInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutProfileInput, Prisma.userUncheckedCreateWithoutProfileInput>
 }
 
-export type UserUpsertWithoutProfileInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutProfileInput, Prisma.UserUncheckedUpdateWithoutProfileInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutProfileInput, Prisma.UserUncheckedCreateWithoutProfileInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutProfileInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutProfileInput, Prisma.userUncheckedUpdateWithoutProfileInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutProfileInput, Prisma.userUncheckedCreateWithoutProfileInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutProfileInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutProfileInput, Prisma.UserUncheckedUpdateWithoutProfileInput>
+export type userUpdateToOneWithWhereWithoutProfileInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutProfileInput, Prisma.userUncheckedUpdateWithoutProfileInput>
 }
 
-export type UserUpdateWithoutProfileInput = {
+export type userUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1696,30 +1696,30 @@ export type UserUpdateWithoutProfileInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutProfileInput = {
+export type userUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1742,30 +1742,30 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutPhotosInput = {
+export type userCreateWithoutPhotosInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1788,30 +1788,30 @@ export type UserCreateWithoutPhotosInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutPhotosInput = {
+export type userUncheckedCreateWithoutPhotosInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1834,46 +1834,46 @@ export type UserUncheckedCreateWithoutPhotosInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutPhotosInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutPhotosInput, Prisma.UserUncheckedCreateWithoutPhotosInput>
+export type userCreateOrConnectWithoutPhotosInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutPhotosInput, Prisma.userUncheckedCreateWithoutPhotosInput>
 }
 
-export type UserUpsertWithoutPhotosInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutPhotosInput, Prisma.UserUncheckedUpdateWithoutPhotosInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutPhotosInput, Prisma.UserUncheckedCreateWithoutPhotosInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutPhotosInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutPhotosInput, Prisma.userUncheckedUpdateWithoutPhotosInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutPhotosInput, Prisma.userUncheckedCreateWithoutPhotosInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutPhotosInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutPhotosInput, Prisma.UserUncheckedUpdateWithoutPhotosInput>
+export type userUpdateToOneWithWhereWithoutPhotosInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutPhotosInput, Prisma.userUncheckedUpdateWithoutPhotosInput>
 }
 
-export type UserUpdateWithoutPhotosInput = {
+export type userUpdateWithoutPhotosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1896,30 +1896,30 @@ export type UserUpdateWithoutPhotosInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutPhotosInput = {
+export type userUncheckedUpdateWithoutPhotosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1942,30 +1942,30 @@ export type UserUncheckedUpdateWithoutPhotosInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutSentInterestsInput = {
+export type userCreateWithoutSentInterestsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -1988,30 +1988,30 @@ export type UserCreateWithoutSentInterestsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutSentInterestsInput = {
+export type userUncheckedCreateWithoutSentInterestsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2034,35 +2034,35 @@ export type UserUncheckedCreateWithoutSentInterestsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutSentInterestsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSentInterestsInput, Prisma.UserUncheckedCreateWithoutSentInterestsInput>
+export type userCreateOrConnectWithoutSentInterestsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutSentInterestsInput, Prisma.userUncheckedCreateWithoutSentInterestsInput>
 }
 
-export type UserCreateWithoutReceivedInterestsInput = {
+export type userCreateWithoutReceivedInterestsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2085,30 +2085,30 @@ export type UserCreateWithoutReceivedInterestsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutReceivedInterestsInput = {
+export type userUncheckedCreateWithoutReceivedInterestsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2131,46 +2131,46 @@ export type UserUncheckedCreateWithoutReceivedInterestsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutReceivedInterestsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedInterestsInput, Prisma.UserUncheckedCreateWithoutReceivedInterestsInput>
+export type userCreateOrConnectWithoutReceivedInterestsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutReceivedInterestsInput, Prisma.userUncheckedCreateWithoutReceivedInterestsInput>
 }
 
-export type UserUpsertWithoutSentInterestsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSentInterestsInput, Prisma.UserUncheckedUpdateWithoutSentInterestsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSentInterestsInput, Prisma.UserUncheckedCreateWithoutSentInterestsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutSentInterestsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutSentInterestsInput, Prisma.userUncheckedUpdateWithoutSentInterestsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutSentInterestsInput, Prisma.userUncheckedCreateWithoutSentInterestsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutSentInterestsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSentInterestsInput, Prisma.UserUncheckedUpdateWithoutSentInterestsInput>
+export type userUpdateToOneWithWhereWithoutSentInterestsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutSentInterestsInput, Prisma.userUncheckedUpdateWithoutSentInterestsInput>
 }
 
-export type UserUpdateWithoutSentInterestsInput = {
+export type userUpdateWithoutSentInterestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2193,30 +2193,30 @@ export type UserUpdateWithoutSentInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutSentInterestsInput = {
+export type userUncheckedUpdateWithoutSentInterestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2239,41 +2239,41 @@ export type UserUncheckedUpdateWithoutSentInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutReceivedInterestsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivedInterestsInput, Prisma.UserUncheckedUpdateWithoutReceivedInterestsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedInterestsInput, Prisma.UserUncheckedCreateWithoutReceivedInterestsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutReceivedInterestsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutReceivedInterestsInput, Prisma.userUncheckedUpdateWithoutReceivedInterestsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutReceivedInterestsInput, Prisma.userUncheckedCreateWithoutReceivedInterestsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutReceivedInterestsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivedInterestsInput, Prisma.UserUncheckedUpdateWithoutReceivedInterestsInput>
+export type userUpdateToOneWithWhereWithoutReceivedInterestsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutReceivedInterestsInput, Prisma.userUncheckedUpdateWithoutReceivedInterestsInput>
 }
 
-export type UserUpdateWithoutReceivedInterestsInput = {
+export type userUpdateWithoutReceivedInterestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2296,30 +2296,30 @@ export type UserUpdateWithoutReceivedInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutReceivedInterestsInput = {
+export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2342,30 +2342,30 @@ export type UserUncheckedUpdateWithoutReceivedInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutChatRoomsAInput = {
+export type userCreateWithoutChatRoomsAInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2388,30 +2388,30 @@ export type UserCreateWithoutChatRoomsAInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutChatRoomsAInput = {
+export type userUncheckedCreateWithoutChatRoomsAInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2434,35 +2434,35 @@ export type UserUncheckedCreateWithoutChatRoomsAInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutChatRoomsAInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsAInput, Prisma.UserUncheckedCreateWithoutChatRoomsAInput>
+export type userCreateOrConnectWithoutChatRoomsAInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutChatRoomsAInput, Prisma.userUncheckedCreateWithoutChatRoomsAInput>
 }
 
-export type UserCreateWithoutChatRoomsBInput = {
+export type userCreateWithoutChatRoomsBInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2485,30 +2485,30 @@ export type UserCreateWithoutChatRoomsBInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutChatRoomsBInput = {
+export type userUncheckedCreateWithoutChatRoomsBInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2531,46 +2531,46 @@ export type UserUncheckedCreateWithoutChatRoomsBInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutChatRoomsBInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsBInput, Prisma.UserUncheckedCreateWithoutChatRoomsBInput>
+export type userCreateOrConnectWithoutChatRoomsBInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutChatRoomsBInput, Prisma.userUncheckedCreateWithoutChatRoomsBInput>
 }
 
-export type UserUpsertWithoutChatRoomsAInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutChatRoomsAInput, Prisma.UserUncheckedUpdateWithoutChatRoomsAInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsAInput, Prisma.UserUncheckedCreateWithoutChatRoomsAInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutChatRoomsAInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutChatRoomsAInput, Prisma.userUncheckedUpdateWithoutChatRoomsAInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutChatRoomsAInput, Prisma.userUncheckedCreateWithoutChatRoomsAInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutChatRoomsAInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutChatRoomsAInput, Prisma.UserUncheckedUpdateWithoutChatRoomsAInput>
+export type userUpdateToOneWithWhereWithoutChatRoomsAInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutChatRoomsAInput, Prisma.userUncheckedUpdateWithoutChatRoomsAInput>
 }
 
-export type UserUpdateWithoutChatRoomsAInput = {
+export type userUpdateWithoutChatRoomsAInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2593,30 +2593,30 @@ export type UserUpdateWithoutChatRoomsAInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutChatRoomsAInput = {
+export type userUncheckedUpdateWithoutChatRoomsAInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2639,41 +2639,41 @@ export type UserUncheckedUpdateWithoutChatRoomsAInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutChatRoomsBInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutChatRoomsBInput, Prisma.UserUncheckedUpdateWithoutChatRoomsBInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutChatRoomsBInput, Prisma.UserUncheckedCreateWithoutChatRoomsBInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutChatRoomsBInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutChatRoomsBInput, Prisma.userUncheckedUpdateWithoutChatRoomsBInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutChatRoomsBInput, Prisma.userUncheckedCreateWithoutChatRoomsBInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutChatRoomsBInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutChatRoomsBInput, Prisma.UserUncheckedUpdateWithoutChatRoomsBInput>
+export type userUpdateToOneWithWhereWithoutChatRoomsBInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutChatRoomsBInput, Prisma.userUncheckedUpdateWithoutChatRoomsBInput>
 }
 
-export type UserUpdateWithoutChatRoomsBInput = {
+export type userUpdateWithoutChatRoomsBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2696,30 +2696,30 @@ export type UserUpdateWithoutChatRoomsBInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutChatRoomsBInput = {
+export type userUncheckedUpdateWithoutChatRoomsBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2742,30 +2742,30 @@ export type UserUncheckedUpdateWithoutChatRoomsBInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutSentMessagesInput = {
+export type userCreateWithoutSentMessagesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2788,30 +2788,30 @@ export type UserCreateWithoutSentMessagesInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutSentMessagesInput = {
+export type userUncheckedCreateWithoutSentMessagesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2834,35 +2834,35 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutSentMessagesInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSentMessagesInput, Prisma.UserUncheckedCreateWithoutSentMessagesInput>
+export type userCreateOrConnectWithoutSentMessagesInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutSentMessagesInput, Prisma.userUncheckedCreateWithoutSentMessagesInput>
 }
 
-export type UserCreateWithoutReceivedMessagesInput = {
+export type userCreateWithoutReceivedMessagesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2885,30 +2885,30 @@ export type UserCreateWithoutReceivedMessagesInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutReceivedMessagesInput = {
+export type userUncheckedCreateWithoutReceivedMessagesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -2931,46 +2931,46 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutReceivedMessagesInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedMessagesInput, Prisma.UserUncheckedCreateWithoutReceivedMessagesInput>
+export type userCreateOrConnectWithoutReceivedMessagesInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutReceivedMessagesInput, Prisma.userUncheckedCreateWithoutReceivedMessagesInput>
 }
 
-export type UserUpsertWithoutSentMessagesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSentMessagesInput, Prisma.UserUncheckedUpdateWithoutSentMessagesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSentMessagesInput, Prisma.UserUncheckedCreateWithoutSentMessagesInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutSentMessagesInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutSentMessagesInput, Prisma.userUncheckedUpdateWithoutSentMessagesInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutSentMessagesInput, Prisma.userUncheckedCreateWithoutSentMessagesInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutSentMessagesInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSentMessagesInput, Prisma.UserUncheckedUpdateWithoutSentMessagesInput>
+export type userUpdateToOneWithWhereWithoutSentMessagesInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutSentMessagesInput, Prisma.userUncheckedUpdateWithoutSentMessagesInput>
 }
 
-export type UserUpdateWithoutSentMessagesInput = {
+export type userUpdateWithoutSentMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2993,30 +2993,30 @@ export type UserUpdateWithoutSentMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutSentMessagesInput = {
+export type userUncheckedUpdateWithoutSentMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3039,41 +3039,41 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutReceivedMessagesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivedMessagesInput, Prisma.UserUncheckedUpdateWithoutReceivedMessagesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedMessagesInput, Prisma.UserUncheckedCreateWithoutReceivedMessagesInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutReceivedMessagesInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutReceivedMessagesInput, Prisma.userUncheckedUpdateWithoutReceivedMessagesInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutReceivedMessagesInput, Prisma.userUncheckedCreateWithoutReceivedMessagesInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutReceivedMessagesInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivedMessagesInput, Prisma.UserUncheckedUpdateWithoutReceivedMessagesInput>
+export type userUpdateToOneWithWhereWithoutReceivedMessagesInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutReceivedMessagesInput, Prisma.userUncheckedUpdateWithoutReceivedMessagesInput>
 }
 
-export type UserUpdateWithoutReceivedMessagesInput = {
+export type userUpdateWithoutReceivedMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3096,30 +3096,30 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
+export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3142,30 +3142,30 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutShortlistedInput = {
+export type userCreateWithoutShortlistedInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3188,30 +3188,30 @@ export type UserCreateWithoutShortlistedInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutShortlistedInput = {
+export type userUncheckedCreateWithoutShortlistedInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3234,35 +3234,35 @@ export type UserUncheckedCreateWithoutShortlistedInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutShortlistedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutShortlistedInput, Prisma.UserUncheckedCreateWithoutShortlistedInput>
+export type userCreateOrConnectWithoutShortlistedInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutShortlistedInput, Prisma.userUncheckedCreateWithoutShortlistedInput>
 }
 
-export type UserCreateWithoutShortlistedByInput = {
+export type userCreateWithoutShortlistedByInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3285,30 +3285,30 @@ export type UserCreateWithoutShortlistedByInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutShortlistedByInput = {
+export type userUncheckedCreateWithoutShortlistedByInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3331,46 +3331,46 @@ export type UserUncheckedCreateWithoutShortlistedByInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutShortlistedByInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutShortlistedByInput, Prisma.UserUncheckedCreateWithoutShortlistedByInput>
+export type userCreateOrConnectWithoutShortlistedByInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutShortlistedByInput, Prisma.userUncheckedCreateWithoutShortlistedByInput>
 }
 
-export type UserUpsertWithoutShortlistedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutShortlistedInput, Prisma.UserUncheckedUpdateWithoutShortlistedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutShortlistedInput, Prisma.UserUncheckedCreateWithoutShortlistedInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutShortlistedInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutShortlistedInput, Prisma.userUncheckedUpdateWithoutShortlistedInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutShortlistedInput, Prisma.userUncheckedCreateWithoutShortlistedInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutShortlistedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutShortlistedInput, Prisma.UserUncheckedUpdateWithoutShortlistedInput>
+export type userUpdateToOneWithWhereWithoutShortlistedInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutShortlistedInput, Prisma.userUncheckedUpdateWithoutShortlistedInput>
 }
 
-export type UserUpdateWithoutShortlistedInput = {
+export type userUpdateWithoutShortlistedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3393,30 +3393,30 @@ export type UserUpdateWithoutShortlistedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutShortlistedInput = {
+export type userUncheckedUpdateWithoutShortlistedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3439,41 +3439,41 @@ export type UserUncheckedUpdateWithoutShortlistedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutShortlistedByInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutShortlistedByInput, Prisma.UserUncheckedUpdateWithoutShortlistedByInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutShortlistedByInput, Prisma.UserUncheckedCreateWithoutShortlistedByInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutShortlistedByInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutShortlistedByInput, Prisma.userUncheckedUpdateWithoutShortlistedByInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutShortlistedByInput, Prisma.userUncheckedCreateWithoutShortlistedByInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutShortlistedByInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutShortlistedByInput, Prisma.UserUncheckedUpdateWithoutShortlistedByInput>
+export type userUpdateToOneWithWhereWithoutShortlistedByInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutShortlistedByInput, Prisma.userUncheckedUpdateWithoutShortlistedByInput>
 }
 
-export type UserUpdateWithoutShortlistedByInput = {
+export type userUpdateWithoutShortlistedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3496,30 +3496,30 @@ export type UserUpdateWithoutShortlistedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutShortlistedByInput = {
+export type userUncheckedUpdateWithoutShortlistedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3542,30 +3542,30 @@ export type UserUncheckedUpdateWithoutShortlistedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutViewedProfilesInput = {
+export type userCreateWithoutViewedProfilesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3588,30 +3588,30 @@ export type UserCreateWithoutViewedProfilesInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutViewedProfilesInput = {
+export type userUncheckedCreateWithoutViewedProfilesInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3634,35 +3634,35 @@ export type UserUncheckedCreateWithoutViewedProfilesInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutViewedProfilesInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutViewedProfilesInput, Prisma.UserUncheckedCreateWithoutViewedProfilesInput>
+export type userCreateOrConnectWithoutViewedProfilesInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutViewedProfilesInput, Prisma.userUncheckedCreateWithoutViewedProfilesInput>
 }
 
-export type UserCreateWithoutProfileViewsInput = {
+export type userCreateWithoutProfileViewsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3685,30 +3685,30 @@ export type UserCreateWithoutProfileViewsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutProfileViewsInput = {
+export type userUncheckedCreateWithoutProfileViewsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3731,46 +3731,46 @@ export type UserUncheckedCreateWithoutProfileViewsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutProfileViewsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutProfileViewsInput, Prisma.UserUncheckedCreateWithoutProfileViewsInput>
+export type userCreateOrConnectWithoutProfileViewsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutProfileViewsInput, Prisma.userUncheckedCreateWithoutProfileViewsInput>
 }
 
-export type UserUpsertWithoutViewedProfilesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutViewedProfilesInput, Prisma.UserUncheckedUpdateWithoutViewedProfilesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutViewedProfilesInput, Prisma.UserUncheckedCreateWithoutViewedProfilesInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutViewedProfilesInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutViewedProfilesInput, Prisma.userUncheckedUpdateWithoutViewedProfilesInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutViewedProfilesInput, Prisma.userUncheckedCreateWithoutViewedProfilesInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutViewedProfilesInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutViewedProfilesInput, Prisma.UserUncheckedUpdateWithoutViewedProfilesInput>
+export type userUpdateToOneWithWhereWithoutViewedProfilesInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutViewedProfilesInput, Prisma.userUncheckedUpdateWithoutViewedProfilesInput>
 }
 
-export type UserUpdateWithoutViewedProfilesInput = {
+export type userUpdateWithoutViewedProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3793,30 +3793,30 @@ export type UserUpdateWithoutViewedProfilesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutViewedProfilesInput = {
+export type userUncheckedUpdateWithoutViewedProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3839,41 +3839,41 @@ export type UserUncheckedUpdateWithoutViewedProfilesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutProfileViewsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutProfileViewsInput, Prisma.UserUncheckedUpdateWithoutProfileViewsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutProfileViewsInput, Prisma.UserUncheckedCreateWithoutProfileViewsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutProfileViewsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutProfileViewsInput, Prisma.userUncheckedUpdateWithoutProfileViewsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutProfileViewsInput, Prisma.userUncheckedCreateWithoutProfileViewsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutProfileViewsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutProfileViewsInput, Prisma.UserUncheckedUpdateWithoutProfileViewsInput>
+export type userUpdateToOneWithWhereWithoutProfileViewsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutProfileViewsInput, Prisma.userUncheckedUpdateWithoutProfileViewsInput>
 }
 
-export type UserUpdateWithoutProfileViewsInput = {
+export type userUpdateWithoutProfileViewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3896,30 +3896,30 @@ export type UserUpdateWithoutProfileViewsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutProfileViewsInput = {
+export type userUncheckedUpdateWithoutProfileViewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3942,30 +3942,30 @@ export type UserUncheckedUpdateWithoutProfileViewsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutNotificationsInput = {
+export type userCreateWithoutNotificationsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -3988,30 +3988,30 @@ export type UserCreateWithoutNotificationsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutNotificationsInput = {
+export type userUncheckedCreateWithoutNotificationsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4034,46 +4034,46 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutNotificationsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+export type userCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutNotificationsInput, Prisma.userUncheckedCreateWithoutNotificationsInput>
 }
 
-export type UserUpsertWithoutNotificationsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutNotificationsInput, Prisma.userUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutNotificationsInput, Prisma.userUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+export type userUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutNotificationsInput, Prisma.userUncheckedUpdateWithoutNotificationsInput>
 }
 
-export type UserUpdateWithoutNotificationsInput = {
+export type userUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4096,30 +4096,30 @@ export type UserUpdateWithoutNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutNotificationsInput = {
+export type userUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4142,30 +4142,30 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutSubscriptionsInput = {
+export type userCreateWithoutSubscriptionsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4188,30 +4188,30 @@ export type UserCreateWithoutSubscriptionsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutSubscriptionsInput = {
+export type userUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4234,46 +4234,46 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutSubscriptionsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
+export type userCreateOrConnectWithoutSubscriptionsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutSubscriptionsInput, Prisma.userUncheckedCreateWithoutSubscriptionsInput>
 }
 
-export type UserUpsertWithoutSubscriptionsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSubscriptionsInput, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutSubscriptionsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutSubscriptionsInput, Prisma.userUncheckedUpdateWithoutSubscriptionsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutSubscriptionsInput, Prisma.userUncheckedCreateWithoutSubscriptionsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutSubscriptionsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSubscriptionsInput, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
+export type userUpdateToOneWithWhereWithoutSubscriptionsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutSubscriptionsInput, Prisma.userUncheckedUpdateWithoutSubscriptionsInput>
 }
 
-export type UserUpdateWithoutSubscriptionsInput = {
+export type userUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4296,30 +4296,30 @@ export type UserUpdateWithoutSubscriptionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutSubscriptionsInput = {
+export type userUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4342,30 +4342,30 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutDocumentsInput = {
+export type userCreateWithoutDocumentsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4388,30 +4388,30 @@ export type UserCreateWithoutDocumentsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutDocumentsInput = {
+export type userUncheckedCreateWithoutDocumentsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4434,46 +4434,46 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutDocumentsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutDocumentsInput, Prisma.UserUncheckedCreateWithoutDocumentsInput>
+export type userCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutDocumentsInput, Prisma.userUncheckedCreateWithoutDocumentsInput>
 }
 
-export type UserUpsertWithoutDocumentsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutDocumentsInput, Prisma.UserUncheckedUpdateWithoutDocumentsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutDocumentsInput, Prisma.UserUncheckedCreateWithoutDocumentsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutDocumentsInput, Prisma.userUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutDocumentsInput, Prisma.userUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutDocumentsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutDocumentsInput, Prisma.UserUncheckedUpdateWithoutDocumentsInput>
+export type userUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutDocumentsInput, Prisma.userUncheckedUpdateWithoutDocumentsInput>
 }
 
-export type UserUpdateWithoutDocumentsInput = {
+export type userUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4496,30 +4496,30 @@ export type UserUpdateWithoutDocumentsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutDocumentsInput = {
+export type userUncheckedUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4542,30 +4542,30 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutReportsMadeInput = {
+export type userCreateWithoutReportsMadeInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4588,30 +4588,30 @@ export type UserCreateWithoutReportsMadeInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutReportsMadeInput = {
+export type userUncheckedCreateWithoutReportsMadeInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4634,35 +4634,35 @@ export type UserUncheckedCreateWithoutReportsMadeInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutReportsMadeInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
+export type userCreateOrConnectWithoutReportsMadeInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutReportsMadeInput, Prisma.userUncheckedCreateWithoutReportsMadeInput>
 }
 
-export type UserCreateWithoutReportsReceivedInput = {
+export type userCreateWithoutReportsReceivedInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4685,30 +4685,30 @@ export type UserCreateWithoutReportsReceivedInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutReportsReceivedInput = {
+export type userUncheckedCreateWithoutReportsReceivedInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4731,46 +4731,46 @@ export type UserUncheckedCreateWithoutReportsReceivedInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutReportsReceivedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
+export type userCreateOrConnectWithoutReportsReceivedInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutReportsReceivedInput, Prisma.userUncheckedCreateWithoutReportsReceivedInput>
 }
 
-export type UserUpsertWithoutReportsMadeInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReportsMadeInput, Prisma.UserUncheckedUpdateWithoutReportsMadeInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutReportsMadeInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutReportsMadeInput, Prisma.userUncheckedUpdateWithoutReportsMadeInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutReportsMadeInput, Prisma.userUncheckedCreateWithoutReportsMadeInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutReportsMadeInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReportsMadeInput, Prisma.UserUncheckedUpdateWithoutReportsMadeInput>
+export type userUpdateToOneWithWhereWithoutReportsMadeInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutReportsMadeInput, Prisma.userUncheckedUpdateWithoutReportsMadeInput>
 }
 
-export type UserUpdateWithoutReportsMadeInput = {
+export type userUpdateWithoutReportsMadeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4793,30 +4793,30 @@ export type UserUpdateWithoutReportsMadeInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutReportsMadeInput = {
+export type userUncheckedUpdateWithoutReportsMadeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4839,41 +4839,41 @@ export type UserUncheckedUpdateWithoutReportsMadeInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutReportsReceivedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutReportsReceivedInput, Prisma.UserUncheckedUpdateWithoutReportsReceivedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutReportsReceivedInput, Prisma.UserUncheckedCreateWithoutReportsReceivedInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutReportsReceivedInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutReportsReceivedInput, Prisma.userUncheckedUpdateWithoutReportsReceivedInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutReportsReceivedInput, Prisma.userUncheckedCreateWithoutReportsReceivedInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutReportsReceivedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutReportsReceivedInput, Prisma.UserUncheckedUpdateWithoutReportsReceivedInput>
+export type userUpdateToOneWithWhereWithoutReportsReceivedInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutReportsReceivedInput, Prisma.userUncheckedUpdateWithoutReportsReceivedInput>
 }
 
-export type UserUpdateWithoutReportsReceivedInput = {
+export type userUpdateWithoutReportsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4896,30 +4896,30 @@ export type UserUpdateWithoutReportsReceivedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutReportsReceivedInput = {
+export type userUncheckedUpdateWithoutReportsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4942,30 +4942,30 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutBlockedUsersInput = {
+export type userCreateWithoutBlockedUsersInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -4988,30 +4988,30 @@ export type UserCreateWithoutBlockedUsersInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutBlockedUsersInput = {
+export type userUncheckedCreateWithoutBlockedUsersInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -5034,35 +5034,35 @@ export type UserUncheckedCreateWithoutBlockedUsersInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutBlockedUsersInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlockedUsersInput, Prisma.UserUncheckedCreateWithoutBlockedUsersInput>
+export type userCreateOrConnectWithoutBlockedUsersInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutBlockedUsersInput, Prisma.userUncheckedCreateWithoutBlockedUsersInput>
 }
 
-export type UserCreateWithoutBlockedByInput = {
+export type userCreateWithoutBlockedByInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -5085,30 +5085,30 @@ export type UserCreateWithoutBlockedByInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  otps?: Prisma.OTPCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutBlockedByInput = {
+export type userUncheckedCreateWithoutBlockedByInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -5131,46 +5131,46 @@ export type UserUncheckedCreateWithoutBlockedByInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  otps?: Prisma.OTPUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutBlockedByInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
+export type userCreateOrConnectWithoutBlockedByInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutBlockedByInput, Prisma.userUncheckedCreateWithoutBlockedByInput>
 }
 
-export type UserUpsertWithoutBlockedUsersInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutBlockedUsersInput, Prisma.UserUncheckedUpdateWithoutBlockedUsersInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlockedUsersInput, Prisma.UserUncheckedCreateWithoutBlockedUsersInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutBlockedUsersInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutBlockedUsersInput, Prisma.userUncheckedUpdateWithoutBlockedUsersInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutBlockedUsersInput, Prisma.userUncheckedCreateWithoutBlockedUsersInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutBlockedUsersInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutBlockedUsersInput, Prisma.UserUncheckedUpdateWithoutBlockedUsersInput>
+export type userUpdateToOneWithWhereWithoutBlockedUsersInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutBlockedUsersInput, Prisma.userUncheckedUpdateWithoutBlockedUsersInput>
 }
 
-export type UserUpdateWithoutBlockedUsersInput = {
+export type userUpdateWithoutBlockedUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5193,30 +5193,30 @@ export type UserUpdateWithoutBlockedUsersInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutBlockedUsersInput = {
+export type userUncheckedUpdateWithoutBlockedUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5239,41 +5239,41 @@ export type UserUncheckedUpdateWithoutBlockedUsersInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserUpsertWithoutBlockedByInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutBlockedByInput, Prisma.UserUncheckedUpdateWithoutBlockedByInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlockedByInput, Prisma.UserUncheckedCreateWithoutBlockedByInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutBlockedByInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutBlockedByInput, Prisma.userUncheckedUpdateWithoutBlockedByInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutBlockedByInput, Prisma.userUncheckedCreateWithoutBlockedByInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutBlockedByInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutBlockedByInput, Prisma.UserUncheckedUpdateWithoutBlockedByInput>
+export type userUpdateToOneWithWhereWithoutBlockedByInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutBlockedByInput, Prisma.userUncheckedUpdateWithoutBlockedByInput>
 }
 
-export type UserUpdateWithoutBlockedByInput = {
+export type userUpdateWithoutBlockedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5296,30 +5296,30 @@ export type UserUpdateWithoutBlockedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  otps?: Prisma.OTPUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutBlockedByInput = {
+export type userUncheckedUpdateWithoutBlockedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5342,30 +5342,30 @@ export type UserUncheckedUpdateWithoutBlockedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  otps?: Prisma.OTPUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutOtpsInput = {
+export type userCreateWithoutOtpsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -5388,30 +5388,30 @@ export type UserCreateWithoutOtpsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
 }
 
-export type UserUncheckedCreateWithoutOtpsInput = {
+export type userUncheckedCreateWithoutOtpsInput = {
   id?: string
   name?: string | null
   email?: string | null
@@ -5434,46 +5434,46 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
-  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutUserInput
-  sentInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutSenderInput
-  receivedInterests?: Prisma.InterestUncheckedCreateNestedManyWithoutReceiverInput
-  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserAInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutUserBInput
-  shortlisted?: Prisma.ShortlistUncheckedCreateNestedManyWithoutOwnerInput
-  shortlistedBy?: Prisma.ShortlistUncheckedCreateNestedManyWithoutTargetInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewerInput
-  profileViews?: Prisma.ProfileViewUncheckedCreateNestedManyWithoutViewedInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
-  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
-  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetInput
-  blockedUsers?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
-  blockedBy?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
 }
 
-export type UserCreateOrConnectWithoutOtpsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutOtpsInput, Prisma.UserUncheckedCreateWithoutOtpsInput>
+export type userCreateOrConnectWithoutOtpsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutOtpsInput, Prisma.userUncheckedCreateWithoutOtpsInput>
 }
 
-export type UserUpsertWithoutOtpsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutOtpsInput, Prisma.UserUncheckedUpdateWithoutOtpsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutOtpsInput, Prisma.UserUncheckedCreateWithoutOtpsInput>
-  where?: Prisma.UserWhereInput
+export type userUpsertWithoutOtpsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutOtpsInput, Prisma.userUncheckedUpdateWithoutOtpsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutOtpsInput, Prisma.userUncheckedCreateWithoutOtpsInput>
+  where?: Prisma.userWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutOtpsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutOtpsInput, Prisma.UserUncheckedUpdateWithoutOtpsInput>
+export type userUpdateToOneWithWhereWithoutOtpsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutOtpsInput, Prisma.userUncheckedUpdateWithoutOtpsInput>
 }
 
-export type UserUpdateWithoutOtpsInput = {
+export type userUpdateWithoutOtpsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5496,30 +5496,30 @@ export type UserUpdateWithoutOtpsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
 }
 
-export type UserUncheckedUpdateWithoutOtpsInput = {
+export type userUncheckedUpdateWithoutOtpsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5542,27 +5542,27 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
-  photos?: Prisma.PhotoUncheckedUpdateManyWithoutUserNestedInput
-  sentInterests?: Prisma.InterestUncheckedUpdateManyWithoutSenderNestedInput
-  receivedInterests?: Prisma.InterestUncheckedUpdateManyWithoutReceiverNestedInput
-  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
-  chatRoomsA?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserANestedInput
-  chatRoomsB?: Prisma.ChatRoomUncheckedUpdateManyWithoutUserBNestedInput
-  shortlisted?: Prisma.ShortlistUncheckedUpdateManyWithoutOwnerNestedInput
-  shortlistedBy?: Prisma.ShortlistUncheckedUpdateManyWithoutTargetNestedInput
-  viewedProfiles?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewerNestedInput
-  profileViews?: Prisma.ProfileViewUncheckedUpdateManyWithoutViewedNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
-  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
-  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutTargetNestedInput
-  blockedUsers?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
-  blockedBy?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
 }
 
 
@@ -5632,151 +5632,151 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SessionWhereInput
+  where?: Prisma.sessionWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountPhotosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PhotoWhereInput
+  where?: Prisma.photoWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountSentInterestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountReceivedInterestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InterestWhereInput
+  where?: Prisma.interestWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountSentMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MessageWhereInput
+  where?: Prisma.messageWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountReceivedMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MessageWhereInput
+  where?: Prisma.messageWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountChatRoomsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountChatRoomsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ChatRoomWhereInput
+  where?: Prisma.chatroomWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountShortlistedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ShortlistWhereInput
+  where?: Prisma.shortlistWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountShortlistedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ShortlistWhereInput
+  where?: Prisma.shortlistWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountViewedProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountProfileViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.NotificationWhereInput
+  where?: Prisma.notificationWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SubscriptionWhereInput
+  where?: Prisma.subscriptionWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DocumentWhereInput
+  where?: Prisma.documentWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountReportsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountReportsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReportWhereInput
+  where?: Prisma.reportWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountBlockedUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BlockWhereInput
+  where?: Prisma.blockWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountBlockedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BlockWhereInput
+  where?: Prisma.blockWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountOtpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OTPWhereInput
+  where?: Prisma.otpWhereInput
 }
 
 
-export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
@@ -5799,34 +5799,34 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
-  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  profile?: boolean | Prisma.User$profileArgs<ExtArgs>
-  photos?: boolean | Prisma.User$photosArgs<ExtArgs>
-  sentInterests?: boolean | Prisma.User$sentInterestsArgs<ExtArgs>
-  receivedInterests?: boolean | Prisma.User$receivedInterestsArgs<ExtArgs>
-  sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
-  receivedMessages?: boolean | Prisma.User$receivedMessagesArgs<ExtArgs>
-  chatRoomsA?: boolean | Prisma.User$chatRoomsAArgs<ExtArgs>
-  chatRoomsB?: boolean | Prisma.User$chatRoomsBArgs<ExtArgs>
-  shortlisted?: boolean | Prisma.User$shortlistedArgs<ExtArgs>
-  shortlistedBy?: boolean | Prisma.User$shortlistedByArgs<ExtArgs>
-  viewedProfiles?: boolean | Prisma.User$viewedProfilesArgs<ExtArgs>
-  profileViews?: boolean | Prisma.User$profileViewsArgs<ExtArgs>
-  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
-  subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
-  documents?: boolean | Prisma.User$documentsArgs<ExtArgs>
-  reportsMade?: boolean | Prisma.User$reportsMadeArgs<ExtArgs>
-  reportsReceived?: boolean | Prisma.User$reportsReceivedArgs<ExtArgs>
-  blockedUsers?: boolean | Prisma.User$blockedUsersArgs<ExtArgs>
-  blockedBy?: boolean | Prisma.User$blockedByArgs<ExtArgs>
-  otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
+  accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
+  sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
+  profile?: boolean | Prisma.user$profileArgs<ExtArgs>
+  photos?: boolean | Prisma.user$photosArgs<ExtArgs>
+  sentInterests?: boolean | Prisma.user$sentInterestsArgs<ExtArgs>
+  receivedInterests?: boolean | Prisma.user$receivedInterestsArgs<ExtArgs>
+  sentMessages?: boolean | Prisma.user$sentMessagesArgs<ExtArgs>
+  receivedMessages?: boolean | Prisma.user$receivedMessagesArgs<ExtArgs>
+  chatRoomsA?: boolean | Prisma.user$chatRoomsAArgs<ExtArgs>
+  chatRoomsB?: boolean | Prisma.user$chatRoomsBArgs<ExtArgs>
+  shortlisted?: boolean | Prisma.user$shortlistedArgs<ExtArgs>
+  shortlistedBy?: boolean | Prisma.user$shortlistedByArgs<ExtArgs>
+  viewedProfiles?: boolean | Prisma.user$viewedProfilesArgs<ExtArgs>
+  profileViews?: boolean | Prisma.user$profileViewsArgs<ExtArgs>
+  notifications?: boolean | Prisma.user$notificationsArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.user$subscriptionsArgs<ExtArgs>
+  documents?: boolean | Prisma.user$documentsArgs<ExtArgs>
+  reportsMade?: boolean | Prisma.user$reportsMadeArgs<ExtArgs>
+  reportsReceived?: boolean | Prisma.user$reportsReceivedArgs<ExtArgs>
+  blockedUsers?: boolean | Prisma.user$blockedUsersArgs<ExtArgs>
+  blockedBy?: boolean | Prisma.user$blockedByArgs<ExtArgs>
+  otps?: boolean | Prisma.user$otpsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 
 
-export type UserSelectScalar = {
+export type userSelectScalar = {
   id?: boolean
   name?: boolean
   email?: boolean
@@ -5851,58 +5851,58 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
-export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
-  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  profile?: boolean | Prisma.User$profileArgs<ExtArgs>
-  photos?: boolean | Prisma.User$photosArgs<ExtArgs>
-  sentInterests?: boolean | Prisma.User$sentInterestsArgs<ExtArgs>
-  receivedInterests?: boolean | Prisma.User$receivedInterestsArgs<ExtArgs>
-  sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
-  receivedMessages?: boolean | Prisma.User$receivedMessagesArgs<ExtArgs>
-  chatRoomsA?: boolean | Prisma.User$chatRoomsAArgs<ExtArgs>
-  chatRoomsB?: boolean | Prisma.User$chatRoomsBArgs<ExtArgs>
-  shortlisted?: boolean | Prisma.User$shortlistedArgs<ExtArgs>
-  shortlistedBy?: boolean | Prisma.User$shortlistedByArgs<ExtArgs>
-  viewedProfiles?: boolean | Prisma.User$viewedProfilesArgs<ExtArgs>
-  profileViews?: boolean | Prisma.User$profileViewsArgs<ExtArgs>
-  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
-  subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
-  documents?: boolean | Prisma.User$documentsArgs<ExtArgs>
-  reportsMade?: boolean | Prisma.User$reportsMadeArgs<ExtArgs>
-  reportsReceived?: boolean | Prisma.User$reportsReceivedArgs<ExtArgs>
-  blockedUsers?: boolean | Prisma.User$blockedUsersArgs<ExtArgs>
-  blockedBy?: boolean | Prisma.User$blockedByArgs<ExtArgs>
-  otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
+export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
+  sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
+  profile?: boolean | Prisma.user$profileArgs<ExtArgs>
+  photos?: boolean | Prisma.user$photosArgs<ExtArgs>
+  sentInterests?: boolean | Prisma.user$sentInterestsArgs<ExtArgs>
+  receivedInterests?: boolean | Prisma.user$receivedInterestsArgs<ExtArgs>
+  sentMessages?: boolean | Prisma.user$sentMessagesArgs<ExtArgs>
+  receivedMessages?: boolean | Prisma.user$receivedMessagesArgs<ExtArgs>
+  chatRoomsA?: boolean | Prisma.user$chatRoomsAArgs<ExtArgs>
+  chatRoomsB?: boolean | Prisma.user$chatRoomsBArgs<ExtArgs>
+  shortlisted?: boolean | Prisma.user$shortlistedArgs<ExtArgs>
+  shortlistedBy?: boolean | Prisma.user$shortlistedByArgs<ExtArgs>
+  viewedProfiles?: boolean | Prisma.user$viewedProfilesArgs<ExtArgs>
+  profileViews?: boolean | Prisma.user$profileViewsArgs<ExtArgs>
+  notifications?: boolean | Prisma.user$notificationsArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.user$subscriptionsArgs<ExtArgs>
+  documents?: boolean | Prisma.user$documentsArgs<ExtArgs>
+  reportsMade?: boolean | Prisma.user$reportsMadeArgs<ExtArgs>
+  reportsReceived?: boolean | Prisma.user$reportsReceivedArgs<ExtArgs>
+  blockedUsers?: boolean | Prisma.user$blockedUsersArgs<ExtArgs>
+  blockedBy?: boolean | Prisma.user$blockedByArgs<ExtArgs>
+  otps?: boolean | Prisma.user$otpsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
-export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "User"
+export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "user"
   objects: {
-    accounts: Prisma.$AccountPayload<ExtArgs>[]
-    sessions: Prisma.$SessionPayload<ExtArgs>[]
-    profile: Prisma.$ProfilePayload<ExtArgs> | null
-    photos: Prisma.$PhotoPayload<ExtArgs>[]
-    sentInterests: Prisma.$InterestPayload<ExtArgs>[]
-    receivedInterests: Prisma.$InterestPayload<ExtArgs>[]
-    sentMessages: Prisma.$MessagePayload<ExtArgs>[]
-    receivedMessages: Prisma.$MessagePayload<ExtArgs>[]
-    chatRoomsA: Prisma.$ChatRoomPayload<ExtArgs>[]
-    chatRoomsB: Prisma.$ChatRoomPayload<ExtArgs>[]
-    shortlisted: Prisma.$ShortlistPayload<ExtArgs>[]
-    shortlistedBy: Prisma.$ShortlistPayload<ExtArgs>[]
-    viewedProfiles: Prisma.$ProfileViewPayload<ExtArgs>[]
-    profileViews: Prisma.$ProfileViewPayload<ExtArgs>[]
-    notifications: Prisma.$NotificationPayload<ExtArgs>[]
-    subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
-    documents: Prisma.$DocumentPayload<ExtArgs>[]
-    reportsMade: Prisma.$ReportPayload<ExtArgs>[]
-    reportsReceived: Prisma.$ReportPayload<ExtArgs>[]
-    blockedUsers: Prisma.$BlockPayload<ExtArgs>[]
-    blockedBy: Prisma.$BlockPayload<ExtArgs>[]
-    otps: Prisma.$OTPPayload<ExtArgs>[]
+    accounts: Prisma.$accountPayload<ExtArgs>[]
+    sessions: Prisma.$sessionPayload<ExtArgs>[]
+    profile: Prisma.$profilePayload<ExtArgs> | null
+    photos: Prisma.$photoPayload<ExtArgs>[]
+    sentInterests: Prisma.$interestPayload<ExtArgs>[]
+    receivedInterests: Prisma.$interestPayload<ExtArgs>[]
+    sentMessages: Prisma.$messagePayload<ExtArgs>[]
+    receivedMessages: Prisma.$messagePayload<ExtArgs>[]
+    chatRoomsA: Prisma.$chatroomPayload<ExtArgs>[]
+    chatRoomsB: Prisma.$chatroomPayload<ExtArgs>[]
+    shortlisted: Prisma.$shortlistPayload<ExtArgs>[]
+    shortlistedBy: Prisma.$shortlistPayload<ExtArgs>[]
+    viewedProfiles: Prisma.$profileviewPayload<ExtArgs>[]
+    profileViews: Prisma.$profileviewPayload<ExtArgs>[]
+    notifications: Prisma.$notificationPayload<ExtArgs>[]
+    subscriptions: Prisma.$subscriptionPayload<ExtArgs>[]
+    documents: Prisma.$documentPayload<ExtArgs>[]
+    reportsMade: Prisma.$reportPayload<ExtArgs>[]
+    reportsReceived: Prisma.$reportPayload<ExtArgs>[]
+    blockedUsers: Prisma.$blockPayload<ExtArgs>[]
+    blockedBy: Prisma.$blockPayload<ExtArgs>[]
+    otps: Prisma.$otpPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5931,18 +5931,18 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   composites: {}
 }
 
-export type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$UserPayload, S>
+export type userGetPayload<S extends boolean | null | undefined | userDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$userPayload, S>
 
-export type UserCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<UserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type userCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<userFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: UserCountAggregateInputType | true
   }
 
-export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['User'], meta: { name: 'User' } }
+export interface userDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['user'], meta: { name: 'user' } }
   /**
    * Find zero or one User that matches the filter.
-   * @param {UserFindUniqueArgs} args - Arguments to find a User
+   * @param {userFindUniqueArgs} args - Arguments to find a User
    * @example
    * // Get one User
    * const user = await prisma.user.findUnique({
@@ -5951,12 +5951,12 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   }
    * })
    */
-  findUnique<T extends UserFindUniqueArgs>(args: Prisma.SelectSubset<T, UserFindUniqueArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends userFindUniqueArgs>(args: Prisma.SelectSubset<T, userFindUniqueArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one User that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+   * @param {userFindUniqueOrThrowArgs} args - Arguments to find a User
    * @example
    * // Get one User
    * const user = await prisma.user.findUniqueOrThrow({
@@ -5965,13 +5965,13 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   }
    * })
    */
-  findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends userFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, userFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first User that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {UserFindFirstArgs} args - Arguments to find a User
+   * @param {userFindFirstArgs} args - Arguments to find a User
    * @example
    * // Get one User
    * const user = await prisma.user.findFirst({
@@ -5980,14 +5980,14 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   }
    * })
    */
-  findFirst<T extends UserFindFirstArgs>(args?: Prisma.SelectSubset<T, UserFindFirstArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends userFindFirstArgs>(args?: Prisma.SelectSubset<T, userFindFirstArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first User that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+   * @param {userFindFirstOrThrowArgs} args - Arguments to find a User
    * @example
    * // Get one User
    * const user = await prisma.user.findFirstOrThrow({
@@ -5996,13 +5996,13 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   }
    * })
    */
-  findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends userFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, userFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Users that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {UserFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {userFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Users
    * const users = await prisma.user.findMany()
@@ -6014,11 +6014,11 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends UserFindManyArgs>(args?: Prisma.SelectSubset<T, UserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends userFindManyArgs>(args?: Prisma.SelectSubset<T, userFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a User.
-   * @param {UserCreateArgs} args - Arguments to create a User.
+   * @param {userCreateArgs} args - Arguments to create a User.
    * @example
    * // Create one User
    * const User = await prisma.user.create({
@@ -6028,11 +6028,11 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * })
    * 
    */
-  create<T extends UserCreateArgs>(args: Prisma.SelectSubset<T, UserCreateArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends userCreateArgs>(args: Prisma.SelectSubset<T, userCreateArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Users.
-   * @param {UserCreateManyArgs} args - Arguments to create many Users.
+   * @param {userCreateManyArgs} args - Arguments to create many Users.
    * @example
    * // Create many Users
    * const user = await prisma.user.createMany({
@@ -6042,11 +6042,11 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * })
    *     
    */
-  createMany<T extends UserCreateManyArgs>(args?: Prisma.SelectSubset<T, UserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends userCreateManyArgs>(args?: Prisma.SelectSubset<T, userCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a User.
-   * @param {UserDeleteArgs} args - Arguments to delete one User.
+   * @param {userDeleteArgs} args - Arguments to delete one User.
    * @example
    * // Delete one User
    * const User = await prisma.user.delete({
@@ -6056,11 +6056,11 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * })
    * 
    */
-  delete<T extends UserDeleteArgs>(args: Prisma.SelectSubset<T, UserDeleteArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends userDeleteArgs>(args: Prisma.SelectSubset<T, userDeleteArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one User.
-   * @param {UserUpdateArgs} args - Arguments to update one User.
+   * @param {userUpdateArgs} args - Arguments to update one User.
    * @example
    * // Update one User
    * const user = await prisma.user.update({
@@ -6073,11 +6073,11 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * })
    * 
    */
-  update<T extends UserUpdateArgs>(args: Prisma.SelectSubset<T, UserUpdateArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends userUpdateArgs>(args: Prisma.SelectSubset<T, userUpdateArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Users.
-   * @param {UserDeleteManyArgs} args - Arguments to filter Users to delete.
+   * @param {userDeleteManyArgs} args - Arguments to filter Users to delete.
    * @example
    * // Delete a few Users
    * const { count } = await prisma.user.deleteMany({
@@ -6087,13 +6087,13 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * })
    * 
    */
-  deleteMany<T extends UserDeleteManyArgs>(args?: Prisma.SelectSubset<T, UserDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends userDeleteManyArgs>(args?: Prisma.SelectSubset<T, userDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Users.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {UserUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {userUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Users
    * const user = await prisma.user.updateMany({
@@ -6106,11 +6106,11 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * })
    * 
    */
-  updateMany<T extends UserUpdateManyArgs>(args: Prisma.SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends userUpdateManyArgs>(args: Prisma.SelectSubset<T, userUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one User.
-   * @param {UserUpsertArgs} args - Arguments to update or create a User.
+   * @param {userUpsertArgs} args - Arguments to update or create a User.
    * @example
    * // Update or create a User
    * const user = await prisma.user.upsert({
@@ -6125,14 +6125,14 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   }
    * })
    */
-  upsert<T extends UserUpsertArgs>(args: Prisma.SelectSubset<T, UserUpsertArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends userUpsertArgs>(args: Prisma.SelectSubset<T, userUpsertArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Users.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {UserCountArgs} args - Arguments to filter Users to count.
+   * @param {userCountArgs} args - Arguments to filter Users to count.
    * @example
    * // Count the number of Users
    * const count = await prisma.user.count({
@@ -6141,8 +6141,8 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   }
    * })
   **/
-  count<T extends UserCountArgs>(
-    args?: Prisma.Subset<T, UserCountArgs>,
+  count<T extends userCountArgs>(
+    args?: Prisma.Subset<T, userCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -6181,7 +6181,7 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * Group by User.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {UserGroupByArgs} args - Group by arguments.
+   * @param {userGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -6196,14 +6196,14 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * 
   **/
   groupBy<
-    T extends UserGroupByArgs,
+    T extends userGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: UserGroupByArgs['orderBy'] }
-      : { orderBy?: UserGroupByArgs['orderBy'] },
+      ? { orderBy: userGroupByArgs['orderBy'] }
+      : { orderBy?: userGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -6252,43 +6252,43 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, userGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the User model
+ * Fields of the user model
  */
-readonly fields: UserFieldRefs;
+readonly fields: userFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for User.
+ * The delegate class that acts as a "Promise-like" for user.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  photos<T extends Prisma.User$photosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$photosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PhotoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  sentInterests<T extends Prisma.User$sentInterestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  receivedInterests<T extends Prisma.User$receivedInterestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  sentMessages<T extends Prisma.User$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  receivedMessages<T extends Prisma.User$receivedMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  chatRoomsA<T extends Prisma.User$chatRoomsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatRoomsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  chatRoomsB<T extends Prisma.User$chatRoomsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatRoomsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  shortlisted<T extends Prisma.User$shortlistedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shortlistedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShortlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  shortlistedBy<T extends Prisma.User$shortlistedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shortlistedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShortlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  viewedProfiles<T extends Prisma.User$viewedProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$viewedProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  profileViews<T extends Prisma.User$profileViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  subscriptions<T extends Prisma.User$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  documents<T extends Prisma.User$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  reportsMade<T extends Prisma.User$reportsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  reportsReceived<T extends Prisma.User$reportsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  blockedUsers<T extends Prisma.User$blockedUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  blockedBy<T extends Prisma.User$blockedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  otps<T extends Prisma.User$otpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OTPPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  accounts<T extends Prisma.user$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sessions<T extends Prisma.user$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$sessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profile<T extends Prisma.user$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$profileArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  photos<T extends Prisma.user$photosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$photosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$photoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentInterests<T extends Prisma.user$sentInterestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$sentInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivedInterests<T extends Prisma.user$receivedInterestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$receivedInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentMessages<T extends Prisma.user$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$messagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivedMessages<T extends Prisma.user$receivedMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$messagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chatRoomsA<T extends Prisma.user$chatRoomsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$chatRoomsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chatRoomsB<T extends Prisma.user$chatRoomsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$chatRoomsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$chatroomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shortlisted<T extends Prisma.user$shortlistedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$shortlistedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$shortlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shortlistedBy<T extends Prisma.user$shortlistedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$shortlistedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$shortlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  viewedProfiles<T extends Prisma.user$viewedProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$viewedProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileViews<T extends Prisma.user$profileViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$profileViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.user$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$notificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subscriptions<T extends Prisma.user$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$subscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documents<T extends Prisma.user$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$documentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reportsMade<T extends Prisma.user$reportsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$reportsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reportsReceived<T extends Prisma.user$reportsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$reportsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$reportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blockedUsers<T extends Prisma.user$blockedUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$blockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blockedBy<T extends Prisma.user$blockedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$blockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  otps<T extends Prisma.user$otpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$otpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6315,915 +6315,915 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 
 
 /**
- * Fields of the User model
+ * Fields of the user model
  */
-export interface UserFieldRefs {
-  readonly id: Prisma.FieldRef<"User", 'String'>
-  readonly name: Prisma.FieldRef<"User", 'String'>
-  readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly emailVerified: Prisma.FieldRef<"User", 'DateTime'>
-  readonly image: Prisma.FieldRef<"User", 'String'>
-  readonly password: Prisma.FieldRef<"User", 'String'>
-  readonly phone: Prisma.FieldRef<"User", 'String'>
-  readonly phoneVerified: Prisma.FieldRef<"User", 'Boolean'>
-  readonly role: Prisma.FieldRef<"User", 'Role'>
-  readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
-  readonly isVerified: Prisma.FieldRef<"User", 'Boolean'>
-  readonly adminVerified: Prisma.FieldRef<"User", 'Boolean'>
-  readonly verificationBadge: Prisma.FieldRef<"User", 'Boolean'>
-  readonly isPremium: Prisma.FieldRef<"User", 'Boolean'>
-  readonly premiumExpiry: Prisma.FieldRef<"User", 'DateTime'>
-  readonly premiumPlan: Prisma.FieldRef<"User", 'String'>
-  readonly profileBoost: Prisma.FieldRef<"User", 'Boolean'>
-  readonly boostExpiry: Prisma.FieldRef<"User", 'DateTime'>
-  readonly loginOtpEnabled: Prisma.FieldRef<"User", 'Boolean'>
-  readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
-  readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+export interface userFieldRefs {
+  readonly id: Prisma.FieldRef<"user", 'String'>
+  readonly name: Prisma.FieldRef<"user", 'String'>
+  readonly email: Prisma.FieldRef<"user", 'String'>
+  readonly emailVerified: Prisma.FieldRef<"user", 'DateTime'>
+  readonly image: Prisma.FieldRef<"user", 'String'>
+  readonly password: Prisma.FieldRef<"user", 'String'>
+  readonly phone: Prisma.FieldRef<"user", 'String'>
+  readonly phoneVerified: Prisma.FieldRef<"user", 'Boolean'>
+  readonly role: Prisma.FieldRef<"user", 'Role'>
+  readonly isActive: Prisma.FieldRef<"user", 'Boolean'>
+  readonly isVerified: Prisma.FieldRef<"user", 'Boolean'>
+  readonly adminVerified: Prisma.FieldRef<"user", 'Boolean'>
+  readonly verificationBadge: Prisma.FieldRef<"user", 'Boolean'>
+  readonly isPremium: Prisma.FieldRef<"user", 'Boolean'>
+  readonly premiumExpiry: Prisma.FieldRef<"user", 'DateTime'>
+  readonly premiumPlan: Prisma.FieldRef<"user", 'String'>
+  readonly profileBoost: Prisma.FieldRef<"user", 'Boolean'>
+  readonly boostExpiry: Prisma.FieldRef<"user", 'DateTime'>
+  readonly loginOtpEnabled: Prisma.FieldRef<"user", 'Boolean'>
+  readonly lastLoginAt: Prisma.FieldRef<"user", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"user", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"user", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * User findUnique
+ * user findUnique
  */
-export type UserFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * Filter, which User to fetch.
+   * Filter, which user to fetch.
    */
-  where: Prisma.UserWhereUniqueInput
+  where: Prisma.userWhereUniqueInput
 }
 
 /**
- * User findUniqueOrThrow
+ * user findUniqueOrThrow
  */
-export type UserFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * Filter, which User to fetch.
+   * Filter, which user to fetch.
    */
-  where: Prisma.UserWhereUniqueInput
+  where: Prisma.userWhereUniqueInput
 }
 
 /**
- * User findFirst
+ * user findFirst
  */
-export type UserFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * Filter, which User to fetch.
+   * Filter, which user to fetch.
    */
-  where?: Prisma.UserWhereInput
+  where?: Prisma.userWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Users to fetch.
+   * Determine the order of users to fetch.
    */
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  orderBy?: Prisma.userOrderByWithRelationInput | Prisma.userOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Users.
+   * Sets the position for searching for users.
    */
-  cursor?: Prisma.UserWhereUniqueInput
+  cursor?: Prisma.userWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Users from the position of the cursor.
+   * Take `±n` users from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Users.
+   * Skip the first `n` users.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Users.
+   * Filter by unique combinations of users.
    */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
 /**
- * User findFirstOrThrow
+ * user findFirstOrThrow
  */
-export type UserFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * Filter, which User to fetch.
+   * Filter, which user to fetch.
    */
-  where?: Prisma.UserWhereInput
+  where?: Prisma.userWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Users to fetch.
+   * Determine the order of users to fetch.
    */
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  orderBy?: Prisma.userOrderByWithRelationInput | Prisma.userOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Users.
+   * Sets the position for searching for users.
    */
-  cursor?: Prisma.UserWhereUniqueInput
+  cursor?: Prisma.userWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Users from the position of the cursor.
+   * Take `±n` users from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Users.
+   * Skip the first `n` users.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Users.
+   * Filter by unique combinations of users.
    */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
 /**
- * User findMany
+ * user findMany
  */
-export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * Filter, which Users to fetch.
+   * Filter, which users to fetch.
    */
-  where?: Prisma.UserWhereInput
+  where?: Prisma.userWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Users to fetch.
+   * Determine the order of users to fetch.
    */
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  orderBy?: Prisma.userOrderByWithRelationInput | Prisma.userOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Users.
+   * Sets the position for listing users.
    */
-  cursor?: Prisma.UserWhereUniqueInput
+  cursor?: Prisma.userWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Users from the position of the cursor.
+   * Take `±n` users from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Users.
+   * Skip the first `n` users.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Users.
+   * Filter by unique combinations of users.
    */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
 /**
- * User create
+ * user create
  */
-export type UserCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * The data needed to create a User.
+   * The data needed to create a user.
    */
-  data: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.userCreateInput, Prisma.userUncheckedCreateInput>
 }
 
 /**
- * User createMany
+ * user createMany
  */
-export type UserCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Users.
+   * The data used to create many users.
    */
-  data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
+  data: Prisma.userCreateManyInput | Prisma.userCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * User update
+ * user update
  */
-export type UserUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * The data needed to update a User.
+   * The data needed to update a user.
    */
-  data: Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.userUpdateInput, Prisma.userUncheckedUpdateInput>
   /**
-   * Choose, which User to update.
+   * Choose, which user to update.
    */
-  where: Prisma.UserWhereUniqueInput
+  where: Prisma.userWhereUniqueInput
 }
 
 /**
- * User updateMany
+ * user updateMany
  */
-export type UserUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Users.
+   * The data used to update users.
    */
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.userUpdateManyMutationInput, Prisma.userUncheckedUpdateManyInput>
   /**
-   * Filter which Users to update
+   * Filter which users to update
    */
-  where?: Prisma.UserWhereInput
+  where?: Prisma.userWhereInput
   /**
-   * Limit how many Users to update.
+   * Limit how many users to update.
    */
   limit?: number
 }
 
 /**
- * User upsert
+ * user upsert
  */
-export type UserUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * The filter to search for the User to update in case it exists.
+   * The filter to search for the user to update in case it exists.
    */
-  where: Prisma.UserWhereUniqueInput
+  where: Prisma.userWhereUniqueInput
   /**
-   * In case the User found by the `where` argument doesn't exist, create a new User with this data.
+   * In case the user found by the `where` argument doesn't exist, create a new user with this data.
    */
-  create: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.userCreateInput, Prisma.userUncheckedCreateInput>
   /**
-   * In case the User was found with the provided `where` argument, update it with this data.
+   * In case the user was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.userUpdateInput, Prisma.userUncheckedUpdateInput>
 }
 
 /**
- * User delete
+ * user delete
  */
-export type UserDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
   /**
-   * Filter which User to delete.
+   * Filter which user to delete.
    */
-  where: Prisma.UserWhereUniqueInput
+  where: Prisma.userWhereUniqueInput
 }
 
 /**
- * User deleteMany
+ * user deleteMany
  */
-export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Users to delete
+   * Filter which users to delete
    */
-  where?: Prisma.UserWhereInput
+  where?: Prisma.userWhereInput
   /**
-   * Limit how many Users to delete.
+   * Limit how many users to delete.
    */
   limit?: number
 }
 
 /**
- * User.accounts
+ * user.accounts
  */
-export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
-  where?: Prisma.AccountWhereInput
-  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
-  cursor?: Prisma.AccountWhereUniqueInput
+  include?: Prisma.accountInclude<ExtArgs> | null
+  where?: Prisma.accountWhereInput
+  orderBy?: Prisma.accountOrderByWithRelationInput | Prisma.accountOrderByWithRelationInput[]
+  cursor?: Prisma.accountWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
 }
 
 /**
- * User.sessions
+ * user.sessions
  */
-export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Session
+   * Select specific fields to fetch from the session
    */
-  select?: Prisma.SessionSelect<ExtArgs> | null
+  select?: Prisma.sessionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Session
+   * Omit specific fields from the session
    */
-  omit?: Prisma.SessionOmit<ExtArgs> | null
+  omit?: Prisma.sessionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SessionInclude<ExtArgs> | null
-  where?: Prisma.SessionWhereInput
-  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
-  cursor?: Prisma.SessionWhereUniqueInput
+  include?: Prisma.sessionInclude<ExtArgs> | null
+  where?: Prisma.sessionWhereInput
+  orderBy?: Prisma.sessionOrderByWithRelationInput | Prisma.sessionOrderByWithRelationInput[]
+  cursor?: Prisma.sessionWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
 }
 
 /**
- * User.profile
+ * user.profile
  */
-export type User$profileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$profileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
-  where?: Prisma.ProfileWhereInput
+  include?: Prisma.profileInclude<ExtArgs> | null
+  where?: Prisma.profileWhereInput
 }
 
 /**
- * User.photos
+ * user.photos
  */
-export type User$photosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$photosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Photo
+   * Select specific fields to fetch from the photo
    */
-  select?: Prisma.PhotoSelect<ExtArgs> | null
+  select?: Prisma.photoSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Photo
+   * Omit specific fields from the photo
    */
-  omit?: Prisma.PhotoOmit<ExtArgs> | null
+  omit?: Prisma.photoOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.PhotoInclude<ExtArgs> | null
-  where?: Prisma.PhotoWhereInput
-  orderBy?: Prisma.PhotoOrderByWithRelationInput | Prisma.PhotoOrderByWithRelationInput[]
-  cursor?: Prisma.PhotoWhereUniqueInput
+  include?: Prisma.photoInclude<ExtArgs> | null
+  where?: Prisma.photoWhereInput
+  orderBy?: Prisma.photoOrderByWithRelationInput | Prisma.photoOrderByWithRelationInput[]
+  cursor?: Prisma.photoWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.PhotoScalarFieldEnum | Prisma.PhotoScalarFieldEnum[]
 }
 
 /**
- * User.sentInterests
+ * user.sentInterests
  */
-export type User$sentInterestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$sentInterestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
-  where?: Prisma.InterestWhereInput
-  orderBy?: Prisma.InterestOrderByWithRelationInput | Prisma.InterestOrderByWithRelationInput[]
-  cursor?: Prisma.InterestWhereUniqueInput
+  include?: Prisma.interestInclude<ExtArgs> | null
+  where?: Prisma.interestWhereInput
+  orderBy?: Prisma.interestOrderByWithRelationInput | Prisma.interestOrderByWithRelationInput[]
+  cursor?: Prisma.interestWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.InterestScalarFieldEnum | Prisma.InterestScalarFieldEnum[]
 }
 
 /**
- * User.receivedInterests
+ * user.receivedInterests
  */
-export type User$receivedInterestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$receivedInterestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Interest
+   * Select specific fields to fetch from the interest
    */
-  select?: Prisma.InterestSelect<ExtArgs> | null
+  select?: Prisma.interestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Interest
+   * Omit specific fields from the interest
    */
-  omit?: Prisma.InterestOmit<ExtArgs> | null
+  omit?: Prisma.interestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InterestInclude<ExtArgs> | null
-  where?: Prisma.InterestWhereInput
-  orderBy?: Prisma.InterestOrderByWithRelationInput | Prisma.InterestOrderByWithRelationInput[]
-  cursor?: Prisma.InterestWhereUniqueInput
+  include?: Prisma.interestInclude<ExtArgs> | null
+  where?: Prisma.interestWhereInput
+  orderBy?: Prisma.interestOrderByWithRelationInput | Prisma.interestOrderByWithRelationInput[]
+  cursor?: Prisma.interestWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.InterestScalarFieldEnum | Prisma.InterestScalarFieldEnum[]
 }
 
 /**
- * User.sentMessages
+ * user.sentMessages
  */
-export type User$sentMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$sentMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Message
+   * Select specific fields to fetch from the message
    */
-  select?: Prisma.MessageSelect<ExtArgs> | null
+  select?: Prisma.messageSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Message
+   * Omit specific fields from the message
    */
-  omit?: Prisma.MessageOmit<ExtArgs> | null
+  omit?: Prisma.messageOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  where?: Prisma.MessageWhereInput
-  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
-  cursor?: Prisma.MessageWhereUniqueInput
+  include?: Prisma.messageInclude<ExtArgs> | null
+  where?: Prisma.messageWhereInput
+  orderBy?: Prisma.messageOrderByWithRelationInput | Prisma.messageOrderByWithRelationInput[]
+  cursor?: Prisma.messageWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
 }
 
 /**
- * User.receivedMessages
+ * user.receivedMessages
  */
-export type User$receivedMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$receivedMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Message
+   * Select specific fields to fetch from the message
    */
-  select?: Prisma.MessageSelect<ExtArgs> | null
+  select?: Prisma.messageSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Message
+   * Omit specific fields from the message
    */
-  omit?: Prisma.MessageOmit<ExtArgs> | null
+  omit?: Prisma.messageOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  where?: Prisma.MessageWhereInput
-  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
-  cursor?: Prisma.MessageWhereUniqueInput
+  include?: Prisma.messageInclude<ExtArgs> | null
+  where?: Prisma.messageWhereInput
+  orderBy?: Prisma.messageOrderByWithRelationInput | Prisma.messageOrderByWithRelationInput[]
+  cursor?: Prisma.messageWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
 }
 
 /**
- * User.chatRoomsA
+ * user.chatRoomsA
  */
-export type User$chatRoomsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$chatRoomsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
-  where?: Prisma.ChatRoomWhereInput
-  orderBy?: Prisma.ChatRoomOrderByWithRelationInput | Prisma.ChatRoomOrderByWithRelationInput[]
-  cursor?: Prisma.ChatRoomWhereUniqueInput
+  include?: Prisma.chatroomInclude<ExtArgs> | null
+  where?: Prisma.chatroomWhereInput
+  orderBy?: Prisma.chatroomOrderByWithRelationInput | Prisma.chatroomOrderByWithRelationInput[]
+  cursor?: Prisma.chatroomWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ChatRoomScalarFieldEnum | Prisma.ChatRoomScalarFieldEnum[]
+  distinct?: Prisma.ChatroomScalarFieldEnum | Prisma.ChatroomScalarFieldEnum[]
 }
 
 /**
- * User.chatRoomsB
+ * user.chatRoomsB
  */
-export type User$chatRoomsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$chatRoomsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ChatRoom
+   * Select specific fields to fetch from the chatroom
    */
-  select?: Prisma.ChatRoomSelect<ExtArgs> | null
+  select?: Prisma.chatroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ChatRoom
+   * Omit specific fields from the chatroom
    */
-  omit?: Prisma.ChatRoomOmit<ExtArgs> | null
+  omit?: Prisma.chatroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatRoomInclude<ExtArgs> | null
-  where?: Prisma.ChatRoomWhereInput
-  orderBy?: Prisma.ChatRoomOrderByWithRelationInput | Prisma.ChatRoomOrderByWithRelationInput[]
-  cursor?: Prisma.ChatRoomWhereUniqueInput
+  include?: Prisma.chatroomInclude<ExtArgs> | null
+  where?: Prisma.chatroomWhereInput
+  orderBy?: Prisma.chatroomOrderByWithRelationInput | Prisma.chatroomOrderByWithRelationInput[]
+  cursor?: Prisma.chatroomWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ChatRoomScalarFieldEnum | Prisma.ChatRoomScalarFieldEnum[]
+  distinct?: Prisma.ChatroomScalarFieldEnum | Prisma.ChatroomScalarFieldEnum[]
 }
 
 /**
- * User.shortlisted
+ * user.shortlisted
  */
-export type User$shortlistedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$shortlistedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Shortlist
+   * Select specific fields to fetch from the shortlist
    */
-  select?: Prisma.ShortlistSelect<ExtArgs> | null
+  select?: Prisma.shortlistSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Shortlist
+   * Omit specific fields from the shortlist
    */
-  omit?: Prisma.ShortlistOmit<ExtArgs> | null
+  omit?: Prisma.shortlistOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ShortlistInclude<ExtArgs> | null
-  where?: Prisma.ShortlistWhereInput
-  orderBy?: Prisma.ShortlistOrderByWithRelationInput | Prisma.ShortlistOrderByWithRelationInput[]
-  cursor?: Prisma.ShortlistWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ShortlistScalarFieldEnum | Prisma.ShortlistScalarFieldEnum[]
-}
-
-/**
- * User.shortlistedBy
- */
-export type User$shortlistedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Shortlist
-   */
-  select?: Prisma.ShortlistSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Shortlist
-   */
-  omit?: Prisma.ShortlistOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShortlistInclude<ExtArgs> | null
-  where?: Prisma.ShortlistWhereInput
-  orderBy?: Prisma.ShortlistOrderByWithRelationInput | Prisma.ShortlistOrderByWithRelationInput[]
-  cursor?: Prisma.ShortlistWhereUniqueInput
+  include?: Prisma.shortlistInclude<ExtArgs> | null
+  where?: Prisma.shortlistWhereInput
+  orderBy?: Prisma.shortlistOrderByWithRelationInput | Prisma.shortlistOrderByWithRelationInput[]
+  cursor?: Prisma.shortlistWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.ShortlistScalarFieldEnum | Prisma.ShortlistScalarFieldEnum[]
 }
 
 /**
- * User.viewedProfiles
+ * user.shortlistedBy
  */
-export type User$viewedProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$shortlistedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the shortlist
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.shortlistSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the shortlist
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.shortlistOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
-  where?: Prisma.ProfileViewWhereInput
-  orderBy?: Prisma.ProfileViewOrderByWithRelationInput | Prisma.ProfileViewOrderByWithRelationInput[]
-  cursor?: Prisma.ProfileViewWhereUniqueInput
+  include?: Prisma.shortlistInclude<ExtArgs> | null
+  where?: Prisma.shortlistWhereInput
+  orderBy?: Prisma.shortlistOrderByWithRelationInput | Prisma.shortlistOrderByWithRelationInput[]
+  cursor?: Prisma.shortlistWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ProfileViewScalarFieldEnum | Prisma.ProfileViewScalarFieldEnum[]
+  distinct?: Prisma.ShortlistScalarFieldEnum | Prisma.ShortlistScalarFieldEnum[]
 }
 
 /**
- * User.profileViews
+ * user.viewedProfiles
  */
-export type User$profileViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$viewedProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
-  where?: Prisma.ProfileViewWhereInput
-  orderBy?: Prisma.ProfileViewOrderByWithRelationInput | Prisma.ProfileViewOrderByWithRelationInput[]
-  cursor?: Prisma.ProfileViewWhereUniqueInput
+  include?: Prisma.profileviewInclude<ExtArgs> | null
+  where?: Prisma.profileviewWhereInput
+  orderBy?: Prisma.profileviewOrderByWithRelationInput | Prisma.profileviewOrderByWithRelationInput[]
+  cursor?: Prisma.profileviewWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ProfileViewScalarFieldEnum | Prisma.ProfileViewScalarFieldEnum[]
+  distinct?: Prisma.ProfileviewScalarFieldEnum | Prisma.ProfileviewScalarFieldEnum[]
 }
 
 /**
- * User.notifications
+ * user.profileViews
  */
-export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$profileViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Notification
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.NotificationSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Notification
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.NotificationInclude<ExtArgs> | null
-  where?: Prisma.NotificationWhereInput
-  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
-  cursor?: Prisma.NotificationWhereUniqueInput
+  include?: Prisma.profileviewInclude<ExtArgs> | null
+  where?: Prisma.profileviewWhereInput
+  orderBy?: Prisma.profileviewOrderByWithRelationInput | Prisma.profileviewOrderByWithRelationInput[]
+  cursor?: Prisma.profileviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProfileviewScalarFieldEnum | Prisma.ProfileviewScalarFieldEnum[]
+}
+
+/**
+ * user.notifications
+ */
+export type user$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the notification
+   */
+  select?: Prisma.notificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the notification
+   */
+  omit?: Prisma.notificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.notificationInclude<ExtArgs> | null
+  where?: Prisma.notificationWhereInput
+  orderBy?: Prisma.notificationOrderByWithRelationInput | Prisma.notificationOrderByWithRelationInput[]
+  cursor?: Prisma.notificationWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**
- * User.subscriptions
+ * user.subscriptions
  */
-export type User$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Subscription
+   * Select specific fields to fetch from the subscription
    */
-  select?: Prisma.SubscriptionSelect<ExtArgs> | null
+  select?: Prisma.subscriptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Subscription
+   * Omit specific fields from the subscription
    */
-  omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  omit?: Prisma.subscriptionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SubscriptionInclude<ExtArgs> | null
-  where?: Prisma.SubscriptionWhereInput
-  orderBy?: Prisma.SubscriptionOrderByWithRelationInput | Prisma.SubscriptionOrderByWithRelationInput[]
-  cursor?: Prisma.SubscriptionWhereUniqueInput
+  include?: Prisma.subscriptionInclude<ExtArgs> | null
+  where?: Prisma.subscriptionWhereInput
+  orderBy?: Prisma.subscriptionOrderByWithRelationInput | Prisma.subscriptionOrderByWithRelationInput[]
+  cursor?: Prisma.subscriptionWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.SubscriptionScalarFieldEnum | Prisma.SubscriptionScalarFieldEnum[]
 }
 
 /**
- * User.documents
+ * user.documents
  */
-export type User$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Document
+   * Select specific fields to fetch from the document
    */
-  select?: Prisma.DocumentSelect<ExtArgs> | null
+  select?: Prisma.documentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Document
+   * Omit specific fields from the document
    */
-  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  omit?: Prisma.documentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.DocumentInclude<ExtArgs> | null
-  where?: Prisma.DocumentWhereInput
-  orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[]
-  cursor?: Prisma.DocumentWhereUniqueInput
+  include?: Prisma.documentInclude<ExtArgs> | null
+  where?: Prisma.documentWhereInput
+  orderBy?: Prisma.documentOrderByWithRelationInput | Prisma.documentOrderByWithRelationInput[]
+  cursor?: Prisma.documentWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
 }
 
 /**
- * User.reportsMade
+ * user.reportsMade
  */
-export type User$reportsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$reportsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
-  where?: Prisma.ReportWhereInput
-  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
-  cursor?: Prisma.ReportWhereUniqueInput
+  include?: Prisma.reportInclude<ExtArgs> | null
+  where?: Prisma.reportWhereInput
+  orderBy?: Prisma.reportOrderByWithRelationInput | Prisma.reportOrderByWithRelationInput[]
+  cursor?: Prisma.reportWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**
- * User.reportsReceived
+ * user.reportsReceived
  */
-export type User$reportsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$reportsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Report
+   * Select specific fields to fetch from the report
    */
-  select?: Prisma.ReportSelect<ExtArgs> | null
+  select?: Prisma.reportSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Report
+   * Omit specific fields from the report
    */
-  omit?: Prisma.ReportOmit<ExtArgs> | null
+  omit?: Prisma.reportOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReportInclude<ExtArgs> | null
-  where?: Prisma.ReportWhereInput
-  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
-  cursor?: Prisma.ReportWhereUniqueInput
+  include?: Prisma.reportInclude<ExtArgs> | null
+  where?: Prisma.reportWhereInput
+  orderBy?: Prisma.reportOrderByWithRelationInput | Prisma.reportOrderByWithRelationInput[]
+  cursor?: Prisma.reportWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**
- * User.blockedUsers
+ * user.blockedUsers
  */
-export type User$blockedUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$blockedUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Block
+   * Select specific fields to fetch from the block
    */
-  select?: Prisma.BlockSelect<ExtArgs> | null
+  select?: Prisma.blockSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Block
+   * Omit specific fields from the block
    */
-  omit?: Prisma.BlockOmit<ExtArgs> | null
+  omit?: Prisma.blockOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.BlockInclude<ExtArgs> | null
-  where?: Prisma.BlockWhereInput
-  orderBy?: Prisma.BlockOrderByWithRelationInput | Prisma.BlockOrderByWithRelationInput[]
-  cursor?: Prisma.BlockWhereUniqueInput
+  include?: Prisma.blockInclude<ExtArgs> | null
+  where?: Prisma.blockWhereInput
+  orderBy?: Prisma.blockOrderByWithRelationInput | Prisma.blockOrderByWithRelationInput[]
+  cursor?: Prisma.blockWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.BlockScalarFieldEnum | Prisma.BlockScalarFieldEnum[]
 }
 
 /**
- * User.blockedBy
+ * user.blockedBy
  */
-export type User$blockedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$blockedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Block
+   * Select specific fields to fetch from the block
    */
-  select?: Prisma.BlockSelect<ExtArgs> | null
+  select?: Prisma.blockSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Block
+   * Omit specific fields from the block
    */
-  omit?: Prisma.BlockOmit<ExtArgs> | null
+  omit?: Prisma.blockOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.BlockInclude<ExtArgs> | null
-  where?: Prisma.BlockWhereInput
-  orderBy?: Prisma.BlockOrderByWithRelationInput | Prisma.BlockOrderByWithRelationInput[]
-  cursor?: Prisma.BlockWhereUniqueInput
+  include?: Prisma.blockInclude<ExtArgs> | null
+  where?: Prisma.blockWhereInput
+  orderBy?: Prisma.blockOrderByWithRelationInput | Prisma.blockOrderByWithRelationInput[]
+  cursor?: Prisma.blockWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.BlockScalarFieldEnum | Prisma.BlockScalarFieldEnum[]
 }
 
 /**
- * User.otps
+ * user.otps
  */
-export type User$otpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type user$otpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the OTP
+   * Select specific fields to fetch from the otp
    */
-  select?: Prisma.OTPSelect<ExtArgs> | null
+  select?: Prisma.otpSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the OTP
+   * Omit specific fields from the otp
    */
-  omit?: Prisma.OTPOmit<ExtArgs> | null
+  omit?: Prisma.otpOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.OTPInclude<ExtArgs> | null
-  where?: Prisma.OTPWhereInput
-  orderBy?: Prisma.OTPOrderByWithRelationInput | Prisma.OTPOrderByWithRelationInput[]
-  cursor?: Prisma.OTPWhereUniqueInput
+  include?: Prisma.otpInclude<ExtArgs> | null
+  where?: Prisma.otpWhereInput
+  orderBy?: Prisma.otpOrderByWithRelationInput | Prisma.otpOrderByWithRelationInput[]
+  cursor?: Prisma.otpWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.OTPScalarFieldEnum | Prisma.OTPScalarFieldEnum[]
+  distinct?: Prisma.OtpScalarFieldEnum | Prisma.OtpScalarFieldEnum[]
 }
 
 /**
- * User without action
+ * user without action
  */
-export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type userDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the user
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.userSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the user
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.userOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
+  include?: Prisma.userInclude<ExtArgs> | null
 }

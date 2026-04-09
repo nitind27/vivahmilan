@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `ProfileView` model and its related types.
+ * This file exports the `profileview` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,32 +13,32 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model ProfileView
+ * Model profileview
  * 
  */
-export type ProfileViewModel = runtime.Types.Result.DefaultSelection<Prisma.$ProfileViewPayload>
+export type profileviewModel = runtime.Types.Result.DefaultSelection<Prisma.$profileviewPayload>
 
-export type AggregateProfileView = {
-  _count: ProfileViewCountAggregateOutputType | null
-  _min: ProfileViewMinAggregateOutputType | null
-  _max: ProfileViewMaxAggregateOutputType | null
+export type AggregateProfileview = {
+  _count: ProfileviewCountAggregateOutputType | null
+  _min: ProfileviewMinAggregateOutputType | null
+  _max: ProfileviewMaxAggregateOutputType | null
 }
 
-export type ProfileViewMinAggregateOutputType = {
+export type ProfileviewMinAggregateOutputType = {
   id: string | null
   viewerId: string | null
   viewedId: string | null
   createdAt: Date | null
 }
 
-export type ProfileViewMaxAggregateOutputType = {
+export type ProfileviewMaxAggregateOutputType = {
   id: string | null
   viewerId: string | null
   viewedId: string | null
   createdAt: Date | null
 }
 
-export type ProfileViewCountAggregateOutputType = {
+export type ProfileviewCountAggregateOutputType = {
   id: number
   viewerId: number
   viewedId: number
@@ -47,21 +47,21 @@ export type ProfileViewCountAggregateOutputType = {
 }
 
 
-export type ProfileViewMinAggregateInputType = {
+export type ProfileviewMinAggregateInputType = {
   id?: true
   viewerId?: true
   viewedId?: true
   createdAt?: true
 }
 
-export type ProfileViewMaxAggregateInputType = {
+export type ProfileviewMaxAggregateInputType = {
   id?: true
   viewerId?: true
   viewedId?: true
   createdAt?: true
 }
 
-export type ProfileViewCountAggregateInputType = {
+export type ProfileviewCountAggregateInputType = {
   id?: true
   viewerId?: true
   viewedId?: true
@@ -69,639 +69,639 @@ export type ProfileViewCountAggregateInputType = {
   _all?: true
 }
 
-export type ProfileViewAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ProfileviewAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which ProfileView to aggregate.
+   * Filter which profileview to aggregate.
    */
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileViews to fetch.
+   * Determine the order of profileviews to fetch.
    */
-  orderBy?: Prisma.ProfileViewOrderByWithRelationInput | Prisma.ProfileViewOrderByWithRelationInput[]
+  orderBy?: Prisma.profileviewOrderByWithRelationInput | Prisma.profileviewOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.ProfileViewWhereUniqueInput
+  cursor?: Prisma.profileviewWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileViews from the position of the cursor.
+   * Take `±n` profileviews from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileViews.
+   * Skip the first `n` profileviews.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned ProfileViews
+   * Count returned profileviews
   **/
-  _count?: true | ProfileViewCountAggregateInputType
+  _count?: true | ProfileviewCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the minimum value
   **/
-  _min?: ProfileViewMinAggregateInputType
+  _min?: ProfileviewMinAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the maximum value
   **/
-  _max?: ProfileViewMaxAggregateInputType
+  _max?: ProfileviewMaxAggregateInputType
 }
 
-export type GetProfileViewAggregateType<T extends ProfileViewAggregateArgs> = {
-      [P in keyof T & keyof AggregateProfileView]: P extends '_count' | 'count'
+export type GetProfileviewAggregateType<T extends ProfileviewAggregateArgs> = {
+      [P in keyof T & keyof AggregateProfileview]: P extends '_count' | 'count'
     ? T[P] extends true
       ? number
-      : Prisma.GetScalarType<T[P], AggregateProfileView[P]>
-    : Prisma.GetScalarType<T[P], AggregateProfileView[P]>
+      : Prisma.GetScalarType<T[P], AggregateProfileview[P]>
+    : Prisma.GetScalarType<T[P], AggregateProfileview[P]>
 }
 
 
 
 
-export type ProfileViewGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProfileViewWhereInput
-  orderBy?: Prisma.ProfileViewOrderByWithAggregationInput | Prisma.ProfileViewOrderByWithAggregationInput[]
-  by: Prisma.ProfileViewScalarFieldEnum[] | Prisma.ProfileViewScalarFieldEnum
-  having?: Prisma.ProfileViewScalarWhereWithAggregatesInput
+export type profileviewGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.profileviewWhereInput
+  orderBy?: Prisma.profileviewOrderByWithAggregationInput | Prisma.profileviewOrderByWithAggregationInput[]
+  by: Prisma.ProfileviewScalarFieldEnum[] | Prisma.ProfileviewScalarFieldEnum
+  having?: Prisma.profileviewScalarWhereWithAggregatesInput
   take?: number
   skip?: number
-  _count?: ProfileViewCountAggregateInputType | true
-  _min?: ProfileViewMinAggregateInputType
-  _max?: ProfileViewMaxAggregateInputType
+  _count?: ProfileviewCountAggregateInputType | true
+  _min?: ProfileviewMinAggregateInputType
+  _max?: ProfileviewMaxAggregateInputType
 }
 
-export type ProfileViewGroupByOutputType = {
+export type ProfileviewGroupByOutputType = {
   id: string
   viewerId: string
   viewedId: string
   createdAt: Date
-  _count: ProfileViewCountAggregateOutputType | null
-  _min: ProfileViewMinAggregateOutputType | null
-  _max: ProfileViewMaxAggregateOutputType | null
+  _count: ProfileviewCountAggregateOutputType | null
+  _min: ProfileviewMinAggregateOutputType | null
+  _max: ProfileviewMaxAggregateOutputType | null
 }
 
-export type GetProfileViewGroupByPayload<T extends ProfileViewGroupByArgs> = Prisma.PrismaPromise<
+export type GetProfileviewGroupByPayload<T extends profileviewGroupByArgs> = Prisma.PrismaPromise<
   Array<
-    Prisma.PickEnumerable<ProfileViewGroupByOutputType, T['by']> &
+    Prisma.PickEnumerable<ProfileviewGroupByOutputType, T['by']> &
       {
-        [P in ((keyof T) & (keyof ProfileViewGroupByOutputType))]: P extends '_count'
+        [P in ((keyof T) & (keyof ProfileviewGroupByOutputType))]: P extends '_count'
           ? T[P] extends boolean
             ? number
-            : Prisma.GetScalarType<T[P], ProfileViewGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], ProfileViewGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], ProfileviewGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], ProfileviewGroupByOutputType[P]>
       }
     >
   >
 
 
 
-export type ProfileViewWhereInput = {
-  AND?: Prisma.ProfileViewWhereInput | Prisma.ProfileViewWhereInput[]
-  OR?: Prisma.ProfileViewWhereInput[]
-  NOT?: Prisma.ProfileViewWhereInput | Prisma.ProfileViewWhereInput[]
-  id?: Prisma.StringFilter<"ProfileView"> | string
-  viewerId?: Prisma.StringFilter<"ProfileView"> | string
-  viewedId?: Prisma.StringFilter<"ProfileView"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProfileView"> | Date | string
-  viewer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  viewed?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+export type profileviewWhereInput = {
+  AND?: Prisma.profileviewWhereInput | Prisma.profileviewWhereInput[]
+  OR?: Prisma.profileviewWhereInput[]
+  NOT?: Prisma.profileviewWhereInput | Prisma.profileviewWhereInput[]
+  id?: Prisma.StringFilter<"profileview"> | string
+  viewerId?: Prisma.StringFilter<"profileview"> | string
+  viewedId?: Prisma.StringFilter<"profileview"> | string
+  createdAt?: Prisma.DateTimeFilter<"profileview"> | Date | string
+  viewer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  viewed?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }
 
-export type ProfileViewOrderByWithRelationInput = {
+export type profileviewOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   viewerId?: Prisma.SortOrder
   viewedId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  viewer?: Prisma.UserOrderByWithRelationInput
-  viewed?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.ProfileViewOrderByRelevanceInput
+  viewer?: Prisma.userOrderByWithRelationInput
+  viewed?: Prisma.userOrderByWithRelationInput
+  _relevance?: Prisma.profileviewOrderByRelevanceInput
 }
 
-export type ProfileViewWhereUniqueInput = Prisma.AtLeast<{
+export type profileviewWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  viewerId_viewedId?: Prisma.ProfileViewViewerIdViewedIdCompoundUniqueInput
-  AND?: Prisma.ProfileViewWhereInput | Prisma.ProfileViewWhereInput[]
-  OR?: Prisma.ProfileViewWhereInput[]
-  NOT?: Prisma.ProfileViewWhereInput | Prisma.ProfileViewWhereInput[]
-  viewerId?: Prisma.StringFilter<"ProfileView"> | string
-  viewedId?: Prisma.StringFilter<"ProfileView"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProfileView"> | Date | string
-  viewer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  viewed?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  viewerId_viewedId?: Prisma.profileviewViewerIdViewedIdCompoundUniqueInput
+  AND?: Prisma.profileviewWhereInput | Prisma.profileviewWhereInput[]
+  OR?: Prisma.profileviewWhereInput[]
+  NOT?: Prisma.profileviewWhereInput | Prisma.profileviewWhereInput[]
+  viewerId?: Prisma.StringFilter<"profileview"> | string
+  viewedId?: Prisma.StringFilter<"profileview"> | string
+  createdAt?: Prisma.DateTimeFilter<"profileview"> | Date | string
+  viewer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
+  viewed?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }, "id" | "viewerId_viewedId">
 
-export type ProfileViewOrderByWithAggregationInput = {
+export type profileviewOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   viewerId?: Prisma.SortOrder
   viewedId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _count?: Prisma.ProfileViewCountOrderByAggregateInput
-  _max?: Prisma.ProfileViewMaxOrderByAggregateInput
-  _min?: Prisma.ProfileViewMinOrderByAggregateInput
+  _count?: Prisma.profileviewCountOrderByAggregateInput
+  _max?: Prisma.profileviewMaxOrderByAggregateInput
+  _min?: Prisma.profileviewMinOrderByAggregateInput
 }
 
-export type ProfileViewScalarWhereWithAggregatesInput = {
-  AND?: Prisma.ProfileViewScalarWhereWithAggregatesInput | Prisma.ProfileViewScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ProfileViewScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.ProfileViewScalarWhereWithAggregatesInput | Prisma.ProfileViewScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"ProfileView"> | string
-  viewerId?: Prisma.StringWithAggregatesFilter<"ProfileView"> | string
-  viewedId?: Prisma.StringWithAggregatesFilter<"ProfileView"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProfileView"> | Date | string
+export type profileviewScalarWhereWithAggregatesInput = {
+  AND?: Prisma.profileviewScalarWhereWithAggregatesInput | Prisma.profileviewScalarWhereWithAggregatesInput[]
+  OR?: Prisma.profileviewScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.profileviewScalarWhereWithAggregatesInput | Prisma.profileviewScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"profileview"> | string
+  viewerId?: Prisma.StringWithAggregatesFilter<"profileview"> | string
+  viewedId?: Prisma.StringWithAggregatesFilter<"profileview"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"profileview"> | Date | string
 }
 
-export type ProfileViewCreateInput = {
+export type profileviewCreateInput = {
   id?: string
   createdAt?: Date | string
-  viewer: Prisma.UserCreateNestedOneWithoutViewedProfilesInput
-  viewed: Prisma.UserCreateNestedOneWithoutProfileViewsInput
+  viewer: Prisma.userCreateNestedOneWithoutViewedProfilesInput
+  viewed: Prisma.userCreateNestedOneWithoutProfileViewsInput
 }
 
-export type ProfileViewUncheckedCreateInput = {
-  id?: string
-  viewerId: string
-  viewedId: string
-  createdAt?: Date | string
-}
-
-export type ProfileViewUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  viewer?: Prisma.UserUpdateOneRequiredWithoutViewedProfilesNestedInput
-  viewed?: Prisma.UserUpdateOneRequiredWithoutProfileViewsNestedInput
-}
-
-export type ProfileViewUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  viewerId?: Prisma.StringFieldUpdateOperationsInput | string
-  viewedId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProfileViewCreateManyInput = {
+export type profileviewUncheckedCreateInput = {
   id?: string
   viewerId: string
   viewedId: string
   createdAt?: Date | string
 }
 
-export type ProfileViewUpdateManyMutationInput = {
+export type profileviewUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewer?: Prisma.userUpdateOneRequiredWithoutViewedProfilesNestedInput
+  viewed?: Prisma.userUpdateOneRequiredWithoutProfileViewsNestedInput
 }
 
-export type ProfileViewUncheckedUpdateManyInput = {
+export type profileviewUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   viewerId?: Prisma.StringFieldUpdateOperationsInput | string
   viewedId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileViewListRelationFilter = {
-  every?: Prisma.ProfileViewWhereInput
-  some?: Prisma.ProfileViewWhereInput
-  none?: Prisma.ProfileViewWhereInput
+export type profileviewCreateManyInput = {
+  id?: string
+  viewerId: string
+  viewedId: string
+  createdAt?: Date | string
 }
 
-export type ProfileViewOrderByRelationAggregateInput = {
+export type profileviewUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type profileviewUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  viewerId?: Prisma.StringFieldUpdateOperationsInput | string
+  viewedId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProfileviewListRelationFilter = {
+  every?: Prisma.profileviewWhereInput
+  some?: Prisma.profileviewWhereInput
+  none?: Prisma.profileviewWhereInput
+}
+
+export type profileviewOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ProfileViewOrderByRelevanceInput = {
-  fields: Prisma.ProfileViewOrderByRelevanceFieldEnum | Prisma.ProfileViewOrderByRelevanceFieldEnum[]
+export type profileviewOrderByRelevanceInput = {
+  fields: Prisma.profileviewOrderByRelevanceFieldEnum | Prisma.profileviewOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type ProfileViewViewerIdViewedIdCompoundUniqueInput = {
+export type profileviewViewerIdViewedIdCompoundUniqueInput = {
   viewerId: string
   viewedId: string
 }
 
-export type ProfileViewCountOrderByAggregateInput = {
+export type profileviewCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   viewerId?: Prisma.SortOrder
   viewedId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ProfileViewMaxOrderByAggregateInput = {
+export type profileviewMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   viewerId?: Prisma.SortOrder
   viewedId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ProfileViewMinOrderByAggregateInput = {
+export type profileviewMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   viewerId?: Prisma.SortOrder
   viewedId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ProfileViewCreateNestedManyWithoutViewerInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewerInput, Prisma.ProfileViewUncheckedCreateWithoutViewerInput> | Prisma.ProfileViewCreateWithoutViewerInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewerInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewerInput | Prisma.ProfileViewCreateOrConnectWithoutViewerInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewerInputEnvelope
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
+export type profileviewCreateNestedManyWithoutViewerInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewerInput, Prisma.profileviewUncheckedCreateWithoutViewerInput> | Prisma.profileviewCreateWithoutViewerInput[] | Prisma.profileviewUncheckedCreateWithoutViewerInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewerInput | Prisma.profileviewCreateOrConnectWithoutViewerInput[]
+  createMany?: Prisma.profileviewCreateManyViewerInputEnvelope
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
 }
 
-export type ProfileViewCreateNestedManyWithoutViewedInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewedInput, Prisma.ProfileViewUncheckedCreateWithoutViewedInput> | Prisma.ProfileViewCreateWithoutViewedInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewedInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewedInput | Prisma.ProfileViewCreateOrConnectWithoutViewedInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewedInputEnvelope
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
+export type profileviewCreateNestedManyWithoutViewedInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewedInput, Prisma.profileviewUncheckedCreateWithoutViewedInput> | Prisma.profileviewCreateWithoutViewedInput[] | Prisma.profileviewUncheckedCreateWithoutViewedInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewedInput | Prisma.profileviewCreateOrConnectWithoutViewedInput[]
+  createMany?: Prisma.profileviewCreateManyViewedInputEnvelope
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
 }
 
-export type ProfileViewUncheckedCreateNestedManyWithoutViewerInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewerInput, Prisma.ProfileViewUncheckedCreateWithoutViewerInput> | Prisma.ProfileViewCreateWithoutViewerInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewerInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewerInput | Prisma.ProfileViewCreateOrConnectWithoutViewerInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewerInputEnvelope
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
+export type profileviewUncheckedCreateNestedManyWithoutViewerInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewerInput, Prisma.profileviewUncheckedCreateWithoutViewerInput> | Prisma.profileviewCreateWithoutViewerInput[] | Prisma.profileviewUncheckedCreateWithoutViewerInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewerInput | Prisma.profileviewCreateOrConnectWithoutViewerInput[]
+  createMany?: Prisma.profileviewCreateManyViewerInputEnvelope
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
 }
 
-export type ProfileViewUncheckedCreateNestedManyWithoutViewedInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewedInput, Prisma.ProfileViewUncheckedCreateWithoutViewedInput> | Prisma.ProfileViewCreateWithoutViewedInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewedInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewedInput | Prisma.ProfileViewCreateOrConnectWithoutViewedInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewedInputEnvelope
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
+export type profileviewUncheckedCreateNestedManyWithoutViewedInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewedInput, Prisma.profileviewUncheckedCreateWithoutViewedInput> | Prisma.profileviewCreateWithoutViewedInput[] | Prisma.profileviewUncheckedCreateWithoutViewedInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewedInput | Prisma.profileviewCreateOrConnectWithoutViewedInput[]
+  createMany?: Prisma.profileviewCreateManyViewedInputEnvelope
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
 }
 
-export type ProfileViewUpdateManyWithoutViewerNestedInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewerInput, Prisma.ProfileViewUncheckedCreateWithoutViewerInput> | Prisma.ProfileViewCreateWithoutViewerInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewerInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewerInput | Prisma.ProfileViewCreateOrConnectWithoutViewerInput[]
-  upsert?: Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewerInput | Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewerInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewerInputEnvelope
-  set?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  disconnect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  delete?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  update?: Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewerInput | Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewerInput[]
-  updateMany?: Prisma.ProfileViewUpdateManyWithWhereWithoutViewerInput | Prisma.ProfileViewUpdateManyWithWhereWithoutViewerInput[]
-  deleteMany?: Prisma.ProfileViewScalarWhereInput | Prisma.ProfileViewScalarWhereInput[]
+export type profileviewUpdateManyWithoutViewerNestedInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewerInput, Prisma.profileviewUncheckedCreateWithoutViewerInput> | Prisma.profileviewCreateWithoutViewerInput[] | Prisma.profileviewUncheckedCreateWithoutViewerInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewerInput | Prisma.profileviewCreateOrConnectWithoutViewerInput[]
+  upsert?: Prisma.profileviewUpsertWithWhereUniqueWithoutViewerInput | Prisma.profileviewUpsertWithWhereUniqueWithoutViewerInput[]
+  createMany?: Prisma.profileviewCreateManyViewerInputEnvelope
+  set?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  disconnect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  delete?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  update?: Prisma.profileviewUpdateWithWhereUniqueWithoutViewerInput | Prisma.profileviewUpdateWithWhereUniqueWithoutViewerInput[]
+  updateMany?: Prisma.profileviewUpdateManyWithWhereWithoutViewerInput | Prisma.profileviewUpdateManyWithWhereWithoutViewerInput[]
+  deleteMany?: Prisma.profileviewScalarWhereInput | Prisma.profileviewScalarWhereInput[]
 }
 
-export type ProfileViewUpdateManyWithoutViewedNestedInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewedInput, Prisma.ProfileViewUncheckedCreateWithoutViewedInput> | Prisma.ProfileViewCreateWithoutViewedInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewedInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewedInput | Prisma.ProfileViewCreateOrConnectWithoutViewedInput[]
-  upsert?: Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewedInput | Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewedInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewedInputEnvelope
-  set?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  disconnect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  delete?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  update?: Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewedInput | Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewedInput[]
-  updateMany?: Prisma.ProfileViewUpdateManyWithWhereWithoutViewedInput | Prisma.ProfileViewUpdateManyWithWhereWithoutViewedInput[]
-  deleteMany?: Prisma.ProfileViewScalarWhereInput | Prisma.ProfileViewScalarWhereInput[]
+export type profileviewUpdateManyWithoutViewedNestedInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewedInput, Prisma.profileviewUncheckedCreateWithoutViewedInput> | Prisma.profileviewCreateWithoutViewedInput[] | Prisma.profileviewUncheckedCreateWithoutViewedInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewedInput | Prisma.profileviewCreateOrConnectWithoutViewedInput[]
+  upsert?: Prisma.profileviewUpsertWithWhereUniqueWithoutViewedInput | Prisma.profileviewUpsertWithWhereUniqueWithoutViewedInput[]
+  createMany?: Prisma.profileviewCreateManyViewedInputEnvelope
+  set?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  disconnect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  delete?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  update?: Prisma.profileviewUpdateWithWhereUniqueWithoutViewedInput | Prisma.profileviewUpdateWithWhereUniqueWithoutViewedInput[]
+  updateMany?: Prisma.profileviewUpdateManyWithWhereWithoutViewedInput | Prisma.profileviewUpdateManyWithWhereWithoutViewedInput[]
+  deleteMany?: Prisma.profileviewScalarWhereInput | Prisma.profileviewScalarWhereInput[]
 }
 
-export type ProfileViewUncheckedUpdateManyWithoutViewerNestedInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewerInput, Prisma.ProfileViewUncheckedCreateWithoutViewerInput> | Prisma.ProfileViewCreateWithoutViewerInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewerInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewerInput | Prisma.ProfileViewCreateOrConnectWithoutViewerInput[]
-  upsert?: Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewerInput | Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewerInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewerInputEnvelope
-  set?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  disconnect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  delete?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  update?: Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewerInput | Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewerInput[]
-  updateMany?: Prisma.ProfileViewUpdateManyWithWhereWithoutViewerInput | Prisma.ProfileViewUpdateManyWithWhereWithoutViewerInput[]
-  deleteMany?: Prisma.ProfileViewScalarWhereInput | Prisma.ProfileViewScalarWhereInput[]
+export type profileviewUncheckedUpdateManyWithoutViewerNestedInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewerInput, Prisma.profileviewUncheckedCreateWithoutViewerInput> | Prisma.profileviewCreateWithoutViewerInput[] | Prisma.profileviewUncheckedCreateWithoutViewerInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewerInput | Prisma.profileviewCreateOrConnectWithoutViewerInput[]
+  upsert?: Prisma.profileviewUpsertWithWhereUniqueWithoutViewerInput | Prisma.profileviewUpsertWithWhereUniqueWithoutViewerInput[]
+  createMany?: Prisma.profileviewCreateManyViewerInputEnvelope
+  set?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  disconnect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  delete?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  update?: Prisma.profileviewUpdateWithWhereUniqueWithoutViewerInput | Prisma.profileviewUpdateWithWhereUniqueWithoutViewerInput[]
+  updateMany?: Prisma.profileviewUpdateManyWithWhereWithoutViewerInput | Prisma.profileviewUpdateManyWithWhereWithoutViewerInput[]
+  deleteMany?: Prisma.profileviewScalarWhereInput | Prisma.profileviewScalarWhereInput[]
 }
 
-export type ProfileViewUncheckedUpdateManyWithoutViewedNestedInput = {
-  create?: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewedInput, Prisma.ProfileViewUncheckedCreateWithoutViewedInput> | Prisma.ProfileViewCreateWithoutViewedInput[] | Prisma.ProfileViewUncheckedCreateWithoutViewedInput[]
-  connectOrCreate?: Prisma.ProfileViewCreateOrConnectWithoutViewedInput | Prisma.ProfileViewCreateOrConnectWithoutViewedInput[]
-  upsert?: Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewedInput | Prisma.ProfileViewUpsertWithWhereUniqueWithoutViewedInput[]
-  createMany?: Prisma.ProfileViewCreateManyViewedInputEnvelope
-  set?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  disconnect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  delete?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  connect?: Prisma.ProfileViewWhereUniqueInput | Prisma.ProfileViewWhereUniqueInput[]
-  update?: Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewedInput | Prisma.ProfileViewUpdateWithWhereUniqueWithoutViewedInput[]
-  updateMany?: Prisma.ProfileViewUpdateManyWithWhereWithoutViewedInput | Prisma.ProfileViewUpdateManyWithWhereWithoutViewedInput[]
-  deleteMany?: Prisma.ProfileViewScalarWhereInput | Prisma.ProfileViewScalarWhereInput[]
+export type profileviewUncheckedUpdateManyWithoutViewedNestedInput = {
+  create?: Prisma.XOR<Prisma.profileviewCreateWithoutViewedInput, Prisma.profileviewUncheckedCreateWithoutViewedInput> | Prisma.profileviewCreateWithoutViewedInput[] | Prisma.profileviewUncheckedCreateWithoutViewedInput[]
+  connectOrCreate?: Prisma.profileviewCreateOrConnectWithoutViewedInput | Prisma.profileviewCreateOrConnectWithoutViewedInput[]
+  upsert?: Prisma.profileviewUpsertWithWhereUniqueWithoutViewedInput | Prisma.profileviewUpsertWithWhereUniqueWithoutViewedInput[]
+  createMany?: Prisma.profileviewCreateManyViewedInputEnvelope
+  set?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  disconnect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  delete?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  connect?: Prisma.profileviewWhereUniqueInput | Prisma.profileviewWhereUniqueInput[]
+  update?: Prisma.profileviewUpdateWithWhereUniqueWithoutViewedInput | Prisma.profileviewUpdateWithWhereUniqueWithoutViewedInput[]
+  updateMany?: Prisma.profileviewUpdateManyWithWhereWithoutViewedInput | Prisma.profileviewUpdateManyWithWhereWithoutViewedInput[]
+  deleteMany?: Prisma.profileviewScalarWhereInput | Prisma.profileviewScalarWhereInput[]
 }
 
-export type ProfileViewCreateWithoutViewerInput = {
+export type profileviewCreateWithoutViewerInput = {
   id?: string
   createdAt?: Date | string
-  viewed: Prisma.UserCreateNestedOneWithoutProfileViewsInput
+  viewed: Prisma.userCreateNestedOneWithoutProfileViewsInput
 }
 
-export type ProfileViewUncheckedCreateWithoutViewerInput = {
+export type profileviewUncheckedCreateWithoutViewerInput = {
   id?: string
   viewedId: string
   createdAt?: Date | string
 }
 
-export type ProfileViewCreateOrConnectWithoutViewerInput = {
-  where: Prisma.ProfileViewWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewerInput, Prisma.ProfileViewUncheckedCreateWithoutViewerInput>
+export type profileviewCreateOrConnectWithoutViewerInput = {
+  where: Prisma.profileviewWhereUniqueInput
+  create: Prisma.XOR<Prisma.profileviewCreateWithoutViewerInput, Prisma.profileviewUncheckedCreateWithoutViewerInput>
 }
 
-export type ProfileViewCreateManyViewerInputEnvelope = {
-  data: Prisma.ProfileViewCreateManyViewerInput | Prisma.ProfileViewCreateManyViewerInput[]
+export type profileviewCreateManyViewerInputEnvelope = {
+  data: Prisma.profileviewCreateManyViewerInput | Prisma.profileviewCreateManyViewerInput[]
   skipDuplicates?: boolean
 }
 
-export type ProfileViewCreateWithoutViewedInput = {
+export type profileviewCreateWithoutViewedInput = {
   id?: string
   createdAt?: Date | string
-  viewer: Prisma.UserCreateNestedOneWithoutViewedProfilesInput
+  viewer: Prisma.userCreateNestedOneWithoutViewedProfilesInput
 }
 
-export type ProfileViewUncheckedCreateWithoutViewedInput = {
+export type profileviewUncheckedCreateWithoutViewedInput = {
   id?: string
   viewerId: string
   createdAt?: Date | string
 }
 
-export type ProfileViewCreateOrConnectWithoutViewedInput = {
-  where: Prisma.ProfileViewWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewedInput, Prisma.ProfileViewUncheckedCreateWithoutViewedInput>
+export type profileviewCreateOrConnectWithoutViewedInput = {
+  where: Prisma.profileviewWhereUniqueInput
+  create: Prisma.XOR<Prisma.profileviewCreateWithoutViewedInput, Prisma.profileviewUncheckedCreateWithoutViewedInput>
 }
 
-export type ProfileViewCreateManyViewedInputEnvelope = {
-  data: Prisma.ProfileViewCreateManyViewedInput | Prisma.ProfileViewCreateManyViewedInput[]
+export type profileviewCreateManyViewedInputEnvelope = {
+  data: Prisma.profileviewCreateManyViewedInput | Prisma.profileviewCreateManyViewedInput[]
   skipDuplicates?: boolean
 }
 
-export type ProfileViewUpsertWithWhereUniqueWithoutViewerInput = {
-  where: Prisma.ProfileViewWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProfileViewUpdateWithoutViewerInput, Prisma.ProfileViewUncheckedUpdateWithoutViewerInput>
-  create: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewerInput, Prisma.ProfileViewUncheckedCreateWithoutViewerInput>
+export type profileviewUpsertWithWhereUniqueWithoutViewerInput = {
+  where: Prisma.profileviewWhereUniqueInput
+  update: Prisma.XOR<Prisma.profileviewUpdateWithoutViewerInput, Prisma.profileviewUncheckedUpdateWithoutViewerInput>
+  create: Prisma.XOR<Prisma.profileviewCreateWithoutViewerInput, Prisma.profileviewUncheckedCreateWithoutViewerInput>
 }
 
-export type ProfileViewUpdateWithWhereUniqueWithoutViewerInput = {
-  where: Prisma.ProfileViewWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProfileViewUpdateWithoutViewerInput, Prisma.ProfileViewUncheckedUpdateWithoutViewerInput>
+export type profileviewUpdateWithWhereUniqueWithoutViewerInput = {
+  where: Prisma.profileviewWhereUniqueInput
+  data: Prisma.XOR<Prisma.profileviewUpdateWithoutViewerInput, Prisma.profileviewUncheckedUpdateWithoutViewerInput>
 }
 
-export type ProfileViewUpdateManyWithWhereWithoutViewerInput = {
-  where: Prisma.ProfileViewScalarWhereInput
-  data: Prisma.XOR<Prisma.ProfileViewUpdateManyMutationInput, Prisma.ProfileViewUncheckedUpdateManyWithoutViewerInput>
+export type profileviewUpdateManyWithWhereWithoutViewerInput = {
+  where: Prisma.profileviewScalarWhereInput
+  data: Prisma.XOR<Prisma.profileviewUpdateManyMutationInput, Prisma.profileviewUncheckedUpdateManyWithoutViewerInput>
 }
 
-export type ProfileViewScalarWhereInput = {
-  AND?: Prisma.ProfileViewScalarWhereInput | Prisma.ProfileViewScalarWhereInput[]
-  OR?: Prisma.ProfileViewScalarWhereInput[]
-  NOT?: Prisma.ProfileViewScalarWhereInput | Prisma.ProfileViewScalarWhereInput[]
-  id?: Prisma.StringFilter<"ProfileView"> | string
-  viewerId?: Prisma.StringFilter<"ProfileView"> | string
-  viewedId?: Prisma.StringFilter<"ProfileView"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProfileView"> | Date | string
+export type profileviewScalarWhereInput = {
+  AND?: Prisma.profileviewScalarWhereInput | Prisma.profileviewScalarWhereInput[]
+  OR?: Prisma.profileviewScalarWhereInput[]
+  NOT?: Prisma.profileviewScalarWhereInput | Prisma.profileviewScalarWhereInput[]
+  id?: Prisma.StringFilter<"profileview"> | string
+  viewerId?: Prisma.StringFilter<"profileview"> | string
+  viewedId?: Prisma.StringFilter<"profileview"> | string
+  createdAt?: Prisma.DateTimeFilter<"profileview"> | Date | string
 }
 
-export type ProfileViewUpsertWithWhereUniqueWithoutViewedInput = {
-  where: Prisma.ProfileViewWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProfileViewUpdateWithoutViewedInput, Prisma.ProfileViewUncheckedUpdateWithoutViewedInput>
-  create: Prisma.XOR<Prisma.ProfileViewCreateWithoutViewedInput, Prisma.ProfileViewUncheckedCreateWithoutViewedInput>
+export type profileviewUpsertWithWhereUniqueWithoutViewedInput = {
+  where: Prisma.profileviewWhereUniqueInput
+  update: Prisma.XOR<Prisma.profileviewUpdateWithoutViewedInput, Prisma.profileviewUncheckedUpdateWithoutViewedInput>
+  create: Prisma.XOR<Prisma.profileviewCreateWithoutViewedInput, Prisma.profileviewUncheckedCreateWithoutViewedInput>
 }
 
-export type ProfileViewUpdateWithWhereUniqueWithoutViewedInput = {
-  where: Prisma.ProfileViewWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProfileViewUpdateWithoutViewedInput, Prisma.ProfileViewUncheckedUpdateWithoutViewedInput>
+export type profileviewUpdateWithWhereUniqueWithoutViewedInput = {
+  where: Prisma.profileviewWhereUniqueInput
+  data: Prisma.XOR<Prisma.profileviewUpdateWithoutViewedInput, Prisma.profileviewUncheckedUpdateWithoutViewedInput>
 }
 
-export type ProfileViewUpdateManyWithWhereWithoutViewedInput = {
-  where: Prisma.ProfileViewScalarWhereInput
-  data: Prisma.XOR<Prisma.ProfileViewUpdateManyMutationInput, Prisma.ProfileViewUncheckedUpdateManyWithoutViewedInput>
+export type profileviewUpdateManyWithWhereWithoutViewedInput = {
+  where: Prisma.profileviewScalarWhereInput
+  data: Prisma.XOR<Prisma.profileviewUpdateManyMutationInput, Prisma.profileviewUncheckedUpdateManyWithoutViewedInput>
 }
 
-export type ProfileViewCreateManyViewerInput = {
+export type profileviewCreateManyViewerInput = {
   id?: string
   viewedId: string
   createdAt?: Date | string
 }
 
-export type ProfileViewCreateManyViewedInput = {
+export type profileviewCreateManyViewedInput = {
   id?: string
   viewerId: string
   createdAt?: Date | string
 }
 
-export type ProfileViewUpdateWithoutViewerInput = {
+export type profileviewUpdateWithoutViewerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  viewed?: Prisma.UserUpdateOneRequiredWithoutProfileViewsNestedInput
+  viewed?: Prisma.userUpdateOneRequiredWithoutProfileViewsNestedInput
 }
 
-export type ProfileViewUncheckedUpdateWithoutViewerInput = {
+export type profileviewUncheckedUpdateWithoutViewerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   viewedId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileViewUncheckedUpdateManyWithoutViewerInput = {
+export type profileviewUncheckedUpdateManyWithoutViewerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   viewedId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileViewUpdateWithoutViewedInput = {
+export type profileviewUpdateWithoutViewedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  viewer?: Prisma.UserUpdateOneRequiredWithoutViewedProfilesNestedInput
+  viewer?: Prisma.userUpdateOneRequiredWithoutViewedProfilesNestedInput
 }
 
-export type ProfileViewUncheckedUpdateWithoutViewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  viewerId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProfileViewUncheckedUpdateManyWithoutViewedInput = {
+export type profileviewUncheckedUpdateWithoutViewedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   viewerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type profileviewUncheckedUpdateManyWithoutViewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  viewerId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
 
 
-export type ProfileViewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+
+export type profileviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   viewerId?: boolean
   viewedId?: boolean
   createdAt?: boolean
-  viewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  viewed?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["profileView"]>
+  viewer?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  viewed?: boolean | Prisma.userDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["profileview"]>
 
 
 
-export type ProfileViewSelectScalar = {
+export type profileviewSelectScalar = {
   id?: boolean
   viewerId?: boolean
   viewedId?: boolean
   createdAt?: boolean
 }
 
-export type ProfileViewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "viewerId" | "viewedId" | "createdAt", ExtArgs["result"]["profileView"]>
-export type ProfileViewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  viewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  viewed?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+export type profileviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "viewerId" | "viewedId" | "createdAt", ExtArgs["result"]["profileview"]>
+export type profileviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  viewer?: boolean | Prisma.userDefaultArgs<ExtArgs>
+  viewed?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
 
-export type $ProfileViewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "ProfileView"
+export type $profileviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "profileview"
   objects: {
-    viewer: Prisma.$UserPayload<ExtArgs>
-    viewed: Prisma.$UserPayload<ExtArgs>
+    viewer: Prisma.$userPayload<ExtArgs>
+    viewed: Prisma.$userPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     viewerId: string
     viewedId: string
     createdAt: Date
-  }, ExtArgs["result"]["profileView"]>
+  }, ExtArgs["result"]["profileview"]>
   composites: {}
 }
 
-export type ProfileViewGetPayload<S extends boolean | null | undefined | ProfileViewDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload, S>
+export type profileviewGetPayload<S extends boolean | null | undefined | profileviewDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$profileviewPayload, S>
 
-export type ProfileViewCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<ProfileViewFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-    select?: ProfileViewCountAggregateInputType | true
+export type profileviewCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<profileviewFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: ProfileviewCountAggregateInputType | true
   }
 
-export interface ProfileViewDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProfileView'], meta: { name: 'ProfileView' } }
+export interface profileviewDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['profileview'], meta: { name: 'profileview' } }
   /**
-   * Find zero or one ProfileView that matches the filter.
-   * @param {ProfileViewFindUniqueArgs} args - Arguments to find a ProfileView
+   * Find zero or one Profileview that matches the filter.
+   * @param {profileviewFindUniqueArgs} args - Arguments to find a Profileview
    * @example
-   * // Get one ProfileView
-   * const profileView = await prisma.profileView.findUnique({
+   * // Get one Profileview
+   * const profileview = await prisma.profileview.findUnique({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUnique<T extends ProfileViewFindUniqueArgs>(args: Prisma.SelectSubset<T, ProfileViewFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends profileviewFindUniqueArgs>(args: Prisma.SelectSubset<T, profileviewFindUniqueArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find one ProfileView that matches the filter or throw an error with `error.code='P2025'`
+   * Find one Profileview that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {ProfileViewFindUniqueOrThrowArgs} args - Arguments to find a ProfileView
+   * @param {profileviewFindUniqueOrThrowArgs} args - Arguments to find a Profileview
    * @example
-   * // Get one ProfileView
-   * const profileView = await prisma.profileView.findUniqueOrThrow({
+   * // Get one Profileview
+   * const profileview = await prisma.profileview.findUniqueOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUniqueOrThrow<T extends ProfileViewFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ProfileViewFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends profileviewFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, profileviewFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first ProfileView that matches the filter.
+   * Find the first Profileview that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewFindFirstArgs} args - Arguments to find a ProfileView
+   * @param {profileviewFindFirstArgs} args - Arguments to find a Profileview
    * @example
-   * // Get one ProfileView
-   * const profileView = await prisma.profileView.findFirst({
+   * // Get one Profileview
+   * const profileview = await prisma.profileview.findFirst({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirst<T extends ProfileViewFindFirstArgs>(args?: Prisma.SelectSubset<T, ProfileViewFindFirstArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends profileviewFindFirstArgs>(args?: Prisma.SelectSubset<T, profileviewFindFirstArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first ProfileView that matches the filter or
+   * Find the first Profileview that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewFindFirstOrThrowArgs} args - Arguments to find a ProfileView
+   * @param {profileviewFindFirstOrThrowArgs} args - Arguments to find a Profileview
    * @example
-   * // Get one ProfileView
-   * const profileView = await prisma.profileView.findFirstOrThrow({
+   * // Get one Profileview
+   * const profileview = await prisma.profileview.findFirstOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirstOrThrow<T extends ProfileViewFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ProfileViewFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends profileviewFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, profileviewFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find zero or more ProfileViews that matches the filter.
+   * Find zero or more Profileviews that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {profileviewFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
-   * // Get all ProfileViews
-   * const profileViews = await prisma.profileView.findMany()
+   * // Get all Profileviews
+   * const profileviews = await prisma.profileview.findMany()
    * 
-   * // Get first 10 ProfileViews
-   * const profileViews = await prisma.profileView.findMany({ take: 10 })
+   * // Get first 10 Profileviews
+   * const profileviews = await prisma.profileview.findMany({ take: 10 })
    * 
    * // Only select the `id`
-   * const profileViewWithIdOnly = await prisma.profileView.findMany({ select: { id: true } })
+   * const profileviewWithIdOnly = await prisma.profileview.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends ProfileViewFindManyArgs>(args?: Prisma.SelectSubset<T, ProfileViewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends profileviewFindManyArgs>(args?: Prisma.SelectSubset<T, profileviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
-   * Create a ProfileView.
-   * @param {ProfileViewCreateArgs} args - Arguments to create a ProfileView.
+   * Create a Profileview.
+   * @param {profileviewCreateArgs} args - Arguments to create a Profileview.
    * @example
-   * // Create one ProfileView
-   * const ProfileView = await prisma.profileView.create({
+   * // Create one Profileview
+   * const Profileview = await prisma.profileview.create({
    *   data: {
-   *     // ... data to create a ProfileView
+   *     // ... data to create a Profileview
    *   }
    * })
    * 
    */
-  create<T extends ProfileViewCreateArgs>(args: Prisma.SelectSubset<T, ProfileViewCreateArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends profileviewCreateArgs>(args: Prisma.SelectSubset<T, profileviewCreateArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Create many ProfileViews.
-   * @param {ProfileViewCreateManyArgs} args - Arguments to create many ProfileViews.
+   * Create many Profileviews.
+   * @param {profileviewCreateManyArgs} args - Arguments to create many Profileviews.
    * @example
-   * // Create many ProfileViews
-   * const profileView = await prisma.profileView.createMany({
+   * // Create many Profileviews
+   * const profileview = await prisma.profileview.createMany({
    *   data: [
    *     // ... provide data here
    *   ]
    * })
    *     
    */
-  createMany<T extends ProfileViewCreateManyArgs>(args?: Prisma.SelectSubset<T, ProfileViewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends profileviewCreateManyArgs>(args?: Prisma.SelectSubset<T, profileviewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Delete a ProfileView.
-   * @param {ProfileViewDeleteArgs} args - Arguments to delete one ProfileView.
+   * Delete a Profileview.
+   * @param {profileviewDeleteArgs} args - Arguments to delete one Profileview.
    * @example
-   * // Delete one ProfileView
-   * const ProfileView = await prisma.profileView.delete({
+   * // Delete one Profileview
+   * const Profileview = await prisma.profileview.delete({
    *   where: {
-   *     // ... filter to delete one ProfileView
+   *     // ... filter to delete one Profileview
    *   }
    * })
    * 
    */
-  delete<T extends ProfileViewDeleteArgs>(args: Prisma.SelectSubset<T, ProfileViewDeleteArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends profileviewDeleteArgs>(args: Prisma.SelectSubset<T, profileviewDeleteArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Update one ProfileView.
-   * @param {ProfileViewUpdateArgs} args - Arguments to update one ProfileView.
+   * Update one Profileview.
+   * @param {profileviewUpdateArgs} args - Arguments to update one Profileview.
    * @example
-   * // Update one ProfileView
-   * const profileView = await prisma.profileView.update({
+   * // Update one Profileview
+   * const profileview = await prisma.profileview.update({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -711,30 +711,30 @@ export interface ProfileViewDelegate<ExtArgs extends runtime.Types.Extensions.In
    * })
    * 
    */
-  update<T extends ProfileViewUpdateArgs>(args: Prisma.SelectSubset<T, ProfileViewUpdateArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends profileviewUpdateArgs>(args: Prisma.SelectSubset<T, profileviewUpdateArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Delete zero or more ProfileViews.
-   * @param {ProfileViewDeleteManyArgs} args - Arguments to filter ProfileViews to delete.
+   * Delete zero or more Profileviews.
+   * @param {profileviewDeleteManyArgs} args - Arguments to filter Profileviews to delete.
    * @example
-   * // Delete a few ProfileViews
-   * const { count } = await prisma.profileView.deleteMany({
+   * // Delete a few Profileviews
+   * const { count } = await prisma.profileview.deleteMany({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    * 
    */
-  deleteMany<T extends ProfileViewDeleteManyArgs>(args?: Prisma.SelectSubset<T, ProfileViewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends profileviewDeleteManyArgs>(args?: Prisma.SelectSubset<T, profileviewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Update zero or more ProfileViews.
+   * Update zero or more Profileviews.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {profileviewUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
-   * // Update many ProfileViews
-   * const profileView = await prisma.profileView.updateMany({
+   * // Update many Profileviews
+   * const profileview = await prisma.profileview.updateMany({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -744,56 +744,56 @@ export interface ProfileViewDelegate<ExtArgs extends runtime.Types.Extensions.In
    * })
    * 
    */
-  updateMany<T extends ProfileViewUpdateManyArgs>(args: Prisma.SelectSubset<T, ProfileViewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends profileviewUpdateManyArgs>(args: Prisma.SelectSubset<T, profileviewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create or update one ProfileView.
-   * @param {ProfileViewUpsertArgs} args - Arguments to update or create a ProfileView.
+   * Create or update one Profileview.
+   * @param {profileviewUpsertArgs} args - Arguments to update or create a Profileview.
    * @example
-   * // Update or create a ProfileView
-   * const profileView = await prisma.profileView.upsert({
+   * // Update or create a Profileview
+   * const profileview = await prisma.profileview.upsert({
    *   create: {
-   *     // ... data to create a ProfileView
+   *     // ... data to create a Profileview
    *   },
    *   update: {
    *     // ... in case it already exists, update
    *   },
    *   where: {
-   *     // ... the filter for the ProfileView we want to update
+   *     // ... the filter for the Profileview we want to update
    *   }
    * })
    */
-  upsert<T extends ProfileViewUpsertArgs>(args: Prisma.SelectSubset<T, ProfileViewUpsertArgs<ExtArgs>>): Prisma.Prisma__ProfileViewClient<runtime.Types.Result.GetResult<Prisma.$ProfileViewPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends profileviewUpsertArgs>(args: Prisma.SelectSubset<T, profileviewUpsertArgs<ExtArgs>>): Prisma.Prisma__profileviewClient<runtime.Types.Result.GetResult<Prisma.$profileviewPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
-   * Count the number of ProfileViews.
+   * Count the number of Profileviews.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewCountArgs} args - Arguments to filter ProfileViews to count.
+   * @param {profileviewCountArgs} args - Arguments to filter Profileviews to count.
    * @example
-   * // Count the number of ProfileViews
-   * const count = await prisma.profileView.count({
+   * // Count the number of Profileviews
+   * const count = await prisma.profileview.count({
    *   where: {
-   *     // ... the filter for the ProfileViews we want to count
+   *     // ... the filter for the Profileviews we want to count
    *   }
    * })
   **/
-  count<T extends ProfileViewCountArgs>(
-    args?: Prisma.Subset<T, ProfileViewCountArgs>,
+  count<T extends profileviewCountArgs>(
+    args?: Prisma.Subset<T, profileviewCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], ProfileViewCountAggregateOutputType>
+        : Prisma.GetScalarType<T['select'], ProfileviewCountAggregateOutputType>
       : number
   >
 
   /**
-   * Allows you to perform aggregations operations on a ProfileView.
+   * Allows you to perform aggregations operations on a Profileview.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+   * @param {ProfileviewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
    * @example
    * // Ordered by age ascending
    * // Where email contains prisma.io
@@ -813,13 +813,13 @@ export interface ProfileViewDelegate<ExtArgs extends runtime.Types.Extensions.In
    *   take: 10,
    * })
   **/
-  aggregate<T extends ProfileViewAggregateArgs>(args: Prisma.Subset<T, ProfileViewAggregateArgs>): Prisma.PrismaPromise<GetProfileViewAggregateType<T>>
+  aggregate<T extends ProfileviewAggregateArgs>(args: Prisma.Subset<T, ProfileviewAggregateArgs>): Prisma.PrismaPromise<GetProfileviewAggregateType<T>>
 
   /**
-   * Group by ProfileView.
+   * Group by Profileview.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileViewGroupByArgs} args - Group by arguments.
+   * @param {profileviewGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -834,14 +834,14 @@ export interface ProfileViewDelegate<ExtArgs extends runtime.Types.Extensions.In
    * 
   **/
   groupBy<
-    T extends ProfileViewGroupByArgs,
+    T extends profileviewGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ProfileViewGroupByArgs['orderBy'] }
-      : { orderBy?: ProfileViewGroupByArgs['orderBy'] },
+      ? { orderBy: profileviewGroupByArgs['orderBy'] }
+      : { orderBy?: profileviewGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -890,23 +890,23 @@ export interface ProfileViewDelegate<ExtArgs extends runtime.Types.Extensions.In
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, ProfileViewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfileViewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, profileviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfileviewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the ProfileView model
+ * Fields of the profileview model
  */
-readonly fields: ProfileViewFieldRefs;
+readonly fields: profileviewFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for ProfileView.
+ * The delegate class that acts as a "Promise-like" for profileview.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__ProfileViewClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__profileviewClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  viewer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  viewed<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  viewer<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  viewed<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -933,374 +933,374 @@ export interface Prisma__ProfileViewClient<T, Null = never, ExtArgs extends runt
 
 
 /**
- * Fields of the ProfileView model
+ * Fields of the profileview model
  */
-export interface ProfileViewFieldRefs {
-  readonly id: Prisma.FieldRef<"ProfileView", 'String'>
-  readonly viewerId: Prisma.FieldRef<"ProfileView", 'String'>
-  readonly viewedId: Prisma.FieldRef<"ProfileView", 'String'>
-  readonly createdAt: Prisma.FieldRef<"ProfileView", 'DateTime'>
+export interface profileviewFieldRefs {
+  readonly id: Prisma.FieldRef<"profileview", 'String'>
+  readonly viewerId: Prisma.FieldRef<"profileview", 'String'>
+  readonly viewedId: Prisma.FieldRef<"profileview", 'String'>
+  readonly createdAt: Prisma.FieldRef<"profileview", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * ProfileView findUnique
+ * profileview findUnique
  */
-export type ProfileViewFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * Filter, which ProfileView to fetch.
+   * Filter, which profileview to fetch.
    */
-  where: Prisma.ProfileViewWhereUniqueInput
+  where: Prisma.profileviewWhereUniqueInput
 }
 
 /**
- * ProfileView findUniqueOrThrow
+ * profileview findUniqueOrThrow
  */
-export type ProfileViewFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * Filter, which ProfileView to fetch.
+   * Filter, which profileview to fetch.
    */
-  where: Prisma.ProfileViewWhereUniqueInput
+  where: Prisma.profileviewWhereUniqueInput
 }
 
 /**
- * ProfileView findFirst
+ * profileview findFirst
  */
-export type ProfileViewFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * Filter, which ProfileView to fetch.
+   * Filter, which profileview to fetch.
    */
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileViews to fetch.
+   * Determine the order of profileviews to fetch.
    */
-  orderBy?: Prisma.ProfileViewOrderByWithRelationInput | Prisma.ProfileViewOrderByWithRelationInput[]
+  orderBy?: Prisma.profileviewOrderByWithRelationInput | Prisma.profileviewOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for ProfileViews.
+   * Sets the position for searching for profileviews.
    */
-  cursor?: Prisma.ProfileViewWhereUniqueInput
+  cursor?: Prisma.profileviewWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileViews from the position of the cursor.
+   * Take `±n` profileviews from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileViews.
+   * Skip the first `n` profileviews.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ProfileViews.
+   * Filter by unique combinations of profileviews.
    */
-  distinct?: Prisma.ProfileViewScalarFieldEnum | Prisma.ProfileViewScalarFieldEnum[]
+  distinct?: Prisma.ProfileviewScalarFieldEnum | Prisma.ProfileviewScalarFieldEnum[]
 }
 
 /**
- * ProfileView findFirstOrThrow
+ * profileview findFirstOrThrow
  */
-export type ProfileViewFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * Filter, which ProfileView to fetch.
+   * Filter, which profileview to fetch.
    */
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileViews to fetch.
+   * Determine the order of profileviews to fetch.
    */
-  orderBy?: Prisma.ProfileViewOrderByWithRelationInput | Prisma.ProfileViewOrderByWithRelationInput[]
+  orderBy?: Prisma.profileviewOrderByWithRelationInput | Prisma.profileviewOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for ProfileViews.
+   * Sets the position for searching for profileviews.
    */
-  cursor?: Prisma.ProfileViewWhereUniqueInput
+  cursor?: Prisma.profileviewWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileViews from the position of the cursor.
+   * Take `±n` profileviews from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileViews.
+   * Skip the first `n` profileviews.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ProfileViews.
+   * Filter by unique combinations of profileviews.
    */
-  distinct?: Prisma.ProfileViewScalarFieldEnum | Prisma.ProfileViewScalarFieldEnum[]
+  distinct?: Prisma.ProfileviewScalarFieldEnum | Prisma.ProfileviewScalarFieldEnum[]
 }
 
 /**
- * ProfileView findMany
+ * profileview findMany
  */
-export type ProfileViewFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * Filter, which ProfileViews to fetch.
+   * Filter, which profileviews to fetch.
    */
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileViews to fetch.
+   * Determine the order of profileviews to fetch.
    */
-  orderBy?: Prisma.ProfileViewOrderByWithRelationInput | Prisma.ProfileViewOrderByWithRelationInput[]
+  orderBy?: Prisma.profileviewOrderByWithRelationInput | Prisma.profileviewOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing ProfileViews.
+   * Sets the position for listing profileviews.
    */
-  cursor?: Prisma.ProfileViewWhereUniqueInput
+  cursor?: Prisma.profileviewWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileViews from the position of the cursor.
+   * Take `±n` profileviews from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileViews.
+   * Skip the first `n` profileviews.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ProfileViews.
+   * Filter by unique combinations of profileviews.
    */
-  distinct?: Prisma.ProfileViewScalarFieldEnum | Prisma.ProfileViewScalarFieldEnum[]
+  distinct?: Prisma.ProfileviewScalarFieldEnum | Prisma.ProfileviewScalarFieldEnum[]
 }
 
 /**
- * ProfileView create
+ * profileview create
  */
-export type ProfileViewCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * The data needed to create a ProfileView.
+   * The data needed to create a profileview.
    */
-  data: Prisma.XOR<Prisma.ProfileViewCreateInput, Prisma.ProfileViewUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.profileviewCreateInput, Prisma.profileviewUncheckedCreateInput>
 }
 
 /**
- * ProfileView createMany
+ * profileview createMany
  */
-export type ProfileViewCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many ProfileViews.
+   * The data used to create many profileviews.
    */
-  data: Prisma.ProfileViewCreateManyInput | Prisma.ProfileViewCreateManyInput[]
+  data: Prisma.profileviewCreateManyInput | Prisma.profileviewCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * ProfileView update
+ * profileview update
  */
-export type ProfileViewUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * The data needed to update a ProfileView.
+   * The data needed to update a profileview.
    */
-  data: Prisma.XOR<Prisma.ProfileViewUpdateInput, Prisma.ProfileViewUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.profileviewUpdateInput, Prisma.profileviewUncheckedUpdateInput>
   /**
-   * Choose, which ProfileView to update.
+   * Choose, which profileview to update.
    */
-  where: Prisma.ProfileViewWhereUniqueInput
+  where: Prisma.profileviewWhereUniqueInput
 }
 
 /**
- * ProfileView updateMany
+ * profileview updateMany
  */
-export type ProfileViewUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update ProfileViews.
+   * The data used to update profileviews.
    */
-  data: Prisma.XOR<Prisma.ProfileViewUpdateManyMutationInput, Prisma.ProfileViewUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.profileviewUpdateManyMutationInput, Prisma.profileviewUncheckedUpdateManyInput>
   /**
-   * Filter which ProfileViews to update
+   * Filter which profileviews to update
    */
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
   /**
-   * Limit how many ProfileViews to update.
+   * Limit how many profileviews to update.
    */
   limit?: number
 }
 
 /**
- * ProfileView upsert
+ * profileview upsert
  */
-export type ProfileViewUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * The filter to search for the ProfileView to update in case it exists.
+   * The filter to search for the profileview to update in case it exists.
    */
-  where: Prisma.ProfileViewWhereUniqueInput
+  where: Prisma.profileviewWhereUniqueInput
   /**
-   * In case the ProfileView found by the `where` argument doesn't exist, create a new ProfileView with this data.
+   * In case the profileview found by the `where` argument doesn't exist, create a new profileview with this data.
    */
-  create: Prisma.XOR<Prisma.ProfileViewCreateInput, Prisma.ProfileViewUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.profileviewCreateInput, Prisma.profileviewUncheckedCreateInput>
   /**
-   * In case the ProfileView was found with the provided `where` argument, update it with this data.
+   * In case the profileview was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.ProfileViewUpdateInput, Prisma.ProfileViewUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.profileviewUpdateInput, Prisma.profileviewUncheckedUpdateInput>
 }
 
 /**
- * ProfileView delete
+ * profileview delete
  */
-export type ProfileViewDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
   /**
-   * Filter which ProfileView to delete.
+   * Filter which profileview to delete.
    */
-  where: Prisma.ProfileViewWhereUniqueInput
+  where: Prisma.profileviewWhereUniqueInput
 }
 
 /**
- * ProfileView deleteMany
+ * profileview deleteMany
  */
-export type ProfileViewDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which ProfileViews to delete
+   * Filter which profileviews to delete
    */
-  where?: Prisma.ProfileViewWhereInput
+  where?: Prisma.profileviewWhereInput
   /**
-   * Limit how many ProfileViews to delete.
+   * Limit how many profileviews to delete.
    */
   limit?: number
 }
 
 /**
- * ProfileView without action
+ * profileview without action
  */
-export type ProfileViewDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileviewDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileView
+   * Select specific fields to fetch from the profileview
    */
-  select?: Prisma.ProfileViewSelect<ExtArgs> | null
+  select?: Prisma.profileviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileView
+   * Omit specific fields from the profileview
    */
-  omit?: Prisma.ProfileViewOmit<ExtArgs> | null
+  omit?: Prisma.profileviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileViewInclude<ExtArgs> | null
+  include?: Prisma.profileviewInclude<ExtArgs> | null
 }

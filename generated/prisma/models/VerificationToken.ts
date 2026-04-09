@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `VerificationToken` model and its related types.
+ * This file exports the `verificationtoken` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,30 +13,30 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model VerificationToken
+ * Model verificationtoken
  * 
  */
-export type VerificationTokenModel = runtime.Types.Result.DefaultSelection<Prisma.$VerificationTokenPayload>
+export type verificationtokenModel = runtime.Types.Result.DefaultSelection<Prisma.$verificationtokenPayload>
 
-export type AggregateVerificationToken = {
-  _count: VerificationTokenCountAggregateOutputType | null
-  _min: VerificationTokenMinAggregateOutputType | null
-  _max: VerificationTokenMaxAggregateOutputType | null
+export type AggregateVerificationtoken = {
+  _count: VerificationtokenCountAggregateOutputType | null
+  _min: VerificationtokenMinAggregateOutputType | null
+  _max: VerificationtokenMaxAggregateOutputType | null
 }
 
-export type VerificationTokenMinAggregateOutputType = {
+export type VerificationtokenMinAggregateOutputType = {
   identifier: string | null
   token: string | null
   expires: Date | null
 }
 
-export type VerificationTokenMaxAggregateOutputType = {
+export type VerificationtokenMaxAggregateOutputType = {
   identifier: string | null
   token: string | null
   expires: Date | null
 }
 
-export type VerificationTokenCountAggregateOutputType = {
+export type VerificationtokenCountAggregateOutputType = {
   identifier: number
   token: number
   expires: number
@@ -44,231 +44,231 @@ export type VerificationTokenCountAggregateOutputType = {
 }
 
 
-export type VerificationTokenMinAggregateInputType = {
+export type VerificationtokenMinAggregateInputType = {
   identifier?: true
   token?: true
   expires?: true
 }
 
-export type VerificationTokenMaxAggregateInputType = {
+export type VerificationtokenMaxAggregateInputType = {
   identifier?: true
   token?: true
   expires?: true
 }
 
-export type VerificationTokenCountAggregateInputType = {
+export type VerificationtokenCountAggregateInputType = {
   identifier?: true
   token?: true
   expires?: true
   _all?: true
 }
 
-export type VerificationTokenAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type VerificationtokenAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which VerificationToken to aggregate.
+   * Filter which verificationtoken to aggregate.
    */
-  where?: Prisma.VerificationTokenWhereInput
+  where?: Prisma.verificationtokenWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of VerificationTokens to fetch.
+   * Determine the order of verificationtokens to fetch.
    */
-  orderBy?: Prisma.VerificationTokenOrderByWithRelationInput | Prisma.VerificationTokenOrderByWithRelationInput[]
+  orderBy?: Prisma.verificationtokenOrderByWithRelationInput | Prisma.verificationtokenOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.VerificationTokenWhereUniqueInput
+  cursor?: Prisma.verificationtokenWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` VerificationTokens from the position of the cursor.
+   * Take `±n` verificationtokens from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` VerificationTokens.
+   * Skip the first `n` verificationtokens.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned VerificationTokens
+   * Count returned verificationtokens
   **/
-  _count?: true | VerificationTokenCountAggregateInputType
+  _count?: true | VerificationtokenCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the minimum value
   **/
-  _min?: VerificationTokenMinAggregateInputType
+  _min?: VerificationtokenMinAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the maximum value
   **/
-  _max?: VerificationTokenMaxAggregateInputType
+  _max?: VerificationtokenMaxAggregateInputType
 }
 
-export type GetVerificationTokenAggregateType<T extends VerificationTokenAggregateArgs> = {
-      [P in keyof T & keyof AggregateVerificationToken]: P extends '_count' | 'count'
+export type GetVerificationtokenAggregateType<T extends VerificationtokenAggregateArgs> = {
+      [P in keyof T & keyof AggregateVerificationtoken]: P extends '_count' | 'count'
     ? T[P] extends true
       ? number
-      : Prisma.GetScalarType<T[P], AggregateVerificationToken[P]>
-    : Prisma.GetScalarType<T[P], AggregateVerificationToken[P]>
+      : Prisma.GetScalarType<T[P], AggregateVerificationtoken[P]>
+    : Prisma.GetScalarType<T[P], AggregateVerificationtoken[P]>
 }
 
 
 
 
-export type VerificationTokenGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.VerificationTokenWhereInput
-  orderBy?: Prisma.VerificationTokenOrderByWithAggregationInput | Prisma.VerificationTokenOrderByWithAggregationInput[]
-  by: Prisma.VerificationTokenScalarFieldEnum[] | Prisma.VerificationTokenScalarFieldEnum
-  having?: Prisma.VerificationTokenScalarWhereWithAggregatesInput
+export type verificationtokenGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.verificationtokenWhereInput
+  orderBy?: Prisma.verificationtokenOrderByWithAggregationInput | Prisma.verificationtokenOrderByWithAggregationInput[]
+  by: Prisma.VerificationtokenScalarFieldEnum[] | Prisma.VerificationtokenScalarFieldEnum
+  having?: Prisma.verificationtokenScalarWhereWithAggregatesInput
   take?: number
   skip?: number
-  _count?: VerificationTokenCountAggregateInputType | true
-  _min?: VerificationTokenMinAggregateInputType
-  _max?: VerificationTokenMaxAggregateInputType
+  _count?: VerificationtokenCountAggregateInputType | true
+  _min?: VerificationtokenMinAggregateInputType
+  _max?: VerificationtokenMaxAggregateInputType
 }
 
-export type VerificationTokenGroupByOutputType = {
+export type VerificationtokenGroupByOutputType = {
   identifier: string
   token: string
   expires: Date
-  _count: VerificationTokenCountAggregateOutputType | null
-  _min: VerificationTokenMinAggregateOutputType | null
-  _max: VerificationTokenMaxAggregateOutputType | null
+  _count: VerificationtokenCountAggregateOutputType | null
+  _min: VerificationtokenMinAggregateOutputType | null
+  _max: VerificationtokenMaxAggregateOutputType | null
 }
 
-export type GetVerificationTokenGroupByPayload<T extends VerificationTokenGroupByArgs> = Prisma.PrismaPromise<
+export type GetVerificationtokenGroupByPayload<T extends verificationtokenGroupByArgs> = Prisma.PrismaPromise<
   Array<
-    Prisma.PickEnumerable<VerificationTokenGroupByOutputType, T['by']> &
+    Prisma.PickEnumerable<VerificationtokenGroupByOutputType, T['by']> &
       {
-        [P in ((keyof T) & (keyof VerificationTokenGroupByOutputType))]: P extends '_count'
+        [P in ((keyof T) & (keyof VerificationtokenGroupByOutputType))]: P extends '_count'
           ? T[P] extends boolean
             ? number
-            : Prisma.GetScalarType<T[P], VerificationTokenGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], VerificationTokenGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], VerificationtokenGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], VerificationtokenGroupByOutputType[P]>
       }
     >
   >
 
 
 
-export type VerificationTokenWhereInput = {
-  AND?: Prisma.VerificationTokenWhereInput | Prisma.VerificationTokenWhereInput[]
-  OR?: Prisma.VerificationTokenWhereInput[]
-  NOT?: Prisma.VerificationTokenWhereInput | Prisma.VerificationTokenWhereInput[]
-  identifier?: Prisma.StringFilter<"VerificationToken"> | string
-  token?: Prisma.StringFilter<"VerificationToken"> | string
-  expires?: Prisma.DateTimeFilter<"VerificationToken"> | Date | string
+export type verificationtokenWhereInput = {
+  AND?: Prisma.verificationtokenWhereInput | Prisma.verificationtokenWhereInput[]
+  OR?: Prisma.verificationtokenWhereInput[]
+  NOT?: Prisma.verificationtokenWhereInput | Prisma.verificationtokenWhereInput[]
+  identifier?: Prisma.StringFilter<"verificationtoken"> | string
+  token?: Prisma.StringFilter<"verificationtoken"> | string
+  expires?: Prisma.DateTimeFilter<"verificationtoken"> | Date | string
 }
 
-export type VerificationTokenOrderByWithRelationInput = {
+export type verificationtokenOrderByWithRelationInput = {
   identifier?: Prisma.SortOrder
   token?: Prisma.SortOrder
   expires?: Prisma.SortOrder
-  _relevance?: Prisma.VerificationTokenOrderByRelevanceInput
+  _relevance?: Prisma.verificationtokenOrderByRelevanceInput
 }
 
-export type VerificationTokenWhereUniqueInput = Prisma.AtLeast<{
+export type verificationtokenWhereUniqueInput = Prisma.AtLeast<{
   token?: string
-  identifier_token?: Prisma.VerificationTokenIdentifierTokenCompoundUniqueInput
-  AND?: Prisma.VerificationTokenWhereInput | Prisma.VerificationTokenWhereInput[]
-  OR?: Prisma.VerificationTokenWhereInput[]
-  NOT?: Prisma.VerificationTokenWhereInput | Prisma.VerificationTokenWhereInput[]
-  identifier?: Prisma.StringFilter<"VerificationToken"> | string
-  expires?: Prisma.DateTimeFilter<"VerificationToken"> | Date | string
+  identifier_token?: Prisma.verificationtokenIdentifierTokenCompoundUniqueInput
+  AND?: Prisma.verificationtokenWhereInput | Prisma.verificationtokenWhereInput[]
+  OR?: Prisma.verificationtokenWhereInput[]
+  NOT?: Prisma.verificationtokenWhereInput | Prisma.verificationtokenWhereInput[]
+  identifier?: Prisma.StringFilter<"verificationtoken"> | string
+  expires?: Prisma.DateTimeFilter<"verificationtoken"> | Date | string
 }, "token" | "identifier_token">
 
-export type VerificationTokenOrderByWithAggregationInput = {
+export type verificationtokenOrderByWithAggregationInput = {
   identifier?: Prisma.SortOrder
   token?: Prisma.SortOrder
   expires?: Prisma.SortOrder
-  _count?: Prisma.VerificationTokenCountOrderByAggregateInput
-  _max?: Prisma.VerificationTokenMaxOrderByAggregateInput
-  _min?: Prisma.VerificationTokenMinOrderByAggregateInput
+  _count?: Prisma.verificationtokenCountOrderByAggregateInput
+  _max?: Prisma.verificationtokenMaxOrderByAggregateInput
+  _min?: Prisma.verificationtokenMinOrderByAggregateInput
 }
 
-export type VerificationTokenScalarWhereWithAggregatesInput = {
-  AND?: Prisma.VerificationTokenScalarWhereWithAggregatesInput | Prisma.VerificationTokenScalarWhereWithAggregatesInput[]
-  OR?: Prisma.VerificationTokenScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.VerificationTokenScalarWhereWithAggregatesInput | Prisma.VerificationTokenScalarWhereWithAggregatesInput[]
-  identifier?: Prisma.StringWithAggregatesFilter<"VerificationToken"> | string
-  token?: Prisma.StringWithAggregatesFilter<"VerificationToken"> | string
-  expires?: Prisma.DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
+export type verificationtokenScalarWhereWithAggregatesInput = {
+  AND?: Prisma.verificationtokenScalarWhereWithAggregatesInput | Prisma.verificationtokenScalarWhereWithAggregatesInput[]
+  OR?: Prisma.verificationtokenScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.verificationtokenScalarWhereWithAggregatesInput | Prisma.verificationtokenScalarWhereWithAggregatesInput[]
+  identifier?: Prisma.StringWithAggregatesFilter<"verificationtoken"> | string
+  token?: Prisma.StringWithAggregatesFilter<"verificationtoken"> | string
+  expires?: Prisma.DateTimeWithAggregatesFilter<"verificationtoken"> | Date | string
 }
 
-export type VerificationTokenCreateInput = {
+export type verificationtokenCreateInput = {
   identifier: string
   token: string
   expires: Date | string
 }
 
-export type VerificationTokenUncheckedCreateInput = {
+export type verificationtokenUncheckedCreateInput = {
   identifier: string
   token: string
   expires: Date | string
 }
 
-export type VerificationTokenUpdateInput = {
+export type verificationtokenUpdateInput = {
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   expires?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type VerificationTokenUncheckedUpdateInput = {
+export type verificationtokenUncheckedUpdateInput = {
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   expires?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type VerificationTokenCreateManyInput = {
+export type verificationtokenCreateManyInput = {
   identifier: string
   token: string
   expires: Date | string
 }
 
-export type VerificationTokenUpdateManyMutationInput = {
+export type verificationtokenUpdateManyMutationInput = {
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   expires?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type VerificationTokenUncheckedUpdateManyInput = {
+export type verificationtokenUncheckedUpdateManyInput = {
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   expires?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type VerificationTokenOrderByRelevanceInput = {
-  fields: Prisma.VerificationTokenOrderByRelevanceFieldEnum | Prisma.VerificationTokenOrderByRelevanceFieldEnum[]
+export type verificationtokenOrderByRelevanceInput = {
+  fields: Prisma.verificationtokenOrderByRelevanceFieldEnum | Prisma.verificationtokenOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type VerificationTokenIdentifierTokenCompoundUniqueInput = {
+export type verificationtokenIdentifierTokenCompoundUniqueInput = {
   identifier: string
   token: string
 }
 
-export type VerificationTokenCountOrderByAggregateInput = {
+export type verificationtokenCountOrderByAggregateInput = {
   identifier?: Prisma.SortOrder
   token?: Prisma.SortOrder
   expires?: Prisma.SortOrder
 }
 
-export type VerificationTokenMaxOrderByAggregateInput = {
+export type verificationtokenMaxOrderByAggregateInput = {
   identifier?: Prisma.SortOrder
   token?: Prisma.SortOrder
   expires?: Prisma.SortOrder
 }
 
-export type VerificationTokenMinOrderByAggregateInput = {
+export type verificationtokenMinOrderByAggregateInput = {
   identifier?: Prisma.SortOrder
   token?: Prisma.SortOrder
   expires?: Prisma.SortOrder
@@ -276,166 +276,166 @@ export type VerificationTokenMinOrderByAggregateInput = {
 
 
 
-export type VerificationTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type verificationtokenSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   identifier?: boolean
   token?: boolean
   expires?: boolean
-}, ExtArgs["result"]["verificationToken"]>
+}, ExtArgs["result"]["verificationtoken"]>
 
 
 
-export type VerificationTokenSelectScalar = {
+export type verificationtokenSelectScalar = {
   identifier?: boolean
   token?: boolean
   expires?: boolean
 }
 
-export type VerificationTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"identifier" | "token" | "expires", ExtArgs["result"]["verificationToken"]>
+export type verificationtokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"identifier" | "token" | "expires", ExtArgs["result"]["verificationtoken"]>
 
-export type $VerificationTokenPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "VerificationToken"
+export type $verificationtokenPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "verificationtoken"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     identifier: string
     token: string
     expires: Date
-  }, ExtArgs["result"]["verificationToken"]>
+  }, ExtArgs["result"]["verificationtoken"]>
   composites: {}
 }
 
-export type VerificationTokenGetPayload<S extends boolean | null | undefined | VerificationTokenDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload, S>
+export type verificationtokenGetPayload<S extends boolean | null | undefined | verificationtokenDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload, S>
 
-export type VerificationTokenCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<VerificationTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-    select?: VerificationTokenCountAggregateInputType | true
+export type verificationtokenCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<verificationtokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: VerificationtokenCountAggregateInputType | true
   }
 
-export interface VerificationTokenDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VerificationToken'], meta: { name: 'VerificationToken' } }
+export interface verificationtokenDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['verificationtoken'], meta: { name: 'verificationtoken' } }
   /**
-   * Find zero or one VerificationToken that matches the filter.
-   * @param {VerificationTokenFindUniqueArgs} args - Arguments to find a VerificationToken
+   * Find zero or one Verificationtoken that matches the filter.
+   * @param {verificationtokenFindUniqueArgs} args - Arguments to find a Verificationtoken
    * @example
-   * // Get one VerificationToken
-   * const verificationToken = await prisma.verificationToken.findUnique({
+   * // Get one Verificationtoken
+   * const verificationtoken = await prisma.verificationtoken.findUnique({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUnique<T extends VerificationTokenFindUniqueArgs>(args: Prisma.SelectSubset<T, VerificationTokenFindUniqueArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends verificationtokenFindUniqueArgs>(args: Prisma.SelectSubset<T, verificationtokenFindUniqueArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find one VerificationToken that matches the filter or throw an error with `error.code='P2025'`
+   * Find one Verificationtoken that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {VerificationTokenFindUniqueOrThrowArgs} args - Arguments to find a VerificationToken
+   * @param {verificationtokenFindUniqueOrThrowArgs} args - Arguments to find a Verificationtoken
    * @example
-   * // Get one VerificationToken
-   * const verificationToken = await prisma.verificationToken.findUniqueOrThrow({
+   * // Get one Verificationtoken
+   * const verificationtoken = await prisma.verificationtoken.findUniqueOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUniqueOrThrow<T extends VerificationTokenFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, VerificationTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends verificationtokenFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, verificationtokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first VerificationToken that matches the filter.
+   * Find the first Verificationtoken that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenFindFirstArgs} args - Arguments to find a VerificationToken
+   * @param {verificationtokenFindFirstArgs} args - Arguments to find a Verificationtoken
    * @example
-   * // Get one VerificationToken
-   * const verificationToken = await prisma.verificationToken.findFirst({
+   * // Get one Verificationtoken
+   * const verificationtoken = await prisma.verificationtoken.findFirst({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirst<T extends VerificationTokenFindFirstArgs>(args?: Prisma.SelectSubset<T, VerificationTokenFindFirstArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends verificationtokenFindFirstArgs>(args?: Prisma.SelectSubset<T, verificationtokenFindFirstArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first VerificationToken that matches the filter or
+   * Find the first Verificationtoken that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenFindFirstOrThrowArgs} args - Arguments to find a VerificationToken
+   * @param {verificationtokenFindFirstOrThrowArgs} args - Arguments to find a Verificationtoken
    * @example
-   * // Get one VerificationToken
-   * const verificationToken = await prisma.verificationToken.findFirstOrThrow({
+   * // Get one Verificationtoken
+   * const verificationtoken = await prisma.verificationtoken.findFirstOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirstOrThrow<T extends VerificationTokenFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, VerificationTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends verificationtokenFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, verificationtokenFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find zero or more VerificationTokens that matches the filter.
+   * Find zero or more Verificationtokens that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {verificationtokenFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
-   * // Get all VerificationTokens
-   * const verificationTokens = await prisma.verificationToken.findMany()
+   * // Get all Verificationtokens
+   * const verificationtokens = await prisma.verificationtoken.findMany()
    * 
-   * // Get first 10 VerificationTokens
-   * const verificationTokens = await prisma.verificationToken.findMany({ take: 10 })
+   * // Get first 10 Verificationtokens
+   * const verificationtokens = await prisma.verificationtoken.findMany({ take: 10 })
    * 
    * // Only select the `identifier`
-   * const verificationTokenWithIdentifierOnly = await prisma.verificationToken.findMany({ select: { identifier: true } })
+   * const verificationtokenWithIdentifierOnly = await prisma.verificationtoken.findMany({ select: { identifier: true } })
    * 
    */
-  findMany<T extends VerificationTokenFindManyArgs>(args?: Prisma.SelectSubset<T, VerificationTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends verificationtokenFindManyArgs>(args?: Prisma.SelectSubset<T, verificationtokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
-   * Create a VerificationToken.
-   * @param {VerificationTokenCreateArgs} args - Arguments to create a VerificationToken.
+   * Create a Verificationtoken.
+   * @param {verificationtokenCreateArgs} args - Arguments to create a Verificationtoken.
    * @example
-   * // Create one VerificationToken
-   * const VerificationToken = await prisma.verificationToken.create({
+   * // Create one Verificationtoken
+   * const Verificationtoken = await prisma.verificationtoken.create({
    *   data: {
-   *     // ... data to create a VerificationToken
+   *     // ... data to create a Verificationtoken
    *   }
    * })
    * 
    */
-  create<T extends VerificationTokenCreateArgs>(args: Prisma.SelectSubset<T, VerificationTokenCreateArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends verificationtokenCreateArgs>(args: Prisma.SelectSubset<T, verificationtokenCreateArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Create many VerificationTokens.
-   * @param {VerificationTokenCreateManyArgs} args - Arguments to create many VerificationTokens.
+   * Create many Verificationtokens.
+   * @param {verificationtokenCreateManyArgs} args - Arguments to create many Verificationtokens.
    * @example
-   * // Create many VerificationTokens
-   * const verificationToken = await prisma.verificationToken.createMany({
+   * // Create many Verificationtokens
+   * const verificationtoken = await prisma.verificationtoken.createMany({
    *   data: [
    *     // ... provide data here
    *   ]
    * })
    *     
    */
-  createMany<T extends VerificationTokenCreateManyArgs>(args?: Prisma.SelectSubset<T, VerificationTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends verificationtokenCreateManyArgs>(args?: Prisma.SelectSubset<T, verificationtokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Delete a VerificationToken.
-   * @param {VerificationTokenDeleteArgs} args - Arguments to delete one VerificationToken.
+   * Delete a Verificationtoken.
+   * @param {verificationtokenDeleteArgs} args - Arguments to delete one Verificationtoken.
    * @example
-   * // Delete one VerificationToken
-   * const VerificationToken = await prisma.verificationToken.delete({
+   * // Delete one Verificationtoken
+   * const Verificationtoken = await prisma.verificationtoken.delete({
    *   where: {
-   *     // ... filter to delete one VerificationToken
+   *     // ... filter to delete one Verificationtoken
    *   }
    * })
    * 
    */
-  delete<T extends VerificationTokenDeleteArgs>(args: Prisma.SelectSubset<T, VerificationTokenDeleteArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends verificationtokenDeleteArgs>(args: Prisma.SelectSubset<T, verificationtokenDeleteArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Update one VerificationToken.
-   * @param {VerificationTokenUpdateArgs} args - Arguments to update one VerificationToken.
+   * Update one Verificationtoken.
+   * @param {verificationtokenUpdateArgs} args - Arguments to update one Verificationtoken.
    * @example
-   * // Update one VerificationToken
-   * const verificationToken = await prisma.verificationToken.update({
+   * // Update one Verificationtoken
+   * const verificationtoken = await prisma.verificationtoken.update({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -445,30 +445,30 @@ export interface VerificationTokenDelegate<ExtArgs extends runtime.Types.Extensi
    * })
    * 
    */
-  update<T extends VerificationTokenUpdateArgs>(args: Prisma.SelectSubset<T, VerificationTokenUpdateArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends verificationtokenUpdateArgs>(args: Prisma.SelectSubset<T, verificationtokenUpdateArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Delete zero or more VerificationTokens.
-   * @param {VerificationTokenDeleteManyArgs} args - Arguments to filter VerificationTokens to delete.
+   * Delete zero or more Verificationtokens.
+   * @param {verificationtokenDeleteManyArgs} args - Arguments to filter Verificationtokens to delete.
    * @example
-   * // Delete a few VerificationTokens
-   * const { count } = await prisma.verificationToken.deleteMany({
+   * // Delete a few Verificationtokens
+   * const { count } = await prisma.verificationtoken.deleteMany({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    * 
    */
-  deleteMany<T extends VerificationTokenDeleteManyArgs>(args?: Prisma.SelectSubset<T, VerificationTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends verificationtokenDeleteManyArgs>(args?: Prisma.SelectSubset<T, verificationtokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Update zero or more VerificationTokens.
+   * Update zero or more Verificationtokens.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {verificationtokenUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
-   * // Update many VerificationTokens
-   * const verificationToken = await prisma.verificationToken.updateMany({
+   * // Update many Verificationtokens
+   * const verificationtoken = await prisma.verificationtoken.updateMany({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -478,56 +478,56 @@ export interface VerificationTokenDelegate<ExtArgs extends runtime.Types.Extensi
    * })
    * 
    */
-  updateMany<T extends VerificationTokenUpdateManyArgs>(args: Prisma.SelectSubset<T, VerificationTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends verificationtokenUpdateManyArgs>(args: Prisma.SelectSubset<T, verificationtokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create or update one VerificationToken.
-   * @param {VerificationTokenUpsertArgs} args - Arguments to update or create a VerificationToken.
+   * Create or update one Verificationtoken.
+   * @param {verificationtokenUpsertArgs} args - Arguments to update or create a Verificationtoken.
    * @example
-   * // Update or create a VerificationToken
-   * const verificationToken = await prisma.verificationToken.upsert({
+   * // Update or create a Verificationtoken
+   * const verificationtoken = await prisma.verificationtoken.upsert({
    *   create: {
-   *     // ... data to create a VerificationToken
+   *     // ... data to create a Verificationtoken
    *   },
    *   update: {
    *     // ... in case it already exists, update
    *   },
    *   where: {
-   *     // ... the filter for the VerificationToken we want to update
+   *     // ... the filter for the Verificationtoken we want to update
    *   }
    * })
    */
-  upsert<T extends VerificationTokenUpsertArgs>(args: Prisma.SelectSubset<T, VerificationTokenUpsertArgs<ExtArgs>>): Prisma.Prisma__VerificationTokenClient<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends verificationtokenUpsertArgs>(args: Prisma.SelectSubset<T, verificationtokenUpsertArgs<ExtArgs>>): Prisma.Prisma__verificationtokenClient<runtime.Types.Result.GetResult<Prisma.$verificationtokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
-   * Count the number of VerificationTokens.
+   * Count the number of Verificationtokens.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenCountArgs} args - Arguments to filter VerificationTokens to count.
+   * @param {verificationtokenCountArgs} args - Arguments to filter Verificationtokens to count.
    * @example
-   * // Count the number of VerificationTokens
-   * const count = await prisma.verificationToken.count({
+   * // Count the number of Verificationtokens
+   * const count = await prisma.verificationtoken.count({
    *   where: {
-   *     // ... the filter for the VerificationTokens we want to count
+   *     // ... the filter for the Verificationtokens we want to count
    *   }
    * })
   **/
-  count<T extends VerificationTokenCountArgs>(
-    args?: Prisma.Subset<T, VerificationTokenCountArgs>,
+  count<T extends verificationtokenCountArgs>(
+    args?: Prisma.Subset<T, verificationtokenCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], VerificationTokenCountAggregateOutputType>
+        : Prisma.GetScalarType<T['select'], VerificationtokenCountAggregateOutputType>
       : number
   >
 
   /**
-   * Allows you to perform aggregations operations on a VerificationToken.
+   * Allows you to perform aggregations operations on a Verificationtoken.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+   * @param {VerificationtokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
    * @example
    * // Ordered by age ascending
    * // Where email contains prisma.io
@@ -547,13 +547,13 @@ export interface VerificationTokenDelegate<ExtArgs extends runtime.Types.Extensi
    *   take: 10,
    * })
   **/
-  aggregate<T extends VerificationTokenAggregateArgs>(args: Prisma.Subset<T, VerificationTokenAggregateArgs>): Prisma.PrismaPromise<GetVerificationTokenAggregateType<T>>
+  aggregate<T extends VerificationtokenAggregateArgs>(args: Prisma.Subset<T, VerificationtokenAggregateArgs>): Prisma.PrismaPromise<GetVerificationtokenAggregateType<T>>
 
   /**
-   * Group by VerificationToken.
+   * Group by Verificationtoken.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {VerificationTokenGroupByArgs} args - Group by arguments.
+   * @param {verificationtokenGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -568,14 +568,14 @@ export interface VerificationTokenDelegate<ExtArgs extends runtime.Types.Extensi
    * 
   **/
   groupBy<
-    T extends VerificationTokenGroupByArgs,
+    T extends verificationtokenGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: VerificationTokenGroupByArgs['orderBy'] }
-      : { orderBy?: VerificationTokenGroupByArgs['orderBy'] },
+      ? { orderBy: verificationtokenGroupByArgs['orderBy'] }
+      : { orderBy?: verificationtokenGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -624,20 +624,20 @@ export interface VerificationTokenDelegate<ExtArgs extends runtime.Types.Extensi
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, VerificationTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVerificationTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, verificationtokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVerificationtokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the VerificationToken model
+ * Fields of the verificationtoken model
  */
-readonly fields: VerificationTokenFieldRefs;
+readonly fields: verificationtokenFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for VerificationToken.
+ * The delegate class that acts as a "Promise-like" for verificationtoken.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__VerificationTokenClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__verificationtokenClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -665,333 +665,333 @@ export interface Prisma__VerificationTokenClient<T, Null = never, ExtArgs extend
 
 
 /**
- * Fields of the VerificationToken model
+ * Fields of the verificationtoken model
  */
-export interface VerificationTokenFieldRefs {
-  readonly identifier: Prisma.FieldRef<"VerificationToken", 'String'>
-  readonly token: Prisma.FieldRef<"VerificationToken", 'String'>
-  readonly expires: Prisma.FieldRef<"VerificationToken", 'DateTime'>
+export interface verificationtokenFieldRefs {
+  readonly identifier: Prisma.FieldRef<"verificationtoken", 'String'>
+  readonly token: Prisma.FieldRef<"verificationtoken", 'String'>
+  readonly expires: Prisma.FieldRef<"verificationtoken", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * VerificationToken findUnique
+ * verificationtoken findUnique
  */
-export type VerificationTokenFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * Filter, which VerificationToken to fetch.
+   * Filter, which verificationtoken to fetch.
    */
-  where: Prisma.VerificationTokenWhereUniqueInput
+  where: Prisma.verificationtokenWhereUniqueInput
 }
 
 /**
- * VerificationToken findUniqueOrThrow
+ * verificationtoken findUniqueOrThrow
  */
-export type VerificationTokenFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * Filter, which VerificationToken to fetch.
+   * Filter, which verificationtoken to fetch.
    */
-  where: Prisma.VerificationTokenWhereUniqueInput
+  where: Prisma.verificationtokenWhereUniqueInput
 }
 
 /**
- * VerificationToken findFirst
+ * verificationtoken findFirst
  */
-export type VerificationTokenFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * Filter, which VerificationToken to fetch.
+   * Filter, which verificationtoken to fetch.
    */
-  where?: Prisma.VerificationTokenWhereInput
+  where?: Prisma.verificationtokenWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of VerificationTokens to fetch.
+   * Determine the order of verificationtokens to fetch.
    */
-  orderBy?: Prisma.VerificationTokenOrderByWithRelationInput | Prisma.VerificationTokenOrderByWithRelationInput[]
+  orderBy?: Prisma.verificationtokenOrderByWithRelationInput | Prisma.verificationtokenOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for VerificationTokens.
+   * Sets the position for searching for verificationtokens.
    */
-  cursor?: Prisma.VerificationTokenWhereUniqueInput
+  cursor?: Prisma.verificationtokenWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` VerificationTokens from the position of the cursor.
+   * Take `±n` verificationtokens from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` VerificationTokens.
+   * Skip the first `n` verificationtokens.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of VerificationTokens.
+   * Filter by unique combinations of verificationtokens.
    */
-  distinct?: Prisma.VerificationTokenScalarFieldEnum | Prisma.VerificationTokenScalarFieldEnum[]
+  distinct?: Prisma.VerificationtokenScalarFieldEnum | Prisma.VerificationtokenScalarFieldEnum[]
 }
 
 /**
- * VerificationToken findFirstOrThrow
+ * verificationtoken findFirstOrThrow
  */
-export type VerificationTokenFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * Filter, which VerificationToken to fetch.
+   * Filter, which verificationtoken to fetch.
    */
-  where?: Prisma.VerificationTokenWhereInput
+  where?: Prisma.verificationtokenWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of VerificationTokens to fetch.
+   * Determine the order of verificationtokens to fetch.
    */
-  orderBy?: Prisma.VerificationTokenOrderByWithRelationInput | Prisma.VerificationTokenOrderByWithRelationInput[]
+  orderBy?: Prisma.verificationtokenOrderByWithRelationInput | Prisma.verificationtokenOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for VerificationTokens.
+   * Sets the position for searching for verificationtokens.
    */
-  cursor?: Prisma.VerificationTokenWhereUniqueInput
+  cursor?: Prisma.verificationtokenWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` VerificationTokens from the position of the cursor.
+   * Take `±n` verificationtokens from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` VerificationTokens.
+   * Skip the first `n` verificationtokens.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of VerificationTokens.
+   * Filter by unique combinations of verificationtokens.
    */
-  distinct?: Prisma.VerificationTokenScalarFieldEnum | Prisma.VerificationTokenScalarFieldEnum[]
+  distinct?: Prisma.VerificationtokenScalarFieldEnum | Prisma.VerificationtokenScalarFieldEnum[]
 }
 
 /**
- * VerificationToken findMany
+ * verificationtoken findMany
  */
-export type VerificationTokenFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * Filter, which VerificationTokens to fetch.
+   * Filter, which verificationtokens to fetch.
    */
-  where?: Prisma.VerificationTokenWhereInput
+  where?: Prisma.verificationtokenWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of VerificationTokens to fetch.
+   * Determine the order of verificationtokens to fetch.
    */
-  orderBy?: Prisma.VerificationTokenOrderByWithRelationInput | Prisma.VerificationTokenOrderByWithRelationInput[]
+  orderBy?: Prisma.verificationtokenOrderByWithRelationInput | Prisma.verificationtokenOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing VerificationTokens.
+   * Sets the position for listing verificationtokens.
    */
-  cursor?: Prisma.VerificationTokenWhereUniqueInput
+  cursor?: Prisma.verificationtokenWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` VerificationTokens from the position of the cursor.
+   * Take `±n` verificationtokens from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` VerificationTokens.
+   * Skip the first `n` verificationtokens.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of VerificationTokens.
+   * Filter by unique combinations of verificationtokens.
    */
-  distinct?: Prisma.VerificationTokenScalarFieldEnum | Prisma.VerificationTokenScalarFieldEnum[]
+  distinct?: Prisma.VerificationtokenScalarFieldEnum | Prisma.VerificationtokenScalarFieldEnum[]
 }
 
 /**
- * VerificationToken create
+ * verificationtoken create
  */
-export type VerificationTokenCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * The data needed to create a VerificationToken.
+   * The data needed to create a verificationtoken.
    */
-  data: Prisma.XOR<Prisma.VerificationTokenCreateInput, Prisma.VerificationTokenUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.verificationtokenCreateInput, Prisma.verificationtokenUncheckedCreateInput>
 }
 
 /**
- * VerificationToken createMany
+ * verificationtoken createMany
  */
-export type VerificationTokenCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many VerificationTokens.
+   * The data used to create many verificationtokens.
    */
-  data: Prisma.VerificationTokenCreateManyInput | Prisma.VerificationTokenCreateManyInput[]
+  data: Prisma.verificationtokenCreateManyInput | Prisma.verificationtokenCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * VerificationToken update
+ * verificationtoken update
  */
-export type VerificationTokenUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * The data needed to update a VerificationToken.
+   * The data needed to update a verificationtoken.
    */
-  data: Prisma.XOR<Prisma.VerificationTokenUpdateInput, Prisma.VerificationTokenUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.verificationtokenUpdateInput, Prisma.verificationtokenUncheckedUpdateInput>
   /**
-   * Choose, which VerificationToken to update.
+   * Choose, which verificationtoken to update.
    */
-  where: Prisma.VerificationTokenWhereUniqueInput
+  where: Prisma.verificationtokenWhereUniqueInput
 }
 
 /**
- * VerificationToken updateMany
+ * verificationtoken updateMany
  */
-export type VerificationTokenUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update VerificationTokens.
+   * The data used to update verificationtokens.
    */
-  data: Prisma.XOR<Prisma.VerificationTokenUpdateManyMutationInput, Prisma.VerificationTokenUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.verificationtokenUpdateManyMutationInput, Prisma.verificationtokenUncheckedUpdateManyInput>
   /**
-   * Filter which VerificationTokens to update
+   * Filter which verificationtokens to update
    */
-  where?: Prisma.VerificationTokenWhereInput
+  where?: Prisma.verificationtokenWhereInput
   /**
-   * Limit how many VerificationTokens to update.
+   * Limit how many verificationtokens to update.
    */
   limit?: number
 }
 
 /**
- * VerificationToken upsert
+ * verificationtoken upsert
  */
-export type VerificationTokenUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * The filter to search for the VerificationToken to update in case it exists.
+   * The filter to search for the verificationtoken to update in case it exists.
    */
-  where: Prisma.VerificationTokenWhereUniqueInput
+  where: Prisma.verificationtokenWhereUniqueInput
   /**
-   * In case the VerificationToken found by the `where` argument doesn't exist, create a new VerificationToken with this data.
+   * In case the verificationtoken found by the `where` argument doesn't exist, create a new verificationtoken with this data.
    */
-  create: Prisma.XOR<Prisma.VerificationTokenCreateInput, Prisma.VerificationTokenUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.verificationtokenCreateInput, Prisma.verificationtokenUncheckedCreateInput>
   /**
-   * In case the VerificationToken was found with the provided `where` argument, update it with this data.
+   * In case the verificationtoken was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.VerificationTokenUpdateInput, Prisma.VerificationTokenUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.verificationtokenUpdateInput, Prisma.verificationtokenUncheckedUpdateInput>
 }
 
 /**
- * VerificationToken delete
+ * verificationtoken delete
  */
-export type VerificationTokenDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
   /**
-   * Filter which VerificationToken to delete.
+   * Filter which verificationtoken to delete.
    */
-  where: Prisma.VerificationTokenWhereUniqueInput
+  where: Prisma.verificationtokenWhereUniqueInput
 }
 
 /**
- * VerificationToken deleteMany
+ * verificationtoken deleteMany
  */
-export type VerificationTokenDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which VerificationTokens to delete
+   * Filter which verificationtokens to delete
    */
-  where?: Prisma.VerificationTokenWhereInput
+  where?: Prisma.verificationtokenWhereInput
   /**
-   * Limit how many VerificationTokens to delete.
+   * Limit how many verificationtokens to delete.
    */
   limit?: number
 }
 
 /**
- * VerificationToken without action
+ * verificationtoken without action
  */
-export type VerificationTokenDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type verificationtokenDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the VerificationToken
+   * Select specific fields to fetch from the verificationtoken
    */
-  select?: Prisma.VerificationTokenSelect<ExtArgs> | null
+  select?: Prisma.verificationtokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the VerificationToken
+   * Omit specific fields from the verificationtoken
    */
-  omit?: Prisma.VerificationTokenOmit<ExtArgs> | null
+  omit?: Prisma.verificationtokenOmit<ExtArgs> | null
 }

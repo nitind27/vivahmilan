@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `Account` model and its related types.
+ * This file exports the `account` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model Account
+ * Model account
  * 
  */
-export type AccountModel = runtime.Types.Result.DefaultSelection<Prisma.$AccountPayload>
+export type accountModel = runtime.Types.Result.DefaultSelection<Prisma.$accountPayload>
 
 export type AggregateAccount = {
   _count: AccountCountAggregateOutputType | null
@@ -137,37 +137,37 @@ export type AccountCountAggregateInputType = {
 
 export type AccountAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Account to aggregate.
+   * Filter which account to aggregate.
    */
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Accounts to fetch.
+   * Determine the order of accounts to fetch.
    */
-  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
+  orderBy?: Prisma.accountOrderByWithRelationInput | Prisma.accountOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.AccountWhereUniqueInput
+  cursor?: Prisma.accountWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Accounts from the position of the cursor.
+   * Take `±n` accounts from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Accounts.
+   * Skip the first `n` accounts.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Accounts
+   * Count returned accounts
   **/
   _count?: true | AccountCountAggregateInputType
   /**
@@ -207,11 +207,11 @@ export type GetAccountAggregateType<T extends AccountAggregateArgs> = {
 
 
 
-export type AccountGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AccountWhereInput
-  orderBy?: Prisma.AccountOrderByWithAggregationInput | Prisma.AccountOrderByWithAggregationInput[]
+export type accountGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.accountWhereInput
+  orderBy?: Prisma.accountOrderByWithAggregationInput | Prisma.accountOrderByWithAggregationInput[]
   by: Prisma.AccountScalarFieldEnum[] | Prisma.AccountScalarFieldEnum
-  having?: Prisma.AccountScalarWhereWithAggregatesInput
+  having?: Prisma.accountScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: AccountCountAggregateInputType | true
@@ -241,7 +241,7 @@ export type AccountGroupByOutputType = {
   _max: AccountMaxAggregateOutputType | null
 }
 
-export type GetAccountGroupByPayload<T extends AccountGroupByArgs> = Prisma.PrismaPromise<
+export type GetAccountGroupByPayload<T extends accountGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AccountGroupByOutputType, T['by']> &
       {
@@ -256,26 +256,26 @@ export type GetAccountGroupByPayload<T extends AccountGroupByArgs> = Prisma.Pris
 
 
 
-export type AccountWhereInput = {
-  AND?: Prisma.AccountWhereInput | Prisma.AccountWhereInput[]
-  OR?: Prisma.AccountWhereInput[]
-  NOT?: Prisma.AccountWhereInput | Prisma.AccountWhereInput[]
-  id?: Prisma.StringFilter<"Account"> | string
-  userId?: Prisma.StringFilter<"Account"> | string
-  type?: Prisma.StringFilter<"Account"> | string
-  provider?: Prisma.StringFilter<"Account"> | string
-  providerAccountId?: Prisma.StringFilter<"Account"> | string
-  refresh_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  access_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  expires_at?: Prisma.IntNullableFilter<"Account"> | number | null
-  token_type?: Prisma.StringNullableFilter<"Account"> | string | null
-  scope?: Prisma.StringNullableFilter<"Account"> | string | null
-  id_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  session_state?: Prisma.StringNullableFilter<"Account"> | string | null
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+export type accountWhereInput = {
+  AND?: Prisma.accountWhereInput | Prisma.accountWhereInput[]
+  OR?: Prisma.accountWhereInput[]
+  NOT?: Prisma.accountWhereInput | Prisma.accountWhereInput[]
+  id?: Prisma.StringFilter<"account"> | string
+  userId?: Prisma.StringFilter<"account"> | string
+  type?: Prisma.StringFilter<"account"> | string
+  provider?: Prisma.StringFilter<"account"> | string
+  providerAccountId?: Prisma.StringFilter<"account"> | string
+  refresh_token?: Prisma.StringNullableFilter<"account"> | string | null
+  access_token?: Prisma.StringNullableFilter<"account"> | string | null
+  expires_at?: Prisma.IntNullableFilter<"account"> | number | null
+  token_type?: Prisma.StringNullableFilter<"account"> | string | null
+  scope?: Prisma.StringNullableFilter<"account"> | string | null
+  id_token?: Prisma.StringNullableFilter<"account"> | string | null
+  session_state?: Prisma.StringNullableFilter<"account"> | string | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }
 
-export type AccountOrderByWithRelationInput = {
+export type accountOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -288,31 +288,31 @@ export type AccountOrderByWithRelationInput = {
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   id_token?: Prisma.SortOrderInput | Prisma.SortOrder
   session_state?: Prisma.SortOrderInput | Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.AccountOrderByRelevanceInput
+  user?: Prisma.userOrderByWithRelationInput
+  _relevance?: Prisma.accountOrderByRelevanceInput
 }
 
-export type AccountWhereUniqueInput = Prisma.AtLeast<{
+export type accountWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  provider_providerAccountId?: Prisma.AccountProviderProviderAccountIdCompoundUniqueInput
-  AND?: Prisma.AccountWhereInput | Prisma.AccountWhereInput[]
-  OR?: Prisma.AccountWhereInput[]
-  NOT?: Prisma.AccountWhereInput | Prisma.AccountWhereInput[]
-  userId?: Prisma.StringFilter<"Account"> | string
-  type?: Prisma.StringFilter<"Account"> | string
-  provider?: Prisma.StringFilter<"Account"> | string
-  providerAccountId?: Prisma.StringFilter<"Account"> | string
-  refresh_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  access_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  expires_at?: Prisma.IntNullableFilter<"Account"> | number | null
-  token_type?: Prisma.StringNullableFilter<"Account"> | string | null
-  scope?: Prisma.StringNullableFilter<"Account"> | string | null
-  id_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  session_state?: Prisma.StringNullableFilter<"Account"> | string | null
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  provider_providerAccountId?: Prisma.accountProviderProviderAccountIdCompoundUniqueInput
+  AND?: Prisma.accountWhereInput | Prisma.accountWhereInput[]
+  OR?: Prisma.accountWhereInput[]
+  NOT?: Prisma.accountWhereInput | Prisma.accountWhereInput[]
+  userId?: Prisma.StringFilter<"account"> | string
+  type?: Prisma.StringFilter<"account"> | string
+  provider?: Prisma.StringFilter<"account"> | string
+  providerAccountId?: Prisma.StringFilter<"account"> | string
+  refresh_token?: Prisma.StringNullableFilter<"account"> | string | null
+  access_token?: Prisma.StringNullableFilter<"account"> | string | null
+  expires_at?: Prisma.IntNullableFilter<"account"> | number | null
+  token_type?: Prisma.StringNullableFilter<"account"> | string | null
+  scope?: Prisma.StringNullableFilter<"account"> | string | null
+  id_token?: Prisma.StringNullableFilter<"account"> | string | null
+  session_state?: Prisma.StringNullableFilter<"account"> | string | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }, "id" | "provider_providerAccountId">
 
-export type AccountOrderByWithAggregationInput = {
+export type accountOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -325,32 +325,32 @@ export type AccountOrderByWithAggregationInput = {
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   id_token?: Prisma.SortOrderInput | Prisma.SortOrder
   session_state?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.AccountCountOrderByAggregateInput
-  _avg?: Prisma.AccountAvgOrderByAggregateInput
-  _max?: Prisma.AccountMaxOrderByAggregateInput
-  _min?: Prisma.AccountMinOrderByAggregateInput
-  _sum?: Prisma.AccountSumOrderByAggregateInput
+  _count?: Prisma.accountCountOrderByAggregateInput
+  _avg?: Prisma.accountAvgOrderByAggregateInput
+  _max?: Prisma.accountMaxOrderByAggregateInput
+  _min?: Prisma.accountMinOrderByAggregateInput
+  _sum?: Prisma.accountSumOrderByAggregateInput
 }
 
-export type AccountScalarWhereWithAggregatesInput = {
-  AND?: Prisma.AccountScalarWhereWithAggregatesInput | Prisma.AccountScalarWhereWithAggregatesInput[]
-  OR?: Prisma.AccountScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.AccountScalarWhereWithAggregatesInput | Prisma.AccountScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Account"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"Account"> | string
-  type?: Prisma.StringWithAggregatesFilter<"Account"> | string
-  provider?: Prisma.StringWithAggregatesFilter<"Account"> | string
-  providerAccountId?: Prisma.StringWithAggregatesFilter<"Account"> | string
-  refresh_token?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
-  access_token?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
-  expires_at?: Prisma.IntNullableWithAggregatesFilter<"Account"> | number | null
-  token_type?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
-  scope?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
-  id_token?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
-  session_state?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
+export type accountScalarWhereWithAggregatesInput = {
+  AND?: Prisma.accountScalarWhereWithAggregatesInput | Prisma.accountScalarWhereWithAggregatesInput[]
+  OR?: Prisma.accountScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.accountScalarWhereWithAggregatesInput | Prisma.accountScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"account"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"account"> | string
+  type?: Prisma.StringWithAggregatesFilter<"account"> | string
+  provider?: Prisma.StringWithAggregatesFilter<"account"> | string
+  providerAccountId?: Prisma.StringWithAggregatesFilter<"account"> | string
+  refresh_token?: Prisma.StringNullableWithAggregatesFilter<"account"> | string | null
+  access_token?: Prisma.StringNullableWithAggregatesFilter<"account"> | string | null
+  expires_at?: Prisma.IntNullableWithAggregatesFilter<"account"> | number | null
+  token_type?: Prisma.StringNullableWithAggregatesFilter<"account"> | string | null
+  scope?: Prisma.StringNullableWithAggregatesFilter<"account"> | string | null
+  id_token?: Prisma.StringNullableWithAggregatesFilter<"account"> | string | null
+  session_state?: Prisma.StringNullableWithAggregatesFilter<"account"> | string | null
 }
 
-export type AccountCreateInput = {
+export type accountCreateInput = {
   id?: string
   type: string
   provider: string
@@ -362,55 +362,10 @@ export type AccountCreateInput = {
   scope?: string | null
   id_token?: string | null
   session_state?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAccountsInput
+  user: Prisma.userCreateNestedOneWithoutAccountsInput
 }
 
-export type AccountUncheckedCreateInput = {
-  id?: string
-  userId: string
-  type: string
-  provider: string
-  providerAccountId: string
-  refresh_token?: string | null
-  access_token?: string | null
-  expires_at?: number | null
-  token_type?: string | null
-  scope?: string | null
-  id_token?: string | null
-  session_state?: string | null
-}
-
-export type AccountUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  provider?: Prisma.StringFieldUpdateOperationsInput | string
-  providerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
-  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  access_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  expires_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  token_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  id_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAccountsNestedInput
-}
-
-export type AccountUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  provider?: Prisma.StringFieldUpdateOperationsInput | string
-  providerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
-  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  access_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  expires_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  token_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  id_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type AccountCreateManyInput = {
+export type accountUncheckedCreateInput = {
   id?: string
   userId: string
   type: string
@@ -425,7 +380,7 @@ export type AccountCreateManyInput = {
   session_state?: string | null
 }
 
-export type AccountUpdateManyMutationInput = {
+export type accountUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
@@ -437,9 +392,10 @@ export type AccountUpdateManyMutationInput = {
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user?: Prisma.userUpdateOneRequiredWithoutAccountsNestedInput
 }
 
-export type AccountUncheckedUpdateManyInput = {
+export type accountUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -454,18 +410,62 @@ export type AccountUncheckedUpdateManyInput = {
   session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type AccountOrderByRelevanceInput = {
-  fields: Prisma.AccountOrderByRelevanceFieldEnum | Prisma.AccountOrderByRelevanceFieldEnum[]
+export type accountCreateManyInput = {
+  id?: string
+  userId: string
+  type: string
+  provider: string
+  providerAccountId: string
+  refresh_token?: string | null
+  access_token?: string | null
+  expires_at?: number | null
+  token_type?: string | null
+  scope?: string | null
+  id_token?: string | null
+  session_state?: string | null
+}
+
+export type accountUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  providerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  access_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expires_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  token_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type accountUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  providerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
+  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  access_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expires_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  token_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type accountOrderByRelevanceInput = {
+  fields: Prisma.accountOrderByRelevanceFieldEnum | Prisma.accountOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type AccountProviderProviderAccountIdCompoundUniqueInput = {
+export type accountProviderProviderAccountIdCompoundUniqueInput = {
   provider: string
   providerAccountId: string
 }
 
-export type AccountCountOrderByAggregateInput = {
+export type accountCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -480,11 +480,11 @@ export type AccountCountOrderByAggregateInput = {
   session_state?: Prisma.SortOrder
 }
 
-export type AccountAvgOrderByAggregateInput = {
+export type accountAvgOrderByAggregateInput = {
   expires_at?: Prisma.SortOrder
 }
 
-export type AccountMaxOrderByAggregateInput = {
+export type accountMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -499,7 +499,7 @@ export type AccountMaxOrderByAggregateInput = {
   session_state?: Prisma.SortOrder
 }
 
-export type AccountMinOrderByAggregateInput = {
+export type accountMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -514,17 +514,17 @@ export type AccountMinOrderByAggregateInput = {
   session_state?: Prisma.SortOrder
 }
 
-export type AccountSumOrderByAggregateInput = {
+export type accountSumOrderByAggregateInput = {
   expires_at?: Prisma.SortOrder
 }
 
 export type AccountListRelationFilter = {
-  every?: Prisma.AccountWhereInput
-  some?: Prisma.AccountWhereInput
-  none?: Prisma.AccountWhereInput
+  every?: Prisma.accountWhereInput
+  some?: Prisma.accountWhereInput
+  none?: Prisma.accountWhereInput
 }
 
-export type AccountOrderByRelationAggregateInput = {
+export type accountOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
@@ -544,49 +544,49 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type AccountCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AccountCreateWithoutUserInput, Prisma.AccountUncheckedCreateWithoutUserInput> | Prisma.AccountCreateWithoutUserInput[] | Prisma.AccountUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccountCreateOrConnectWithoutUserInput | Prisma.AccountCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AccountCreateManyUserInputEnvelope
-  connect?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
+export type accountCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.accountCreateWithoutUserInput, Prisma.accountUncheckedCreateWithoutUserInput> | Prisma.accountCreateWithoutUserInput[] | Prisma.accountUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.accountCreateOrConnectWithoutUserInput | Prisma.accountCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.accountCreateManyUserInputEnvelope
+  connect?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
 }
 
-export type AccountUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AccountCreateWithoutUserInput, Prisma.AccountUncheckedCreateWithoutUserInput> | Prisma.AccountCreateWithoutUserInput[] | Prisma.AccountUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccountCreateOrConnectWithoutUserInput | Prisma.AccountCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AccountCreateManyUserInputEnvelope
-  connect?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
+export type accountUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.accountCreateWithoutUserInput, Prisma.accountUncheckedCreateWithoutUserInput> | Prisma.accountCreateWithoutUserInput[] | Prisma.accountUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.accountCreateOrConnectWithoutUserInput | Prisma.accountCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.accountCreateManyUserInputEnvelope
+  connect?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
 }
 
-export type AccountUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AccountCreateWithoutUserInput, Prisma.AccountUncheckedCreateWithoutUserInput> | Prisma.AccountCreateWithoutUserInput[] | Prisma.AccountUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccountCreateOrConnectWithoutUserInput | Prisma.AccountCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AccountUpsertWithWhereUniqueWithoutUserInput | Prisma.AccountUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AccountCreateManyUserInputEnvelope
-  set?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  disconnect?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  delete?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  connect?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  update?: Prisma.AccountUpdateWithWhereUniqueWithoutUserInput | Prisma.AccountUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AccountUpdateManyWithWhereWithoutUserInput | Prisma.AccountUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.AccountScalarWhereInput | Prisma.AccountScalarWhereInput[]
+export type accountUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.accountCreateWithoutUserInput, Prisma.accountUncheckedCreateWithoutUserInput> | Prisma.accountCreateWithoutUserInput[] | Prisma.accountUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.accountCreateOrConnectWithoutUserInput | Prisma.accountCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.accountUpsertWithWhereUniqueWithoutUserInput | Prisma.accountUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.accountCreateManyUserInputEnvelope
+  set?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  disconnect?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  delete?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  connect?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  update?: Prisma.accountUpdateWithWhereUniqueWithoutUserInput | Prisma.accountUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.accountUpdateManyWithWhereWithoutUserInput | Prisma.accountUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.accountScalarWhereInput | Prisma.accountScalarWhereInput[]
 }
 
-export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AccountCreateWithoutUserInput, Prisma.AccountUncheckedCreateWithoutUserInput> | Prisma.AccountCreateWithoutUserInput[] | Prisma.AccountUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccountCreateOrConnectWithoutUserInput | Prisma.AccountCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AccountUpsertWithWhereUniqueWithoutUserInput | Prisma.AccountUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AccountCreateManyUserInputEnvelope
-  set?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  disconnect?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  delete?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  connect?: Prisma.AccountWhereUniqueInput | Prisma.AccountWhereUniqueInput[]
-  update?: Prisma.AccountUpdateWithWhereUniqueWithoutUserInput | Prisma.AccountUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AccountUpdateManyWithWhereWithoutUserInput | Prisma.AccountUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.AccountScalarWhereInput | Prisma.AccountScalarWhereInput[]
+export type accountUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.accountCreateWithoutUserInput, Prisma.accountUncheckedCreateWithoutUserInput> | Prisma.accountCreateWithoutUserInput[] | Prisma.accountUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.accountCreateOrConnectWithoutUserInput | Prisma.accountCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.accountUpsertWithWhereUniqueWithoutUserInput | Prisma.accountUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.accountCreateManyUserInputEnvelope
+  set?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  disconnect?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  delete?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  connect?: Prisma.accountWhereUniqueInput | Prisma.accountWhereUniqueInput[]
+  update?: Prisma.accountUpdateWithWhereUniqueWithoutUserInput | Prisma.accountUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.accountUpdateManyWithWhereWithoutUserInput | Prisma.accountUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.accountScalarWhereInput | Prisma.accountScalarWhereInput[]
 }
 
-export type AccountCreateWithoutUserInput = {
+export type accountCreateWithoutUserInput = {
   id?: string
   type: string
   provider: string
@@ -600,7 +600,7 @@ export type AccountCreateWithoutUserInput = {
   session_state?: string | null
 }
 
-export type AccountUncheckedCreateWithoutUserInput = {
+export type accountUncheckedCreateWithoutUserInput = {
   id?: string
   type: string
   provider: string
@@ -614,51 +614,51 @@ export type AccountUncheckedCreateWithoutUserInput = {
   session_state?: string | null
 }
 
-export type AccountCreateOrConnectWithoutUserInput = {
-  where: Prisma.AccountWhereUniqueInput
-  create: Prisma.XOR<Prisma.AccountCreateWithoutUserInput, Prisma.AccountUncheckedCreateWithoutUserInput>
+export type accountCreateOrConnectWithoutUserInput = {
+  where: Prisma.accountWhereUniqueInput
+  create: Prisma.XOR<Prisma.accountCreateWithoutUserInput, Prisma.accountUncheckedCreateWithoutUserInput>
 }
 
-export type AccountCreateManyUserInputEnvelope = {
-  data: Prisma.AccountCreateManyUserInput | Prisma.AccountCreateManyUserInput[]
+export type accountCreateManyUserInputEnvelope = {
+  data: Prisma.accountCreateManyUserInput | Prisma.accountCreateManyUserInput[]
   skipDuplicates?: boolean
 }
 
-export type AccountUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.AccountWhereUniqueInput
-  update: Prisma.XOR<Prisma.AccountUpdateWithoutUserInput, Prisma.AccountUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.AccountCreateWithoutUserInput, Prisma.AccountUncheckedCreateWithoutUserInput>
+export type accountUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.accountWhereUniqueInput
+  update: Prisma.XOR<Prisma.accountUpdateWithoutUserInput, Prisma.accountUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.accountCreateWithoutUserInput, Prisma.accountUncheckedCreateWithoutUserInput>
 }
 
-export type AccountUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.AccountWhereUniqueInput
-  data: Prisma.XOR<Prisma.AccountUpdateWithoutUserInput, Prisma.AccountUncheckedUpdateWithoutUserInput>
+export type accountUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.accountWhereUniqueInput
+  data: Prisma.XOR<Prisma.accountUpdateWithoutUserInput, Prisma.accountUncheckedUpdateWithoutUserInput>
 }
 
-export type AccountUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.AccountScalarWhereInput
-  data: Prisma.XOR<Prisma.AccountUpdateManyMutationInput, Prisma.AccountUncheckedUpdateManyWithoutUserInput>
+export type accountUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.accountScalarWhereInput
+  data: Prisma.XOR<Prisma.accountUpdateManyMutationInput, Prisma.accountUncheckedUpdateManyWithoutUserInput>
 }
 
-export type AccountScalarWhereInput = {
-  AND?: Prisma.AccountScalarWhereInput | Prisma.AccountScalarWhereInput[]
-  OR?: Prisma.AccountScalarWhereInput[]
-  NOT?: Prisma.AccountScalarWhereInput | Prisma.AccountScalarWhereInput[]
-  id?: Prisma.StringFilter<"Account"> | string
-  userId?: Prisma.StringFilter<"Account"> | string
-  type?: Prisma.StringFilter<"Account"> | string
-  provider?: Prisma.StringFilter<"Account"> | string
-  providerAccountId?: Prisma.StringFilter<"Account"> | string
-  refresh_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  access_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  expires_at?: Prisma.IntNullableFilter<"Account"> | number | null
-  token_type?: Prisma.StringNullableFilter<"Account"> | string | null
-  scope?: Prisma.StringNullableFilter<"Account"> | string | null
-  id_token?: Prisma.StringNullableFilter<"Account"> | string | null
-  session_state?: Prisma.StringNullableFilter<"Account"> | string | null
+export type accountScalarWhereInput = {
+  AND?: Prisma.accountScalarWhereInput | Prisma.accountScalarWhereInput[]
+  OR?: Prisma.accountScalarWhereInput[]
+  NOT?: Prisma.accountScalarWhereInput | Prisma.accountScalarWhereInput[]
+  id?: Prisma.StringFilter<"account"> | string
+  userId?: Prisma.StringFilter<"account"> | string
+  type?: Prisma.StringFilter<"account"> | string
+  provider?: Prisma.StringFilter<"account"> | string
+  providerAccountId?: Prisma.StringFilter<"account"> | string
+  refresh_token?: Prisma.StringNullableFilter<"account"> | string | null
+  access_token?: Prisma.StringNullableFilter<"account"> | string | null
+  expires_at?: Prisma.IntNullableFilter<"account"> | number | null
+  token_type?: Prisma.StringNullableFilter<"account"> | string | null
+  scope?: Prisma.StringNullableFilter<"account"> | string | null
+  id_token?: Prisma.StringNullableFilter<"account"> | string | null
+  session_state?: Prisma.StringNullableFilter<"account"> | string | null
 }
 
-export type AccountCreateManyUserInput = {
+export type accountCreateManyUserInput = {
   id?: string
   type: string
   provider: string
@@ -672,7 +672,7 @@ export type AccountCreateManyUserInput = {
   session_state?: string | null
 }
 
-export type AccountUpdateWithoutUserInput = {
+export type accountUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
@@ -686,7 +686,7 @@ export type AccountUpdateWithoutUserInput = {
   session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type AccountUncheckedUpdateWithoutUserInput = {
+export type accountUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
@@ -700,7 +700,7 @@ export type AccountUncheckedUpdateWithoutUserInput = {
   session_state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type AccountUncheckedUpdateManyWithoutUserInput = {
+export type accountUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
@@ -716,7 +716,7 @@ export type AccountUncheckedUpdateManyWithoutUserInput = {
 
 
 
-export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type accountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   type?: boolean
@@ -729,12 +729,12 @@ export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scope?: boolean
   id_token?: boolean
   session_state?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["account"]>
 
 
 
-export type AccountSelectScalar = {
+export type accountSelectScalar = {
   id?: boolean
   userId?: boolean
   type?: boolean
@@ -749,15 +749,15 @@ export type AccountSelectScalar = {
   session_state?: boolean
 }
 
-export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "provider" | "providerAccountId" | "refresh_token" | "access_token" | "expires_at" | "token_type" | "scope" | "id_token" | "session_state", ExtArgs["result"]["account"]>
-export type AccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+export type accountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "provider" | "providerAccountId" | "refresh_token" | "access_token" | "expires_at" | "token_type" | "scope" | "id_token" | "session_state", ExtArgs["result"]["account"]>
+export type accountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
 
-export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "Account"
+export type $accountPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "account"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$userPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -776,18 +776,18 @@ export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   composites: {}
 }
 
-export type AccountGetPayload<S extends boolean | null | undefined | AccountDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$AccountPayload, S>
+export type accountGetPayload<S extends boolean | null | undefined | accountDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$accountPayload, S>
 
-export type AccountCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<AccountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type accountCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<accountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: AccountCountAggregateInputType | true
   }
 
-export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Account'], meta: { name: 'Account' } }
+export interface accountDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['account'], meta: { name: 'account' } }
   /**
    * Find zero or one Account that matches the filter.
-   * @param {AccountFindUniqueArgs} args - Arguments to find a Account
+   * @param {accountFindUniqueArgs} args - Arguments to find a Account
    * @example
    * // Get one Account
    * const account = await prisma.account.findUnique({
@@ -796,12 +796,12 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findUnique<T extends AccountFindUniqueArgs>(args: Prisma.SelectSubset<T, AccountFindUniqueArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends accountFindUniqueArgs>(args: Prisma.SelectSubset<T, accountFindUniqueArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Account that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {AccountFindUniqueOrThrowArgs} args - Arguments to find a Account
+   * @param {accountFindUniqueOrThrowArgs} args - Arguments to find a Account
    * @example
    * // Get one Account
    * const account = await prisma.account.findUniqueOrThrow({
@@ -810,13 +810,13 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findUniqueOrThrow<T extends AccountFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, AccountFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends accountFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, accountFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Account that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {AccountFindFirstArgs} args - Arguments to find a Account
+   * @param {accountFindFirstArgs} args - Arguments to find a Account
    * @example
    * // Get one Account
    * const account = await prisma.account.findFirst({
@@ -825,14 +825,14 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findFirst<T extends AccountFindFirstArgs>(args?: Prisma.SelectSubset<T, AccountFindFirstArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends accountFindFirstArgs>(args?: Prisma.SelectSubset<T, accountFindFirstArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Account that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {AccountFindFirstOrThrowArgs} args - Arguments to find a Account
+   * @param {accountFindFirstOrThrowArgs} args - Arguments to find a Account
    * @example
    * // Get one Account
    * const account = await prisma.account.findFirstOrThrow({
@@ -841,13 +841,13 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findFirstOrThrow<T extends AccountFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, AccountFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends accountFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, accountFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Accounts that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {AccountFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {accountFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Accounts
    * const accounts = await prisma.account.findMany()
@@ -859,11 +859,11 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * const accountWithIdOnly = await prisma.account.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends AccountFindManyArgs>(args?: Prisma.SelectSubset<T, AccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends accountFindManyArgs>(args?: Prisma.SelectSubset<T, accountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Account.
-   * @param {AccountCreateArgs} args - Arguments to create a Account.
+   * @param {accountCreateArgs} args - Arguments to create a Account.
    * @example
    * // Create one Account
    * const Account = await prisma.account.create({
@@ -873,11 +873,11 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  create<T extends AccountCreateArgs>(args: Prisma.SelectSubset<T, AccountCreateArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends accountCreateArgs>(args: Prisma.SelectSubset<T, accountCreateArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Accounts.
-   * @param {AccountCreateManyArgs} args - Arguments to create many Accounts.
+   * @param {accountCreateManyArgs} args - Arguments to create many Accounts.
    * @example
    * // Create many Accounts
    * const account = await prisma.account.createMany({
@@ -887,11 +887,11 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    *     
    */
-  createMany<T extends AccountCreateManyArgs>(args?: Prisma.SelectSubset<T, AccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends accountCreateManyArgs>(args?: Prisma.SelectSubset<T, accountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a Account.
-   * @param {AccountDeleteArgs} args - Arguments to delete one Account.
+   * @param {accountDeleteArgs} args - Arguments to delete one Account.
    * @example
    * // Delete one Account
    * const Account = await prisma.account.delete({
@@ -901,11 +901,11 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  delete<T extends AccountDeleteArgs>(args: Prisma.SelectSubset<T, AccountDeleteArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends accountDeleteArgs>(args: Prisma.SelectSubset<T, accountDeleteArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Account.
-   * @param {AccountUpdateArgs} args - Arguments to update one Account.
+   * @param {accountUpdateArgs} args - Arguments to update one Account.
    * @example
    * // Update one Account
    * const account = await prisma.account.update({
@@ -918,11 +918,11 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  update<T extends AccountUpdateArgs>(args: Prisma.SelectSubset<T, AccountUpdateArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends accountUpdateArgs>(args: Prisma.SelectSubset<T, accountUpdateArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Accounts.
-   * @param {AccountDeleteManyArgs} args - Arguments to filter Accounts to delete.
+   * @param {accountDeleteManyArgs} args - Arguments to filter Accounts to delete.
    * @example
    * // Delete a few Accounts
    * const { count } = await prisma.account.deleteMany({
@@ -932,13 +932,13 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  deleteMany<T extends AccountDeleteManyArgs>(args?: Prisma.SelectSubset<T, AccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends accountDeleteManyArgs>(args?: Prisma.SelectSubset<T, accountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Accounts.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {AccountUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {accountUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Accounts
    * const account = await prisma.account.updateMany({
@@ -951,11 +951,11 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  updateMany<T extends AccountUpdateManyArgs>(args: Prisma.SelectSubset<T, AccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends accountUpdateManyArgs>(args: Prisma.SelectSubset<T, accountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one Account.
-   * @param {AccountUpsertArgs} args - Arguments to update or create a Account.
+   * @param {accountUpsertArgs} args - Arguments to update or create a Account.
    * @example
    * // Update or create a Account
    * const account = await prisma.account.upsert({
@@ -970,14 +970,14 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  upsert<T extends AccountUpsertArgs>(args: Prisma.SelectSubset<T, AccountUpsertArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends accountUpsertArgs>(args: Prisma.SelectSubset<T, accountUpsertArgs<ExtArgs>>): Prisma.Prisma__accountClient<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Accounts.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {AccountCountArgs} args - Arguments to filter Accounts to count.
+   * @param {accountCountArgs} args - Arguments to filter Accounts to count.
    * @example
    * // Count the number of Accounts
    * const count = await prisma.account.count({
@@ -986,8 +986,8 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
   **/
-  count<T extends AccountCountArgs>(
-    args?: Prisma.Subset<T, AccountCountArgs>,
+  count<T extends accountCountArgs>(
+    args?: Prisma.Subset<T, accountCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -1026,7 +1026,7 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * Group by Account.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {AccountGroupByArgs} args - Group by arguments.
+   * @param {accountGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -1041,14 +1041,14 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
   **/
   groupBy<
-    T extends AccountGroupByArgs,
+    T extends accountGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: AccountGroupByArgs['orderBy'] }
-      : { orderBy?: AccountGroupByArgs['orderBy'] },
+      ? { orderBy: accountGroupByArgs['orderBy'] }
+      : { orderBy?: accountGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1097,22 +1097,22 @@ export interface AccountDelegate<ExtArgs extends runtime.Types.Extensions.Intern
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, AccountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, accountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the Account model
+ * Fields of the account model
  */
-readonly fields: AccountFieldRefs;
+readonly fields: accountFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for Account.
+ * The delegate class that acts as a "Promise-like" for account.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__AccountClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__accountClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1139,382 +1139,382 @@ export interface Prisma__AccountClient<T, Null = never, ExtArgs extends runtime.
 
 
 /**
- * Fields of the Account model
+ * Fields of the account model
  */
-export interface AccountFieldRefs {
-  readonly id: Prisma.FieldRef<"Account", 'String'>
-  readonly userId: Prisma.FieldRef<"Account", 'String'>
-  readonly type: Prisma.FieldRef<"Account", 'String'>
-  readonly provider: Prisma.FieldRef<"Account", 'String'>
-  readonly providerAccountId: Prisma.FieldRef<"Account", 'String'>
-  readonly refresh_token: Prisma.FieldRef<"Account", 'String'>
-  readonly access_token: Prisma.FieldRef<"Account", 'String'>
-  readonly expires_at: Prisma.FieldRef<"Account", 'Int'>
-  readonly token_type: Prisma.FieldRef<"Account", 'String'>
-  readonly scope: Prisma.FieldRef<"Account", 'String'>
-  readonly id_token: Prisma.FieldRef<"Account", 'String'>
-  readonly session_state: Prisma.FieldRef<"Account", 'String'>
+export interface accountFieldRefs {
+  readonly id: Prisma.FieldRef<"account", 'String'>
+  readonly userId: Prisma.FieldRef<"account", 'String'>
+  readonly type: Prisma.FieldRef<"account", 'String'>
+  readonly provider: Prisma.FieldRef<"account", 'String'>
+  readonly providerAccountId: Prisma.FieldRef<"account", 'String'>
+  readonly refresh_token: Prisma.FieldRef<"account", 'String'>
+  readonly access_token: Prisma.FieldRef<"account", 'String'>
+  readonly expires_at: Prisma.FieldRef<"account", 'Int'>
+  readonly token_type: Prisma.FieldRef<"account", 'String'>
+  readonly scope: Prisma.FieldRef<"account", 'String'>
+  readonly id_token: Prisma.FieldRef<"account", 'String'>
+  readonly session_state: Prisma.FieldRef<"account", 'String'>
 }
     
 
 // Custom InputTypes
 /**
- * Account findUnique
+ * account findUnique
  */
-export type AccountFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * Filter, which Account to fetch.
+   * Filter, which account to fetch.
    */
-  where: Prisma.AccountWhereUniqueInput
+  where: Prisma.accountWhereUniqueInput
 }
 
 /**
- * Account findUniqueOrThrow
+ * account findUniqueOrThrow
  */
-export type AccountFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * Filter, which Account to fetch.
+   * Filter, which account to fetch.
    */
-  where: Prisma.AccountWhereUniqueInput
+  where: Prisma.accountWhereUniqueInput
 }
 
 /**
- * Account findFirst
+ * account findFirst
  */
-export type AccountFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * Filter, which Account to fetch.
+   * Filter, which account to fetch.
    */
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Accounts to fetch.
+   * Determine the order of accounts to fetch.
    */
-  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
+  orderBy?: Prisma.accountOrderByWithRelationInput | Prisma.accountOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Accounts.
+   * Sets the position for searching for accounts.
    */
-  cursor?: Prisma.AccountWhereUniqueInput
+  cursor?: Prisma.accountWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Accounts from the position of the cursor.
+   * Take `±n` accounts from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Accounts.
+   * Skip the first `n` accounts.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Accounts.
+   * Filter by unique combinations of accounts.
    */
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
 }
 
 /**
- * Account findFirstOrThrow
+ * account findFirstOrThrow
  */
-export type AccountFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * Filter, which Account to fetch.
+   * Filter, which account to fetch.
    */
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Accounts to fetch.
+   * Determine the order of accounts to fetch.
    */
-  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
+  orderBy?: Prisma.accountOrderByWithRelationInput | Prisma.accountOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Accounts.
+   * Sets the position for searching for accounts.
    */
-  cursor?: Prisma.AccountWhereUniqueInput
+  cursor?: Prisma.accountWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Accounts from the position of the cursor.
+   * Take `±n` accounts from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Accounts.
+   * Skip the first `n` accounts.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Accounts.
+   * Filter by unique combinations of accounts.
    */
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
 }
 
 /**
- * Account findMany
+ * account findMany
  */
-export type AccountFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * Filter, which Accounts to fetch.
+   * Filter, which accounts to fetch.
    */
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Accounts to fetch.
+   * Determine the order of accounts to fetch.
    */
-  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
+  orderBy?: Prisma.accountOrderByWithRelationInput | Prisma.accountOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Accounts.
+   * Sets the position for listing accounts.
    */
-  cursor?: Prisma.AccountWhereUniqueInput
+  cursor?: Prisma.accountWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Accounts from the position of the cursor.
+   * Take `±n` accounts from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Accounts.
+   * Skip the first `n` accounts.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Accounts.
+   * Filter by unique combinations of accounts.
    */
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
 }
 
 /**
- * Account create
+ * account create
  */
-export type AccountCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * The data needed to create a Account.
+   * The data needed to create a account.
    */
-  data: Prisma.XOR<Prisma.AccountCreateInput, Prisma.AccountUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.accountCreateInput, Prisma.accountUncheckedCreateInput>
 }
 
 /**
- * Account createMany
+ * account createMany
  */
-export type AccountCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Accounts.
+   * The data used to create many accounts.
    */
-  data: Prisma.AccountCreateManyInput | Prisma.AccountCreateManyInput[]
+  data: Prisma.accountCreateManyInput | Prisma.accountCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Account update
+ * account update
  */
-export type AccountUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * The data needed to update a Account.
+   * The data needed to update a account.
    */
-  data: Prisma.XOR<Prisma.AccountUpdateInput, Prisma.AccountUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.accountUpdateInput, Prisma.accountUncheckedUpdateInput>
   /**
-   * Choose, which Account to update.
+   * Choose, which account to update.
    */
-  where: Prisma.AccountWhereUniqueInput
+  where: Prisma.accountWhereUniqueInput
 }
 
 /**
- * Account updateMany
+ * account updateMany
  */
-export type AccountUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Accounts.
+   * The data used to update accounts.
    */
-  data: Prisma.XOR<Prisma.AccountUpdateManyMutationInput, Prisma.AccountUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.accountUpdateManyMutationInput, Prisma.accountUncheckedUpdateManyInput>
   /**
-   * Filter which Accounts to update
+   * Filter which accounts to update
    */
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
   /**
-   * Limit how many Accounts to update.
+   * Limit how many accounts to update.
    */
   limit?: number
 }
 
 /**
- * Account upsert
+ * account upsert
  */
-export type AccountUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * The filter to search for the Account to update in case it exists.
+   * The filter to search for the account to update in case it exists.
    */
-  where: Prisma.AccountWhereUniqueInput
+  where: Prisma.accountWhereUniqueInput
   /**
-   * In case the Account found by the `where` argument doesn't exist, create a new Account with this data.
+   * In case the account found by the `where` argument doesn't exist, create a new account with this data.
    */
-  create: Prisma.XOR<Prisma.AccountCreateInput, Prisma.AccountUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.accountCreateInput, Prisma.accountUncheckedCreateInput>
   /**
-   * In case the Account was found with the provided `where` argument, update it with this data.
+   * In case the account was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.AccountUpdateInput, Prisma.AccountUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.accountUpdateInput, Prisma.accountUncheckedUpdateInput>
 }
 
 /**
- * Account delete
+ * account delete
  */
-export type AccountDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
   /**
-   * Filter which Account to delete.
+   * Filter which account to delete.
    */
-  where: Prisma.AccountWhereUniqueInput
+  where: Prisma.accountWhereUniqueInput
 }
 
 /**
- * Account deleteMany
+ * account deleteMany
  */
-export type AccountDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Accounts to delete
+   * Filter which accounts to delete
    */
-  where?: Prisma.AccountWhereInput
+  where?: Prisma.accountWhereInput
   /**
-   * Limit how many Accounts to delete.
+   * Limit how many accounts to delete.
    */
   limit?: number
 }
 
 /**
- * Account without action
+ * account without action
  */
-export type AccountDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type accountDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Account
+   * Select specific fields to fetch from the account
    */
-  select?: Prisma.AccountSelect<ExtArgs> | null
+  select?: Prisma.accountSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Account
+   * Omit specific fields from the account
    */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
+  omit?: Prisma.accountOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccountInclude<ExtArgs> | null
+  include?: Prisma.accountInclude<ExtArgs> | null
 }

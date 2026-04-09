@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `Profile` model and its related types.
+ * This file exports the `profile` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model Profile
+ * Model profile
  * 
  */
-export type ProfileModel = runtime.Types.Result.DefaultSelection<Prisma.$ProfilePayload>
+export type profileModel = runtime.Types.Result.DefaultSelection<Prisma.$profilePayload>
 
 export type AggregateProfile = {
   _count: ProfileCountAggregateOutputType | null
@@ -375,37 +375,37 @@ export type ProfileCountAggregateInputType = {
 
 export type ProfileAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Profile to aggregate.
+   * Filter which profile to aggregate.
    */
-  where?: Prisma.ProfileWhereInput
+  where?: Prisma.profileWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Profiles to fetch.
+   * Determine the order of profiles to fetch.
    */
-  orderBy?: Prisma.ProfileOrderByWithRelationInput | Prisma.ProfileOrderByWithRelationInput[]
+  orderBy?: Prisma.profileOrderByWithRelationInput | Prisma.profileOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.ProfileWhereUniqueInput
+  cursor?: Prisma.profileWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Profiles from the position of the cursor.
+   * Take `±n` profiles from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Profiles.
+   * Skip the first `n` profiles.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Profiles
+   * Count returned profiles
   **/
   _count?: true | ProfileCountAggregateInputType
   /**
@@ -445,11 +445,11 @@ export type GetProfileAggregateType<T extends ProfileAggregateArgs> = {
 
 
 
-export type ProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProfileWhereInput
-  orderBy?: Prisma.ProfileOrderByWithAggregationInput | Prisma.ProfileOrderByWithAggregationInput[]
+export type profileGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.profileWhereInput
+  orderBy?: Prisma.profileOrderByWithAggregationInput | Prisma.profileOrderByWithAggregationInput[]
   by: Prisma.ProfileScalarFieldEnum[] | Prisma.ProfileScalarFieldEnum
-  having?: Prisma.ProfileScalarWhereWithAggregatesInput
+  having?: Prisma.profileScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: ProfileCountAggregateInputType | true
@@ -514,7 +514,7 @@ export type ProfileGroupByOutputType = {
   _max: ProfileMaxAggregateOutputType | null
 }
 
-export type GetProfileGroupByPayload<T extends ProfileGroupByArgs> = Prisma.PrismaPromise<
+export type GetProfileGroupByPayload<T extends profileGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProfileGroupByOutputType, T['by']> &
       {
@@ -529,61 +529,61 @@ export type GetProfileGroupByPayload<T extends ProfileGroupByArgs> = Prisma.Pris
 
 
 
-export type ProfileWhereInput = {
-  AND?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
-  OR?: Prisma.ProfileWhereInput[]
-  NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
-  id?: Prisma.StringFilter<"Profile"> | string
-  userId?: Prisma.StringFilter<"Profile"> | string
-  gender?: Prisma.EnumGenderNullableFilter<"Profile"> | $Enums.Gender | null
-  dob?: Prisma.DateTimeNullableFilter<"Profile"> | Date | string | null
-  height?: Prisma.IntNullableFilter<"Profile"> | number | null
-  weight?: Prisma.IntNullableFilter<"Profile"> | number | null
-  religion?: Prisma.StringNullableFilter<"Profile"> | string | null
-  caste?: Prisma.StringNullableFilter<"Profile"> | string | null
-  subCaste?: Prisma.StringNullableFilter<"Profile"> | string | null
-  sect?: Prisma.StringNullableFilter<"Profile"> | string | null
-  gotra?: Prisma.StringNullableFilter<"Profile"> | string | null
-  motherTongue?: Prisma.StringNullableFilter<"Profile"> | string | null
-  education?: Prisma.StringNullableFilter<"Profile"> | string | null
-  profession?: Prisma.StringNullableFilter<"Profile"> | string | null
-  income?: Prisma.StringNullableFilter<"Profile"> | string | null
-  country?: Prisma.StringNullableFilter<"Profile"> | string | null
-  state?: Prisma.StringNullableFilter<"Profile"> | string | null
-  city?: Prisma.StringNullableFilter<"Profile"> | string | null
-  aboutMe?: Prisma.StringNullableFilter<"Profile"> | string | null
-  maritalStatus?: Prisma.EnumMaritalStatusFilter<"Profile"> | $Enums.MaritalStatus
-  smoking?: Prisma.EnumLifestyleFilter<"Profile"> | $Enums.Lifestyle
-  drinking?: Prisma.EnumLifestyleFilter<"Profile"> | $Enums.Lifestyle
-  diet?: Prisma.StringNullableFilter<"Profile"> | string | null
-  complexion?: Prisma.StringNullableFilter<"Profile"> | string | null
-  bodyType?: Prisma.StringNullableFilter<"Profile"> | string | null
-  fatherOccupation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  motherOccupation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  siblings?: Prisma.IntNullableFilter<"Profile"> | number | null
-  familyType?: Prisma.StringNullableFilter<"Profile"> | string | null
-  familyStatus?: Prisma.StringNullableFilter<"Profile"> | string | null
-  partnerAgeMin?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerAgeMax?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerHeightMin?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerHeightMax?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerReligion?: Prisma.StringNullableFilter<"Profile"> | string | null
-  partnerEducation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  partnerLocation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  horoscopeSign?: Prisma.StringNullableFilter<"Profile"> | string | null
-  nakshatra?: Prisma.StringNullableFilter<"Profile"> | string | null
-  manglik?: Prisma.StringNullableFilter<"Profile"> | string | null
-  kundliMatch?: Prisma.StringNullableFilter<"Profile"> | string | null
-  amritdhari?: Prisma.StringNullableFilter<"Profile"> | string | null
-  hidePhone?: Prisma.BoolFilter<"Profile"> | boolean
-  hidePhoto?: Prisma.BoolFilter<"Profile"> | boolean
-  profileComplete?: Prisma.IntFilter<"Profile"> | number
-  createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+export type profileWhereInput = {
+  AND?: Prisma.profileWhereInput | Prisma.profileWhereInput[]
+  OR?: Prisma.profileWhereInput[]
+  NOT?: Prisma.profileWhereInput | Prisma.profileWhereInput[]
+  id?: Prisma.StringFilter<"profile"> | string
+  userId?: Prisma.StringFilter<"profile"> | string
+  gender?: Prisma.EnumGenderNullableFilter<"profile"> | $Enums.Gender | null
+  dob?: Prisma.DateTimeNullableFilter<"profile"> | Date | string | null
+  height?: Prisma.IntNullableFilter<"profile"> | number | null
+  weight?: Prisma.IntNullableFilter<"profile"> | number | null
+  religion?: Prisma.StringNullableFilter<"profile"> | string | null
+  caste?: Prisma.StringNullableFilter<"profile"> | string | null
+  subCaste?: Prisma.StringNullableFilter<"profile"> | string | null
+  sect?: Prisma.StringNullableFilter<"profile"> | string | null
+  gotra?: Prisma.StringNullableFilter<"profile"> | string | null
+  motherTongue?: Prisma.StringNullableFilter<"profile"> | string | null
+  education?: Prisma.StringNullableFilter<"profile"> | string | null
+  profession?: Prisma.StringNullableFilter<"profile"> | string | null
+  income?: Prisma.StringNullableFilter<"profile"> | string | null
+  country?: Prisma.StringNullableFilter<"profile"> | string | null
+  state?: Prisma.StringNullableFilter<"profile"> | string | null
+  city?: Prisma.StringNullableFilter<"profile"> | string | null
+  aboutMe?: Prisma.StringNullableFilter<"profile"> | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFilter<"profile"> | $Enums.MaritalStatus
+  smoking?: Prisma.EnumLifestyleFilter<"profile"> | $Enums.Lifestyle
+  drinking?: Prisma.EnumLifestyleFilter<"profile"> | $Enums.Lifestyle
+  diet?: Prisma.StringNullableFilter<"profile"> | string | null
+  complexion?: Prisma.StringNullableFilter<"profile"> | string | null
+  bodyType?: Prisma.StringNullableFilter<"profile"> | string | null
+  fatherOccupation?: Prisma.StringNullableFilter<"profile"> | string | null
+  motherOccupation?: Prisma.StringNullableFilter<"profile"> | string | null
+  siblings?: Prisma.IntNullableFilter<"profile"> | number | null
+  familyType?: Prisma.StringNullableFilter<"profile"> | string | null
+  familyStatus?: Prisma.StringNullableFilter<"profile"> | string | null
+  partnerAgeMin?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerAgeMax?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerHeightMin?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerHeightMax?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerReligion?: Prisma.StringNullableFilter<"profile"> | string | null
+  partnerEducation?: Prisma.StringNullableFilter<"profile"> | string | null
+  partnerLocation?: Prisma.StringNullableFilter<"profile"> | string | null
+  horoscopeSign?: Prisma.StringNullableFilter<"profile"> | string | null
+  nakshatra?: Prisma.StringNullableFilter<"profile"> | string | null
+  manglik?: Prisma.StringNullableFilter<"profile"> | string | null
+  kundliMatch?: Prisma.StringNullableFilter<"profile"> | string | null
+  amritdhari?: Prisma.StringNullableFilter<"profile"> | string | null
+  hidePhone?: Prisma.BoolFilter<"profile"> | boolean
+  hidePhoto?: Prisma.BoolFilter<"profile"> | boolean
+  profileComplete?: Prisma.IntFilter<"profile"> | number
+  createdAt?: Prisma.DateTimeFilter<"profile"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"profile"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }
 
-export type ProfileOrderByWithRelationInput = {
+export type profileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -631,65 +631,65 @@ export type ProfileOrderByWithRelationInput = {
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.ProfileOrderByRelevanceInput
+  user?: Prisma.userOrderByWithRelationInput
+  _relevance?: Prisma.profileOrderByRelevanceInput
 }
 
-export type ProfileWhereUniqueInput = Prisma.AtLeast<{
+export type profileWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
-  AND?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
-  OR?: Prisma.ProfileWhereInput[]
-  NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
-  gender?: Prisma.EnumGenderNullableFilter<"Profile"> | $Enums.Gender | null
-  dob?: Prisma.DateTimeNullableFilter<"Profile"> | Date | string | null
-  height?: Prisma.IntNullableFilter<"Profile"> | number | null
-  weight?: Prisma.IntNullableFilter<"Profile"> | number | null
-  religion?: Prisma.StringNullableFilter<"Profile"> | string | null
-  caste?: Prisma.StringNullableFilter<"Profile"> | string | null
-  subCaste?: Prisma.StringNullableFilter<"Profile"> | string | null
-  sect?: Prisma.StringNullableFilter<"Profile"> | string | null
-  gotra?: Prisma.StringNullableFilter<"Profile"> | string | null
-  motherTongue?: Prisma.StringNullableFilter<"Profile"> | string | null
-  education?: Prisma.StringNullableFilter<"Profile"> | string | null
-  profession?: Prisma.StringNullableFilter<"Profile"> | string | null
-  income?: Prisma.StringNullableFilter<"Profile"> | string | null
-  country?: Prisma.StringNullableFilter<"Profile"> | string | null
-  state?: Prisma.StringNullableFilter<"Profile"> | string | null
-  city?: Prisma.StringNullableFilter<"Profile"> | string | null
-  aboutMe?: Prisma.StringNullableFilter<"Profile"> | string | null
-  maritalStatus?: Prisma.EnumMaritalStatusFilter<"Profile"> | $Enums.MaritalStatus
-  smoking?: Prisma.EnumLifestyleFilter<"Profile"> | $Enums.Lifestyle
-  drinking?: Prisma.EnumLifestyleFilter<"Profile"> | $Enums.Lifestyle
-  diet?: Prisma.StringNullableFilter<"Profile"> | string | null
-  complexion?: Prisma.StringNullableFilter<"Profile"> | string | null
-  bodyType?: Prisma.StringNullableFilter<"Profile"> | string | null
-  fatherOccupation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  motherOccupation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  siblings?: Prisma.IntNullableFilter<"Profile"> | number | null
-  familyType?: Prisma.StringNullableFilter<"Profile"> | string | null
-  familyStatus?: Prisma.StringNullableFilter<"Profile"> | string | null
-  partnerAgeMin?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerAgeMax?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerHeightMin?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerHeightMax?: Prisma.IntNullableFilter<"Profile"> | number | null
-  partnerReligion?: Prisma.StringNullableFilter<"Profile"> | string | null
-  partnerEducation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  partnerLocation?: Prisma.StringNullableFilter<"Profile"> | string | null
-  horoscopeSign?: Prisma.StringNullableFilter<"Profile"> | string | null
-  nakshatra?: Prisma.StringNullableFilter<"Profile"> | string | null
-  manglik?: Prisma.StringNullableFilter<"Profile"> | string | null
-  kundliMatch?: Prisma.StringNullableFilter<"Profile"> | string | null
-  amritdhari?: Prisma.StringNullableFilter<"Profile"> | string | null
-  hidePhone?: Prisma.BoolFilter<"Profile"> | boolean
-  hidePhoto?: Prisma.BoolFilter<"Profile"> | boolean
-  profileComplete?: Prisma.IntFilter<"Profile"> | number
-  createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  AND?: Prisma.profileWhereInput | Prisma.profileWhereInput[]
+  OR?: Prisma.profileWhereInput[]
+  NOT?: Prisma.profileWhereInput | Prisma.profileWhereInput[]
+  gender?: Prisma.EnumGenderNullableFilter<"profile"> | $Enums.Gender | null
+  dob?: Prisma.DateTimeNullableFilter<"profile"> | Date | string | null
+  height?: Prisma.IntNullableFilter<"profile"> | number | null
+  weight?: Prisma.IntNullableFilter<"profile"> | number | null
+  religion?: Prisma.StringNullableFilter<"profile"> | string | null
+  caste?: Prisma.StringNullableFilter<"profile"> | string | null
+  subCaste?: Prisma.StringNullableFilter<"profile"> | string | null
+  sect?: Prisma.StringNullableFilter<"profile"> | string | null
+  gotra?: Prisma.StringNullableFilter<"profile"> | string | null
+  motherTongue?: Prisma.StringNullableFilter<"profile"> | string | null
+  education?: Prisma.StringNullableFilter<"profile"> | string | null
+  profession?: Prisma.StringNullableFilter<"profile"> | string | null
+  income?: Prisma.StringNullableFilter<"profile"> | string | null
+  country?: Prisma.StringNullableFilter<"profile"> | string | null
+  state?: Prisma.StringNullableFilter<"profile"> | string | null
+  city?: Prisma.StringNullableFilter<"profile"> | string | null
+  aboutMe?: Prisma.StringNullableFilter<"profile"> | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFilter<"profile"> | $Enums.MaritalStatus
+  smoking?: Prisma.EnumLifestyleFilter<"profile"> | $Enums.Lifestyle
+  drinking?: Prisma.EnumLifestyleFilter<"profile"> | $Enums.Lifestyle
+  diet?: Prisma.StringNullableFilter<"profile"> | string | null
+  complexion?: Prisma.StringNullableFilter<"profile"> | string | null
+  bodyType?: Prisma.StringNullableFilter<"profile"> | string | null
+  fatherOccupation?: Prisma.StringNullableFilter<"profile"> | string | null
+  motherOccupation?: Prisma.StringNullableFilter<"profile"> | string | null
+  siblings?: Prisma.IntNullableFilter<"profile"> | number | null
+  familyType?: Prisma.StringNullableFilter<"profile"> | string | null
+  familyStatus?: Prisma.StringNullableFilter<"profile"> | string | null
+  partnerAgeMin?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerAgeMax?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerHeightMin?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerHeightMax?: Prisma.IntNullableFilter<"profile"> | number | null
+  partnerReligion?: Prisma.StringNullableFilter<"profile"> | string | null
+  partnerEducation?: Prisma.StringNullableFilter<"profile"> | string | null
+  partnerLocation?: Prisma.StringNullableFilter<"profile"> | string | null
+  horoscopeSign?: Prisma.StringNullableFilter<"profile"> | string | null
+  nakshatra?: Prisma.StringNullableFilter<"profile"> | string | null
+  manglik?: Prisma.StringNullableFilter<"profile"> | string | null
+  kundliMatch?: Prisma.StringNullableFilter<"profile"> | string | null
+  amritdhari?: Prisma.StringNullableFilter<"profile"> | string | null
+  hidePhone?: Prisma.BoolFilter<"profile"> | boolean
+  hidePhoto?: Prisma.BoolFilter<"profile"> | boolean
+  profileComplete?: Prisma.IntFilter<"profile"> | number
+  createdAt?: Prisma.DateTimeFilter<"profile"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"profile"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
 }, "id" | "userId">
 
-export type ProfileOrderByWithAggregationInput = {
+export type profileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -737,67 +737,67 @@ export type ProfileOrderByWithAggregationInput = {
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  _count?: Prisma.ProfileCountOrderByAggregateInput
-  _avg?: Prisma.ProfileAvgOrderByAggregateInput
-  _max?: Prisma.ProfileMaxOrderByAggregateInput
-  _min?: Prisma.ProfileMinOrderByAggregateInput
-  _sum?: Prisma.ProfileSumOrderByAggregateInput
+  _count?: Prisma.profileCountOrderByAggregateInput
+  _avg?: Prisma.profileAvgOrderByAggregateInput
+  _max?: Prisma.profileMaxOrderByAggregateInput
+  _min?: Prisma.profileMinOrderByAggregateInput
+  _sum?: Prisma.profileSumOrderByAggregateInput
 }
 
-export type ProfileScalarWhereWithAggregatesInput = {
-  AND?: Prisma.ProfileScalarWhereWithAggregatesInput | Prisma.ProfileScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ProfileScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.ProfileScalarWhereWithAggregatesInput | Prisma.ProfileScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Profile"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"Profile"> | string
-  gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"Profile"> | $Enums.Gender | null
-  dob?: Prisma.DateTimeNullableWithAggregatesFilter<"Profile"> | Date | string | null
-  height?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  weight?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  religion?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  caste?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  subCaste?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  sect?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  gotra?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  motherTongue?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  education?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  profession?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  income?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  country?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  state?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  city?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  aboutMe?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  maritalStatus?: Prisma.EnumMaritalStatusWithAggregatesFilter<"Profile"> | $Enums.MaritalStatus
-  smoking?: Prisma.EnumLifestyleWithAggregatesFilter<"Profile"> | $Enums.Lifestyle
-  drinking?: Prisma.EnumLifestyleWithAggregatesFilter<"Profile"> | $Enums.Lifestyle
-  diet?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  complexion?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  bodyType?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  fatherOccupation?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  motherOccupation?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  siblings?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  familyType?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  familyStatus?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  partnerAgeMin?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  partnerAgeMax?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  partnerHeightMin?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  partnerHeightMax?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
-  partnerReligion?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  partnerEducation?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  partnerLocation?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  horoscopeSign?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  nakshatra?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  manglik?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  kundliMatch?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  amritdhari?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
-  hidePhone?: Prisma.BoolWithAggregatesFilter<"Profile"> | boolean
-  hidePhoto?: Prisma.BoolWithAggregatesFilter<"Profile"> | boolean
-  profileComplete?: Prisma.IntWithAggregatesFilter<"Profile"> | number
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
+export type profileScalarWhereWithAggregatesInput = {
+  AND?: Prisma.profileScalarWhereWithAggregatesInput | Prisma.profileScalarWhereWithAggregatesInput[]
+  OR?: Prisma.profileScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.profileScalarWhereWithAggregatesInput | Prisma.profileScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"profile"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"profile"> | string
+  gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"profile"> | $Enums.Gender | null
+  dob?: Prisma.DateTimeNullableWithAggregatesFilter<"profile"> | Date | string | null
+  height?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  weight?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  religion?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  caste?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  subCaste?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  sect?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  gotra?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  motherTongue?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  education?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  profession?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  income?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  country?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  state?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  city?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  aboutMe?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusWithAggregatesFilter<"profile"> | $Enums.MaritalStatus
+  smoking?: Prisma.EnumLifestyleWithAggregatesFilter<"profile"> | $Enums.Lifestyle
+  drinking?: Prisma.EnumLifestyleWithAggregatesFilter<"profile"> | $Enums.Lifestyle
+  diet?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  complexion?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  bodyType?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  fatherOccupation?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  motherOccupation?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  siblings?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  familyType?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  familyStatus?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  partnerAgeMin?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  partnerAgeMax?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  partnerHeightMin?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  partnerHeightMax?: Prisma.IntNullableWithAggregatesFilter<"profile"> | number | null
+  partnerReligion?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  partnerEducation?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  partnerLocation?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  horoscopeSign?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  nakshatra?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  manglik?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  kundliMatch?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  amritdhari?: Prisma.StringNullableWithAggregatesFilter<"profile"> | string | null
+  hidePhone?: Prisma.BoolWithAggregatesFilter<"profile"> | boolean
+  hidePhoto?: Prisma.BoolWithAggregatesFilter<"profile"> | boolean
+  profileComplete?: Prisma.IntWithAggregatesFilter<"profile"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"profile"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"profile"> | Date | string
 }
 
-export type ProfileCreateInput = {
+export type profileCreateInput = {
   id?: string
   gender?: $Enums.Gender | null
   dob?: Date | string | null
@@ -844,10 +844,10 @@ export type ProfileCreateInput = {
   profileComplete?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutProfileInput
+  user: Prisma.userCreateNestedOneWithoutProfileInput
 }
 
-export type ProfileUncheckedCreateInput = {
+export type profileUncheckedCreateInput = {
   id?: string
   userId: string
   gender?: $Enums.Gender | null
@@ -897,7 +897,7 @@ export type ProfileUncheckedCreateInput = {
   updatedAt?: Date | string
 }
 
-export type ProfileUpdateInput = {
+export type profileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -944,10 +944,10 @@ export type ProfileUpdateInput = {
   profileComplete?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
+  user?: Prisma.userUpdateOneRequiredWithoutProfileNestedInput
 }
 
-export type ProfileUncheckedUpdateInput = {
+export type profileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
@@ -997,7 +997,7 @@ export type ProfileUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileCreateManyInput = {
+export type profileCreateManyInput = {
   id?: string
   userId: string
   gender?: $Enums.Gender | null
@@ -1047,7 +1047,7 @@ export type ProfileCreateManyInput = {
   updatedAt?: Date | string
 }
 
-export type ProfileUpdateManyMutationInput = {
+export type profileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1096,7 +1096,7 @@ export type ProfileUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileUncheckedUpdateManyInput = {
+export type profileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
@@ -1147,17 +1147,17 @@ export type ProfileUncheckedUpdateManyInput = {
 }
 
 export type ProfileNullableScalarRelationFilter = {
-  is?: Prisma.ProfileWhereInput | null
-  isNot?: Prisma.ProfileWhereInput | null
+  is?: Prisma.profileWhereInput | null
+  isNot?: Prisma.profileWhereInput | null
 }
 
-export type ProfileOrderByRelevanceInput = {
-  fields: Prisma.ProfileOrderByRelevanceFieldEnum | Prisma.ProfileOrderByRelevanceFieldEnum[]
+export type profileOrderByRelevanceInput = {
+  fields: Prisma.profileOrderByRelevanceFieldEnum | Prisma.profileOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type ProfileCountOrderByAggregateInput = {
+export type profileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -1207,7 +1207,7 @@ export type ProfileCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type ProfileAvgOrderByAggregateInput = {
+export type profileAvgOrderByAggregateInput = {
   height?: Prisma.SortOrder
   weight?: Prisma.SortOrder
   siblings?: Prisma.SortOrder
@@ -1218,7 +1218,7 @@ export type ProfileAvgOrderByAggregateInput = {
   profileComplete?: Prisma.SortOrder
 }
 
-export type ProfileMaxOrderByAggregateInput = {
+export type profileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -1268,7 +1268,7 @@ export type ProfileMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type ProfileMinOrderByAggregateInput = {
+export type profileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -1318,7 +1318,7 @@ export type ProfileMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type ProfileSumOrderByAggregateInput = {
+export type profileSumOrderByAggregateInput = {
   height?: Prisma.SortOrder
   weight?: Prisma.SortOrder
   siblings?: Prisma.SortOrder
@@ -1329,36 +1329,36 @@ export type ProfileSumOrderByAggregateInput = {
   profileComplete?: Prisma.SortOrder
 }
 
-export type ProfileCreateNestedOneWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ProfileCreateWithoutUserInput, Prisma.ProfileUncheckedCreateWithoutUserInput>
-  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutUserInput
-  connect?: Prisma.ProfileWhereUniqueInput
+export type profileCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.profileCreateWithoutUserInput, Prisma.profileUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.profileCreateOrConnectWithoutUserInput
+  connect?: Prisma.profileWhereUniqueInput
 }
 
-export type ProfileUncheckedCreateNestedOneWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ProfileCreateWithoutUserInput, Prisma.ProfileUncheckedCreateWithoutUserInput>
-  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutUserInput
-  connect?: Prisma.ProfileWhereUniqueInput
+export type profileUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.profileCreateWithoutUserInput, Prisma.profileUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.profileCreateOrConnectWithoutUserInput
+  connect?: Prisma.profileWhereUniqueInput
 }
 
-export type ProfileUpdateOneWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ProfileCreateWithoutUserInput, Prisma.ProfileUncheckedCreateWithoutUserInput>
-  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutUserInput
-  upsert?: Prisma.ProfileUpsertWithoutUserInput
-  disconnect?: Prisma.ProfileWhereInput | boolean
-  delete?: Prisma.ProfileWhereInput | boolean
-  connect?: Prisma.ProfileWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutUserInput, Prisma.ProfileUpdateWithoutUserInput>, Prisma.ProfileUncheckedUpdateWithoutUserInput>
+export type profileUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.profileCreateWithoutUserInput, Prisma.profileUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.profileCreateOrConnectWithoutUserInput
+  upsert?: Prisma.profileUpsertWithoutUserInput
+  disconnect?: Prisma.profileWhereInput | boolean
+  delete?: Prisma.profileWhereInput | boolean
+  connect?: Prisma.profileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.profileUpdateToOneWithWhereWithoutUserInput, Prisma.profileUpdateWithoutUserInput>, Prisma.profileUncheckedUpdateWithoutUserInput>
 }
 
-export type ProfileUncheckedUpdateOneWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ProfileCreateWithoutUserInput, Prisma.ProfileUncheckedCreateWithoutUserInput>
-  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutUserInput
-  upsert?: Prisma.ProfileUpsertWithoutUserInput
-  disconnect?: Prisma.ProfileWhereInput | boolean
-  delete?: Prisma.ProfileWhereInput | boolean
-  connect?: Prisma.ProfileWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutUserInput, Prisma.ProfileUpdateWithoutUserInput>, Prisma.ProfileUncheckedUpdateWithoutUserInput>
+export type profileUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.profileCreateWithoutUserInput, Prisma.profileUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.profileCreateOrConnectWithoutUserInput
+  upsert?: Prisma.profileUpsertWithoutUserInput
+  disconnect?: Prisma.profileWhereInput | boolean
+  delete?: Prisma.profileWhereInput | boolean
+  connect?: Prisma.profileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.profileUpdateToOneWithWhereWithoutUserInput, Prisma.profileUpdateWithoutUserInput>, Prisma.profileUncheckedUpdateWithoutUserInput>
 }
 
 export type NullableEnumGenderFieldUpdateOperationsInput = {
@@ -1381,7 +1381,7 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type ProfileCreateWithoutUserInput = {
+export type profileCreateWithoutUserInput = {
   id?: string
   gender?: $Enums.Gender | null
   dob?: Date | string | null
@@ -1430,7 +1430,7 @@ export type ProfileCreateWithoutUserInput = {
   updatedAt?: Date | string
 }
 
-export type ProfileUncheckedCreateWithoutUserInput = {
+export type profileUncheckedCreateWithoutUserInput = {
   id?: string
   gender?: $Enums.Gender | null
   dob?: Date | string | null
@@ -1479,23 +1479,23 @@ export type ProfileUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
 }
 
-export type ProfileCreateOrConnectWithoutUserInput = {
-  where: Prisma.ProfileWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProfileCreateWithoutUserInput, Prisma.ProfileUncheckedCreateWithoutUserInput>
+export type profileCreateOrConnectWithoutUserInput = {
+  where: Prisma.profileWhereUniqueInput
+  create: Prisma.XOR<Prisma.profileCreateWithoutUserInput, Prisma.profileUncheckedCreateWithoutUserInput>
 }
 
-export type ProfileUpsertWithoutUserInput = {
-  update: Prisma.XOR<Prisma.ProfileUpdateWithoutUserInput, Prisma.ProfileUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.ProfileCreateWithoutUserInput, Prisma.ProfileUncheckedCreateWithoutUserInput>
-  where?: Prisma.ProfileWhereInput
+export type profileUpsertWithoutUserInput = {
+  update: Prisma.XOR<Prisma.profileUpdateWithoutUserInput, Prisma.profileUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.profileCreateWithoutUserInput, Prisma.profileUncheckedCreateWithoutUserInput>
+  where?: Prisma.profileWhereInput
 }
 
-export type ProfileUpdateToOneWithWhereWithoutUserInput = {
-  where?: Prisma.ProfileWhereInput
-  data: Prisma.XOR<Prisma.ProfileUpdateWithoutUserInput, Prisma.ProfileUncheckedUpdateWithoutUserInput>
+export type profileUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.profileWhereInput
+  data: Prisma.XOR<Prisma.profileUpdateWithoutUserInput, Prisma.profileUncheckedUpdateWithoutUserInput>
 }
 
-export type ProfileUpdateWithoutUserInput = {
+export type profileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1544,7 +1544,7 @@ export type ProfileUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileUncheckedUpdateWithoutUserInput = {
+export type profileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1595,7 +1595,7 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
 
 
 
-export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type profileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   gender?: boolean
@@ -1643,12 +1643,12 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   profileComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
 
 
-export type ProfileSelectScalar = {
+export type profileSelectScalar = {
   id?: boolean
   userId?: boolean
   gender?: boolean
@@ -1698,15 +1698,15 @@ export type ProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "gender" | "dob" | "height" | "weight" | "religion" | "caste" | "subCaste" | "sect" | "gotra" | "motherTongue" | "education" | "profession" | "income" | "country" | "state" | "city" | "aboutMe" | "maritalStatus" | "smoking" | "drinking" | "diet" | "complexion" | "bodyType" | "fatherOccupation" | "motherOccupation" | "siblings" | "familyType" | "familyStatus" | "partnerAgeMin" | "partnerAgeMax" | "partnerHeightMin" | "partnerHeightMax" | "partnerReligion" | "partnerEducation" | "partnerLocation" | "horoscopeSign" | "nakshatra" | "manglik" | "kundliMatch" | "amritdhari" | "hidePhone" | "hidePhoto" | "profileComplete" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
-export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+export type profileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "gender" | "dob" | "height" | "weight" | "religion" | "caste" | "subCaste" | "sect" | "gotra" | "motherTongue" | "education" | "profession" | "income" | "country" | "state" | "city" | "aboutMe" | "maritalStatus" | "smoking" | "drinking" | "diet" | "complexion" | "bodyType" | "fatherOccupation" | "motherOccupation" | "siblings" | "familyType" | "familyStatus" | "partnerAgeMin" | "partnerAgeMax" | "partnerHeightMin" | "partnerHeightMax" | "partnerReligion" | "partnerEducation" | "partnerLocation" | "horoscopeSign" | "nakshatra" | "manglik" | "kundliMatch" | "amritdhari" | "hidePhone" | "hidePhoto" | "profileComplete" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type profileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
 
-export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "Profile"
+export type $profilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "profile"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$userPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1760,18 +1760,18 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   composites: {}
 }
 
-export type ProfileGetPayload<S extends boolean | null | undefined | ProfileDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ProfilePayload, S>
+export type profileGetPayload<S extends boolean | null | undefined | profileDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$profilePayload, S>
 
-export type ProfileCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<ProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type profileCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<profileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: ProfileCountAggregateInputType | true
   }
 
-export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Profile'], meta: { name: 'Profile' } }
+export interface profileDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['profile'], meta: { name: 'profile' } }
   /**
    * Find zero or one Profile that matches the filter.
-   * @param {ProfileFindUniqueArgs} args - Arguments to find a Profile
+   * @param {profileFindUniqueArgs} args - Arguments to find a Profile
    * @example
    * // Get one Profile
    * const profile = await prisma.profile.findUnique({
@@ -1780,12 +1780,12 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findUnique<T extends ProfileFindUniqueArgs>(args: Prisma.SelectSubset<T, ProfileFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends profileFindUniqueArgs>(args: Prisma.SelectSubset<T, profileFindUniqueArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Profile that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {ProfileFindUniqueOrThrowArgs} args - Arguments to find a Profile
+   * @param {profileFindUniqueOrThrowArgs} args - Arguments to find a Profile
    * @example
    * // Get one Profile
    * const profile = await prisma.profile.findUniqueOrThrow({
@@ -1794,13 +1794,13 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findUniqueOrThrow<T extends ProfileFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends profileFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, profileFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Profile that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileFindFirstArgs} args - Arguments to find a Profile
+   * @param {profileFindFirstArgs} args - Arguments to find a Profile
    * @example
    * // Get one Profile
    * const profile = await prisma.profile.findFirst({
@@ -1809,14 +1809,14 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findFirst<T extends ProfileFindFirstArgs>(args?: Prisma.SelectSubset<T, ProfileFindFirstArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends profileFindFirstArgs>(args?: Prisma.SelectSubset<T, profileFindFirstArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Profile that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileFindFirstOrThrowArgs} args - Arguments to find a Profile
+   * @param {profileFindFirstOrThrowArgs} args - Arguments to find a Profile
    * @example
    * // Get one Profile
    * const profile = await prisma.profile.findFirstOrThrow({
@@ -1825,13 +1825,13 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findFirstOrThrow<T extends ProfileFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends profileFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, profileFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Profiles that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {profileFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Profiles
    * const profiles = await prisma.profile.findMany()
@@ -1843,11 +1843,11 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * const profileWithIdOnly = await prisma.profile.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends ProfileFindManyArgs>(args?: Prisma.SelectSubset<T, ProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends profileFindManyArgs>(args?: Prisma.SelectSubset<T, profileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Profile.
-   * @param {ProfileCreateArgs} args - Arguments to create a Profile.
+   * @param {profileCreateArgs} args - Arguments to create a Profile.
    * @example
    * // Create one Profile
    * const Profile = await prisma.profile.create({
@@ -1857,11 +1857,11 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  create<T extends ProfileCreateArgs>(args: Prisma.SelectSubset<T, ProfileCreateArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends profileCreateArgs>(args: Prisma.SelectSubset<T, profileCreateArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Profiles.
-   * @param {ProfileCreateManyArgs} args - Arguments to create many Profiles.
+   * @param {profileCreateManyArgs} args - Arguments to create many Profiles.
    * @example
    * // Create many Profiles
    * const profile = await prisma.profile.createMany({
@@ -1871,11 +1871,11 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    *     
    */
-  createMany<T extends ProfileCreateManyArgs>(args?: Prisma.SelectSubset<T, ProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends profileCreateManyArgs>(args?: Prisma.SelectSubset<T, profileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a Profile.
-   * @param {ProfileDeleteArgs} args - Arguments to delete one Profile.
+   * @param {profileDeleteArgs} args - Arguments to delete one Profile.
    * @example
    * // Delete one Profile
    * const Profile = await prisma.profile.delete({
@@ -1885,11 +1885,11 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  delete<T extends ProfileDeleteArgs>(args: Prisma.SelectSubset<T, ProfileDeleteArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends profileDeleteArgs>(args: Prisma.SelectSubset<T, profileDeleteArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Profile.
-   * @param {ProfileUpdateArgs} args - Arguments to update one Profile.
+   * @param {profileUpdateArgs} args - Arguments to update one Profile.
    * @example
    * // Update one Profile
    * const profile = await prisma.profile.update({
@@ -1902,11 +1902,11 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  update<T extends ProfileUpdateArgs>(args: Prisma.SelectSubset<T, ProfileUpdateArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends profileUpdateArgs>(args: Prisma.SelectSubset<T, profileUpdateArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Profiles.
-   * @param {ProfileDeleteManyArgs} args - Arguments to filter Profiles to delete.
+   * @param {profileDeleteManyArgs} args - Arguments to filter Profiles to delete.
    * @example
    * // Delete a few Profiles
    * const { count } = await prisma.profile.deleteMany({
@@ -1916,13 +1916,13 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  deleteMany<T extends ProfileDeleteManyArgs>(args?: Prisma.SelectSubset<T, ProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends profileDeleteManyArgs>(args?: Prisma.SelectSubset<T, profileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Profiles.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {profileUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Profiles
    * const profile = await prisma.profile.updateMany({
@@ -1935,11 +1935,11 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  updateMany<T extends ProfileUpdateManyArgs>(args: Prisma.SelectSubset<T, ProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends profileUpdateManyArgs>(args: Prisma.SelectSubset<T, profileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one Profile.
-   * @param {ProfileUpsertArgs} args - Arguments to update or create a Profile.
+   * @param {profileUpsertArgs} args - Arguments to update or create a Profile.
    * @example
    * // Update or create a Profile
    * const profile = await prisma.profile.upsert({
@@ -1954,14 +1954,14 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  upsert<T extends ProfileUpsertArgs>(args: Prisma.SelectSubset<T, ProfileUpsertArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends profileUpsertArgs>(args: Prisma.SelectSubset<T, profileUpsertArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Profiles.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileCountArgs} args - Arguments to filter Profiles to count.
+   * @param {profileCountArgs} args - Arguments to filter Profiles to count.
    * @example
    * // Count the number of Profiles
    * const count = await prisma.profile.count({
@@ -1970,8 +1970,8 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
   **/
-  count<T extends ProfileCountArgs>(
-    args?: Prisma.Subset<T, ProfileCountArgs>,
+  count<T extends profileCountArgs>(
+    args?: Prisma.Subset<T, profileCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -2010,7 +2010,7 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * Group by Profile.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileGroupByArgs} args - Group by arguments.
+   * @param {profileGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -2025,14 +2025,14 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
   **/
   groupBy<
-    T extends ProfileGroupByArgs,
+    T extends profileGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ProfileGroupByArgs['orderBy'] }
-      : { orderBy?: ProfileGroupByArgs['orderBy'] },
+      ? { orderBy: profileGroupByArgs['orderBy'] }
+      : { orderBy?: profileGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -2081,22 +2081,22 @@ export interface ProfileDelegate<ExtArgs extends runtime.Types.Extensions.Intern
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, ProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, profileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the Profile model
+ * Fields of the profile model
  */
-readonly fields: ProfileFieldRefs;
+readonly fields: profileFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for Profile.
+ * The delegate class that acts as a "Promise-like" for profile.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__profileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.userDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.userDefaultArgs<ExtArgs>>): Prisma.Prisma__userClient<runtime.Types.Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2123,417 +2123,417 @@ export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.
 
 
 /**
- * Fields of the Profile model
+ * Fields of the profile model
  */
-export interface ProfileFieldRefs {
-  readonly id: Prisma.FieldRef<"Profile", 'String'>
-  readonly userId: Prisma.FieldRef<"Profile", 'String'>
-  readonly gender: Prisma.FieldRef<"Profile", 'Gender'>
-  readonly dob: Prisma.FieldRef<"Profile", 'DateTime'>
-  readonly height: Prisma.FieldRef<"Profile", 'Int'>
-  readonly weight: Prisma.FieldRef<"Profile", 'Int'>
-  readonly religion: Prisma.FieldRef<"Profile", 'String'>
-  readonly caste: Prisma.FieldRef<"Profile", 'String'>
-  readonly subCaste: Prisma.FieldRef<"Profile", 'String'>
-  readonly sect: Prisma.FieldRef<"Profile", 'String'>
-  readonly gotra: Prisma.FieldRef<"Profile", 'String'>
-  readonly motherTongue: Prisma.FieldRef<"Profile", 'String'>
-  readonly education: Prisma.FieldRef<"Profile", 'String'>
-  readonly profession: Prisma.FieldRef<"Profile", 'String'>
-  readonly income: Prisma.FieldRef<"Profile", 'String'>
-  readonly country: Prisma.FieldRef<"Profile", 'String'>
-  readonly state: Prisma.FieldRef<"Profile", 'String'>
-  readonly city: Prisma.FieldRef<"Profile", 'String'>
-  readonly aboutMe: Prisma.FieldRef<"Profile", 'String'>
-  readonly maritalStatus: Prisma.FieldRef<"Profile", 'MaritalStatus'>
-  readonly smoking: Prisma.FieldRef<"Profile", 'Lifestyle'>
-  readonly drinking: Prisma.FieldRef<"Profile", 'Lifestyle'>
-  readonly diet: Prisma.FieldRef<"Profile", 'String'>
-  readonly complexion: Prisma.FieldRef<"Profile", 'String'>
-  readonly bodyType: Prisma.FieldRef<"Profile", 'String'>
-  readonly fatherOccupation: Prisma.FieldRef<"Profile", 'String'>
-  readonly motherOccupation: Prisma.FieldRef<"Profile", 'String'>
-  readonly siblings: Prisma.FieldRef<"Profile", 'Int'>
-  readonly familyType: Prisma.FieldRef<"Profile", 'String'>
-  readonly familyStatus: Prisma.FieldRef<"Profile", 'String'>
-  readonly partnerAgeMin: Prisma.FieldRef<"Profile", 'Int'>
-  readonly partnerAgeMax: Prisma.FieldRef<"Profile", 'Int'>
-  readonly partnerHeightMin: Prisma.FieldRef<"Profile", 'Int'>
-  readonly partnerHeightMax: Prisma.FieldRef<"Profile", 'Int'>
-  readonly partnerReligion: Prisma.FieldRef<"Profile", 'String'>
-  readonly partnerEducation: Prisma.FieldRef<"Profile", 'String'>
-  readonly partnerLocation: Prisma.FieldRef<"Profile", 'String'>
-  readonly horoscopeSign: Prisma.FieldRef<"Profile", 'String'>
-  readonly nakshatra: Prisma.FieldRef<"Profile", 'String'>
-  readonly manglik: Prisma.FieldRef<"Profile", 'String'>
-  readonly kundliMatch: Prisma.FieldRef<"Profile", 'String'>
-  readonly amritdhari: Prisma.FieldRef<"Profile", 'String'>
-  readonly hidePhone: Prisma.FieldRef<"Profile", 'Boolean'>
-  readonly hidePhoto: Prisma.FieldRef<"Profile", 'Boolean'>
-  readonly profileComplete: Prisma.FieldRef<"Profile", 'Int'>
-  readonly createdAt: Prisma.FieldRef<"Profile", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Profile", 'DateTime'>
+export interface profileFieldRefs {
+  readonly id: Prisma.FieldRef<"profile", 'String'>
+  readonly userId: Prisma.FieldRef<"profile", 'String'>
+  readonly gender: Prisma.FieldRef<"profile", 'Gender'>
+  readonly dob: Prisma.FieldRef<"profile", 'DateTime'>
+  readonly height: Prisma.FieldRef<"profile", 'Int'>
+  readonly weight: Prisma.FieldRef<"profile", 'Int'>
+  readonly religion: Prisma.FieldRef<"profile", 'String'>
+  readonly caste: Prisma.FieldRef<"profile", 'String'>
+  readonly subCaste: Prisma.FieldRef<"profile", 'String'>
+  readonly sect: Prisma.FieldRef<"profile", 'String'>
+  readonly gotra: Prisma.FieldRef<"profile", 'String'>
+  readonly motherTongue: Prisma.FieldRef<"profile", 'String'>
+  readonly education: Prisma.FieldRef<"profile", 'String'>
+  readonly profession: Prisma.FieldRef<"profile", 'String'>
+  readonly income: Prisma.FieldRef<"profile", 'String'>
+  readonly country: Prisma.FieldRef<"profile", 'String'>
+  readonly state: Prisma.FieldRef<"profile", 'String'>
+  readonly city: Prisma.FieldRef<"profile", 'String'>
+  readonly aboutMe: Prisma.FieldRef<"profile", 'String'>
+  readonly maritalStatus: Prisma.FieldRef<"profile", 'MaritalStatus'>
+  readonly smoking: Prisma.FieldRef<"profile", 'Lifestyle'>
+  readonly drinking: Prisma.FieldRef<"profile", 'Lifestyle'>
+  readonly diet: Prisma.FieldRef<"profile", 'String'>
+  readonly complexion: Prisma.FieldRef<"profile", 'String'>
+  readonly bodyType: Prisma.FieldRef<"profile", 'String'>
+  readonly fatherOccupation: Prisma.FieldRef<"profile", 'String'>
+  readonly motherOccupation: Prisma.FieldRef<"profile", 'String'>
+  readonly siblings: Prisma.FieldRef<"profile", 'Int'>
+  readonly familyType: Prisma.FieldRef<"profile", 'String'>
+  readonly familyStatus: Prisma.FieldRef<"profile", 'String'>
+  readonly partnerAgeMin: Prisma.FieldRef<"profile", 'Int'>
+  readonly partnerAgeMax: Prisma.FieldRef<"profile", 'Int'>
+  readonly partnerHeightMin: Prisma.FieldRef<"profile", 'Int'>
+  readonly partnerHeightMax: Prisma.FieldRef<"profile", 'Int'>
+  readonly partnerReligion: Prisma.FieldRef<"profile", 'String'>
+  readonly partnerEducation: Prisma.FieldRef<"profile", 'String'>
+  readonly partnerLocation: Prisma.FieldRef<"profile", 'String'>
+  readonly horoscopeSign: Prisma.FieldRef<"profile", 'String'>
+  readonly nakshatra: Prisma.FieldRef<"profile", 'String'>
+  readonly manglik: Prisma.FieldRef<"profile", 'String'>
+  readonly kundliMatch: Prisma.FieldRef<"profile", 'String'>
+  readonly amritdhari: Prisma.FieldRef<"profile", 'String'>
+  readonly hidePhone: Prisma.FieldRef<"profile", 'Boolean'>
+  readonly hidePhoto: Prisma.FieldRef<"profile", 'Boolean'>
+  readonly profileComplete: Prisma.FieldRef<"profile", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"profile", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"profile", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * Profile findUnique
+ * profile findUnique
  */
-export type ProfileFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * Filter, which Profile to fetch.
+   * Filter, which profile to fetch.
    */
-  where: Prisma.ProfileWhereUniqueInput
+  where: Prisma.profileWhereUniqueInput
 }
 
 /**
- * Profile findUniqueOrThrow
+ * profile findUniqueOrThrow
  */
-export type ProfileFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * Filter, which Profile to fetch.
+   * Filter, which profile to fetch.
    */
-  where: Prisma.ProfileWhereUniqueInput
+  where: Prisma.profileWhereUniqueInput
 }
 
 /**
- * Profile findFirst
+ * profile findFirst
  */
-export type ProfileFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * Filter, which Profile to fetch.
+   * Filter, which profile to fetch.
    */
-  where?: Prisma.ProfileWhereInput
+  where?: Prisma.profileWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Profiles to fetch.
+   * Determine the order of profiles to fetch.
    */
-  orderBy?: Prisma.ProfileOrderByWithRelationInput | Prisma.ProfileOrderByWithRelationInput[]
+  orderBy?: Prisma.profileOrderByWithRelationInput | Prisma.profileOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Profiles.
+   * Sets the position for searching for profiles.
    */
-  cursor?: Prisma.ProfileWhereUniqueInput
+  cursor?: Prisma.profileWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Profiles from the position of the cursor.
+   * Take `±n` profiles from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Profiles.
+   * Skip the first `n` profiles.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Profiles.
+   * Filter by unique combinations of profiles.
    */
   distinct?: Prisma.ProfileScalarFieldEnum | Prisma.ProfileScalarFieldEnum[]
 }
 
 /**
- * Profile findFirstOrThrow
+ * profile findFirstOrThrow
  */
-export type ProfileFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * Filter, which Profile to fetch.
+   * Filter, which profile to fetch.
    */
-  where?: Prisma.ProfileWhereInput
+  where?: Prisma.profileWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Profiles to fetch.
+   * Determine the order of profiles to fetch.
    */
-  orderBy?: Prisma.ProfileOrderByWithRelationInput | Prisma.ProfileOrderByWithRelationInput[]
+  orderBy?: Prisma.profileOrderByWithRelationInput | Prisma.profileOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Profiles.
+   * Sets the position for searching for profiles.
    */
-  cursor?: Prisma.ProfileWhereUniqueInput
+  cursor?: Prisma.profileWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Profiles from the position of the cursor.
+   * Take `±n` profiles from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Profiles.
+   * Skip the first `n` profiles.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Profiles.
+   * Filter by unique combinations of profiles.
    */
   distinct?: Prisma.ProfileScalarFieldEnum | Prisma.ProfileScalarFieldEnum[]
 }
 
 /**
- * Profile findMany
+ * profile findMany
  */
-export type ProfileFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * Filter, which Profiles to fetch.
+   * Filter, which profiles to fetch.
    */
-  where?: Prisma.ProfileWhereInput
+  where?: Prisma.profileWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Profiles to fetch.
+   * Determine the order of profiles to fetch.
    */
-  orderBy?: Prisma.ProfileOrderByWithRelationInput | Prisma.ProfileOrderByWithRelationInput[]
+  orderBy?: Prisma.profileOrderByWithRelationInput | Prisma.profileOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Profiles.
+   * Sets the position for listing profiles.
    */
-  cursor?: Prisma.ProfileWhereUniqueInput
+  cursor?: Prisma.profileWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Profiles from the position of the cursor.
+   * Take `±n` profiles from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Profiles.
+   * Skip the first `n` profiles.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Profiles.
+   * Filter by unique combinations of profiles.
    */
   distinct?: Prisma.ProfileScalarFieldEnum | Prisma.ProfileScalarFieldEnum[]
 }
 
 /**
- * Profile create
+ * profile create
  */
-export type ProfileCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * The data needed to create a Profile.
+   * The data needed to create a profile.
    */
-  data: Prisma.XOR<Prisma.ProfileCreateInput, Prisma.ProfileUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.profileCreateInput, Prisma.profileUncheckedCreateInput>
 }
 
 /**
- * Profile createMany
+ * profile createMany
  */
-export type ProfileCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Profiles.
+   * The data used to create many profiles.
    */
-  data: Prisma.ProfileCreateManyInput | Prisma.ProfileCreateManyInput[]
+  data: Prisma.profileCreateManyInput | Prisma.profileCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Profile update
+ * profile update
  */
-export type ProfileUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * The data needed to update a Profile.
+   * The data needed to update a profile.
    */
-  data: Prisma.XOR<Prisma.ProfileUpdateInput, Prisma.ProfileUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.profileUpdateInput, Prisma.profileUncheckedUpdateInput>
   /**
-   * Choose, which Profile to update.
+   * Choose, which profile to update.
    */
-  where: Prisma.ProfileWhereUniqueInput
+  where: Prisma.profileWhereUniqueInput
 }
 
 /**
- * Profile updateMany
+ * profile updateMany
  */
-export type ProfileUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Profiles.
+   * The data used to update profiles.
    */
-  data: Prisma.XOR<Prisma.ProfileUpdateManyMutationInput, Prisma.ProfileUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.profileUpdateManyMutationInput, Prisma.profileUncheckedUpdateManyInput>
   /**
-   * Filter which Profiles to update
+   * Filter which profiles to update
    */
-  where?: Prisma.ProfileWhereInput
+  where?: Prisma.profileWhereInput
   /**
-   * Limit how many Profiles to update.
+   * Limit how many profiles to update.
    */
   limit?: number
 }
 
 /**
- * Profile upsert
+ * profile upsert
  */
-export type ProfileUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * The filter to search for the Profile to update in case it exists.
+   * The filter to search for the profile to update in case it exists.
    */
-  where: Prisma.ProfileWhereUniqueInput
+  where: Prisma.profileWhereUniqueInput
   /**
-   * In case the Profile found by the `where` argument doesn't exist, create a new Profile with this data.
+   * In case the profile found by the `where` argument doesn't exist, create a new profile with this data.
    */
-  create: Prisma.XOR<Prisma.ProfileCreateInput, Prisma.ProfileUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.profileCreateInput, Prisma.profileUncheckedCreateInput>
   /**
-   * In case the Profile was found with the provided `where` argument, update it with this data.
+   * In case the profile was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.ProfileUpdateInput, Prisma.ProfileUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.profileUpdateInput, Prisma.profileUncheckedUpdateInput>
 }
 
 /**
- * Profile delete
+ * profile delete
  */
-export type ProfileDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
   /**
-   * Filter which Profile to delete.
+   * Filter which profile to delete.
    */
-  where: Prisma.ProfileWhereUniqueInput
+  where: Prisma.profileWhereUniqueInput
 }
 
 /**
- * Profile deleteMany
+ * profile deleteMany
  */
-export type ProfileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Profiles to delete
+   * Filter which profiles to delete
    */
-  where?: Prisma.ProfileWhereInput
+  where?: Prisma.profileWhereInput
   /**
-   * Limit how many Profiles to delete.
+   * Limit how many profiles to delete.
    */
   limit?: number
 }
 
 /**
- * Profile without action
+ * profile without action
  */
-export type ProfileDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Profile
+   * Select specific fields to fetch from the profile
    */
-  select?: Prisma.ProfileSelect<ExtArgs> | null
+  select?: Prisma.profileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Profile
+   * Omit specific fields from the profile
    */
-  omit?: Prisma.ProfileOmit<ExtArgs> | null
+  omit?: Prisma.profileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileInclude<ExtArgs> | null
+  include?: Prisma.profileInclude<ExtArgs> | null
 }

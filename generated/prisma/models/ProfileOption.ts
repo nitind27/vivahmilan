@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `ProfileOption` model and its related types.
+ * This file exports the `profileoption` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,28 +13,28 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model ProfileOption
+ * Model profileoption
  * 
  */
-export type ProfileOptionModel = runtime.Types.Result.DefaultSelection<Prisma.$ProfileOptionPayload>
+export type profileoptionModel = runtime.Types.Result.DefaultSelection<Prisma.$profileoptionPayload>
 
-export type AggregateProfileOption = {
-  _count: ProfileOptionCountAggregateOutputType | null
-  _avg: ProfileOptionAvgAggregateOutputType | null
-  _sum: ProfileOptionSumAggregateOutputType | null
-  _min: ProfileOptionMinAggregateOutputType | null
-  _max: ProfileOptionMaxAggregateOutputType | null
+export type AggregateProfileoption = {
+  _count: ProfileoptionCountAggregateOutputType | null
+  _avg: ProfileoptionAvgAggregateOutputType | null
+  _sum: ProfileoptionSumAggregateOutputType | null
+  _min: ProfileoptionMinAggregateOutputType | null
+  _max: ProfileoptionMaxAggregateOutputType | null
 }
 
-export type ProfileOptionAvgAggregateOutputType = {
+export type ProfileoptionAvgAggregateOutputType = {
   sortOrder: number | null
 }
 
-export type ProfileOptionSumAggregateOutputType = {
+export type ProfileoptionSumAggregateOutputType = {
   sortOrder: number | null
 }
 
-export type ProfileOptionMinAggregateOutputType = {
+export type ProfileoptionMinAggregateOutputType = {
   id: string | null
   category: string | null
   value: string | null
@@ -45,7 +45,7 @@ export type ProfileOptionMinAggregateOutputType = {
   createdAt: Date | null
 }
 
-export type ProfileOptionMaxAggregateOutputType = {
+export type ProfileoptionMaxAggregateOutputType = {
   id: string | null
   category: string | null
   value: string | null
@@ -56,7 +56,7 @@ export type ProfileOptionMaxAggregateOutputType = {
   createdAt: Date | null
 }
 
-export type ProfileOptionCountAggregateOutputType = {
+export type ProfileoptionCountAggregateOutputType = {
   id: number
   category: number
   value: number
@@ -69,15 +69,15 @@ export type ProfileOptionCountAggregateOutputType = {
 }
 
 
-export type ProfileOptionAvgAggregateInputType = {
+export type ProfileoptionAvgAggregateInputType = {
   sortOrder?: true
 }
 
-export type ProfileOptionSumAggregateInputType = {
+export type ProfileoptionSumAggregateInputType = {
   sortOrder?: true
 }
 
-export type ProfileOptionMinAggregateInputType = {
+export type ProfileoptionMinAggregateInputType = {
   id?: true
   category?: true
   value?: true
@@ -88,7 +88,7 @@ export type ProfileOptionMinAggregateInputType = {
   createdAt?: true
 }
 
-export type ProfileOptionMaxAggregateInputType = {
+export type ProfileoptionMaxAggregateInputType = {
   id?: true
   category?: true
   value?: true
@@ -99,7 +99,7 @@ export type ProfileOptionMaxAggregateInputType = {
   createdAt?: true
 }
 
-export type ProfileOptionCountAggregateInputType = {
+export type ProfileoptionCountAggregateInputType = {
   id?: true
   category?: true
   value?: true
@@ -111,93 +111,93 @@ export type ProfileOptionCountAggregateInputType = {
   _all?: true
 }
 
-export type ProfileOptionAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ProfileoptionAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which ProfileOption to aggregate.
+   * Filter which profileoption to aggregate.
    */
-  where?: Prisma.ProfileOptionWhereInput
+  where?: Prisma.profileoptionWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileOptions to fetch.
+   * Determine the order of profileoptions to fetch.
    */
-  orderBy?: Prisma.ProfileOptionOrderByWithRelationInput | Prisma.ProfileOptionOrderByWithRelationInput[]
+  orderBy?: Prisma.profileoptionOrderByWithRelationInput | Prisma.profileoptionOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.ProfileOptionWhereUniqueInput
+  cursor?: Prisma.profileoptionWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileOptions from the position of the cursor.
+   * Take `±n` profileoptions from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileOptions.
+   * Skip the first `n` profileoptions.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned ProfileOptions
+   * Count returned profileoptions
   **/
-  _count?: true | ProfileOptionCountAggregateInputType
+  _count?: true | ProfileoptionCountAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to average
   **/
-  _avg?: ProfileOptionAvgAggregateInputType
+  _avg?: ProfileoptionAvgAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to sum
   **/
-  _sum?: ProfileOptionSumAggregateInputType
+  _sum?: ProfileoptionSumAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the minimum value
   **/
-  _min?: ProfileOptionMinAggregateInputType
+  _min?: ProfileoptionMinAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
    * Select which fields to find the maximum value
   **/
-  _max?: ProfileOptionMaxAggregateInputType
+  _max?: ProfileoptionMaxAggregateInputType
 }
 
-export type GetProfileOptionAggregateType<T extends ProfileOptionAggregateArgs> = {
-      [P in keyof T & keyof AggregateProfileOption]: P extends '_count' | 'count'
+export type GetProfileoptionAggregateType<T extends ProfileoptionAggregateArgs> = {
+      [P in keyof T & keyof AggregateProfileoption]: P extends '_count' | 'count'
     ? T[P] extends true
       ? number
-      : Prisma.GetScalarType<T[P], AggregateProfileOption[P]>
-    : Prisma.GetScalarType<T[P], AggregateProfileOption[P]>
+      : Prisma.GetScalarType<T[P], AggregateProfileoption[P]>
+    : Prisma.GetScalarType<T[P], AggregateProfileoption[P]>
 }
 
 
 
 
-export type ProfileOptionGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProfileOptionWhereInput
-  orderBy?: Prisma.ProfileOptionOrderByWithAggregationInput | Prisma.ProfileOptionOrderByWithAggregationInput[]
-  by: Prisma.ProfileOptionScalarFieldEnum[] | Prisma.ProfileOptionScalarFieldEnum
-  having?: Prisma.ProfileOptionScalarWhereWithAggregatesInput
+export type profileoptionGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.profileoptionWhereInput
+  orderBy?: Prisma.profileoptionOrderByWithAggregationInput | Prisma.profileoptionOrderByWithAggregationInput[]
+  by: Prisma.ProfileoptionScalarFieldEnum[] | Prisma.ProfileoptionScalarFieldEnum
+  having?: Prisma.profileoptionScalarWhereWithAggregatesInput
   take?: number
   skip?: number
-  _count?: ProfileOptionCountAggregateInputType | true
-  _avg?: ProfileOptionAvgAggregateInputType
-  _sum?: ProfileOptionSumAggregateInputType
-  _min?: ProfileOptionMinAggregateInputType
-  _max?: ProfileOptionMaxAggregateInputType
+  _count?: ProfileoptionCountAggregateInputType | true
+  _avg?: ProfileoptionAvgAggregateInputType
+  _sum?: ProfileoptionSumAggregateInputType
+  _min?: ProfileoptionMinAggregateInputType
+  _max?: ProfileoptionMaxAggregateInputType
 }
 
-export type ProfileOptionGroupByOutputType = {
+export type ProfileoptionGroupByOutputType = {
   id: string
   category: string
   value: string
@@ -206,43 +206,43 @@ export type ProfileOptionGroupByOutputType = {
   sortOrder: number
   isActive: boolean
   createdAt: Date
-  _count: ProfileOptionCountAggregateOutputType | null
-  _avg: ProfileOptionAvgAggregateOutputType | null
-  _sum: ProfileOptionSumAggregateOutputType | null
-  _min: ProfileOptionMinAggregateOutputType | null
-  _max: ProfileOptionMaxAggregateOutputType | null
+  _count: ProfileoptionCountAggregateOutputType | null
+  _avg: ProfileoptionAvgAggregateOutputType | null
+  _sum: ProfileoptionSumAggregateOutputType | null
+  _min: ProfileoptionMinAggregateOutputType | null
+  _max: ProfileoptionMaxAggregateOutputType | null
 }
 
-export type GetProfileOptionGroupByPayload<T extends ProfileOptionGroupByArgs> = Prisma.PrismaPromise<
+export type GetProfileoptionGroupByPayload<T extends profileoptionGroupByArgs> = Prisma.PrismaPromise<
   Array<
-    Prisma.PickEnumerable<ProfileOptionGroupByOutputType, T['by']> &
+    Prisma.PickEnumerable<ProfileoptionGroupByOutputType, T['by']> &
       {
-        [P in ((keyof T) & (keyof ProfileOptionGroupByOutputType))]: P extends '_count'
+        [P in ((keyof T) & (keyof ProfileoptionGroupByOutputType))]: P extends '_count'
           ? T[P] extends boolean
             ? number
-            : Prisma.GetScalarType<T[P], ProfileOptionGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], ProfileOptionGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], ProfileoptionGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], ProfileoptionGroupByOutputType[P]>
       }
     >
   >
 
 
 
-export type ProfileOptionWhereInput = {
-  AND?: Prisma.ProfileOptionWhereInput | Prisma.ProfileOptionWhereInput[]
-  OR?: Prisma.ProfileOptionWhereInput[]
-  NOT?: Prisma.ProfileOptionWhereInput | Prisma.ProfileOptionWhereInput[]
-  id?: Prisma.StringFilter<"ProfileOption"> | string
-  category?: Prisma.StringFilter<"ProfileOption"> | string
-  value?: Prisma.StringFilter<"ProfileOption"> | string
-  label?: Prisma.StringFilter<"ProfileOption"> | string
-  group?: Prisma.StringNullableFilter<"ProfileOption"> | string | null
-  sortOrder?: Prisma.IntFilter<"ProfileOption"> | number
-  isActive?: Prisma.BoolFilter<"ProfileOption"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"ProfileOption"> | Date | string
+export type profileoptionWhereInput = {
+  AND?: Prisma.profileoptionWhereInput | Prisma.profileoptionWhereInput[]
+  OR?: Prisma.profileoptionWhereInput[]
+  NOT?: Prisma.profileoptionWhereInput | Prisma.profileoptionWhereInput[]
+  id?: Prisma.StringFilter<"profileoption"> | string
+  category?: Prisma.StringFilter<"profileoption"> | string
+  value?: Prisma.StringFilter<"profileoption"> | string
+  label?: Prisma.StringFilter<"profileoption"> | string
+  group?: Prisma.StringNullableFilter<"profileoption"> | string | null
+  sortOrder?: Prisma.IntFilter<"profileoption"> | number
+  isActive?: Prisma.BoolFilter<"profileoption"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"profileoption"> | Date | string
 }
 
-export type ProfileOptionOrderByWithRelationInput = {
+export type profileoptionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   category?: Prisma.SortOrder
   value?: Prisma.SortOrder
@@ -251,25 +251,25 @@ export type ProfileOptionOrderByWithRelationInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _relevance?: Prisma.ProfileOptionOrderByRelevanceInput
+  _relevance?: Prisma.profileoptionOrderByRelevanceInput
 }
 
-export type ProfileOptionWhereUniqueInput = Prisma.AtLeast<{
+export type profileoptionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  category_value?: Prisma.ProfileOptionCategoryValueCompoundUniqueInput
-  AND?: Prisma.ProfileOptionWhereInput | Prisma.ProfileOptionWhereInput[]
-  OR?: Prisma.ProfileOptionWhereInput[]
-  NOT?: Prisma.ProfileOptionWhereInput | Prisma.ProfileOptionWhereInput[]
-  category?: Prisma.StringFilter<"ProfileOption"> | string
-  value?: Prisma.StringFilter<"ProfileOption"> | string
-  label?: Prisma.StringFilter<"ProfileOption"> | string
-  group?: Prisma.StringNullableFilter<"ProfileOption"> | string | null
-  sortOrder?: Prisma.IntFilter<"ProfileOption"> | number
-  isActive?: Prisma.BoolFilter<"ProfileOption"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"ProfileOption"> | Date | string
+  category_value?: Prisma.profileoptionCategoryValueCompoundUniqueInput
+  AND?: Prisma.profileoptionWhereInput | Prisma.profileoptionWhereInput[]
+  OR?: Prisma.profileoptionWhereInput[]
+  NOT?: Prisma.profileoptionWhereInput | Prisma.profileoptionWhereInput[]
+  category?: Prisma.StringFilter<"profileoption"> | string
+  value?: Prisma.StringFilter<"profileoption"> | string
+  label?: Prisma.StringFilter<"profileoption"> | string
+  group?: Prisma.StringNullableFilter<"profileoption"> | string | null
+  sortOrder?: Prisma.IntFilter<"profileoption"> | number
+  isActive?: Prisma.BoolFilter<"profileoption"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"profileoption"> | Date | string
 }, "id" | "category_value">
 
-export type ProfileOptionOrderByWithAggregationInput = {
+export type profileoptionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   category?: Prisma.SortOrder
   value?: Prisma.SortOrder
@@ -278,28 +278,28 @@ export type ProfileOptionOrderByWithAggregationInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _count?: Prisma.ProfileOptionCountOrderByAggregateInput
-  _avg?: Prisma.ProfileOptionAvgOrderByAggregateInput
-  _max?: Prisma.ProfileOptionMaxOrderByAggregateInput
-  _min?: Prisma.ProfileOptionMinOrderByAggregateInput
-  _sum?: Prisma.ProfileOptionSumOrderByAggregateInput
+  _count?: Prisma.profileoptionCountOrderByAggregateInput
+  _avg?: Prisma.profileoptionAvgOrderByAggregateInput
+  _max?: Prisma.profileoptionMaxOrderByAggregateInput
+  _min?: Prisma.profileoptionMinOrderByAggregateInput
+  _sum?: Prisma.profileoptionSumOrderByAggregateInput
 }
 
-export type ProfileOptionScalarWhereWithAggregatesInput = {
-  AND?: Prisma.ProfileOptionScalarWhereWithAggregatesInput | Prisma.ProfileOptionScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ProfileOptionScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.ProfileOptionScalarWhereWithAggregatesInput | Prisma.ProfileOptionScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"ProfileOption"> | string
-  category?: Prisma.StringWithAggregatesFilter<"ProfileOption"> | string
-  value?: Prisma.StringWithAggregatesFilter<"ProfileOption"> | string
-  label?: Prisma.StringWithAggregatesFilter<"ProfileOption"> | string
-  group?: Prisma.StringNullableWithAggregatesFilter<"ProfileOption"> | string | null
-  sortOrder?: Prisma.IntWithAggregatesFilter<"ProfileOption"> | number
-  isActive?: Prisma.BoolWithAggregatesFilter<"ProfileOption"> | boolean
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProfileOption"> | Date | string
+export type profileoptionScalarWhereWithAggregatesInput = {
+  AND?: Prisma.profileoptionScalarWhereWithAggregatesInput | Prisma.profileoptionScalarWhereWithAggregatesInput[]
+  OR?: Prisma.profileoptionScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.profileoptionScalarWhereWithAggregatesInput | Prisma.profileoptionScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"profileoption"> | string
+  category?: Prisma.StringWithAggregatesFilter<"profileoption"> | string
+  value?: Prisma.StringWithAggregatesFilter<"profileoption"> | string
+  label?: Prisma.StringWithAggregatesFilter<"profileoption"> | string
+  group?: Prisma.StringNullableWithAggregatesFilter<"profileoption"> | string | null
+  sortOrder?: Prisma.IntWithAggregatesFilter<"profileoption"> | number
+  isActive?: Prisma.BoolWithAggregatesFilter<"profileoption"> | boolean
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"profileoption"> | Date | string
 }
 
-export type ProfileOptionCreateInput = {
+export type profileoptionCreateInput = {
   id?: string
   category: string
   value: string
@@ -310,7 +310,7 @@ export type ProfileOptionCreateInput = {
   createdAt?: Date | string
 }
 
-export type ProfileOptionUncheckedCreateInput = {
+export type profileoptionUncheckedCreateInput = {
   id?: string
   category: string
   value: string
@@ -321,7 +321,7 @@ export type ProfileOptionUncheckedCreateInput = {
   createdAt?: Date | string
 }
 
-export type ProfileOptionUpdateInput = {
+export type profileoptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
@@ -332,7 +332,7 @@ export type ProfileOptionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileOptionUncheckedUpdateInput = {
+export type profileoptionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
@@ -343,7 +343,7 @@ export type ProfileOptionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileOptionCreateManyInput = {
+export type profileoptionCreateManyInput = {
   id?: string
   category: string
   value: string
@@ -354,7 +354,7 @@ export type ProfileOptionCreateManyInput = {
   createdAt?: Date | string
 }
 
-export type ProfileOptionUpdateManyMutationInput = {
+export type profileoptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
@@ -365,7 +365,7 @@ export type ProfileOptionUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileOptionUncheckedUpdateManyInput = {
+export type profileoptionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
@@ -376,18 +376,18 @@ export type ProfileOptionUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProfileOptionOrderByRelevanceInput = {
-  fields: Prisma.ProfileOptionOrderByRelevanceFieldEnum | Prisma.ProfileOptionOrderByRelevanceFieldEnum[]
+export type profileoptionOrderByRelevanceInput = {
+  fields: Prisma.profileoptionOrderByRelevanceFieldEnum | Prisma.profileoptionOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type ProfileOptionCategoryValueCompoundUniqueInput = {
+export type profileoptionCategoryValueCompoundUniqueInput = {
   category: string
   value: string
 }
 
-export type ProfileOptionCountOrderByAggregateInput = {
+export type profileoptionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   category?: Prisma.SortOrder
   value?: Prisma.SortOrder
@@ -398,11 +398,11 @@ export type ProfileOptionCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ProfileOptionAvgOrderByAggregateInput = {
+export type profileoptionAvgOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
 }
 
-export type ProfileOptionMaxOrderByAggregateInput = {
+export type profileoptionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   category?: Prisma.SortOrder
   value?: Prisma.SortOrder
@@ -413,7 +413,7 @@ export type ProfileOptionMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ProfileOptionMinOrderByAggregateInput = {
+export type profileoptionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   category?: Prisma.SortOrder
   value?: Prisma.SortOrder
@@ -424,13 +424,13 @@ export type ProfileOptionMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ProfileOptionSumOrderByAggregateInput = {
+export type profileoptionSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
 }
 
 
 
-export type ProfileOptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type profileoptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   category?: boolean
   value?: boolean
@@ -439,11 +439,11 @@ export type ProfileOptionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   sortOrder?: boolean
   isActive?: boolean
   createdAt?: boolean
-}, ExtArgs["result"]["profileOption"]>
+}, ExtArgs["result"]["profileoption"]>
 
 
 
-export type ProfileOptionSelectScalar = {
+export type profileoptionSelectScalar = {
   id?: boolean
   category?: boolean
   value?: boolean
@@ -454,10 +454,10 @@ export type ProfileOptionSelectScalar = {
   createdAt?: boolean
 }
 
-export type ProfileOptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "category" | "value" | "label" | "group" | "sortOrder" | "isActive" | "createdAt", ExtArgs["result"]["profileOption"]>
+export type profileoptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "category" | "value" | "label" | "group" | "sortOrder" | "isActive" | "createdAt", ExtArgs["result"]["profileoption"]>
 
-export type $ProfileOptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "ProfileOption"
+export type $profileoptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "profileoption"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -468,143 +468,143 @@ export type $ProfileOptionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     sortOrder: number
     isActive: boolean
     createdAt: Date
-  }, ExtArgs["result"]["profileOption"]>
+  }, ExtArgs["result"]["profileoption"]>
   composites: {}
 }
 
-export type ProfileOptionGetPayload<S extends boolean | null | undefined | ProfileOptionDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload, S>
+export type profileoptionGetPayload<S extends boolean | null | undefined | profileoptionDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$profileoptionPayload, S>
 
-export type ProfileOptionCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<ProfileOptionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-    select?: ProfileOptionCountAggregateInputType | true
+export type profileoptionCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<profileoptionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: ProfileoptionCountAggregateInputType | true
   }
 
-export interface ProfileOptionDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProfileOption'], meta: { name: 'ProfileOption' } }
+export interface profileoptionDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['profileoption'], meta: { name: 'profileoption' } }
   /**
-   * Find zero or one ProfileOption that matches the filter.
-   * @param {ProfileOptionFindUniqueArgs} args - Arguments to find a ProfileOption
+   * Find zero or one Profileoption that matches the filter.
+   * @param {profileoptionFindUniqueArgs} args - Arguments to find a Profileoption
    * @example
-   * // Get one ProfileOption
-   * const profileOption = await prisma.profileOption.findUnique({
+   * // Get one Profileoption
+   * const profileoption = await prisma.profileoption.findUnique({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUnique<T extends ProfileOptionFindUniqueArgs>(args: Prisma.SelectSubset<T, ProfileOptionFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends profileoptionFindUniqueArgs>(args: Prisma.SelectSubset<T, profileoptionFindUniqueArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find one ProfileOption that matches the filter or throw an error with `error.code='P2025'`
+   * Find one Profileoption that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {ProfileOptionFindUniqueOrThrowArgs} args - Arguments to find a ProfileOption
+   * @param {profileoptionFindUniqueOrThrowArgs} args - Arguments to find a Profileoption
    * @example
-   * // Get one ProfileOption
-   * const profileOption = await prisma.profileOption.findUniqueOrThrow({
+   * // Get one Profileoption
+   * const profileoption = await prisma.profileoption.findUniqueOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findUniqueOrThrow<T extends ProfileOptionFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ProfileOptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends profileoptionFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, profileoptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first ProfileOption that matches the filter.
+   * Find the first Profileoption that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionFindFirstArgs} args - Arguments to find a ProfileOption
+   * @param {profileoptionFindFirstArgs} args - Arguments to find a Profileoption
    * @example
-   * // Get one ProfileOption
-   * const profileOption = await prisma.profileOption.findFirst({
+   * // Get one Profileoption
+   * const profileoption = await prisma.profileoption.findFirst({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirst<T extends ProfileOptionFindFirstArgs>(args?: Prisma.SelectSubset<T, ProfileOptionFindFirstArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends profileoptionFindFirstArgs>(args?: Prisma.SelectSubset<T, profileoptionFindFirstArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find the first ProfileOption that matches the filter or
+   * Find the first Profileoption that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionFindFirstOrThrowArgs} args - Arguments to find a ProfileOption
+   * @param {profileoptionFindFirstOrThrowArgs} args - Arguments to find a Profileoption
    * @example
-   * // Get one ProfileOption
-   * const profileOption = await prisma.profileOption.findFirstOrThrow({
+   * // Get one Profileoption
+   * const profileoption = await prisma.profileoption.findFirstOrThrow({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    */
-  findFirstOrThrow<T extends ProfileOptionFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ProfileOptionFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends profileoptionFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, profileoptionFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Find zero or more ProfileOptions that matches the filter.
+   * Find zero or more Profileoptions that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {profileoptionFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
-   * // Get all ProfileOptions
-   * const profileOptions = await prisma.profileOption.findMany()
+   * // Get all Profileoptions
+   * const profileoptions = await prisma.profileoption.findMany()
    * 
-   * // Get first 10 ProfileOptions
-   * const profileOptions = await prisma.profileOption.findMany({ take: 10 })
+   * // Get first 10 Profileoptions
+   * const profileoptions = await prisma.profileoption.findMany({ take: 10 })
    * 
    * // Only select the `id`
-   * const profileOptionWithIdOnly = await prisma.profileOption.findMany({ select: { id: true } })
+   * const profileoptionWithIdOnly = await prisma.profileoption.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends ProfileOptionFindManyArgs>(args?: Prisma.SelectSubset<T, ProfileOptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends profileoptionFindManyArgs>(args?: Prisma.SelectSubset<T, profileoptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
-   * Create a ProfileOption.
-   * @param {ProfileOptionCreateArgs} args - Arguments to create a ProfileOption.
+   * Create a Profileoption.
+   * @param {profileoptionCreateArgs} args - Arguments to create a Profileoption.
    * @example
-   * // Create one ProfileOption
-   * const ProfileOption = await prisma.profileOption.create({
+   * // Create one Profileoption
+   * const Profileoption = await prisma.profileoption.create({
    *   data: {
-   *     // ... data to create a ProfileOption
+   *     // ... data to create a Profileoption
    *   }
    * })
    * 
    */
-  create<T extends ProfileOptionCreateArgs>(args: Prisma.SelectSubset<T, ProfileOptionCreateArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends profileoptionCreateArgs>(args: Prisma.SelectSubset<T, profileoptionCreateArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Create many ProfileOptions.
-   * @param {ProfileOptionCreateManyArgs} args - Arguments to create many ProfileOptions.
+   * Create many Profileoptions.
+   * @param {profileoptionCreateManyArgs} args - Arguments to create many Profileoptions.
    * @example
-   * // Create many ProfileOptions
-   * const profileOption = await prisma.profileOption.createMany({
+   * // Create many Profileoptions
+   * const profileoption = await prisma.profileoption.createMany({
    *   data: [
    *     // ... provide data here
    *   ]
    * })
    *     
    */
-  createMany<T extends ProfileOptionCreateManyArgs>(args?: Prisma.SelectSubset<T, ProfileOptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends profileoptionCreateManyArgs>(args?: Prisma.SelectSubset<T, profileoptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Delete a ProfileOption.
-   * @param {ProfileOptionDeleteArgs} args - Arguments to delete one ProfileOption.
+   * Delete a Profileoption.
+   * @param {profileoptionDeleteArgs} args - Arguments to delete one Profileoption.
    * @example
-   * // Delete one ProfileOption
-   * const ProfileOption = await prisma.profileOption.delete({
+   * // Delete one Profileoption
+   * const Profileoption = await prisma.profileoption.delete({
    *   where: {
-   *     // ... filter to delete one ProfileOption
+   *     // ... filter to delete one Profileoption
    *   }
    * })
    * 
    */
-  delete<T extends ProfileOptionDeleteArgs>(args: Prisma.SelectSubset<T, ProfileOptionDeleteArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends profileoptionDeleteArgs>(args: Prisma.SelectSubset<T, profileoptionDeleteArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Update one ProfileOption.
-   * @param {ProfileOptionUpdateArgs} args - Arguments to update one ProfileOption.
+   * Update one Profileoption.
+   * @param {profileoptionUpdateArgs} args - Arguments to update one Profileoption.
    * @example
-   * // Update one ProfileOption
-   * const profileOption = await prisma.profileOption.update({
+   * // Update one Profileoption
+   * const profileoption = await prisma.profileoption.update({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -614,30 +614,30 @@ export interface ProfileOptionDelegate<ExtArgs extends runtime.Types.Extensions.
    * })
    * 
    */
-  update<T extends ProfileOptionUpdateArgs>(args: Prisma.SelectSubset<T, ProfileOptionUpdateArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends profileoptionUpdateArgs>(args: Prisma.SelectSubset<T, profileoptionUpdateArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
-   * Delete zero or more ProfileOptions.
-   * @param {ProfileOptionDeleteManyArgs} args - Arguments to filter ProfileOptions to delete.
+   * Delete zero or more Profileoptions.
+   * @param {profileoptionDeleteManyArgs} args - Arguments to filter Profileoptions to delete.
    * @example
-   * // Delete a few ProfileOptions
-   * const { count } = await prisma.profileOption.deleteMany({
+   * // Delete a few Profileoptions
+   * const { count } = await prisma.profileoption.deleteMany({
    *   where: {
    *     // ... provide filter here
    *   }
    * })
    * 
    */
-  deleteMany<T extends ProfileOptionDeleteManyArgs>(args?: Prisma.SelectSubset<T, ProfileOptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends profileoptionDeleteManyArgs>(args?: Prisma.SelectSubset<T, profileoptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Update zero or more ProfileOptions.
+   * Update zero or more Profileoptions.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {profileoptionUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
-   * // Update many ProfileOptions
-   * const profileOption = await prisma.profileOption.updateMany({
+   * // Update many Profileoptions
+   * const profileoption = await prisma.profileoption.updateMany({
    *   where: {
    *     // ... provide filter here
    *   },
@@ -647,56 +647,56 @@ export interface ProfileOptionDelegate<ExtArgs extends runtime.Types.Extensions.
    * })
    * 
    */
-  updateMany<T extends ProfileOptionUpdateManyArgs>(args: Prisma.SelectSubset<T, ProfileOptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends profileoptionUpdateManyArgs>(args: Prisma.SelectSubset<T, profileoptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create or update one ProfileOption.
-   * @param {ProfileOptionUpsertArgs} args - Arguments to update or create a ProfileOption.
+   * Create or update one Profileoption.
+   * @param {profileoptionUpsertArgs} args - Arguments to update or create a Profileoption.
    * @example
-   * // Update or create a ProfileOption
-   * const profileOption = await prisma.profileOption.upsert({
+   * // Update or create a Profileoption
+   * const profileoption = await prisma.profileoption.upsert({
    *   create: {
-   *     // ... data to create a ProfileOption
+   *     // ... data to create a Profileoption
    *   },
    *   update: {
    *     // ... in case it already exists, update
    *   },
    *   where: {
-   *     // ... the filter for the ProfileOption we want to update
+   *     // ... the filter for the Profileoption we want to update
    *   }
    * })
    */
-  upsert<T extends ProfileOptionUpsertArgs>(args: Prisma.SelectSubset<T, ProfileOptionUpsertArgs<ExtArgs>>): Prisma.Prisma__ProfileOptionClient<runtime.Types.Result.GetResult<Prisma.$ProfileOptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends profileoptionUpsertArgs>(args: Prisma.SelectSubset<T, profileoptionUpsertArgs<ExtArgs>>): Prisma.Prisma__profileoptionClient<runtime.Types.Result.GetResult<Prisma.$profileoptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
-   * Count the number of ProfileOptions.
+   * Count the number of Profileoptions.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionCountArgs} args - Arguments to filter ProfileOptions to count.
+   * @param {profileoptionCountArgs} args - Arguments to filter Profileoptions to count.
    * @example
-   * // Count the number of ProfileOptions
-   * const count = await prisma.profileOption.count({
+   * // Count the number of Profileoptions
+   * const count = await prisma.profileoption.count({
    *   where: {
-   *     // ... the filter for the ProfileOptions we want to count
+   *     // ... the filter for the Profileoptions we want to count
    *   }
    * })
   **/
-  count<T extends ProfileOptionCountArgs>(
-    args?: Prisma.Subset<T, ProfileOptionCountArgs>,
+  count<T extends profileoptionCountArgs>(
+    args?: Prisma.Subset<T, profileoptionCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], ProfileOptionCountAggregateOutputType>
+        : Prisma.GetScalarType<T['select'], ProfileoptionCountAggregateOutputType>
       : number
   >
 
   /**
-   * Allows you to perform aggregations operations on a ProfileOption.
+   * Allows you to perform aggregations operations on a Profileoption.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+   * @param {ProfileoptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
    * @example
    * // Ordered by age ascending
    * // Where email contains prisma.io
@@ -716,13 +716,13 @@ export interface ProfileOptionDelegate<ExtArgs extends runtime.Types.Extensions.
    *   take: 10,
    * })
   **/
-  aggregate<T extends ProfileOptionAggregateArgs>(args: Prisma.Subset<T, ProfileOptionAggregateArgs>): Prisma.PrismaPromise<GetProfileOptionAggregateType<T>>
+  aggregate<T extends ProfileoptionAggregateArgs>(args: Prisma.Subset<T, ProfileoptionAggregateArgs>): Prisma.PrismaPromise<GetProfileoptionAggregateType<T>>
 
   /**
-   * Group by ProfileOption.
+   * Group by Profileoption.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProfileOptionGroupByArgs} args - Group by arguments.
+   * @param {profileoptionGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -737,14 +737,14 @@ export interface ProfileOptionDelegate<ExtArgs extends runtime.Types.Extensions.
    * 
   **/
   groupBy<
-    T extends ProfileOptionGroupByArgs,
+    T extends profileoptionGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ProfileOptionGroupByArgs['orderBy'] }
-      : { orderBy?: ProfileOptionGroupByArgs['orderBy'] },
+      ? { orderBy: profileoptionGroupByArgs['orderBy'] }
+      : { orderBy?: profileoptionGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -793,20 +793,20 @@ export interface ProfileOptionDelegate<ExtArgs extends runtime.Types.Extensions.
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, ProfileOptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfileOptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, profileoptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfileoptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the ProfileOption model
+ * Fields of the profileoption model
  */
-readonly fields: ProfileOptionFieldRefs;
+readonly fields: profileoptionFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for ProfileOption.
+ * The delegate class that acts as a "Promise-like" for profileoption.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__ProfileOptionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__profileoptionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -834,338 +834,338 @@ export interface Prisma__ProfileOptionClient<T, Null = never, ExtArgs extends ru
 
 
 /**
- * Fields of the ProfileOption model
+ * Fields of the profileoption model
  */
-export interface ProfileOptionFieldRefs {
-  readonly id: Prisma.FieldRef<"ProfileOption", 'String'>
-  readonly category: Prisma.FieldRef<"ProfileOption", 'String'>
-  readonly value: Prisma.FieldRef<"ProfileOption", 'String'>
-  readonly label: Prisma.FieldRef<"ProfileOption", 'String'>
-  readonly group: Prisma.FieldRef<"ProfileOption", 'String'>
-  readonly sortOrder: Prisma.FieldRef<"ProfileOption", 'Int'>
-  readonly isActive: Prisma.FieldRef<"ProfileOption", 'Boolean'>
-  readonly createdAt: Prisma.FieldRef<"ProfileOption", 'DateTime'>
+export interface profileoptionFieldRefs {
+  readonly id: Prisma.FieldRef<"profileoption", 'String'>
+  readonly category: Prisma.FieldRef<"profileoption", 'String'>
+  readonly value: Prisma.FieldRef<"profileoption", 'String'>
+  readonly label: Prisma.FieldRef<"profileoption", 'String'>
+  readonly group: Prisma.FieldRef<"profileoption", 'String'>
+  readonly sortOrder: Prisma.FieldRef<"profileoption", 'Int'>
+  readonly isActive: Prisma.FieldRef<"profileoption", 'Boolean'>
+  readonly createdAt: Prisma.FieldRef<"profileoption", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * ProfileOption findUnique
+ * profileoption findUnique
  */
-export type ProfileOptionFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * Filter, which ProfileOption to fetch.
+   * Filter, which profileoption to fetch.
    */
-  where: Prisma.ProfileOptionWhereUniqueInput
+  where: Prisma.profileoptionWhereUniqueInput
 }
 
 /**
- * ProfileOption findUniqueOrThrow
+ * profileoption findUniqueOrThrow
  */
-export type ProfileOptionFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * Filter, which ProfileOption to fetch.
+   * Filter, which profileoption to fetch.
    */
-  where: Prisma.ProfileOptionWhereUniqueInput
+  where: Prisma.profileoptionWhereUniqueInput
 }
 
 /**
- * ProfileOption findFirst
+ * profileoption findFirst
  */
-export type ProfileOptionFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * Filter, which ProfileOption to fetch.
+   * Filter, which profileoption to fetch.
    */
-  where?: Prisma.ProfileOptionWhereInput
+  where?: Prisma.profileoptionWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileOptions to fetch.
+   * Determine the order of profileoptions to fetch.
    */
-  orderBy?: Prisma.ProfileOptionOrderByWithRelationInput | Prisma.ProfileOptionOrderByWithRelationInput[]
+  orderBy?: Prisma.profileoptionOrderByWithRelationInput | Prisma.profileoptionOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for ProfileOptions.
+   * Sets the position for searching for profileoptions.
    */
-  cursor?: Prisma.ProfileOptionWhereUniqueInput
+  cursor?: Prisma.profileoptionWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileOptions from the position of the cursor.
+   * Take `±n` profileoptions from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileOptions.
+   * Skip the first `n` profileoptions.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ProfileOptions.
+   * Filter by unique combinations of profileoptions.
    */
-  distinct?: Prisma.ProfileOptionScalarFieldEnum | Prisma.ProfileOptionScalarFieldEnum[]
+  distinct?: Prisma.ProfileoptionScalarFieldEnum | Prisma.ProfileoptionScalarFieldEnum[]
 }
 
 /**
- * ProfileOption findFirstOrThrow
+ * profileoption findFirstOrThrow
  */
-export type ProfileOptionFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * Filter, which ProfileOption to fetch.
+   * Filter, which profileoption to fetch.
    */
-  where?: Prisma.ProfileOptionWhereInput
+  where?: Prisma.profileoptionWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileOptions to fetch.
+   * Determine the order of profileoptions to fetch.
    */
-  orderBy?: Prisma.ProfileOptionOrderByWithRelationInput | Prisma.ProfileOptionOrderByWithRelationInput[]
+  orderBy?: Prisma.profileoptionOrderByWithRelationInput | Prisma.profileoptionOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for ProfileOptions.
+   * Sets the position for searching for profileoptions.
    */
-  cursor?: Prisma.ProfileOptionWhereUniqueInput
+  cursor?: Prisma.profileoptionWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileOptions from the position of the cursor.
+   * Take `±n` profileoptions from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileOptions.
+   * Skip the first `n` profileoptions.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ProfileOptions.
+   * Filter by unique combinations of profileoptions.
    */
-  distinct?: Prisma.ProfileOptionScalarFieldEnum | Prisma.ProfileOptionScalarFieldEnum[]
+  distinct?: Prisma.ProfileoptionScalarFieldEnum | Prisma.ProfileoptionScalarFieldEnum[]
 }
 
 /**
- * ProfileOption findMany
+ * profileoption findMany
  */
-export type ProfileOptionFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * Filter, which ProfileOptions to fetch.
+   * Filter, which profileoptions to fetch.
    */
-  where?: Prisma.ProfileOptionWhereInput
+  where?: Prisma.profileoptionWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of ProfileOptions to fetch.
+   * Determine the order of profileoptions to fetch.
    */
-  orderBy?: Prisma.ProfileOptionOrderByWithRelationInput | Prisma.ProfileOptionOrderByWithRelationInput[]
+  orderBy?: Prisma.profileoptionOrderByWithRelationInput | Prisma.profileoptionOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing ProfileOptions.
+   * Sets the position for listing profileoptions.
    */
-  cursor?: Prisma.ProfileOptionWhereUniqueInput
+  cursor?: Prisma.profileoptionWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` ProfileOptions from the position of the cursor.
+   * Take `±n` profileoptions from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` ProfileOptions.
+   * Skip the first `n` profileoptions.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of ProfileOptions.
+   * Filter by unique combinations of profileoptions.
    */
-  distinct?: Prisma.ProfileOptionScalarFieldEnum | Prisma.ProfileOptionScalarFieldEnum[]
+  distinct?: Prisma.ProfileoptionScalarFieldEnum | Prisma.ProfileoptionScalarFieldEnum[]
 }
 
 /**
- * ProfileOption create
+ * profileoption create
  */
-export type ProfileOptionCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * The data needed to create a ProfileOption.
+   * The data needed to create a profileoption.
    */
-  data: Prisma.XOR<Prisma.ProfileOptionCreateInput, Prisma.ProfileOptionUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.profileoptionCreateInput, Prisma.profileoptionUncheckedCreateInput>
 }
 
 /**
- * ProfileOption createMany
+ * profileoption createMany
  */
-export type ProfileOptionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many ProfileOptions.
+   * The data used to create many profileoptions.
    */
-  data: Prisma.ProfileOptionCreateManyInput | Prisma.ProfileOptionCreateManyInput[]
+  data: Prisma.profileoptionCreateManyInput | Prisma.profileoptionCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * ProfileOption update
+ * profileoption update
  */
-export type ProfileOptionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * The data needed to update a ProfileOption.
+   * The data needed to update a profileoption.
    */
-  data: Prisma.XOR<Prisma.ProfileOptionUpdateInput, Prisma.ProfileOptionUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.profileoptionUpdateInput, Prisma.profileoptionUncheckedUpdateInput>
   /**
-   * Choose, which ProfileOption to update.
+   * Choose, which profileoption to update.
    */
-  where: Prisma.ProfileOptionWhereUniqueInput
+  where: Prisma.profileoptionWhereUniqueInput
 }
 
 /**
- * ProfileOption updateMany
+ * profileoption updateMany
  */
-export type ProfileOptionUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update ProfileOptions.
+   * The data used to update profileoptions.
    */
-  data: Prisma.XOR<Prisma.ProfileOptionUpdateManyMutationInput, Prisma.ProfileOptionUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.profileoptionUpdateManyMutationInput, Prisma.profileoptionUncheckedUpdateManyInput>
   /**
-   * Filter which ProfileOptions to update
+   * Filter which profileoptions to update
    */
-  where?: Prisma.ProfileOptionWhereInput
+  where?: Prisma.profileoptionWhereInput
   /**
-   * Limit how many ProfileOptions to update.
+   * Limit how many profileoptions to update.
    */
   limit?: number
 }
 
 /**
- * ProfileOption upsert
+ * profileoption upsert
  */
-export type ProfileOptionUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * The filter to search for the ProfileOption to update in case it exists.
+   * The filter to search for the profileoption to update in case it exists.
    */
-  where: Prisma.ProfileOptionWhereUniqueInput
+  where: Prisma.profileoptionWhereUniqueInput
   /**
-   * In case the ProfileOption found by the `where` argument doesn't exist, create a new ProfileOption with this data.
+   * In case the profileoption found by the `where` argument doesn't exist, create a new profileoption with this data.
    */
-  create: Prisma.XOR<Prisma.ProfileOptionCreateInput, Prisma.ProfileOptionUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.profileoptionCreateInput, Prisma.profileoptionUncheckedCreateInput>
   /**
-   * In case the ProfileOption was found with the provided `where` argument, update it with this data.
+   * In case the profileoption was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.ProfileOptionUpdateInput, Prisma.ProfileOptionUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.profileoptionUpdateInput, Prisma.profileoptionUncheckedUpdateInput>
 }
 
 /**
- * ProfileOption delete
+ * profileoption delete
  */
-export type ProfileOptionDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
   /**
-   * Filter which ProfileOption to delete.
+   * Filter which profileoption to delete.
    */
-  where: Prisma.ProfileOptionWhereUniqueInput
+  where: Prisma.profileoptionWhereUniqueInput
 }
 
 /**
- * ProfileOption deleteMany
+ * profileoption deleteMany
  */
-export type ProfileOptionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which ProfileOptions to delete
+   * Filter which profileoptions to delete
    */
-  where?: Prisma.ProfileOptionWhereInput
+  where?: Prisma.profileoptionWhereInput
   /**
-   * Limit how many ProfileOptions to delete.
+   * Limit how many profileoptions to delete.
    */
   limit?: number
 }
 
 /**
- * ProfileOption without action
+ * profileoption without action
  */
-export type ProfileOptionDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type profileoptionDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileOption
+   * Select specific fields to fetch from the profileoption
    */
-  select?: Prisma.ProfileOptionSelect<ExtArgs> | null
+  select?: Prisma.profileoptionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileOption
+   * Omit specific fields from the profileoption
    */
-  omit?: Prisma.ProfileOptionOmit<ExtArgs> | null
+  omit?: Prisma.profileoptionOmit<ExtArgs> | null
 }
