@@ -25,7 +25,7 @@ export const authOptions = {
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
-          return { id: user.id, email: user.email, name: user.name, role: user.role, isPremium: user.isPremium, isVerified: user.isVerified };
+          return { id: user.id, email: user.email, name: user.name, role: user.role, isPremium: !!user.isPremium, isVerified: !!user.isVerified };
         } catch (err) {
           console.error('Auth error:', err.message);
           throw err;
