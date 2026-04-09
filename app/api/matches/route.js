@@ -1,77 +1,118 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import prisma from '@/lib/prisma';
+import { query, queryOne } from '@/lib/db';
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '12');
-  const skip = (page - 1) * limit;
+  const page   = parseInt(searchParams.get('page')  || '1');
+  const limit  = parseInt(searchParams.get('limit') || '12');
+  const offset = (page - 1) * limit;
 
-  // Filters
-  const ageMin = searchParams.get('ageMin');
-  const ageMax = searchParams.get('ageMax');
-  const religion = searchParams.get('religion');
-  const country = searchParams.get('country');
-  const state = searchParams.get('state');
-  const city = searchParams.get('city');
-  const education = searchParams.get('education');
-  const profession = searchParams.get('profession');
-  const heightMin = searchParams.get('heightMin');
-  const heightMax = searchParams.get('heightMax');
-  const gender = searchParams.get('gender');
+  const ageMin       = searchParams.get('ageMin');
+  const ageMax       = searchParams.get('ageMax');
+  const religion     = searchParams.get('religion');
+  const country      = searchParams.get('country');
+  const state        = searchParams.get('state');
+  const city         = searchParams.get('city');
+  const education    = searchParams.get('education');
+  const profession   = searchParams.get('profession');
+  const heightMin    = searchParams.get('heightMin');
+  const heightMax    = searchParams.get('heightMax');
   const maritalStatus = searchParams.get('maritalStatus');
+  const genderFilter = searchParams.get('gender');
 
-  // Get current user profile to determine opposite gender
-  const currentUser = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    include: { profile: true },
-  });
+  // Get current user gender to show opposite
+  const currentUser = await queryOne(
+    'SELECT u.id, p.gender FROM `user` u LEFT JOIN profile p ON p.userId = u.id WHERE u.id = ?',
+    [session.user.id]
+  );
+  const myGender = currentUser?.gender;
+  const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
+  const targetGender = genderFilter || oppositeGender;
 
-  const oppositeGender = currentUser?.profile?.gender === 'MALE' ? 'FEMALE' : 'MALE';
-
-  // Build date range for age filter
-  const now = new Date();
-  const dobMax = (ageMin && !isNaN(parseInt(ageMin))) ? new Date(now.getFullYear() - parseInt(ageMin), now.getMonth(), now.getDate()) : undefined;
-  const dobMin = (ageMax && !isNaN(parseInt(ageMax))) ? new Date(now.getFullYear() - parseInt(ageMax), now.getMonth(), now.getDate()) : undefined;
-
-  // Get blocked user IDs
-  const blocks = await prisma.block.findMany({
-    where: { OR: [{ blockerId: session.user.id }, { blockedId: session.user.id }] },
-  });
+  // Blocked IDs
+  const blocks = await query(
+    'SELECT blockerId, blockedId FROM block WHERE blockerId = ? OR blockedId = ?',
+    [session.user.id, session.user.id]
+  );
   const blockedIds = blocks.map(b => b.blockerId === session.user.id ? b.blockedId : b.blockerId);
 
-  const where = {
-    id: { not: session.user.id, notIn: blockedIds },
-    isActive: true,
+  const conditions = ['u.id != ?', 'u.isActive = 1'];
+  const params = [session.user.id];
+
+  if (blockedIds.length) {
+    conditions.push(`u.id NOT IN (${blockedIds.map(() => '?').join(',')})`);
+    params.push(...blockedIds);
+  }
+  if (targetGender) { conditions.push('p.gender = ?'); params.push(targetGender); }
+  if (religion)     { conditions.push('p.religion = ?'); params.push(religion); }
+  if (country)      { conditions.push('p.country = ?'); params.push(country); }
+  if (state)        { conditions.push('p.state = ?'); params.push(state); }
+  if (city)         { conditions.push('p.city = ?'); params.push(city); }
+  if (education)    { conditions.push('p.education = ?'); params.push(education); }
+  if (profession)   { conditions.push('p.profession = ?'); params.push(profession); }
+  if (maritalStatus){ conditions.push('p.maritalStatus = ?'); params.push(maritalStatus); }
+  if (heightMin)    { conditions.push('p.height >= ?'); params.push(parseInt(heightMin)); }
+  if (heightMax)    { conditions.push('p.height <= ?'); params.push(parseInt(heightMax)); }
+
+  const now = new Date();
+  if (ageMin) {
+    const dobMax = new Date(now.getFullYear() - parseInt(ageMin), now.getMonth(), now.getDate());
+    conditions.push('p.dob <= ?'); params.push(dobMax);
+  }
+  if (ageMax) {
+    const dobMin = new Date(now.getFullYear() - parseInt(ageMax), now.getMonth(), now.getDate());
+    conditions.push('p.dob >= ?'); params.push(dobMin);
+  }
+
+  const where = 'WHERE ' + conditions.join(' AND ');
+
+  const baseSQL = `
+    FROM \`user\` u
+    LEFT JOIN profile p ON p.userId = u.id
+    ${where}
+  `;
+
+  const countRow = await queryOne(`SELECT COUNT(*) as cnt ${baseSQL}`, params);
+  const total = Number(countRow?.cnt ?? 0);
+
+  const users = await query(
+    `SELECT u.*, p.gender, p.dob, p.height, p.religion, p.caste, p.education, p.profession,
+            p.country, p.state, p.city, p.aboutMe, p.maritalStatus, p.profileComplete,
+            p.complexion, p.bodyType, p.motherTongue, p.income, p.diet, p.smoking, p.drinking
+     ${baseSQL}
+     ORDER BY u.isPremium DESC, u.profileBoost DESC, u.createdAt DESC
+     LIMIT ? OFFSET ?`,
+    [...params, limit, offset]
+  );
+
+  // Attach main photo
+  const userIds = users.map(u => u.id);
+  let photos = [];
+  if (userIds.length) {
+    photos = await query(
+      `SELECT * FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`,
+      userIds
+    );
+  }
+  const photoMap = Object.fromEntries(photos.map(p => [p.userId, p]));
+
+  const result = users.map(u => ({
+    ...u,
     profile: {
-      gender: gender || oppositeGender,
-      ...(religion && { religion }),
-      ...(country && { country }),
-      ...(state && { state }),
-      ...(city && { city }),
-      ...(education && { education }),
-      ...(profession && { profession }),
-      ...(maritalStatus && { maritalStatus }),
-      ...(dobMin || dobMax ? { dob: { ...(dobMin && { gte: dobMin }), ...(dobMax && { lte: dobMax }) } } : {}),
-      ...(heightMin || heightMax ? { height: { ...(heightMin && { gte: parseInt(heightMin) }), ...(heightMax && { lte: parseInt(heightMax) }) } } : {}),
+      gender: u.gender, dob: u.dob, height: u.height, religion: u.religion,
+      caste: u.caste, education: u.education, profession: u.profession,
+      country: u.country, state: u.state, city: u.city, aboutMe: u.aboutMe,
+      maritalStatus: u.maritalStatus, profileComplete: u.profileComplete,
+      complexion: u.complexion, bodyType: u.bodyType, motherTongue: u.motherTongue,
+      income: u.income, diet: u.diet, smoking: u.smoking, drinking: u.drinking,
     },
-  };
+    photos: photoMap[u.id] ? [photoMap[u.id]] : [],
+  }));
 
-  const [users, total] = await Promise.all([
-    prisma.user.findMany({
-      where,
-      include: { profile: true, photos: { where: { isMain: true }, take: 1 } },
-      skip,
-      take: limit,
-      orderBy: [{ isPremium: 'desc' }, { profileBoost: 'desc' }, { createdAt: 'desc' }],
-    }),
-    prisma.user.count({ where }),
-  ]);
-
-  return NextResponse.json({ users, total, page, totalPages: Math.ceil(total / limit) });
+  return NextResponse.json({ users: result, total, page, totalPages: Math.ceil(total / limit) });
 }
