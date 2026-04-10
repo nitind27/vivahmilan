@@ -22,8 +22,16 @@ app.prepare().then(() => {
 
   // ── Socket.io attached to the SAME server ──────────────────────────
   const io = new Server(httpServer, {
-    path: '/api/socket',          // single origin, no CORS needed
+    path: '/api/socket',
     addTrailingSlash: false,
+    cors: {
+      origin: process.env.NEXTAUTH_URL || '*',
+      methods: ['GET', 'POST'],
+      credentials: true,
+    },
+    transports: ['websocket', 'polling'],
+    pingTimeout: 60000,
+    pingInterval: 25000,
   });
 
   // Track online users
@@ -58,6 +66,11 @@ app.prepare().then(() => {
     socket.on('interest:notify', ({ toUserId, fromUser }) => {
       const targetSocket = onlineUsers.get(toUserId);
       if (targetSocket) io.to(targetSocket).emit('interest:received', { fromUser });
+    });
+
+    // Live location update
+    socket.on('location:update', ({ roomId, msgId, latitude, longitude }) => {
+      socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
     });
 
     socket.on('disconnect', () => {

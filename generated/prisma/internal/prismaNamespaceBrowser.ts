@@ -65,6 +65,7 @@ export const ModelName = {
   notification: 'notification',
   profileoption: 'profileoption',
   planconfig: 'planconfig',
+  siteconfig: 'siteconfig',
   subscription: 'subscription',
   document: 'document',
   report: 'report',
@@ -146,6 +147,8 @@ export const UserScalarFieldEnum = {
   boostExpiry: 'boostExpiry',
   loginOtpEnabled: 'loginOtpEnabled',
   lastLoginAt: 'lastLoginAt',
+  freeTrialUsed: 'freeTrialUsed',
+  freeTrialExpiry: 'freeTrialExpiry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -325,6 +328,17 @@ export const PlanconfigScalarFieldEnum = {
 } as const
 
 export type PlanconfigScalarFieldEnum = (typeof PlanconfigScalarFieldEnum)[keyof typeof PlanconfigScalarFieldEnum]
+
+
+export const SiteconfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SiteconfigScalarFieldEnum = (typeof SiteconfigScalarFieldEnum)[keyof typeof SiteconfigScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {
@@ -586,6 +600,15 @@ export const planconfigOrderByRelevanceFieldEnum = {
 } as const
 
 export type planconfigOrderByRelevanceFieldEnum = (typeof planconfigOrderByRelevanceFieldEnum)[keyof typeof planconfigOrderByRelevanceFieldEnum]
+
+
+export const siteconfigOrderByRelevanceFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value'
+} as const
+
+export type siteconfigOrderByRelevanceFieldEnum = (typeof siteconfigOrderByRelevanceFieldEnum)[keyof typeof siteconfigOrderByRelevanceFieldEnum]
 
 
 export const subscriptionOrderByRelevanceFieldEnum = {

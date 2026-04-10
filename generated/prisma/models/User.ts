@@ -45,6 +45,8 @@ export type UserMinAggregateOutputType = {
   boostExpiry: Date | null
   loginOtpEnabled: boolean | null
   lastLoginAt: Date | null
+  freeTrialUsed: boolean | null
+  freeTrialExpiry: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +72,8 @@ export type UserMaxAggregateOutputType = {
   boostExpiry: Date | null
   loginOtpEnabled: boolean | null
   lastLoginAt: Date | null
+  freeTrialUsed: boolean | null
+  freeTrialExpiry: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -95,6 +99,8 @@ export type UserCountAggregateOutputType = {
   boostExpiry: number
   loginOtpEnabled: number
   lastLoginAt: number
+  freeTrialUsed: number
+  freeTrialExpiry: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -122,6 +128,8 @@ export type UserMinAggregateInputType = {
   boostExpiry?: true
   loginOtpEnabled?: true
   lastLoginAt?: true
+  freeTrialUsed?: true
+  freeTrialExpiry?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -147,6 +155,8 @@ export type UserMaxAggregateInputType = {
   boostExpiry?: true
   loginOtpEnabled?: true
   lastLoginAt?: true
+  freeTrialUsed?: true
+  freeTrialExpiry?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -172,6 +182,8 @@ export type UserCountAggregateInputType = {
   boostExpiry?: true
   loginOtpEnabled?: true
   lastLoginAt?: true
+  freeTrialUsed?: true
+  freeTrialExpiry?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -270,6 +282,8 @@ export type UserGroupByOutputType = {
   boostExpiry: Date | null
   loginOtpEnabled: boolean
   lastLoginAt: Date | null
+  freeTrialUsed: boolean
+  freeTrialExpiry: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -316,6 +330,8 @@ export type userWhereInput = {
   boostExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   loginOtpEnabled?: Prisma.BoolFilter<"user"> | boolean
   lastLoginAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  freeTrialUsed?: Prisma.BoolFilter<"user"> | boolean
+  freeTrialExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -363,6 +379,8 @@ export type userOrderByWithRelationInput = {
   boostExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   loginOtpEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  freeTrialUsed?: Prisma.SortOrder
+  freeTrialExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.accountOrderByRelationAggregateInput
@@ -414,6 +432,8 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   boostExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   loginOtpEnabled?: Prisma.BoolFilter<"user"> | boolean
   lastLoginAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  freeTrialUsed?: Prisma.BoolFilter<"user"> | boolean
+  freeTrialExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -461,6 +481,8 @@ export type userOrderByWithAggregationInput = {
   boostExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   loginOtpEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  freeTrialUsed?: Prisma.SortOrder
+  freeTrialExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.userCountOrderByAggregateInput
@@ -492,6 +514,8 @@ export type userScalarWhereWithAggregatesInput = {
   boostExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
   loginOtpEnabled?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
+  freeTrialUsed?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  freeTrialExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
 }
@@ -517,6 +541,8 @@ export type userCreateInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -564,6 +590,8 @@ export type userUncheckedCreateInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -611,6 +639,8 @@ export type userUpdateInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -658,6 +688,8 @@ export type userUncheckedUpdateInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -705,6 +737,8 @@ export type userCreateManyInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -730,6 +764,8 @@ export type userUpdateManyMutationInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -755,6 +791,8 @@ export type userUncheckedUpdateManyInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -791,6 +829,8 @@ export type userCountOrderByAggregateInput = {
   boostExpiry?: Prisma.SortOrder
   loginOtpEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  freeTrialUsed?: Prisma.SortOrder
+  freeTrialExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -816,6 +856,8 @@ export type userMaxOrderByAggregateInput = {
   boostExpiry?: Prisma.SortOrder
   loginOtpEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  freeTrialUsed?: Prisma.SortOrder
+  freeTrialExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -841,6 +883,8 @@ export type userMinOrderByAggregateInput = {
   boostExpiry?: Prisma.SortOrder
   loginOtpEnabled?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  freeTrialUsed?: Prisma.SortOrder
+  freeTrialExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1186,6 +1230,8 @@ export type userCreateWithoutAccountsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
@@ -1232,6 +1278,8 @@ export type userUncheckedCreateWithoutAccountsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
@@ -1294,6 +1342,8 @@ export type userUpdateWithoutAccountsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
@@ -1340,6 +1390,8 @@ export type userUncheckedUpdateWithoutAccountsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1386,6 +1438,8 @@ export type userCreateWithoutSessionsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1432,6 +1486,8 @@ export type userUncheckedCreateWithoutSessionsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1494,6 +1550,8 @@ export type userUpdateWithoutSessionsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1540,6 +1598,8 @@ export type userUncheckedUpdateWithoutSessionsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1586,6 +1646,8 @@ export type userCreateWithoutProfileInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1632,6 +1694,8 @@ export type userUncheckedCreateWithoutProfileInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1694,6 +1758,8 @@ export type userUpdateWithoutProfileInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1740,6 +1806,8 @@ export type userUncheckedUpdateWithoutProfileInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1786,6 +1854,8 @@ export type userCreateWithoutPhotosInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1832,6 +1902,8 @@ export type userUncheckedCreateWithoutPhotosInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1894,6 +1966,8 @@ export type userUpdateWithoutPhotosInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1940,6 +2014,8 @@ export type userUncheckedUpdateWithoutPhotosInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1986,6 +2062,8 @@ export type userCreateWithoutSentInterestsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2032,6 +2110,8 @@ export type userUncheckedCreateWithoutSentInterestsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2083,6 +2163,8 @@ export type userCreateWithoutReceivedInterestsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2129,6 +2211,8 @@ export type userUncheckedCreateWithoutReceivedInterestsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2191,6 +2275,8 @@ export type userUpdateWithoutSentInterestsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2237,6 +2323,8 @@ export type userUncheckedUpdateWithoutSentInterestsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2294,6 +2382,8 @@ export type userUpdateWithoutReceivedInterestsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2340,6 +2430,8 @@ export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2386,6 +2478,8 @@ export type userCreateWithoutChatRoomsAInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2432,6 +2526,8 @@ export type userUncheckedCreateWithoutChatRoomsAInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2483,6 +2579,8 @@ export type userCreateWithoutChatRoomsBInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2529,6 +2627,8 @@ export type userUncheckedCreateWithoutChatRoomsBInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2591,6 +2691,8 @@ export type userUpdateWithoutChatRoomsAInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2637,6 +2739,8 @@ export type userUncheckedUpdateWithoutChatRoomsAInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2694,6 +2798,8 @@ export type userUpdateWithoutChatRoomsBInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2740,6 +2846,8 @@ export type userUncheckedUpdateWithoutChatRoomsBInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2786,6 +2894,8 @@ export type userCreateWithoutSentMessagesInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2832,6 +2942,8 @@ export type userUncheckedCreateWithoutSentMessagesInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2883,6 +2995,8 @@ export type userCreateWithoutReceivedMessagesInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2929,6 +3043,8 @@ export type userUncheckedCreateWithoutReceivedMessagesInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2991,6 +3107,8 @@ export type userUpdateWithoutSentMessagesInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3037,6 +3155,8 @@ export type userUncheckedUpdateWithoutSentMessagesInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3094,6 +3214,8 @@ export type userUpdateWithoutReceivedMessagesInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3140,6 +3262,8 @@ export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3186,6 +3310,8 @@ export type userCreateWithoutShortlistedInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3232,6 +3358,8 @@ export type userUncheckedCreateWithoutShortlistedInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3283,6 +3411,8 @@ export type userCreateWithoutShortlistedByInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3329,6 +3459,8 @@ export type userUncheckedCreateWithoutShortlistedByInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3391,6 +3523,8 @@ export type userUpdateWithoutShortlistedInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3437,6 +3571,8 @@ export type userUncheckedUpdateWithoutShortlistedInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3494,6 +3630,8 @@ export type userUpdateWithoutShortlistedByInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3540,6 +3678,8 @@ export type userUncheckedUpdateWithoutShortlistedByInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3586,6 +3726,8 @@ export type userCreateWithoutViewedProfilesInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3632,6 +3774,8 @@ export type userUncheckedCreateWithoutViewedProfilesInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3683,6 +3827,8 @@ export type userCreateWithoutProfileViewsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3729,6 +3875,8 @@ export type userUncheckedCreateWithoutProfileViewsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3791,6 +3939,8 @@ export type userUpdateWithoutViewedProfilesInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3837,6 +3987,8 @@ export type userUncheckedUpdateWithoutViewedProfilesInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3894,6 +4046,8 @@ export type userUpdateWithoutProfileViewsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3940,6 +4094,8 @@ export type userUncheckedUpdateWithoutProfileViewsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3986,6 +4142,8 @@ export type userCreateWithoutNotificationsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4032,6 +4190,8 @@ export type userUncheckedCreateWithoutNotificationsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4094,6 +4254,8 @@ export type userUpdateWithoutNotificationsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4140,6 +4302,8 @@ export type userUncheckedUpdateWithoutNotificationsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4186,6 +4350,8 @@ export type userCreateWithoutSubscriptionsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4232,6 +4398,8 @@ export type userUncheckedCreateWithoutSubscriptionsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4294,6 +4462,8 @@ export type userUpdateWithoutSubscriptionsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4340,6 +4510,8 @@ export type userUncheckedUpdateWithoutSubscriptionsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4386,6 +4558,8 @@ export type userCreateWithoutDocumentsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4432,6 +4606,8 @@ export type userUncheckedCreateWithoutDocumentsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4494,6 +4670,8 @@ export type userUpdateWithoutDocumentsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4540,6 +4718,8 @@ export type userUncheckedUpdateWithoutDocumentsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4586,6 +4766,8 @@ export type userCreateWithoutReportsMadeInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4632,6 +4814,8 @@ export type userUncheckedCreateWithoutReportsMadeInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4683,6 +4867,8 @@ export type userCreateWithoutReportsReceivedInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4729,6 +4915,8 @@ export type userUncheckedCreateWithoutReportsReceivedInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4791,6 +4979,8 @@ export type userUpdateWithoutReportsMadeInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4837,6 +5027,8 @@ export type userUncheckedUpdateWithoutReportsMadeInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4894,6 +5086,8 @@ export type userUpdateWithoutReportsReceivedInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4940,6 +5134,8 @@ export type userUncheckedUpdateWithoutReportsReceivedInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4986,6 +5182,8 @@ export type userCreateWithoutBlockedUsersInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5032,6 +5230,8 @@ export type userUncheckedCreateWithoutBlockedUsersInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5083,6 +5283,8 @@ export type userCreateWithoutBlockedByInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5129,6 +5331,8 @@ export type userUncheckedCreateWithoutBlockedByInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5191,6 +5395,8 @@ export type userUpdateWithoutBlockedUsersInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5237,6 +5443,8 @@ export type userUncheckedUpdateWithoutBlockedUsersInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5294,6 +5502,8 @@ export type userUpdateWithoutBlockedByInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5340,6 +5550,8 @@ export type userUncheckedUpdateWithoutBlockedByInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5386,6 +5598,8 @@ export type userCreateWithoutOtpsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5432,6 +5646,8 @@ export type userUncheckedCreateWithoutOtpsInput = {
   boostExpiry?: Date | string | null
   loginOtpEnabled?: boolean
   lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5494,6 +5710,8 @@ export type userUpdateWithoutOtpsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5540,6 +5758,8 @@ export type userUncheckedUpdateWithoutOtpsInput = {
   boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5797,6 +6017,8 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   boostExpiry?: boolean
   loginOtpEnabled?: boolean
   lastLoginAt?: boolean
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
@@ -5847,11 +6069,13 @@ export type userSelectScalar = {
   boostExpiry?: boolean
   loginOtpEnabled?: boolean
   lastLoginAt?: boolean
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "freeTrialUsed" | "freeTrialExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
@@ -5925,6 +6149,8 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     boostExpiry: Date | null
     loginOtpEnabled: boolean
     lastLoginAt: Date | null
+    freeTrialUsed: boolean
+    freeTrialExpiry: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -6338,6 +6564,8 @@ export interface userFieldRefs {
   readonly boostExpiry: Prisma.FieldRef<"user", 'DateTime'>
   readonly loginOtpEnabled: Prisma.FieldRef<"user", 'Boolean'>
   readonly lastLoginAt: Prisma.FieldRef<"user", 'DateTime'>
+  readonly freeTrialUsed: Prisma.FieldRef<"user", 'Boolean'>
+  readonly freeTrialExpiry: Prisma.FieldRef<"user", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"user", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"user", 'DateTime'>
 }

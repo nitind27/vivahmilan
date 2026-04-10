@@ -20,13 +20,25 @@ export const authOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         try {
-          const user = await queryOne('SELECT id, email, name, password, role, isActive, isPremium, isVerified FROM `user` WHERE email = ?', [credentials.email]);
+          const user = await queryOne('SELECT id, email, name, password, role, isActive, isPremium, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE email = ?', [credentials.email]);
           if (!user || !user.password) return null;
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
-          return { id: user.id, email: user.email, name: user.name, role: user.role, isPremium: !!user.isPremium, isVerified: !!user.isVerified };
-        } catch (err) {
+          // Block login until admin approves (skip for ADMIN role)
+          if (user.role !== 'ADMIN' && !user.adminVerified) throw new Error('PENDING_APPROVAL');
+          // Free trial check — kept separate from isPremium
+          const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            isPremium: !!user.isPremium,
+            freeTrialActive: !!trialActive,
+            freeTrialExpiry: user.freeTrialExpiry ? user.freeTrialExpiry.toISOString() : null,
+            isVerified: !!user.isVerified,
+          };} catch (err) {
           console.error('Auth error:', err.message);
           throw err;
         }
@@ -36,15 +48,34 @@ export const authOptions = {
   session: { strategy: 'jwt' },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      if (user) { token.id = user.id; token.role = user.role; token.isPremium = user.isPremium; token.isVerified = user.isVerified; }
-      if (trigger === 'update' && session) { token.isPremium = session.isPremium; token.isVerified = session.isVerified; }
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.isPremium = user.isPremium;
+        token.freeTrialActive = user.freeTrialActive;
+        token.freeTrialExpiry = user.freeTrialExpiry || null;
+        token.isVerified = user.isVerified;
+      }
+      if (trigger === 'update' && session) {
+        token.isPremium = session.isPremium;
+        token.freeTrialActive = session.freeTrialActive;
+        token.freeTrialExpiry = session.freeTrialExpiry || null;
+        token.isVerified = session.isVerified;
+      }
       // Remove image/picture from token to prevent header too large error
       delete token.picture;
       delete token.image;
       return token;
     },
     async session({ session, token }) {
-      if (token) { session.user.id = token.id; session.user.role = token.role; session.user.isPremium = token.isPremium; session.user.isVerified = token.isVerified; }
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.isPremium = token.isPremium;
+        session.user.freeTrialActive = token.freeTrialActive;
+        session.user.freeTrialExpiry = token.freeTrialExpiry || null;
+        session.user.isVerified = token.isVerified;
+      }
       // Don't put image in session — fetch it from /api/profile instead
       delete session.user.image;
       return session;

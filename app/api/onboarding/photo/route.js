@@ -13,8 +13,8 @@ export async function POST(req) {
 
     if (!email || !file) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
 
-    const user = await queryOne('SELECT id, emailVerified FROM `user` WHERE email = ?', [email]);
-    if (!user || !user.emailVerified) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
+    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
     if (file.size > 8 * 1024 * 1024) return NextResponse.json({ error: 'Max 8MB' }, { status: 400 });
     if (!file.type.startsWith('image/')) return NextResponse.json({ error: 'Images only' }, { status: 400 });
@@ -31,6 +31,6 @@ export async function POST(req) {
     return NextResponse.json({ success: true, url });
   } catch (err) {
     console.error('onboarding/photo error:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Server error: ' + err.message }, { status: 500 });
   }
 }

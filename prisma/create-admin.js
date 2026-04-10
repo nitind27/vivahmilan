@@ -18,7 +18,7 @@ async function main() {
   const password = 'Admin@1234';
   const name = 'Milan Admin';
 
-  const [existing] = await conn.execute('SELECT id FROM User WHERE email = ?', [email]);
+  const [existing] = await conn.execute('SELECT id FROM `user` WHERE email = ?', [email]);
   if (existing.length > 0) {
     console.log('✅ Admin already exists. Login with:', email, '/', password);
     await conn.end(); return;
@@ -29,8 +29,8 @@ async function main() {
   const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   await conn.execute(
-    `INSERT INTO User (id, name, email, password, role, isActive, isVerified, adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified, createdAt, updatedAt)
-     VALUES (?, ?, ?, ?, 'ADMIN', 1, 1, 1, 1, 1, 0, 0, ?, ?)`,
+    `INSERT INTO \`user\` (id, name, email, password, role, isActive, isVerified, adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified, loginOtpEnabled, createdAt, updatedAt)
+     VALUES (?, ?, ?, ?, 'ADMIN', 1, 1, 1, 1, 1, 0, 0, 0, ?, ?)`,
     [id, name, email, hashed, now, now]
   );
 
@@ -43,11 +43,11 @@ async function main() {
   ];
 
   for (const p of plans) {
-    const [ex] = await conn.execute('SELECT id FROM PlanConfig WHERE plan = ?', [p.plan]);
+    const [ex] = await conn.execute('SELECT id FROM `planconfig` WHERE plan = ?', [p.plan]);
     if (ex.length === 0) {
       const pid = randomUUID();
       await conn.execute(
-        `INSERT INTO PlanConfig (id, plan, displayName, price, currency, durationDays, isActive, permissions, createdAt, updatedAt) VALUES (?, ?, ?, ?, 'INR', ?, 1, ?, ?, ?)`,
+        `INSERT INTO \`planconfig\` (id, plan, displayName, price, currency, durationDays, isActive, permissions, createdAt, updatedAt) VALUES (?, ?, ?, ?, 'INR', ?, 1, ?, ?, ?)`,
         [pid, p.plan, p.name, p.price, p.days, JSON.stringify(p.perms), now, now]
       );
       console.log(`✅ Plan created: ${p.name}`);

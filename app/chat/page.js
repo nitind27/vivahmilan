@@ -299,15 +299,20 @@ function ChatInner() {
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
-    if (status === 'authenticated' && !session?.user?.isPremium) {
-      toast.error('Chat is Premium only. Upgrade to access.');
-      router.push('/premium');
+    if (status === 'authenticated') {
+      const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
+      if (!hasAccess) {
+        toast.error('Chat requires Premium. Upgrade to access.');
+        router.push('/premium');
+      }
     }
   }, [status, session, router]);
 
   // Socket setup
   useEffect(() => {
-    if (status !== 'authenticated' || !session?.user?.isPremium) return;
+    if (status !== 'authenticated') return;
+    const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
+    if (!hasAccess) return;
     const s = connectSocket(session.user.id);
     socketRef.current = s;
     s.on('users:online', setOnlineUsers);
@@ -334,7 +339,9 @@ function ChatInner() {
 
   // Load rooms
   useEffect(() => {
-    if (status !== 'authenticated' || !session?.user?.isPremium) return;
+    if (status !== 'authenticated') return;
+    const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
+    if (!hasAccess) return;
     const loadRooms = () => {
       Promise.all([
         fetch('/api/chat').then(r => r.json()),

@@ -5,11 +5,11 @@ import { randomUUID } from 'crypto';
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { email, ...data } = body;
+    const { email, _activateTrial, ...data } = body;
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
-    const user = await queryOne('SELECT id, emailVerified, name, phone FROM `user` WHERE email = ?', [email]);
+    const user = await queryOne('SELECT id, emailVerified, name, phone, freeTrialUsed FROM `user` WHERE email = ?', [email]);
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
     if (!user.emailVerified) return NextResponse.json({ error: 'Email not verified' }, { status: 403 });
 
@@ -58,6 +58,10 @@ export async function POST(req) {
       const ph = vals.map(() => '?').join(', ');
       await execute(`INSERT INTO profile (${cols.map(c => `\`${c}\``).join(', ')}) VALUES (${ph})`, vals);
     }
+
+    // Activate free trial on final submit (if not already used)
+    // NOTE: Trial is now activated when admin approves the profile, not here.
+    // This ensures the trial starts when the user can actually use it.
 
     return NextResponse.json({ success: true });
   } catch (err) {

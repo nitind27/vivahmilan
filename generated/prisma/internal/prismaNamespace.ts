@@ -398,6 +398,7 @@ export const ModelName = {
   notification: 'notification',
   profileoption: 'profileoption',
   planconfig: 'planconfig',
+  siteconfig: 'siteconfig',
   subscription: 'subscription',
   document: 'document',
   report: 'report',
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "subscription" | "document" | "report" | "block" | "otp"
+    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "subscription" | "document" | "report" | "block" | "otp"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1346,6 +1347,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    siteconfig: {
+      payload: Prisma.$siteconfigPayload<ExtArgs>
+      fields: Prisma.siteconfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.siteconfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.siteconfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>
+        }
+        findFirst: {
+          args: Prisma.siteconfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.siteconfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>
+        }
+        findMany: {
+          args: Prisma.siteconfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>[]
+        }
+        create: {
+          args: Prisma.siteconfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>
+        }
+        createMany: {
+          args: Prisma.siteconfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.siteconfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>
+        }
+        update: {
+          args: Prisma.siteconfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.siteconfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.siteconfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.siteconfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$siteconfigPayload>
+        }
+        aggregate: {
+          args: Prisma.SiteconfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSiteconfig>
+        }
+        groupBy: {
+          args: Prisma.siteconfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteconfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.siteconfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteconfigCountAggregateOutputType> | number
+        }
+      }
+    }
     subscription: {
       payload: Prisma.$subscriptionPayload<ExtArgs>
       fields: Prisma.subscriptionFieldRefs
@@ -1773,6 +1840,8 @@ export const UserScalarFieldEnum = {
   boostExpiry: 'boostExpiry',
   loginOtpEnabled: 'loginOtpEnabled',
   lastLoginAt: 'lastLoginAt',
+  freeTrialUsed: 'freeTrialUsed',
+  freeTrialExpiry: 'freeTrialExpiry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1952,6 +2021,17 @@ export const PlanconfigScalarFieldEnum = {
 } as const
 
 export type PlanconfigScalarFieldEnum = (typeof PlanconfigScalarFieldEnum)[keyof typeof PlanconfigScalarFieldEnum]
+
+
+export const SiteconfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SiteconfigScalarFieldEnum = (typeof SiteconfigScalarFieldEnum)[keyof typeof SiteconfigScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {
@@ -2213,6 +2293,15 @@ export const planconfigOrderByRelevanceFieldEnum = {
 } as const
 
 export type planconfigOrderByRelevanceFieldEnum = (typeof planconfigOrderByRelevanceFieldEnum)[keyof typeof planconfigOrderByRelevanceFieldEnum]
+
+
+export const siteconfigOrderByRelevanceFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value'
+} as const
+
+export type siteconfigOrderByRelevanceFieldEnum = (typeof siteconfigOrderByRelevanceFieldEnum)[keyof typeof siteconfigOrderByRelevanceFieldEnum]
 
 
 export const subscriptionOrderByRelevanceFieldEnum = {
@@ -2506,6 +2595,7 @@ export type GlobalOmitConfig = {
   notification?: Prisma.notificationOmit
   profileoption?: Prisma.profileoptionOmit
   planconfig?: Prisma.planconfigOmit
+  siteconfig?: Prisma.siteconfigOmit
   subscription?: Prisma.subscriptionOmit
   document?: Prisma.documentOmit
   report?: Prisma.reportOmit

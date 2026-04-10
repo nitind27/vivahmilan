@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Heart, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Mail, Lock, Eye, EyeOff, Clock, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
@@ -12,20 +12,26 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     const res = await signIn('credentials', { ...form, redirect: false });
     setLoading(false);
+
     if (res?.error) {
+      if (res.error === 'PENDING_APPROVAL') {
+        // Show pending approval screen
+        setPendingEmail(form.email);
+        return;
+      }
       const msg = res.error === 'CredentialsSignin'
         ? 'Invalid email or password'
         : res.error;
       toast.error(msg);
     } else {
       toast.success('Welcome back!');
-      // Get fresh session to check role
       const session = await getSession();
       if (session?.user?.role === 'ADMIN') {
         router.push('/admin');
@@ -35,6 +41,49 @@ export default function LoginPage() {
     }
   };
 
+  // ── Pending Approval Screen ───────────────────────────────────────────────
+  if (pendingEmail) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700 text-center">
+            <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-5">
+              <Clock className="w-10 h-10 text-amber-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Profile Under Review</h2>
+            <p className="text-gray-500 text-sm mb-4">
+              Your profile is awaiting admin approval. This usually takes up to <strong className="text-gray-700 dark:text-gray-300">24 hours</strong>.
+            </p>
+            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 mb-6 text-left space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                <span className="text-gray-600 dark:text-gray-400">Registration complete</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                <span className="text-gray-600 dark:text-gray-400">Profile submitted</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Clock className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                <span className="text-gray-600 dark:text-gray-400">Waiting for admin verification</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400 mb-6">
+              We'll send an email to <strong className="text-pink-500">{pendingEmail}</strong> as soon as your profile is approved.
+            </p>
+            <button
+              onClick={() => setPendingEmail(null)}
+              className="w-full border border-gray-200 dark:border-gray-600 py-3 rounded-2xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              Back to Login
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ── Login Form ────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">

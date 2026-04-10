@@ -24,6 +24,7 @@ const TABS = [
   { id: 'subscriptions', label: 'Subscriptions',   icon: Star },
   { id: 'plans',         label: 'Plan Config',     icon: Settings },
   { id: 'options',       label: 'Profile Options', icon: Edit2 },
+  { id: 'siteconfig',    label: 'Site Settings',   icon: Lock },
 ];
 
 const DEFAULT_PERMISSIONS = {
@@ -471,6 +472,8 @@ export default function AdminPage() {
   const [profileOptions, setProfileOptions] = useState([]);
   const [optCategory, setOptCategory] = useState('religion');
   const [newOpt, setNewOpt] = useState({ value: '', label: '', group: '' });
+  const [siteConfig, setSiteConfig] = useState({ freeTrialDays: '1' });
+  const [savingConfig, setSavingConfig] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -496,6 +499,8 @@ export default function AdminPage() {
     setPlans(pl);
     // Load profile options
     fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions).catch(() => {});
+    // Load site config
+    fetch('/api/admin/siteconfig').then(r => r.json()).then(setSiteConfig).catch(() => {});
     setLoading(false);  };
 
   useEffect(() => { if (status === 'authenticated' && session?.user?.role === 'ADMIN') loadAll(); }, [status, session]);
@@ -934,6 +939,49 @@ export default function AdminPage() {
               fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions);
             }}
           />
+        )}
+
+        {/* ── SITE SETTINGS ── */}
+        {tab === 'siteconfig' && (
+          <div className="max-w-lg space-y-6">
+            <p className="text-gray-400 text-sm">Configure global site settings. Changes take effect immediately for new users.</p>
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-5">
+              <h3 className="font-bold text-lg text-white">Free Trial Settings</h3>
+              <div>
+                <label className="text-xs text-gray-400 mb-1.5 block">Free Trial Duration (days)</label>
+                <p className="text-xs text-gray-500 mb-2">New users get this many days of free premium access after completing their profile. Set to 0 to disable free trial.</p>
+                <div className="flex gap-3 items-center">
+                  <input
+                    type="number"
+                    min="0"
+                    max="365"
+                    value={siteConfig.freeTrialDays ?? '1'}
+                    onChange={e => setSiteConfig(p => ({ ...p, freeTrialDays: e.target.value }))}
+                    className="w-32 px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white"
+                  />
+                  <span className="text-gray-400 text-sm">days</span>
+                </div>
+              </div>
+              <button
+                disabled={savingConfig}
+                onClick={async () => {
+                  setSavingConfig(true);
+                  try {
+                    const res = await fetch('/api/admin/siteconfig', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ key: 'freeTrialDays', value: siteConfig.freeTrialDays }),
+                    });
+                    if (res.ok) toast.success('Settings saved');
+                    else toast.error('Failed to save');
+                  } finally { setSavingConfig(false); }
+                }}
+                className="gradient-bg text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity"
+              >
+                {savingConfig ? 'Saving…' : 'Save Settings'}
+              </button>
+            </div>
+          </div>
         )}
       </main>
     </div>

@@ -14,8 +14,8 @@ export async function POST(req) {
 
     if (!email || !file || !docType) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
 
-    const user = await queryOne('SELECT id, emailVerified FROM `user` WHERE email = ?', [email]);
-    if (!user || !user.emailVerified) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
+    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Max 5MB' }, { status: 400 });
 
@@ -39,6 +39,6 @@ export async function POST(req) {
     return NextResponse.json({ id: docId, type: docType, status: 'PENDING' });
   } catch (err) {
     console.error('onboarding/document error:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Server error: ' + err.message }, { status: 500 });
   }
 }

@@ -37,9 +37,14 @@ export async function POST(req, { params }) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   if (!session.user.isPremium) {
-    return NextResponse.json({ error: 'Chat requires a Premium subscription' }, { status: 403 });
+    // Also check free trial in DB directly (in case session is stale)
+    const { queryOne } = await import('@/lib/db');
+    const dbUser = await queryOne('SELECT freeTrialExpiry FROM `user` WHERE id = ?', [session.user.id]);
+    const trialActive = dbUser?.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
+    if (!trialActive) {
+      return NextResponse.json({ error: 'Chat requires a Premium subscription' }, { status: 403 });
+    }
   }
-
   const { roomId } = await params;
 
   const room = await queryOne('SELECT * FROM chatroom WHERE id = ?', [roomId]);

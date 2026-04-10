@@ -162,7 +162,7 @@ function OnboardingInner() {
     } finally { setDocUploading(false); }
   };
 
-  const saveStep = async () => {
+  const saveStep = async (isFinal = false) => {
     setSaving(true);
     try {
       const res = await fetch('/api/onboarding', {
@@ -177,14 +177,14 @@ function OnboardingInner() {
   };
 
   const next = async () => {
-    const ok = await saveStep();
+    const ok = await saveStep(false);
     if (ok && step < STEPS.length - 1) setStep(s => s + 1);
   };
 
   const submit = async () => {
     if (!photoPreview) { toast.error('Please upload a profile photo'); return; }
     if (!docStatus) { toast.error('Please upload an ID document'); return; }
-    const ok = await saveStep();
+    const ok = await saveStep(true);
     if (ok) setSubmitted(true);
   };
 

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -7,7 +7,122 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
-import { Heart, Eye, MessageCircle, Bell, Star, TrendingUp, Users, ChevronRight } from 'lucide-react';
+import { Heart, Eye, MessageCircle, Bell, Star, TrendingUp, Users, ChevronRight, Clock, Zap, Crown } from 'lucide-react';
+
+// ── Live countdown timer ──────────────────────────────────────────────────────
+function useCountdown(expiryISO) {
+  const calc = useCallback(() => {
+    if (!expiryISO) return null;
+    const diff = new Date(expiryISO) - new Date();
+    if (diff <= 0) return { expired: true, h: 0, m: 0, s: 0, totalMs: 0 };
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    return { expired: false, h, m, s, totalMs: diff };
+  }, [expiryISO]);
+
+  const [time, setTime] = useState(calc);
+
+  useEffect(() => {
+    if (!expiryISO) return;
+    setTime(calc());
+    const id = setInterval(() => setTime(calc()), 1000);
+    return () => clearInterval(id);
+  }, [expiryISO, calc]);
+
+  return time;
+}
+
+// ── Free Trial Banner ─────────────────────────────────────────────────────────
+function FreeTrialBanner({ expiry }) {
+  const countdown = useCountdown(expiry);
+  if (!countdown) return null;
+
+  if (countdown.expired) {
+    return (
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl p-4 mb-6 text-white flex items-center justify-between gap-4"
+        style={{ background: 'linear-gradient(135deg, #ef4444, #ec4899)' }}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Crown className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <p className="font-bold text-sm">Free Trial Ended</p>
+            <p className="text-white/80 text-xs mt-0.5">Upgrade to Premium to keep chatting and access all features</p>
+          </div>
+        </div>
+        <Link href="/premium"
+          className="bg-white text-red-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0">
+          Upgrade Now
+        </Link>
+      </motion.div>
+    );
+  }
+
+  const pad = n => String(n).padStart(2, '0');
+  // Progress: how much of 24h is left
+  const totalDuration = 24 * 3600000;
+  const pct = Math.min(100, Math.round((countdown.totalMs / totalDuration) * 100));
+  const urgent = countdown.h < 3;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl p-5 mb-6 text-white overflow-hidden relative"
+      style={{ background: urgent ? 'linear-gradient(135deg, #f59e0b, #ef4444)' : 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}>
+      {/* Decorative circles */}
+      <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
+      <div className="absolute -bottom-8 -right-16 w-40 h-40 bg-white/5 rounded-full" />
+
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <Zap className="w-4 h-4 text-yellow-300 fill-yellow-300" />
+            <p className="font-bold text-base">1 Day Free Trial Active</p>
+          </div>
+          <p className="text-white/80 text-xs mb-4">
+            Enjoy full premium access — chat, view contacts, and more. Upgrade before it expires!
+          </p>
+
+          {/* Countdown */}
+          <div className="flex items-center gap-2 mb-4">
+            <Clock className="w-4 h-4 text-white/70 flex-shrink-0" />
+            <span className="text-white/70 text-xs">Time remaining:</span>
+            <div className="flex items-center gap-1">
+              {[
+                { val: pad(countdown.h), label: 'hr' },
+                { val: pad(countdown.m), label: 'min' },
+                { val: pad(countdown.s), label: 'sec' },
+              ].map((t, i) => (
+                <span key={t.label} className="flex items-center gap-0.5">
+                  {i > 0 && <span className="text-white/50 text-sm font-bold">:</span>}
+                  <span className="bg-white/20 rounded-lg px-2 py-1 text-sm font-bold tabular-nums min-w-[2.2rem] text-center">
+                    {t.val}
+                  </span>
+                  <span className="text-white/60 text-xs">{t.label}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="bg-white/20 rounded-full h-1.5 w-full max-w-xs">
+            <div
+              className="h-1.5 rounded-full bg-white transition-all duration-1000"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <p className="text-white/60 text-xs mt-1">{pct}% of trial remaining</p>
+        </div>
+
+        <Link href="/premium"
+          className="bg-white text-purple-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0 mt-1">
+          Upgrade
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -96,6 +211,45 @@ export default function Dashboard() {
               <div className="gradient-bg h-2 rounded-full transition-all" style={{ width: `${profileComplete}%` }} />
             </div>
             <p className="text-white/80 text-xs mt-1">{profileComplete}% complete</p>
+          </motion.div>
+        )}
+
+        {/* Free trial banner — shows when trial is active OR just expired */}
+        {session?.user?.freeTrialExpiry && !session?.user?.isPremium && (
+          <FreeTrialBanner expiry={session.user.freeTrialExpiry} />
+        )}
+
+        {/* Free trial expiry banner */}
+        {session?.user?.freeTrialExpiry && !session?.user?.isPremium && (() => {
+          const expiry = new Date(session.user.freeTrialExpiry);
+          const now = new Date();
+          if (expiry <= now) return null;
+          const hoursLeft = Math.ceil((expiry - now) / 3600000);
+          return (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-amber-400 to-orange-500 rounded-2xl p-4 mb-6 text-white flex items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-sm">⏳ Free Trial Active</p>
+                <p className="text-white/90 text-xs mt-0.5">
+                  {hoursLeft <= 1 ? 'Less than 1 hour left!' : `${hoursLeft} hours remaining`} — Upgrade to keep full access
+                </p>
+              </div>
+              <Link href="/premium" className="bg-white text-orange-600 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0">
+                Upgrade Now
+              </Link>
+            </motion.div>
+          );
+        })()}
+
+        {/* Trial expired banner */}
+        {session?.user?.freeTrialExpiry && !session?.user?.isPremium && new Date(session.user.freeTrialExpiry) <= new Date() && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl p-4 mb-6 text-white flex items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-sm">🔒 Free Trial Ended</p>
+              <p className="text-white/90 text-xs mt-0.5">Upgrade to Premium to continue chatting and accessing all features</p>
+            </div>
+            <Link href="/premium" className="bg-white text-red-600 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0">
+              Upgrade Now
+            </Link>
           </motion.div>
         )}
 

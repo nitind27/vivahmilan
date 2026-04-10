@@ -112,6 +112,11 @@ export type profileoption = Prisma.profileoptionModel
  */
 export type planconfig = Prisma.planconfigModel
 /**
+ * Model siteconfig
+ * 
+ */
+export type siteconfig = Prisma.siteconfigModel
+/**
  * Model subscription
  * 
  */
