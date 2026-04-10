@@ -108,6 +108,17 @@ export async function POST(req, { params }) {
     [randomUUID(), receiverId, `${session.user.name} sent you a message.`, `/chat?userId=${session.user.id}`]
   );
 
+  // Web Push notification to receiver
+  try {
+    const { sendPushToUser } = await import('@/lib/webpush');
+    const msgBody = type === 'IMAGE' ? '📷 Photo' : type === 'DOCUMENT' ? '📄 Document' : type === 'LOCATION' ? '📍 Location' : content;
+    await sendPushToUser(receiverId, {
+      title: `💬 ${session.user.name}`,
+      body: msgBody,
+      url: `/chat?userId=${session.user.id}`,
+    });
+  } catch (e) { console.error('Push error:', e.message); }
+
   const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
-  return NextResponse.json(message, { status: 201 });
+  return NextResponse.json({ ...message, _senderName: session.user.name }, { status: 201 });
 }

@@ -41,6 +41,15 @@ export async function PATCH(req, { params }) {
         link: '/login',
       },
     });
+    // Web Push
+    try {
+      const { sendPushToUser } = await import('@/lib/webpush');
+      await sendPushToUser(id, {
+        title: '✅ Profile Approved!',
+        body: `Welcome to Milan Matrimony! Your ${trialDays}-day free trial starts now.`,
+        url: '/login',
+      });
+    } catch (e) { console.error('Push error:', e.message); }
   }
 
   return NextResponse.json(updated);

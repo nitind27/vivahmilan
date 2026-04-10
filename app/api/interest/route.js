@@ -28,6 +28,16 @@ export async function POST(req) {
     [randomUUID(), receiverId, `${session.user.name} has sent you an interest request.`, `/profile/${session.user.id}`]
   );
 
+  // Web Push
+  try {
+    const { sendPushToUser } = await import('@/lib/webpush');
+    await sendPushToUser(receiverId, {
+      title: '💕 New Interest!',
+      body: `${session.user.name} has sent you an interest request.`,
+      url: `/profile/${session.user.id}`,
+    });
+  } catch (e) { console.error('Push error:', e.message); }
+
   return NextResponse.json({ id, senderId: session.user.id, receiverId, status: 'PENDING' }, { status: 201 });
 }
 
