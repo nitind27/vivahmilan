@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
 import { Heart, Eye, MessageCircle, Bell, Star, TrendingUp, Users, ChevronRight, Clock, Zap, Crown } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 // ── Live countdown timer ──────────────────────────────────────────────────────
 function useCountdown(expiryISO) {
@@ -335,7 +336,7 @@ export default function Dashboard() {
             </div>
 
             {/* Premium upsell */}
-            {!session?.user?.isPremium && (
+            {!session?.user?.isPremium && !session?.user?.freeTrialActive && (
               <div className="gradient-bg rounded-2xl p-5 text-white">
                 <Star className="w-8 h-8 mb-3 fill-white" />
                 <h3 className="font-bold text-lg mb-1">Go Premium</h3>
@@ -345,6 +346,28 @@ export default function Dashboard() {
                 </Link>
               </div>
             )}
+
+            {/* Notification test */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
+              <p className="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1.5">
+                <Bell className="w-3.5 h-3.5" /> Desktop Notifications
+              </p>
+              <button
+                onClick={async () => {
+                  if (Notification.permission === 'denied') {
+                    toast.error('Notifications blocked. Enable in browser settings.');
+                    return;
+                  }
+                  const res = await fetch('/api/push/test', { method: 'POST' });
+                  const d = await res.json();
+                  if (res.ok) toast.success('Test notification sent!');
+                  else toast.error(d.error || 'Failed');
+                }}
+                className="w-full text-xs bg-gray-50 dark:bg-gray-700 hover:bg-pink-50 dark:hover:bg-pink-900/20 text-gray-600 dark:text-gray-300 hover:text-pink-600 py-2 rounded-xl transition-colors border border-gray-200 dark:border-gray-600"
+              >
+                🔔 Send Test Notification
+              </button>
+            </div>
           </div>
         </div>
       </div>
