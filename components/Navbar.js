@@ -116,8 +116,8 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex items-center gap-2">
-                <Link href="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors px-3 py-2">Login</Link>
-                <Link href="/register" className="gradient-bg text-white text-sm font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Register Free</Link>
+                {/* <Link href="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors px-3 py-2">Login</Link> */}
+                <Link href="/login" className="gradient-bg text-white text-sm font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Sign in</Link>
               </div>
             )}
 
