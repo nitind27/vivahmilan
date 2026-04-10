@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings } from 'lucide-react';
-import Image from 'next/image';
+import SmartImage from '@/components/SmartImage';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -67,7 +67,7 @@ export default function Navbar() {
                   <button onClick={() => setDropOpen(!dropOpen)} className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
                       {session.user.image ? (
-                        <Image src={session.user.image} alt="avatar" width={32} height={32} className="object-cover" />
+                        <SmartImage src={session.user.image} alt="avatar" width={32} height={32} className="object-cover w-full h-full" />
                       ) : (
                         <span className="text-white text-sm font-bold">{session.user.name?.[0]?.toUpperCase()}</span>
                       )}

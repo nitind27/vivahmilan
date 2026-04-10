@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
+import SmartImage from '@/components/SmartImage';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -271,7 +272,7 @@ export default function ProfilePage() {
             {/* Main photo */}
             <div className="relative h-80 rounded-3xl overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20 shadow-md">
               {allPhotos.length > 0 ? (
-                <Image src={allPhotos[activePhoto]?.url} alt={user.name} fill className="object-cover" />
+                <SmartImage src={allPhotos[activePhoto]?.url} alt={user.name} fill className="object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="w-24 h-24 gradient-bg rounded-full flex items-center justify-center">
@@ -300,7 +301,7 @@ export default function ProfilePage() {
                 {allPhotos.map((p, i) => (
                   <button key={i} onClick={() => setActivePhoto(i)}
                     className={`relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border-2 transition-all ${activePhoto === i ? 'border-pink-500 scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}>
-                    <Image src={p.url} alt="" fill className="object-cover" />
+                    <SmartImage src={p.url} alt="" fill className="object-cover" />
                   </button>
                 ))}
               </div>

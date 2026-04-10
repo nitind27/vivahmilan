@@ -2,7 +2,8 @@
 import { useEffect, useState, useRef, useCallback, Suspense, lazy } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';import Link from 'next/link';
+import Image from 'next/image';
+import SmartImage from '@/components/SmartImage';import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import {
@@ -610,7 +611,7 @@ function ChatInner() {
                     <div className="relative flex-shrink-0">
                       <div className="w-11 h-11 rounded-full overflow-hidden gradient-bg flex items-center justify-center text-white font-bold">
                         {other?.image
-                          ? <Image src={other.image} alt="" width={44} height={44} className="object-cover w-full h-full" />
+                          ? <SmartImage src={other.image} alt="" width={44} height={44} className="object-cover w-full h-full" />
                           : <span>{other?.name?.[0]}</span>
                         }
                       </div>
@@ -656,7 +657,7 @@ function ChatInner() {
                     <button onClick={() => setActiveRoom(null)} className="md:hidden p-1 text-gray-500"><ArrowLeft className="w-5 h-5" /></button>
                     <div className="relative">
                       <div className="w-10 h-10 rounded-full overflow-hidden gradient-bg flex items-center justify-center text-white font-bold">
-                        {other?.image ? <Image src={other.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <span>{other?.name?.[0]}</span>}
+                        {other?.image ? <SmartImage src={other.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <span>{other?.name?.[0]}</span>}
                       </div>
                       {online && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />}
                     </div>

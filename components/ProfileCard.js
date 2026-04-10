@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import SmartImage from '@/components/SmartImage';
 import Link from 'next/link';
 import { Heart, MapPin, GraduationCap, Briefcase, BadgeCheck, Star } from 'lucide-react';
 import { useState } from 'react';
@@ -46,7 +46,7 @@ export default function ProfileCard({ user, index = 0 }) {
           {/* Photo */}
           <div className="relative h-56 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
             {photo ? (
-              <Image src={photo} alt={user.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+              <SmartImage src={photo} alt={user.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <div className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center">

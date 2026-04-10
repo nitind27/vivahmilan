@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import SmartImage from '@/components/SmartImage';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import {
@@ -136,7 +137,7 @@ export default function InterestsPage() {
                       <Link href={`/profile/${person?.id}`}
                         className="relative w-32 sm:w-40 flex-shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
                         {photo ? (
-                          <Image src={photo} alt={person?.name} fill className="object-cover" />
+                          <SmartImage src={photo} alt={person?.name} fill className="object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
                             <div className="w-14 h-14 gradient-bg rounded-full flex items-center justify-center">
