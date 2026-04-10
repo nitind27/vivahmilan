@@ -1,25 +1,24 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, Trash2, Star, Plus, Loader2, FileText, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Camera, Upload, Trash2, Plus, Loader2, FileText, CheckCircle, Clock, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const DOC_TYPES = ['Aadhaar Card', 'PAN Card', 'Voter ID Card', 'Passport', 'Driving License'];
 
 // ── Profile Photo Upload ──────────────────────────────────────────────────────
-export function PhotoUploadSection({ userId }) {
+export function PhotoUploadSection() {
   const [photos, setPhotos] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef(null);
+  const [mainUploading, setMainUploading] = useState(false);
+  const [uploadingIds, setUploadingIds] = useState(new Set()); // track per-slot uploading
 
   useEffect(() => {
     fetch('/api/profile').then(r => r.json()).then(data => {
-      const all = data.image ? [{ id: 'main', url: data.image, isMain: true }, ...(data.photos || [])] : (data.photos || []);
-      setPhotos(all);
+      setPhotos(data.photos || []);
     });
   }, []);
 
-  const compressImage = (file, maxW = 800, quality = 0.82) =>
+  const compressImage = (file, maxW = 1200, quality = 0.85) =>
     new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = e => {
@@ -37,35 +36,75 @@ export function PhotoUploadSection({ userId }) {
       reader.readAsDataURL(file);
     });
 
-  const upload = async (file, isMain = false) => {
-    if (!file.type.startsWith('image/')) { toast.error('Only images allowed'); return; }
-    setUploading(true);
+  const uploadOne = async (file, isMain = false) => {
+    if (!file.type.startsWith('image/')) { toast.error('Only images allowed — no videos'); return null; }
+    if (file.size > 10 * 1024 * 1024) { toast.error('Max 10MB per image'); return null; }
+    const compressed = await compressImage(file);
+    const fd = new FormData();
+    fd.append('photo', compressed, 'photo.jpg');
+    fd.append('isMain', String(isMain));
+    const res = await fetch('/api/upload/photo', { method: 'POST', body: fd });
+    if (!res.ok) { const d = await res.json(); toast.error(d.error || 'Upload failed'); return null; }
+    return await res.json();
+  };
+
+  // Upload main profile photo
+  const uploadMain = async (file) => {
+    setMainUploading(true);
     try {
-      const compressed = await compressImage(file);
-      const fd = new FormData();
-      fd.append('photo', compressed, 'photo.jpg');
-      fd.append('isMain', String(isMain));
-      const res = await fetch('/api/upload/photo', { method: 'POST', body: fd });
-      if (!res.ok) { const d = await res.json(); toast.error(d.error); return; }
-      const photo = await res.json();
-      if (isMain) {
+      const photo = await uploadOne(file, true);
+      if (photo) {
         setPhotos(prev => [{ ...photo, isMain: true }, ...prev.filter(p => !p.isMain)]);
-      } else {
-        setPhotos(prev => [...prev, photo]);
+        toast.success('Profile photo updated!');
       }
-      toast.success(isMain ? 'Profile photo updated!' : 'Photo added!');
-    } finally { setUploading(false); }
+    } finally { setMainUploading(false); }
+  };
+
+  // Upload multiple additional photos
+  const uploadMultiple = async (files) => {
+    const fileArr = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (fileArr.length === 0) { toast.error('Only image files allowed — no videos'); return; }
+
+    const mainPhoto = photos.find(p => p.isMain);
+    const otherPhotos = photos.filter(p => !p.isMain);
+    const slotsLeft = 6 - otherPhotos.length;
+    if (slotsLeft <= 0) { toast.error('Maximum 6 additional photos reached'); return; }
+
+    const toUpload = fileArr.slice(0, slotsLeft);
+    if (fileArr.length > slotsLeft) toast(`Only ${slotsLeft} slot(s) left — uploading first ${slotsLeft}`);
+
+    // Add temp placeholders
+    const tempIds = toUpload.map((_, i) => `temp_${Date.now()}_${i}`);
+    setUploadingIds(new Set(tempIds));
+    setPhotos(prev => [...prev, ...tempIds.map(id => ({ id, url: '', isMain: false, _loading: true }))]);
+
+    const results = await Promise.all(toUpload.map(f => uploadOne(f, false)));
+
+    // Replace placeholders with real photos
+    setPhotos(prev => {
+      let updated = prev.filter(p => !p._loading);
+      results.forEach(photo => { if (photo) updated = [...updated, photo]; });
+      return updated;
+    });
+    setUploadingIds(new Set());
+
+    const success = results.filter(Boolean).length;
+    if (success > 0) toast.success(`${success} photo${success > 1 ? 's' : ''} uploaded!`);
   };
 
   const deletePhoto = async (photoId) => {
-    if (photoId === 'main') { toast.error("Can't delete main photo directly"); return; }
-    await fetch('/api/upload/photo', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ photoId }) });
+    await fetch('/api/upload/photo', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photoId }),
+    });
     setPhotos(prev => prev.filter(p => p.id !== photoId));
     toast.success('Photo removed');
   };
 
   const mainPhoto = photos.find(p => p.isMain);
   const otherPhotos = photos.filter(p => !p.isMain);
+  const slotsLeft = 6 - otherPhotos.filter(p => !p._loading).length;
 
   return (
     <div className="space-y-6">
@@ -81,18 +120,20 @@ export function PhotoUploadSection({ userId }) {
                 <Camera className="w-10 h-10 text-gray-300" />
               </div>
             )}
-            {uploading && (
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            {mainUploading && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                 <Loader2 className="w-6 h-6 text-white animate-spin" />
               </div>
             )}
           </div>
           <div>
             <p className="text-sm font-medium mb-1">Main Profile Photo</p>
-            <p className="text-xs text-gray-400 mb-3">This photo appears on your profile card. Max 8MB.</p>
+            <p className="text-xs text-gray-400 mb-3">Appears on your profile card. Images only, max 10MB.</p>
             <label className="cursor-pointer gradient-bg text-white text-xs px-4 py-2 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-1.5 w-fit">
-              <Upload className="w-3.5 h-3.5" /> Upload Photo
-              <input type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && upload(e.target.files[0], true)} />
+              <Upload className="w-3.5 h-3.5" /> {mainUploading ? 'Uploading…' : 'Upload Photo'}
+              <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden"
+                disabled={mainUploading}
+                onChange={e => e.target.files?.[0] && uploadMain(e.target.files[0])} />
             </label>
           </div>
         </div>
@@ -100,26 +141,50 @@ export function PhotoUploadSection({ userId }) {
 
       {/* Additional photos */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">Additional Photos (up to 6)</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            Additional Photos ({otherPhotos.filter(p => !p._loading).length}/6)
+          </p>
+          {slotsLeft > 0 && (
+            <label className="cursor-pointer text-xs text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1 transition-colors">
+              <Plus className="w-3.5 h-3.5" /> Add up to {slotsLeft} more
+              <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple className="hidden"
+                onChange={e => e.target.files?.length && uploadMultiple(e.target.files)} />
+            </label>
+          )}
+        </div>
+
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
           {otherPhotos.map(photo => (
             <motion.div key={photo.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
               className="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 group">
-              <img src={photo.url} alt="" className="w-full h-full object-cover" />
-              <button onClick={() => deletePhoto(photo.id)}
-                className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Trash2 className="w-3 h-3" />
-              </button>
+              {photo._loading ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 text-pink-400 animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                  <button onClick={() => deletePhoto(photo.id)}
+                    className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </>
+              )}
             </motion.div>
           ))}
-          {otherPhotos.length < 6 && (
+
+          {/* Add more slot */}
+          {slotsLeft > 0 && (
             <label className="aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center cursor-pointer hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-all">
-              {uploading ? <Loader2 className="w-6 h-6 text-pink-400 animate-spin" /> : <Plus className="w-6 h-6 text-gray-400" />}
+              <Plus className="w-6 h-6 text-gray-400" />
               <span className="text-xs text-gray-400 mt-1">Add</span>
-              <input type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && upload(e.target.files[0], false)} />
+              <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple className="hidden"
+                onChange={e => e.target.files?.length && uploadMultiple(e.target.files)} />
             </label>
           )}
         </div>
+        <p className="text-xs text-gray-400 mt-2">Select multiple images at once. Images only — no videos.</p>
       </div>
     </div>
   );
