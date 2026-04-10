@@ -14,7 +14,6 @@ import {
 import { format, isToday, isYesterday } from 'date-fns';
 import toast from 'react-hot-toast';
 import { connectSocket } from '@/lib/socket';
-import { sendNotification } from '@/lib/notifications';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 
@@ -333,12 +332,7 @@ function ChatInner() {
       } else {
         setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
         setUnreadPerRoom(prev => ({ ...prev, [msg.chatRoomId]: (prev[msg.chatRoomId] || 0) + 1 }));
-        // Browser notification
-        sendNotification({
-          title: msg._senderName || 'New Message',
-          body: msg.type === 'IMAGE' ? '📷 Photo' : msg.type === 'DOCUMENT' ? '📄 Document' : (msg.content || 'New message'),
-          url: `/chat?userId=${msg.senderId}`,
-        });
+        // No client-side notification here — server already sends Web Push
       }
       setRooms(prev => {
         const updated = prev.map(r => r.id === msg.chatRoomId ? { ...r, messages: [msg] } : r);
