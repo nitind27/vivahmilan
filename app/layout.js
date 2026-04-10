@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
+import SWRegister from '@/components/SWRegister';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100`}>
         <Providers>
+          <SWRegister />
           {children}
           <Toaster position="top-right" toastOptions={{
             style: { background: '#1f2937', color: '#fff', borderRadius: '12px' },

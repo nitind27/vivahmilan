@@ -5,6 +5,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
+import { sendNotification } from '@/lib/notifications';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -21,21 +22,16 @@ export default function Navbar() {
 
   useEffect(() => {
     if (session) {
-      // Request browser notification permission
-      if (typeof window !== 'undefined' && Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-
       const checkNotifs = () => {
         fetch('/api/notifications').then(r => r.json()).then(d => {
           const newCount = d.unreadCount || 0;
-          // Show browser notification if count increased
           if (newCount > unread && Notification.permission === 'granted') {
             const latest = d.notifications?.find(n => !n.isRead);
             if (latest) {
-              new Notification(latest.title || 'Milan Matrimony', {
+              sendNotification({
+                title: latest.title || 'Milan Matrimony',
                 body: latest.message || 'You have a new notification',
-                icon: '/favicon.ico',
+                url: '/notifications',
               });
             }
           }

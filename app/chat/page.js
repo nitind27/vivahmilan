@@ -14,6 +14,7 @@ import {
 import { format, isToday, isYesterday } from 'date-fns';
 import toast from 'react-hot-toast';
 import { connectSocket } from '@/lib/socket';
+import { sendNotification } from '@/lib/notifications';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 
@@ -303,21 +304,6 @@ function ChatInner() {
   // Keep activeRoomRef in sync
   useEffect(() => { activeRoomRef.current = activeRoom; }, [activeRoom]);
 
-  // Browser notification helper
-  const showBrowserNotification = useCallback((title, body) => {
-    if (typeof window === 'undefined') return;
-    if (Notification.permission === 'granted') {
-      new Notification(title, { body, icon: '/favicon.ico' });
-    }
-  }, []);
-
-  // Request notification permission on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined' && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  }, []);
-
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
     if (status === 'authenticated') {
@@ -348,7 +334,11 @@ function ChatInner() {
         setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
         setUnreadPerRoom(prev => ({ ...prev, [msg.chatRoomId]: (prev[msg.chatRoomId] || 0) + 1 }));
         // Browser notification
-        showBrowserNotification(msg._senderName || 'New message', msg.content || '📷 Photo');
+        sendNotification({
+          title: msg._senderName || 'New Message',
+          body: msg.type === 'IMAGE' ? '📷 Photo' : msg.type === 'DOCUMENT' ? '📄 Document' : (msg.content || 'New message'),
+          url: `/chat?userId=${msg.senderId}`,
+        });
       }
       setRooms(prev => {
         const updated = prev.map(r => r.id === msg.chatRoomId ? { ...r, messages: [msg] } : r);
