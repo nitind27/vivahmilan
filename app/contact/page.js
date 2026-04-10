@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, MessageCircle, HelpCircle, Flag, Shield } from 'lucide-react';
@@ -118,13 +119,13 @@ export default function ContactPage() {
                 <h3 className="font-bold text-sm mb-3 text-gray-500 uppercase tracking-wide">Quick Links</h3>
                 <div className="space-y-2">
                   {QUICK_LINKS.map((l, i) => (
-                    <a key={i} href={l.href} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                    <Link key={i} href={l.href} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                       <l.icon className="w-4 h-4 text-pink-500 flex-shrink-0" />
                       <div>
                         <p className="text-sm font-medium group-hover:text-pink-500 transition-colors">{l.label}</p>
                         <p className="text-xs text-gray-400">{l.desc}</p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>

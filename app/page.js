@@ -246,16 +246,20 @@ export default function Home() {
                 { label: 'Contact Us', href: '/contact' },
               ]},
               { title: 'Legal', links: [
-                { label: 'Privacy Policy', href: '#' },
-                { label: 'Terms of Service', href: '#' },
-                { label: 'Cookie Policy', href: '#' },
-                { label: 'Refund Policy', href: '#' },
+                { label: 'Privacy Policy', href: '/privacy' },
+                { label: 'Terms of Service', href: '/terms' },
+                { label: 'Cookie Policy', href: '/cookies' },
+                { label: 'Refund Policy', href: '/refund' },
               ]},
             ].map(col => (
               <div key={col.title}>
                 <h4 className="text-white font-semibold mb-4">{col.title}</h4>
                 <ul className="space-y-2">
-                  {col.links.map(l => <li key={l.label}><a href={l.href} className="text-sm hover:text-pink-400 transition-colors">{l.label}</a></li>)}
+                  {col.links.map(l => (
+                    <li key={l.label}>
+                      <Link href={l.href} className="text-sm hover:text-pink-400 transition-colors">{l.label}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             ))}

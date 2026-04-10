@@ -9,13 +9,15 @@ import { useTheme } from '@/components/ThemeProvider';
 
 export default function Navbar() {
   const { data: session } = useSession();
-  const { theme, toggle } = useTheme();
+  const { theme, toggle, mounted } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [unread, setUnread] = useState(0);
+  const [clientReady, setClientReady] = useState(false);
 
   useEffect(() => {
+    setClientReady(true);
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
@@ -37,7 +39,7 @@ export default function Navbar() {
   }, [session]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${clientReady && scrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -57,7 +59,7 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            {session ? (
+            {clientReady && session ? (
               <>
                 <Link href="/chat" className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
                   <MessageCircle className="w-5 h-5" />
@@ -116,12 +118,11 @@ export default function Navbar() {
                   </AnimatePresence>
                 </div>
               </>
-            ) : (
+            ) : clientReady ? (
               <div className="flex items-center gap-2">
-                {/* <Link href="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors px-3 py-2">Login</Link> */}
                 <Link href="/login" className="gradient-bg text-white text-sm font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Sign in</Link>
               </div>
-            )}
+            ) : null}
 
             {/* Mobile menu button */}
             <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-gray-600 dark:text-gray-300">
@@ -134,32 +135,35 @@ export default function Navbar() {
               className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              {theme === 'dark'
+              {mounted && (theme === 'dark'
                 ? <Sun className="w-5 h-5 text-yellow-400" />
                 : <Moon className="w-5 h-5" />
-              }
+              )}
+              {!mounted && <Moon className="w-5 h-5 opacity-0" />}
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800"
-          >
-            <div className="px-4 py-3 space-y-1">
-              <Link href="/matches" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Find Matches</Link>
-              <Link href="/search" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Search</Link>
-              <Link href="/premium" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Premium</Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {clientReady && (
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800"
+            >
+              <div className="px-4 py-3 space-y-1">
+                <Link href="/matches" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Find Matches</Link>
+                <Link href="/search" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Search</Link>
+                <Link href="/premium" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Premium</Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
     </nav>
   );
 }
