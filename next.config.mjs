@@ -13,7 +13,11 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000', '192.168.29.125:3000'],
+      allowedOrigins: [
+        'localhost:3000',
+        '192.168.29.125:3000',
+        'vivahmilan.codeatinfotech.com',
+      ],
       bodySizeLimit: '20mb',
     },
   },
