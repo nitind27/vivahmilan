@@ -11,6 +11,12 @@ const nextConfig = {
     // Allow local uploaded images
     localPatterns: [{ pathname: '/uploads/**' }],
   },
+   // ✅ THIS IS THE MAIN FIX
+  allowedDevOrigins: [
+    'http://vivahmilan.codeatinfotech.com',
+    'https://vivahmilan.codeatinfotech.com',
+  ],
+
   experimental: {
     serverActions: {
       allowedOrigins: [
