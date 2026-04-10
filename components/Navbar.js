@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings } from 'lucide-react';
+import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
+import { useTheme } from '@/components/ThemeProvider';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const { theme, toggle } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -124,6 +126,18 @@ export default function Navbar() {
             {/* Mobile menu button */}
             <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-gray-600 dark:text-gray-300">
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            {/* Dark/Light toggle */}
+            <button
+              onClick={toggle}
+              className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark'
+                ? <Sun className="w-5 h-5 text-yellow-400" />
+                : <Moon className="w-5 h-5" />
+              }
             </button>
           </div>
         </div>
