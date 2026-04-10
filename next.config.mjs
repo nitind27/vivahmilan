@@ -7,9 +7,10 @@ const nextConfig = {
       { protocol: 'https', hostname: 'randomuser.me' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'staticmap.openstreetmap.de' },
+      { protocol: 'https', hostname: 'vivahmilan.codeatinfotech.com' },
     ],
-    // Allow local uploaded images
     localPatterns: [{ pathname: '/uploads/**' }],
+    unoptimized: true,
   },
    // ✅ THIS IS THE MAIN FIX
   allowedDevOrigins: [

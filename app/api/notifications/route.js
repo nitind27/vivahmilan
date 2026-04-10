@@ -24,10 +24,21 @@ export async function PATCH(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  await prisma.notification.updateMany({
-    where: { userId: session.user.id, isRead: false },
-    data: { isRead: true },
-  });
+  const body = await req.json().catch(() => ({}));
+
+  if (body?.id) {
+    // Mark single notification as read
+    await prisma.notification.updateMany({
+      where: { id: body.id, userId: session.user.id },
+      data: { isRead: true },
+    });
+  } else {
+    // Mark all as read
+    await prisma.notification.updateMany({
+      where: { userId: session.user.id, isRead: false },
+      data: { isRead: true },
+    });
+  }
 
   return NextResponse.json({ success: true });
 }

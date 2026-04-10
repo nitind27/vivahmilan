@@ -33,17 +33,39 @@ export default function NotificationsPage() {
       fetch('/api/notifications').then(r => r.json()).then(data => {
         setNotifications(data.notifications || []);
         setLoading(false);
-        // Mark all as read
-        fetch('/api/notifications', { method: 'PATCH' });
       });
     }
   }, [status]);
+
+  const markAllRead = async () => {
+    await fetch('/api/notifications', { method: 'PATCH' });
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+  };
+
+  const markOneRead = async (id) => {
+    await fetch('/api/notifications', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+  };
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-24 pb-12">
-        <h1 className="text-3xl font-bold mb-6">Notifications</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">Notifications</h1>
+          {unreadCount > 0 && (
+            <button onClick={markAllRead}
+              className="text-sm text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1.5 transition-colors">
+              <CheckCheck className="w-4 h-4" /> Mark all read ({unreadCount})
+            </button>
+          )}
+        </div>
 
         {loading ? (
           <div className="space-y-3">
@@ -60,7 +82,8 @@ export default function NotificationsPage() {
               const Icon = iconMap[n.type] || Bell;
               return (
                 <motion.div key={n.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
-                  <Link href={n.link || '#'} className={`flex items-start gap-4 p-4 rounded-2xl transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${!n.isRead ? 'bg-pink-50 dark:bg-pink-900/10' : 'bg-white dark:bg-gray-800'}`}>
+                  <Link href={n.link || '#'} onClick={() => !n.isRead && markOneRead(n.id)}
+                    className={`flex items-start gap-4 p-4 rounded-2xl transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${!n.isRead ? 'bg-pink-50 dark:bg-pink-900/10' : 'bg-white dark:bg-gray-800'}`}>
                     <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center flex-shrink-0">
                       <Icon className="w-5 h-5 text-white" />
                     </div>

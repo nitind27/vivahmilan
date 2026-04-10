@@ -12,7 +12,6 @@ export default function Navbar() {
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [unread, setUnread] = useState(0);
-  const [unreadChat, setUnreadChat] = useState(0);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -23,10 +22,7 @@ export default function Navbar() {
   useEffect(() => {
     if (session) {
       fetch('/api/notifications').then(r => r.json()).then(d => setUnread(d.unreadCount || 0));
-      fetch('/api/chat/unread').then(r => r.json()).then(d => setUnreadChat(d.total || 0));
-      // Poll every 30s
       const interval = setInterval(() => {
-        fetch('/api/chat/unread').then(r => r.json()).then(d => setUnreadChat(d.total || 0));
         fetch('/api/notifications').then(r => r.json()).then(d => setUnread(d.unreadCount || 0));
       }, 30000);
       return () => clearInterval(interval);
@@ -58,11 +54,6 @@ export default function Navbar() {
               <>
                 <Link href="/chat" className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
                   <MessageCircle className="w-5 h-5" />
-                  {unreadChat > 0 && (
-                    <span className="absolute top-1 right-1 w-4 h-4 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
-                      {unreadChat > 9 ? '9+' : unreadChat}
-                    </span>
-                  )}
                 </Link>
                 <Link href="/notifications" className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
                   <Bell className="w-5 h-5" />
