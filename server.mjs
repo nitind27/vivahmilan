@@ -2,6 +2,8 @@
 // Run with: node server.mjs  (replaces `next dev` / `next start`)
 import { createServer } from 'http';
 import { parse } from 'url';
+import { createReadStream, statSync, existsSync } from 'fs';
+import { join, extname } from 'path';
 import next from 'next';
 import { Server } from 'socket.io';
 
@@ -12,11 +14,42 @@ const port = parseInt(process.env.PORT || '3000');
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
+// MIME types for uploaded files
+const MIME = {
+  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+  '.png': 'image/png', '.webp': 'image/webp',
+  '.gif': 'image/gif', '.pdf': 'application/pdf',
+};
+
+const UPLOADS_DIR = join(process.cwd(), 'public', 'uploads');
+
 app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
-    // Fix HTTP 431 — increase header size tolerance
     req.socket.setMaxListeners(0);
     const parsedUrl = parse(req.url, true);
+
+    // ── Serve /uploads/* directly from disk ──────────────────────────
+    if (parsedUrl.pathname?.startsWith('/uploads/')) {
+      const filePath = join(process.cwd(), 'public', parsedUrl.pathname);
+      if (existsSync(filePath)) {
+        const ext = extname(filePath).toLowerCase();
+        const mime = MIME[ext] || 'application/octet-stream';
+        res.setHeader('Content-Type', mime);
+        res.setHeader('Cache-Control', 'public, max-age=31536000');
+        try {
+          const stat = statSync(filePath);
+          res.setHeader('Content-Length', stat.size);
+          createReadStream(filePath).pipe(res);
+        } catch {
+          res.writeHead(500); res.end('Error reading file');
+        }
+        return;
+      } else {
+        res.writeHead(404); res.end('Not found');
+        return;
+      }
+    }
+
     handle(req, res, parsedUrl);
   });
 

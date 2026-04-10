@@ -7,11 +7,14 @@ import toast from 'react-hot-toast';
 const DOC_TYPES = ['Aadhaar Card', 'PAN Card', 'Voter ID Card', 'Passport', 'Driving License'];
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || '';
 
-// Resolve image src — local uploads get absolute URL so <img> works on any domain
+// Resolve image src — blob URLs pass through, local uploads get absolute URL
 function imgSrc(url) {
   if (!url) return '';
-  if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
-  // Local upload path — prepend origin so it works on VPS
+  // blob: or data: — use directly (preview)
+  if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+  // Already absolute
+  if (url.startsWith('http')) return url;
+  // Local upload — prepend APP_URL for live, or use relative for localhost
   return `${APP_URL}${url}`;
 }
 
