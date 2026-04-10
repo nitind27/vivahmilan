@@ -233,14 +233,29 @@ export default function Home() {
               <p className="text-sm leading-relaxed">The world's most trusted matrimonial platform connecting hearts across 150+ countries.</p>
             </div>
             {[
-              { title: 'Company', links: ['About Us', 'Careers', 'Press', 'Blog'] },
-              { title: 'Support', links: ['Help Center', 'Safety Tips', 'Report Abuse', 'Contact Us'] },
-              { title: 'Legal', links: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Refund Policy'] },
+              { title: 'Company', links: [
+                { label: 'About Us', href: '#' },
+                { label: 'Careers', href: '#' },
+                { label: 'Press', href: '#' },
+                { label: 'Blog', href: '#' },
+              ]},
+              { title: 'Support', links: [
+                { label: 'Help Center', href: '/help' },
+                { label: 'Safety Tips', href: '/safety' },
+                { label: 'Report Abuse', href: '/report-abuse' },
+                { label: 'Contact Us', href: '/contact' },
+              ]},
+              { title: 'Legal', links: [
+                { label: 'Privacy Policy', href: '#' },
+                { label: 'Terms of Service', href: '#' },
+                { label: 'Cookie Policy', href: '#' },
+                { label: 'Refund Policy', href: '#' },
+              ]},
             ].map(col => (
               <div key={col.title}>
                 <h4 className="text-white font-semibold mb-4">{col.title}</h4>
                 <ul className="space-y-2">
-                  {col.links.map(l => <li key={l}><a href="#" className="text-sm hover:text-pink-400 transition-colors">{l}</a></li>)}
+                  {col.links.map(l => <li key={l.label}><a href={l.href} className="text-sm hover:text-pink-400 transition-colors">{l.label}</a></li>)}
                 </ul>
               </div>
             ))}
