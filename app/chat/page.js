@@ -262,9 +262,10 @@ function MsgMeta({ isMe, msg }) {
   return (
     <div className={`flex items-center gap-1 mt-0.5 ${isMe ? 'justify-end' : 'justify-start'}`}>
       <span className="text-xs text-gray-400">{format(new Date(msg.createdAt), 'h:mm a')}</span>
-      {isMe && (msg.isRead
-        ? <CheckCheck className="w-3 h-3 text-blue-400" />
-        : <Check className="w-3 h-3 text-gray-400" />
+      {isMe && (
+        msg.isRead
+          ? <CheckCheck className="w-3.5 h-3.5 text-blue-500" title="Seen" />
+          : <CheckCheck className="w-3.5 h-3.5 text-gray-400" title="Delivered" />
       )}
     </div>
   );
@@ -297,6 +298,25 @@ function ChatInner() {
   const fileInputRef    = useRef(null);
   const docInputRef     = useRef(null);
   const inputRef        = useRef(null);
+  const activeRoomRef   = useRef(null); // always current activeRoom
+
+  // Keep activeRoomRef in sync
+  useEffect(() => { activeRoomRef.current = activeRoom; }, [activeRoom]);
+
+  // Browser notification helper
+  const showBrowserNotification = useCallback((title, body) => {
+    if (typeof window === 'undefined') return;
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body, icon: '/favicon.ico' });
+    }
+  }, []);
+
+  // Request notification permission on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -318,8 +338,18 @@ function ChatInner() {
     socketRef.current = s;
     s.on('users:online', setOnlineUsers);
     s.on('message:receive', (msg) => {
-      setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
-      // Move room to top + increment unread
+      // If this room is currently open — don't increment unread, mark read immediately
+      const currentRoom = activeRoomRef.current;
+      if (currentRoom?.id === msg.chatRoomId) {
+        setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, { ...msg, isRead: true }]);
+        // Tell sender their message was read
+        socketRef.current?.emit('message:read', { roomId: msg.chatRoomId, readerId: session.user.id });
+      } else {
+        setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
+        setUnreadPerRoom(prev => ({ ...prev, [msg.chatRoomId]: (prev[msg.chatRoomId] || 0) + 1 }));
+        // Browser notification
+        showBrowserNotification(msg._senderName || 'New message', msg.content || '📷 Photo');
+      }
       setRooms(prev => {
         const updated = prev.map(r => r.id === msg.chatRoomId ? { ...r, messages: [msg] } : r);
         return updated.sort((a, b) => {
@@ -328,14 +358,16 @@ function ChatInner() {
           return bTime - aTime;
         });
       });
-      setUnreadPerRoom(prev => ({
-        ...prev,
-        [msg.chatRoomId]: (prev[msg.chatRoomId] || 0) + 1,
-      }));
+    });
+    // When receiver reads our messages — update ticks to blue
+    s.on('message:read', ({ roomId, readerId }) => {
+      setMessages(prev => prev.map(m =>
+        m.chatRoomId === roomId && m.senderId === session.user.id ? { ...m, isRead: true } : m
+      ));
     });
     s.on('typing:start', () => setOtherTyping(true));
     s.on('typing:stop',  () => setOtherTyping(false));
-    return () => { s.off('users:online'); s.off('message:receive'); s.off('typing:start'); s.off('typing:stop'); };
+    return () => { s.off('users:online'); s.off('message:receive'); s.off('message:read'); s.off('typing:start'); s.off('typing:stop'); };
   }, [status, session]);
 
   // Load rooms
@@ -376,10 +408,14 @@ function ChatInner() {
     setShowEmoji(false);
     setShowAttach(false);
     socketRef.current?.emit('room:join', room.id);
-    fetch(`/api/chat/${room.id}`).then(r => r.json()).then(setMessages);
+    fetch(`/api/chat/${room.id}`).then(r => r.json()).then(msgs => {
+      setMessages(msgs);
+      // Tell sender their messages are read
+      socketRef.current?.emit('message:read', { roomId: room.id, readerId: session?.user?.id });
+    });
     // Clear unread for this room
     setUnreadPerRoom(prev => ({ ...prev, [room.id]: 0 }));
-  }, [activeRoom]);
+  }, [activeRoom, session]);
 
   const getOtherUser = (room) => room?.userAId === session?.user?.id ? room?.userB : room?.userA;
   const isOnline = (uid) => onlineUsers.includes(uid);

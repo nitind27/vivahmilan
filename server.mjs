@@ -87,6 +87,11 @@ app.prepare().then(() => {
       socket.to(roomId).emit('message:receive', message);
     });
 
+    // Read receipt — tell sender their messages were read
+    socket.on('message:read', ({ roomId, readerId }) => {
+      socket.to(roomId).emit('message:read', { roomId, readerId });
+    });
+
     // Typing indicators
     socket.on('typing:start', ({ roomId, userId }) => {
       socket.to(roomId).emit('typing:start', { userId });

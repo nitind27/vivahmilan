@@ -39,16 +39,23 @@ export default function NotificationsPage() {
 
   const markAllRead = async () => {
     await fetch('/api/notifications', { method: 'PATCH' });
+    // Mark all read then clear after delay
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    setTimeout(() => setNotifications([]), 400);
   };
 
   const markOneRead = async (id) => {
+    // Mark read then remove from list after short delay
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
     await fetch('/api/notifications', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    // Remove after 300ms so user sees the read state briefly
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }, 300);
   };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;

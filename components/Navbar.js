@@ -21,10 +21,30 @@ export default function Navbar() {
 
   useEffect(() => {
     if (session) {
-      fetch('/api/notifications').then(r => r.json()).then(d => setUnread(d.unreadCount || 0));
-      const interval = setInterval(() => {
-        fetch('/api/notifications').then(r => r.json()).then(d => setUnread(d.unreadCount || 0));
-      }, 30000);
+      // Request browser notification permission
+      if (typeof window !== 'undefined' && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+
+      const checkNotifs = () => {
+        fetch('/api/notifications').then(r => r.json()).then(d => {
+          const newCount = d.unreadCount || 0;
+          // Show browser notification if count increased
+          if (newCount > unread && Notification.permission === 'granted') {
+            const latest = d.notifications?.find(n => !n.isRead);
+            if (latest) {
+              new Notification(latest.title || 'Milan Matrimony', {
+                body: latest.message || 'You have a new notification',
+                icon: '/favicon.ico',
+              });
+            }
+          }
+          setUnread(newCount);
+        });
+      };
+
+      checkNotifs();
+      const interval = setInterval(checkNotifs, 30000);
       return () => clearInterval(interval);
     }
   }, [session]);
