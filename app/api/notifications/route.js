@@ -7,17 +7,30 @@ export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  const { searchParams } = new URL(req.url);
+  const skip = parseInt(searchParams.get('skip') || '0');
+  const limit = parseInt(searchParams.get('limit') || '10');
+
+  // Exclude MESSAGE_RECEIVED — chat has its own unread system
+  const where = {
+    userId: session.user.id,
+    NOT: { type: 'MESSAGE_RECEIVED' },
+  };
+
   const notifications = await prisma.notification.findMany({
-    where: { userId: session.user.id },
+    where,
     orderBy: { createdAt: 'desc' },
-    take: 20,
+    take: limit,
+    skip,
   });
+
+  const total = await prisma.notification.count({ where });
 
   const unreadCount = await prisma.notification.count({
-    where: { userId: session.user.id, isRead: false },
+    where: { ...where, isRead: false },
   });
 
-  return NextResponse.json({ notifications, unreadCount });
+  return NextResponse.json({ notifications, unreadCount, total, hasMore: skip + limit < total });
 }
 
 export async function PATCH(req) {
