@@ -181,7 +181,6 @@ export default function InterestsPage() {
                             </span>
                           )}
                         </div>
-                        </div>
                       </Link>
 
                       {/* Details */}
