@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, Bot, User, Headphones, ChevronDown, Loader2, PhoneOff } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
@@ -58,6 +59,7 @@ const QUICK_REPLIES = [
 // ── Main ChatBot component ────────────────────────────────────────────────────
 export default function ChatBot() {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -184,12 +186,17 @@ export default function ChatBot() {
     handleOpen();
   };
 
+  // Hide chatbot on chat page (overlaps with message input on mobile)
+  const isHidden = pathname === '/chat' || pathname?.startsWith('/chat');
+
+  if (isHidden) return null;
+
   return (
     <>
       {/* Floating button */}
       <button
         onClick={() => open ? setOpen(false) : handleOpen()}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 gradient-bg rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-4 sm:right-6 z-40 w-14 h-14 gradient-bg rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform"
         aria-label="Open chat support"
       >
         {open ? <X className="w-6 h-6 text-white" /> : <MessageCircle className="w-6 h-6 text-white" />}
@@ -202,8 +209,8 @@ export default function ChatBot() {
 
       {/* Chat window */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-24px)] bg-gray-900 rounded-3xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
-          style={{ height: '520px' }}>
+        <div className="fixed bottom-24 right-2 sm:right-6 z-40 w-[calc(100vw-16px)] sm:w-[360px] max-w-[360px] bg-gray-900 rounded-3xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
+          style={{ height: '520px', maxHeight: 'calc(100vh - 120px)' }}>
 
           {/* Header */}
           <div className="gradient-bg px-4 py-3 flex items-center gap-3">
