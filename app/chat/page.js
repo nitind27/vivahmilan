@@ -14,6 +14,7 @@ import {
 import { format, isToday, isYesterday } from 'date-fns';
 import toast from 'react-hot-toast';
 import { connectSocket } from '@/lib/socket';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 
@@ -684,7 +685,7 @@ function ChatInner() {
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5">
                         <p className="font-semibold">{other?.name}</p>
-                        {other?.verificationBadge && <BadgeCheck className="w-4 h-4 text-blue-500" />}
+                        {other?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
                         {other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
                       </div>
                       <p className={`text-xs ${online ? 'text-green-500' : 'text-gray-400'}`}>

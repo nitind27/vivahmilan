@@ -6,6 +6,7 @@ import { Heart, MapPin, GraduationCap, Briefcase, BadgeCheck, Star } from 'lucid
 import { useState } from 'react';
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 export default function ProfileCard({ user, index = 0 }) {
   const [shortlisted, setShortlisted] = useState(user.isShortlisted || false);
@@ -56,17 +57,13 @@ export default function ProfileCard({ user, index = 0 }) {
             )}
 
             {/* Badges */}
-            <div className="absolute top-3 left-3 flex gap-1">
+            <div className="absolute top-3 left-3 flex gap-1 flex-wrap">
               {user.isPremium && (
                 <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
                   <Star className="w-3 h-3 fill-white" /> Premium
                 </span>
               )}
-              {user.verificationBadge && (
-                <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <BadgeCheck className="w-3 h-3" /> Verified
-                </span>
-              )}
+              {user.verificationBadge && <VerifiedBadge size="sm" />}
             </div>
 
             {/* Shortlist button */}
@@ -82,7 +79,10 @@ export default function ProfileCard({ user, index = 0 }) {
           {/* Info */}
           <div className="p-4">
             <div className="flex items-center justify-between mb-1">
-              <h3 className="font-semibold text-gray-900 dark:text-white truncate">{user.name}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white truncate flex items-center gap-1.5">
+                {user.name}
+                {user.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
+              </h3>
               {age && <span className="text-sm text-gray-500">{age} yrs</span>}
             </div>
 

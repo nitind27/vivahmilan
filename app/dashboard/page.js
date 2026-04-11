@@ -2,12 +2,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
-import { Heart, Eye, MessageCircle, Bell, Star, TrendingUp, Users, ChevronRight, Clock, Zap, Crown } from 'lucide-react';
+import { Heart, Eye, MessageCircle, Bell, Star, TrendingUp, Users, ChevronRight, Clock, Zap, Crown, Shield, Calendar, Gift, Sparkles, PartyPopper } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // ── Live countdown timer ──────────────────────────────────────────────────────
@@ -34,7 +34,203 @@ function useCountdown(expiryISO) {
   return time;
 }
 
-// ── Free Trial Banner ─────────────────────────────────────────────────────────
+// ── Premium Validity Card ─────────────────────────────────────────────────────
+function PremiumValidityCard({ premiumInfo }) {
+  if (!premiumInfo?.isPremium) return null;
+
+  const { plan, expiry, daysLeft } = premiumInfo;
+  const expiryDate = new Date(expiry);
+  const isUrgent = daysLeft <= 2;
+  const isExpired = daysLeft <= 0;
+
+  const planColors = {
+    SILVER: { from: '#6b7280', to: '#9ca3af', badge: 'bg-gray-100 text-gray-700' },
+    GOLD:   { from: '#f59e0b', to: '#d97706', badge: 'bg-yellow-100 text-yellow-700' },
+    PLATINUM: { from: '#8b5cf6', to: '#6d28d9', badge: 'bg-purple-100 text-purple-700' },
+  };
+  const colors = planColors[plan] || planColors.GOLD;
+
+  const planEmoji = { SILVER: '🥈', GOLD: '🥇', PLATINUM: '💎' };
+
+  // Progress bar: 30 days total
+  const totalDays = 30;
+  const pct = Math.max(0, Math.min(100, Math.round((daysLeft / totalDays) * 100)));
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl p-5 mb-6 text-white overflow-hidden relative"
+      style={{ background: isUrgent ? 'linear-gradient(135deg, #ef4444, #dc2626)' : `linear-gradient(135deg, ${colors.from}, ${colors.to})` }}
+    >
+      {/* Decorative blobs */}
+      <div className="absolute -top-8 -right-8 w-36 h-36 bg-white/10 rounded-full pointer-events-none" />
+      <div className="absolute -bottom-10 -left-6 w-28 h-28 bg-white/5 rounded-full pointer-events-none" />
+
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <Crown className="w-5 h-5 text-white fill-white/80" />
+            <span className="font-bold text-base">
+              {planEmoji[plan]} {plan} Premium
+            </span>
+            {isUrgent && (
+              <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full animate-pulse">
+                Expiring Soon!
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 text-white/80 text-sm mb-4">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>
+              {isExpired
+                ? 'Subscription expired'
+                : `Valid until ${expiryDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`}
+            </span>
+          </div>
+
+          {/* Days left pill */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="bg-white/20 rounded-xl px-4 py-2 text-center">
+              <p className="text-2xl font-bold tabular-nums">{daysLeft}</p>
+              <p className="text-white/70 text-xs">days left</p>
+            </div>
+            <div className="flex-1">
+              <div className="bg-white/20 rounded-full h-2 mb-1">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                  className="h-2 rounded-full bg-white"
+                />
+              </div>
+              <p className="text-white/60 text-xs">{pct}% validity remaining</p>
+            </div>
+          </div>
+        </div>
+
+        <Link href="/premium"
+          className="bg-white/20 hover:bg-white/30 border border-white/30 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap flex-shrink-0">
+          {isUrgent ? '🔄 Renew' : 'Manage'}
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+
+// ── Birthday Card ─────────────────────────────────────────────────────────────
+const CONFETTI_COLORS = ['#ec4899','#8b5cf6','#f59e0b','#10b981','#3b82f6','#ef4444'];
+
+function Confetti() {
+  const pieces = Array.from({ length: 18 }, (_, i) => ({
+    id: i,
+    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+    x: Math.random() * 100,
+    delay: Math.random() * 1.5,
+    duration: 2 + Math.random() * 2,
+    size: 6 + Math.random() * 8,
+    rotate: Math.random() * 360,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-3xl">
+      {pieces.map(p => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-sm"
+          style={{
+            left: `${p.x}%`,
+            top: '-10px',
+            width: p.size,
+            height: p.size * 0.6,
+            backgroundColor: p.color,
+            rotate: p.rotate,
+          }}
+          animate={{ y: ['0%', '110%'], opacity: [1, 1, 0], rotate: [p.rotate, p.rotate + 360] }}
+          transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'linear' }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function BirthdayCard({ name }) {
+  const [show, setShow] = useState(true);
+  if (!show) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: -20 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+        className="relative rounded-3xl p-6 mb-6 overflow-hidden text-white"
+        style={{ background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%)' }}
+      >
+        <Confetti />
+
+        {/* Glow rings */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-white/10 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-white/10 pointer-events-none" />
+
+        <div className="relative flex items-center justify-between gap-4">
+          <div className="flex-1">
+            {/* Emoji row */}
+            <div className="flex gap-1 text-2xl mb-3">
+              {['🎂','🎉','🎊','✨','🎈'].map((e, i) => (
+                <motion.span key={i}
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 1.2, delay: i * 0.15, repeat: Infinity, ease: 'easeInOut' }}>
+                  {e}
+                </motion.span>
+              ))}
+            </div>
+
+            <motion.h2
+              className="text-2xl font-black mb-1 tracking-tight"
+              animate={{ scale: [1, 1.03, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              Happy Birthday, {name?.split(' ')[0]}! 🎂
+            </motion.h2>
+            <p className="text-white/85 text-sm leading-relaxed">
+              Wishing you a day filled with joy and love. May this year bring you your perfect life partner! 💕
+            </p>
+
+            <div className="flex items-center gap-2 mt-4">
+              <motion.div
+                className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl px-4 py-2 text-sm font-semibold"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                🥳 It's Your Special Day!
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Big cake */}
+          <motion.div
+            className="text-7xl flex-shrink-0 select-none"
+            animate={{ rotate: [-5, 5, -5], scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            🎂
+          </motion.div>
+        </div>
+
+        {/* Close button */}
+        <button
+          onClick={() => setShow(false)}
+          className="absolute top-3 right-3 w-7 h-7 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white/80 hover:text-white transition-colors text-sm"
+        >
+          ✕
+        </button>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 function FreeTrialBanner({ expiry }) {
   const countdown = useCountdown(expiry);
   if (!countdown) return null;
@@ -134,6 +330,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [unreadChat, setUnreadChat] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [reminders, setReminders] = useState({ premiumInfo: null, birthdayInfo: null });
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -148,12 +345,14 @@ export default function Dashboard() {
         fetch('/api/notifications').then(r => r.json()),
         fetch('/api/profile').then(r => r.json()),
         fetch('/api/chat/unread').then(r => r.json()),
-      ]).then(([m, i, n, p, u]) => {
+        fetch('/api/reminders', { method: 'POST' }).then(r => r.json()),
+      ]).then(([m, i, n, p, u, rem]) => {
         setMatches(m.users || []);
         setInterests(i || []);
         setNotifications(n.notifications || []);
         setProfile(p);
         setUnreadChat(u.total || 0);
+        setReminders(rem);
         setLoading(false);
       });
     }
@@ -195,6 +394,14 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold">Welcome back, {session?.user?.name?.split(' ')[0]} 👋</h1>
           <p className="text-gray-500 mt-1">Here's what's happening with your profile today.</p>
         </motion.div>
+
+        {/* Birthday card */}
+        {reminders.birthdayInfo?.isBirthday && (
+          <BirthdayCard name={session?.user?.name} />
+        )}
+
+        {/* Premium validity card */}
+        <PremiumValidityCard premiumInfo={reminders.premiumInfo} />
 
         {/* Profile completion banner */}
         {profileComplete < 80 && (

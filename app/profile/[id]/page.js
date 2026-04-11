@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 // ── Interest Action Panel ─────────────────────────────────────────────────────
 function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, userId, session, onStatusChange }) {
@@ -287,11 +288,7 @@ export default function ProfilePage() {
                     <Star className="w-3 h-3 fill-white" /> Premium
                   </span>
                 )}
-                {user.verificationBadge && (
-                  <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
-                    <BadgeCheck className="w-3 h-3" /> Verified
-                  </span>
-                )}
+                {user.verificationBadge && <VerifiedBadge size="md" />}
               </div>
             </div>
 
@@ -360,9 +357,11 @@ export default function ProfilePage() {
               className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h1 className="text-2xl font-bold flex items-center gap-2">
+                  <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
                     {user.name}
-                    {user.verificationBadge && <BadgeCheck className="w-5 h-5 text-blue-500" />}
+                    {user.verificationBadge && (
+                      <VerifiedBadge size="lg" variant="badge" />
+                    )}
                   </h1>
                   <div className="flex flex-wrap items-center gap-2 mt-1">
                     {age && <span className="text-gray-500 text-sm">{age} years</span>}

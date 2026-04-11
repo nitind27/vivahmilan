@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { differenceInYears, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 export default function InterestsPage() {
   const { data: session, status } = useSession();
@@ -173,16 +174,13 @@ export default function InterestsPage() {
                         )}
                         {/* Badges */}
                         <div className="absolute top-2 left-2 flex flex-col gap-1">
-                          {person?.verificationBadge && (
-                            <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                              <BadgeCheck className="w-3 h-3" />
-                            </span>
-                          )}
+                          {person?.verificationBadge && <VerifiedBadge size="sm" />}
                           {person?.isPremium && (
                             <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
                               <Star className="w-3 h-3 fill-white" />
                             </span>
                           )}
+                        </div>
                         </div>
                       </Link>
 
@@ -193,7 +191,7 @@ export default function InterestsPage() {
                             <Link href={`/profile/${person?.id}`}
                               className="font-bold text-lg hover:text-pink-500 transition-colors flex items-center gap-2">
                               {person?.name}
-                              {person?.verificationBadge && <BadgeCheck className="w-4 h-4 text-blue-500" />}
+                              {person?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
                             </Link>
                             <div className="flex items-center gap-3 text-sm text-gray-500 flex-wrap mt-0.5">
                               {age && <span>{age} yrs</span>}
