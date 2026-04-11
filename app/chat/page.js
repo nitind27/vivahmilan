@@ -856,7 +856,7 @@ function ChatInner() {
                         onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTextMessage(); } }}
                         rows={1} maxLength={1000}
                         className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 text-sm input-focus resize-none max-h-32 overflow-y-auto"
-                        placeholder="Type a message… (Enter to send, Shift+Enter for newline)"
+                        placeholder="Message"
                         style={{ minHeight: '44px' }}
                         onInput={e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 128) + 'px'; }}
                       />
