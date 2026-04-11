@@ -88,7 +88,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
       ) : (
         <div className="space-y-3">
           {pendingUsers.map(u => (
-            <div key={u.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700 flex items-center gap-4">
+            <div key={u.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               {/* Avatar */}
               <div className="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0">
                 {u.image ? <img src={u.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-xl">{u.name?.[0]}</span>}
@@ -107,7 +107,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
                   {u.profile?.gender && <span className="text-xs bg-pink-900/30 text-pink-400 px-2 py-0.5 rounded-full">{u.profile.gender}</span>}
                 </div>
               </div>
-              <div className="flex gap-2 flex-shrink-0">
+              <div className="flex gap-2 flex-shrink-0 flex-wrap">
                 <button onClick={() => setSelected(u)} className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-xs transition-colors flex items-center gap-1">
                   <Eye className="w-3.5 h-3.5" /> View
                 </button>
@@ -460,6 +460,7 @@ export default function AdminPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [tab, setTab] = useState('overview');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -567,8 +568,52 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white flex">
-      {/* ── Sidebar ── */}
-      <aside className="w-64 bg-gray-900 border-r border-gray-800 flex flex-col fixed h-full z-20">
+      {/* ── Mobile top bar ── */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4 h-14">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 gradient-bg rounded-full flex items-center justify-center">
+            <Heart className="w-3.5 h-3.5 text-white fill-white" />
+          </div>
+          <span className="font-bold">Milan Admin</span>
+        </div>
+        <button onClick={() => setMobileMenuOpen(o => !o)} className="p-2 text-gray-400 hover:text-white">
+          {mobileMenuOpen ? <XCircle className="w-5 h-5" /> : <Settings className="w-5 h-5" />}
+        </button>
+      </div>
+
+      {/* ── Mobile menu overlay ── */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-20 bg-black/60" onClick={() => setMobileMenuOpen(false)}>
+          <div className="w-64 h-full bg-gray-900 border-r border-gray-800 flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-gray-800">
+              <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
+            </div>
+            <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+              {TABS.map(t => (
+                <button key={t.id} onClick={() => { setTab(t.id); setMobileMenuOpen(false); }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${tab === t.id ? 'gradient-bg text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
+                  <t.icon className="w-4 h-4 flex-shrink-0" />
+                  <span className="flex-1 text-left">{t.label}</span>
+                  {t.badge && stats?.[t.badge] > 0 && (
+                    <span className="bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{stats[t.badge]}</span>
+                  )}
+                </button>
+              ))}
+            </nav>
+            <div className="p-3 border-t border-gray-800 space-y-1">
+              <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
+                <Eye className="w-4 h-4" /> View Site
+              </Link>
+              <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-900/20 transition-all">
+                <LogOut className="w-4 h-4" /> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Desktop Sidebar ── */}
+      <aside className="hidden md:flex w-64 bg-gray-900 border-r border-gray-800 flex-col fixed h-full z-20">
         <div className="p-5 border-b border-gray-800">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
@@ -576,7 +621,7 @@ export default function AdminPage() {
             </div>
             <span className="font-bold text-lg">Milan Admin</span>
           </div>
-          <p className="text-xs text-gray-500">{session?.user?.email}</p>
+          <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {TABS.map(t => (
@@ -601,22 +646,22 @@ export default function AdminPage() {
       </aside>
 
       {/* ── Main Content ── */}
-      <main className="flex-1 ml-64 p-6 overflow-y-auto">
+      <main className="flex-1 md:ml-64 p-4 md:p-6 overflow-y-auto pt-16 md:pt-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold capitalize">{TABS.find(t => t.id === tab)?.label}</h1>
-            <p className="text-gray-500 text-sm mt-0.5">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            <h1 className="text-xl md:text-2xl font-bold capitalize">{TABS.find(t => t.id === tab)?.label}</h1>
+            <p className="text-gray-500 text-xs md:text-sm mt-0.5 hidden sm:block">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
           </div>
-          <button onClick={loadAll} className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
-            <RefreshCw className="w-4 h-4" /> Refresh
+          <button onClick={loadAll} className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
+            <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">Refresh</span>
           </button>
         </div>
 
         {/* ── OVERVIEW ── */}
         {tab === 'overview' && (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               <StatCard icon={Users} label="Total Users" value={stats?.totalUsers} color="text-blue-400" bg="bg-blue-900/20" sub={`+${stats?.newUsersToday} today`} />
               <StatCard icon={Star} label="Premium Users" value={stats?.premiumUsers} color="text-yellow-400" bg="bg-yellow-900/20" sub={`${stats?.activeSubscriptions} active subs`} />
               <StatCard icon={UserCheck} label="Pending Approval" value={stats?.pendingAdminVerify} color="text-orange-400" bg="bg-orange-900/20" sub="Awaiting admin verify" />
@@ -626,7 +671,7 @@ export default function AdminPage() {
               <StatCard icon={TrendingUp} label="New This Month" value={stats?.newUsersMonth} color="text-green-400" bg="bg-green-900/20" />
               <StatCard icon={Shield} label="ID Verifications" value={stats?.pendingVerifications} color="text-cyan-400" bg="bg-cyan-900/20" sub="Pending review" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
                 <h3 className="font-semibold mb-4 text-gray-300">Gender Distribution</h3>
                 <div className="space-y-3">
@@ -667,10 +712,10 @@ export default function AdminPage() {
         {/* ── ALL USERS ── */}
         {tab === 'users' && (
           <div>
-            <div className="flex flex-wrap gap-3 mb-4">
-              <div className="relative flex-1 min-w-48">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4">
+              <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name, email, phone…"
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name, email…"
                   className="w-full pl-9 pr-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
               </div>
               <select value={userFilter} onChange={e => setUserFilter(e.target.value)} className="px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-sm focus:outline-none focus:border-pink-500">
@@ -681,7 +726,9 @@ export default function AdminPage() {
                 <option value="blocked">Blocked</option>
               </select>
             </div>
-            <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+
+            {/* Desktop table */}
+            <div className="hidden md:block bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-gray-700/50">
@@ -699,7 +746,7 @@ export default function AdminPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-gray-400">{u.email}</td>
+                        <td className="px-4 py-3 text-gray-400 text-xs">{u.email}</td>
                         <td className="px-4 py-3">
                           <div className="flex flex-col gap-1">
                             <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${u.isActive ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>{u.isActive ? 'Active' : 'Blocked'}</span>
@@ -728,6 +775,38 @@ export default function AdminPage() {
               </div>
               {filteredUsers.length === 0 && <div className="text-center py-10 text-gray-500">No users found</div>}
             </div>
+
+            {/* Mobile cards */}
+            <div className="md:hidden space-y-3">
+              {filteredUsers.length === 0 && <div className="text-center py-10 text-gray-500">No users found</div>}
+              {filteredUsers.map(u => (
+                <div key={u.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">{u.name?.[0]}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-white truncate">{u.name}</p>
+                      <p className="text-xs text-gray-400 truncate">{u.email}</p>
+                    </div>
+                    <div className="flex flex-col gap-1 items-end">
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${u.isActive ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>{u.isActive ? 'Active' : 'Blocked'}</span>
+                      {u.isPremium && <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">{u.premiumPlan || 'Premium'}</span>}
+                      {u.verificationBadge && <span className="text-xs bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">Verified</span>}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-500">{u.profile?.city || '—'} · {format(new Date(u.createdAt), 'dd MMM yy')}</p>
+                    <div className="flex gap-1.5">
+                      {!u.adminVerified && <button onClick={() => updateUser(u.id, { adminVerified: true })} className="p-1.5 bg-green-900/30 text-green-400 rounded-lg"><CheckCircle className="w-3.5 h-3.5" /></button>}
+                      <button onClick={() => updateUser(u.id, { isActive: !u.isActive })} className={`p-1.5 rounded-lg ${u.isActive ? 'bg-red-900/30 text-red-400' : 'bg-green-900/30 text-green-400'}`}>
+                        {u.isActive ? <Ban className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+                      </button>
+                      <button onClick={() => updateUser(u.id, { isPremium: !u.isPremium })} className="p-1.5 bg-yellow-900/30 text-yellow-400 rounded-lg"><Star className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => deleteUser(u.id, u.name)} className="p-1.5 bg-red-900/30 text-red-400 rounded-lg"><Trash2 className="w-3.5 h-3.5" /></button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -740,7 +819,7 @@ export default function AdminPage() {
               <div className="space-y-4">
                 {verifications.map(doc => (
                   <div key={doc.id} className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4">
                       <div>
                         <p className="font-semibold">{doc.user?.name}</p>
                         <p className="text-gray-400 text-sm">{doc.user?.email}</p>
@@ -769,7 +848,7 @@ export default function AdminPage() {
               <div className="space-y-4">
                 {reports.map(r => (
                   <div key={r.id} className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <span className={`text-xs px-2 py-0.5 rounded-full ${r.status === 'PENDING' ? 'bg-yellow-900/30 text-yellow-400' : r.status === 'RESOLVED' ? 'bg-green-900/30 text-green-400' : 'bg-gray-700 text-gray-400'}`}>{r.status}</span>
@@ -797,25 +876,45 @@ export default function AdminPage() {
         {/* ── SUBSCRIPTIONS ── */}
         {tab === 'subscriptions' && (
           <div>
-            <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-700/50">
-                  <tr>{['User','Plan','Amount','Status','Start','End'].map(h => <th key={h} className="text-left px-4 py-3 text-gray-400 font-medium">{h}</th>)}</tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700/50">
-                  {subscriptions.map?.(s => (
-                    <tr key={s.id} className="hover:bg-gray-700/30">
-                      <td className="px-4 py-3 text-white">{s.user?.name || s.userId}</td>
-                      <td className="px-4 py-3"><span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">{s.plan}</span></td>
-                      <td className="px-4 py-3 text-green-400">₹{Number(s.amount).toLocaleString()}</td>
-                      <td className="px-4 py-3"><span className={`text-xs px-2 py-0.5 rounded-full ${s.status === 'ACTIVE' ? 'bg-green-900/30 text-green-400' : 'bg-gray-700 text-gray-400'}`}>{s.status}</span></td>
-                      <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(s.startDate), 'dd MMM yy')}</td>
-                      <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(s.endDate), 'dd MMM yy')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Desktop table */}
+            <div className="hidden md:block bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-700/50">
+                    <tr>{['User','Plan','Amount','Status','Start','End'].map(h => <th key={h} className="text-left px-4 py-3 text-gray-400 font-medium">{h}</th>)}</tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-700/50">
+                    {subscriptions.map?.(s => (
+                      <tr key={s.id} className="hover:bg-gray-700/30">
+                        <td className="px-4 py-3 text-white">{s.user?.name || s.userId}</td>
+                        <td className="px-4 py-3"><span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">{s.plan}</span></td>
+                        <td className="px-4 py-3 text-green-400">₹{Number(s.amount).toLocaleString()}</td>
+                        <td className="px-4 py-3"><span className={`text-xs px-2 py-0.5 rounded-full ${s.status === 'ACTIVE' ? 'bg-green-900/30 text-green-400' : 'bg-gray-700 text-gray-400'}`}>{s.status}</span></td>
+                        <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(s.startDate), 'dd MMM yy')}</td>
+                        <td className="px-4 py-3 text-gray-400 text-xs">{format(new Date(s.endDate), 'dd MMM yy')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               {(!subscriptions?.length) && <div className="text-center py-10 text-gray-500">No subscriptions yet</div>}
+            </div>
+            {/* Mobile cards */}
+            <div className="md:hidden space-y-3">
+              {(!subscriptions?.length) && <div className="text-center py-10 text-gray-500">No subscriptions yet</div>}
+              {subscriptions.map?.(s => (
+                <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-semibold text-white">{s.user?.name || 'Unknown'}</p>
+                    <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">{s.plan}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-400">
+                    <span className="text-green-400 font-medium">₹{Number(s.amount).toLocaleString()}</span>
+                    <span className={`px-2 py-0.5 rounded-full ${s.status === 'ACTIVE' ? 'bg-green-900/30 text-green-400' : 'bg-gray-700 text-gray-400'}`}>{s.status}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">{format(new Date(s.startDate), 'dd MMM yy')} → {format(new Date(s.endDate), 'dd MMM yy')}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
