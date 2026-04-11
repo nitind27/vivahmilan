@@ -598,16 +598,16 @@ function ChatInner() {
   if (loading) return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 pt-24"><div className="h-[600px] skeleton rounded-3xl" /></div>
+      <div className="max-w-5xl mx-auto px-4 pt-20"><div className="h-[600px] skeleton rounded-3xl" /></div>
     </div>
   );
 
   return (
-    <div className="h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 flex flex-col">
+    <div className="flex flex-col bg-gray-50 dark:bg-gray-950" style={{ height: '100dvh' }}>
       <Navbar />
-      {/* Chat container — fills remaining height after navbar (64px) */}
-      <div className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pb-4 flex flex-col overflow-hidden" style={{ paddingTop: '80px' }}>
-        <div className="flex-1 flex gap-0 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+      {/* Chat container — fills remaining height after navbar */}
+      <div className="flex-1 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-6 pb-2 sm:pb-4 flex flex-col overflow-hidden pt-16">
+        <div className="flex-1 flex gap-0 bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden min-h-0">
 
           {/* ── Sidebar ── */}
           <div className={`${activeRoom ? 'hidden md:flex' : 'flex'} w-full md:w-80 flex-col border-r border-gray-100 dark:border-gray-700 overflow-hidden`}>
