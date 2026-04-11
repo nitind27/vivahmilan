@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import {
   Heart, Check, X, MapPin, GraduationCap, Briefcase,
-  BadgeCheck, Star, MessageCircle, Eye, ChevronRight, Clock
+  BadgeCheck, Star, MessageCircle, Eye, ChevronRight, Clock, Ban
 } from 'lucide-react';
 import { differenceInYears, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -21,6 +21,8 @@ export default function InterestsPage() {
   const [interests, setInterests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [responding, setResponding] = useState(null); // id of interest being responded to
+  const [blocking, setBlocking] = useState(null); // id of user being blocked
+  const [blocked, setBlocked] = useState(new Set()); // set of blocked userIds
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -53,6 +55,30 @@ export default function InterestsPage() {
       }
     } finally {
       setResponding(null);
+    }
+  };
+
+  const blockUser = async (userId, userName) => {
+    if (!confirm(`Block ${userName}? They won't be able to see your profile or send you interests.`)) return;
+    setBlocking(userId);
+    try {
+      const res = await fetch('/api/block', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ blockedId: userId }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.blocked) {
+          setBlocked(prev => new Set([...prev, userId]));
+          toast.success(`${userName} has been blocked.`);
+        } else {
+          setBlocked(prev => { const s = new Set(prev); s.delete(userId); return s; });
+          toast(`${userName} has been unblocked.`, { icon: '🔓' });
+        }
+      }
+    } finally {
+      setBlocking(null);
     }
   };
 
@@ -270,6 +296,21 @@ export default function InterestsPage() {
                                 <Star className="w-3.5 h-3.5 fill-yellow-500" /> Premium to Chat
                               </Link>
                             )
+                          )}
+
+                          {/* Block button — show on accepted or declined interests */}
+                          {!isPending && person?.id && (
+                            <button
+                              onClick={() => blockUser(person.id, person.name)}
+                              disabled={blocking === person.id}
+                              className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl transition-colors font-medium ${
+                                blocked.has(person.id)
+                                  ? 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                  : 'bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40'
+                              } disabled:opacity-60`}>
+                              <Ban className="w-3.5 h-3.5" />
+                              {blocking === person.id ? '...' : blocked.has(person.id) ? 'Unblock' : 'Block'}
+                            </button>
                           )}
                         </div>
                       </div>

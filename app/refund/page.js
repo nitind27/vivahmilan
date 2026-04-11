@@ -1,3 +1,4 @@
+'use client';
 import LegalPage from '@/components/LegalPage';
 import { RefreshCw } from 'lucide-react';
 

@@ -14,6 +14,7 @@ import {
 import { signOut } from 'next-auth/react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import AdminSupportChat from '@/components/AdminSupportChat';
 
 const TABS = [
   { id: 'overview',      label: 'Overview',       icon: BarChart2 },
@@ -25,6 +26,7 @@ const TABS = [
   { id: 'plans',         label: 'Plan Config',     icon: Settings },
   { id: 'options',       label: 'Profile Options', icon: Edit2 },
   { id: 'siteconfig',    label: 'Site Settings',   icon: Lock },
+  { id: 'support',       label: 'Support Chat',    icon: MessageCircle },
 ];
 
 const DEFAULT_PERMISSIONS = {
@@ -981,6 +983,14 @@ export default function AdminPage() {
                 {savingConfig ? 'Saving…' : 'Save Settings'}
               </button>
             </div>
+          </div>
+        )}
+
+        {/* ── SUPPORT CHAT ── */}
+        {tab === 'support' && (
+          <div>
+            <p className="text-gray-400 text-sm mb-4">Manage live support chats with users. Respond to queries and end sessions when resolved.</p>
+            <AdminSupportChat />
           </div>
         )}
       </main>

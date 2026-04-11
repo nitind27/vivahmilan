@@ -1,3 +1,4 @@
+'use client';
 import LegalPage from '@/components/LegalPage';
 import { FileText } from 'lucide-react';
 

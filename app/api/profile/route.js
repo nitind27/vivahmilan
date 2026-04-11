@@ -4,6 +4,21 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
+// Auto-migrate: add missing columns if they don't exist
+async function ensureColumns() {
+  const cols = [
+    'ALTER TABLE profile ADD COLUMN IF NOT EXISTS partnerCaste VARCHAR(255) NULL',
+    'ALTER TABLE profile ADD COLUMN IF NOT EXISTS partnerProfession VARCHAR(255) NULL',
+    'ALTER TABLE profile ADD COLUMN IF NOT EXISTS partnerMaritalStatus VARCHAR(100) NULL',
+    'ALTER TABLE profile ADD COLUMN IF NOT EXISTS partnerManglik VARCHAR(50) NULL',
+  ];
+  for (const sql of cols) {
+    try { await execute(sql); } catch {}
+  }
+}
+
+let migrated = false;
+
 export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,11 +34,28 @@ export async function PUT(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  // Run once per server instance
+  if (!migrated) { await ensureColumns(); migrated = true; }
+
   const data = await req.json();
   const { name, phone, ...profileData } = data;
 
+  // Whitelist of all valid profile columns (prevents unknown column SQL errors)
+  const ALLOWED_PROFILE_COLS = new Set([
+    'gender','dob','height','weight','religion','caste','subCaste','sect','gotra','motherTongue',
+    'education','profession','income','country','state','city','aboutMe',
+    'maritalStatus','smoking','drinking','diet','complexion','bodyType',
+    'fatherOccupation','motherOccupation','siblings','familyType','familyStatus',
+    'partnerAgeMin','partnerAgeMax','partnerHeightMin','partnerHeightMax',
+    'partnerReligion','partnerCaste','partnerEducation','partnerProfession',
+    'partnerLocation','partnerMaritalStatus','partnerManglik',
+    'horoscopeSign','nakshatra','manglik','kundliMatch','amritdhari',
+    'hidePhone','hidePhoto',
+  ]);
+
   const sanitized = {};
   for (const [key, val] of Object.entries(profileData)) {
+    if (!ALLOWED_PROFILE_COLS.has(key)) continue; // skip unknown columns
     if (val === '' || val === undefined) {
       sanitized[key] = null;
     } else if (key === 'dob') {
