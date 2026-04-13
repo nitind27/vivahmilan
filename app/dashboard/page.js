@@ -555,7 +555,7 @@ export default function Dashboard() {
             )}
 
             {/* Notification test */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
+            {/* <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
               <p className="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5" /> Desktop Notifications
               </p>
@@ -574,7 +574,7 @@ export default function Dashboard() {
               >
                 🔔 Send Test Notification
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
