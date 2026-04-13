@@ -22,6 +22,8 @@ function LoginInner() {
     const error = searchParams?.get('error');
     if (error === 'PENDING_APPROVAL') setPendingEmail('your Google account');
     else if (error === 'AccountSuspended') toast.error('Your account has been suspended.');
+    else if (error === 'ServerError') toast.error('Something went wrong. Please try again.');
+    else if (error === 'AccessDenied') toast.error('Access denied. Please try again or contact support.');
   }, [searchParams]);
 
   // After Google login — redirect based on user state

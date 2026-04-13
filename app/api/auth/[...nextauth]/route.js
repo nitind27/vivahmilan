@@ -58,6 +58,11 @@ export const authOptions = {
       if (account?.provider !== 'google') return true;
 
       try {
+        // Ensure needsPassword column exists
+        try {
+          await execute(`ALTER TABLE \`user\` ADD COLUMN IF NOT EXISTS needsPassword TINYINT(1) DEFAULT 0`);
+        } catch {}
+
         const now = new Date();
         const dbUser = await queryOne('SELECT * FROM `user` WHERE email = ?', [user.email]);
 
@@ -90,12 +95,17 @@ export const authOptions = {
           user.adminVerified = false;
           user.needsPassword = true;
           user.isNewUser     = true;
+          // New user — allow session but they'll see pending screen
           return true;
         }
 
         // ── Existing user ───────────────────────────────────────────────
         if (!dbUser.isActive) return '/login?error=AccountSuspended';
-        if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) return '/login?error=PENDING_APPROVAL';
+
+        // Not yet approved — redirect to pending page (don't return false)
+        if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) {
+          return '/login?error=PENDING_APPROVAL';
+        }
 
         user.id            = dbUser.id;
         user.role          = dbUser.role;
@@ -110,7 +120,8 @@ export const authOptions = {
         return true;
       } catch (err) {
         console.error('Google signIn error:', err);
-        return false;
+        // Return redirect instead of false to avoid AccessDenied error page
+        return '/login?error=ServerError';
       }
     },
 
