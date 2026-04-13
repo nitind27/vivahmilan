@@ -12,8 +12,8 @@ export default function SetPasswordModal() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
-  // Only show if user needs to set password
-  if (!session?.user?.needsPassword || done) return null;
+  // Only show if user is approved AND needs to set password
+  if (!session?.user?.needsPassword || !session?.user?.adminVerified || done) return null;
 
   const strength = (() => {
     const p = form.password;

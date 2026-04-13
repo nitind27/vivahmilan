@@ -29,9 +29,7 @@ function LoginInner() {
   // After Google login — redirect based on user state
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
-      if (session.user.isNewUser) {
-        router.replace('/profile/edit?welcome=1');
-      } else if (session.user.role === 'ADMIN') {
+      if (session.user.role === 'ADMIN') {
         router.replace('/admin');
       } else {
         router.replace('/dashboard');

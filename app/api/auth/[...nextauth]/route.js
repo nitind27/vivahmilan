@@ -67,7 +67,7 @@ export const authOptions = {
         const dbUser = await queryOne('SELECT * FROM `user` WHERE email = ?', [user.email]);
 
         if (!dbUser) {
-          // ── New Google user: create user + profile ──────────────────────
+          // ── New Google user: create user + profile, then redirect to complete profile ──
           const userId    = randomUUID();
           const profileId = randomUUID();
 
@@ -88,15 +88,10 @@ export const authOptions = {
             [profileId, userId, now, now]
           );
 
-          user.id            = userId;
-          user.role          = 'USER';
-          user.isPremium     = false;
-          user.isVerified    = false;
-          user.adminVerified = false;
-          user.needsPassword = true;
-          user.isNewUser     = true;
-          // New user — allow session but they'll see pending screen
-          return true;
+          // Don't create session — redirect to profile completion page
+          const encodedEmail = encodeURIComponent(user.email);
+          const encodedName  = encodeURIComponent(user.name || '');
+          return `/register/complete?email=${encodedEmail}&name=${encodedName}`;
         }
 
         // ── Existing user ───────────────────────────────────────────────
