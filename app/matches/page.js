@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -12,7 +12,7 @@ const religions = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', '
 const educations = ['High School', 'Diploma', "Bachelor's", "Master's", 'PhD', 'MBBS', 'CA', 'Other'];
 const countries = ['India', 'USA', 'UK', 'Canada', 'Australia', 'UAE', 'Singapore', 'Germany', 'Other'];
 
-export default function MatchesPage() {
+function MatchesPage() {
   const { status } = useSession();
   const router = useRouter();
   const [users, setUsers] = useState([]);
@@ -217,5 +217,17 @@ export default function MatchesPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function MatchesPageWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <MatchesPage />
+    </Suspense>
   );
 }

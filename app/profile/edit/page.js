@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -90,7 +90,7 @@ const FAMILY_STATUS = ['Middle Class', 'Upper Middle Class', 'Rich / Affluent', 
 const MARITAL_STATUS = [{ val: 'NEVER_MARRIED', label: 'Never Married' }, { val: 'DIVORCED', label: 'Divorced' }, { val: 'WIDOWED', label: 'Widowed' }, { val: 'SEPARATED', label: 'Separated' }];
 
 // ── Main Component ────────────────────────────────────────────────────────────
-export default function EditProfilePage() {
+function EditProfilePage() {
   const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -524,5 +524,18 @@ export default function EditProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ── Suspense wrapper (required for useSearchParams at build time) ─────────────
+export default function EditProfilePageWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <EditProfilePage />
+    </Suspense>
   );
 }
