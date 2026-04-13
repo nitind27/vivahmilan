@@ -2,10 +2,10 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { queryOne } from '@/lib/db';
+import { queryOne, execute } from '@/lib/db';
+import { randomUUID } from 'crypto';
 
 export const authOptions = {
-  // Remove adapter for JWT strategy — not needed and causes conflicts
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -20,14 +20,15 @@ export const authOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         try {
-          const user = await queryOne('SELECT id, email, name, password, role, isActive, isPremium, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE email = ?', [credentials.email]);
+          const user = await queryOne(
+            'SELECT id, email, name, password, role, isActive, isPremium, isVerified, adminVerified, freeTrialExpiry, needsPassword FROM `user` WHERE email = ?',
+            [credentials.email]
+          );
           if (!user || !user.password) return null;
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
-          // Block login until admin approves (skip for ADMIN role)
           if (user.role !== 'ADMIN' && !user.adminVerified) throw new Error('PENDING_APPROVAL');
-          // Free trial check — kept separate from isPremium
           const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
           return {
             id: user.id,
@@ -38,54 +39,128 @@ export const authOptions = {
             freeTrialActive: !!trialActive,
             freeTrialExpiry: user.freeTrialExpiry ? user.freeTrialExpiry.toISOString() : null,
             isVerified: !!user.isVerified,
-          };} catch (err) {
+            adminVerified: !!user.adminVerified,
+            needsPassword: !!user.needsPassword,
+            isNewUser: false,
+          };
+        } catch (err) {
           console.error('Auth error:', err.message);
           throw err;
         }
       },
     }),
   ],
+
   session: { strategy: 'jwt' },
+
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== 'google') return true;
+
+      try {
+        const now = new Date();
+        const dbUser = await queryOne('SELECT * FROM `user` WHERE email = ?', [user.email]);
+
+        if (!dbUser) {
+          // ── New Google user: create user + profile ──────────────────────
+          const userId    = randomUUID();
+          const profileId = randomUUID();
+
+          await execute(
+            `INSERT INTO \`user\`
+               (id, name, email, role, isActive, isVerified, adminVerified,
+                verificationBadge, isPremium, profileBoost, phoneVerified,
+                loginOtpEnabled, needsPassword, createdAt, updatedAt)
+             VALUES (?, ?, ?, 'USER', 1, 0, 0, 0, 0, 0, 0, 0, 1, ?, ?)`,
+            [userId, user.name || user.email.split('@')[0], user.email, now, now]
+          );
+
+          await execute(
+            `INSERT INTO profile
+               (id, userId, profileComplete, maritalStatus, smoking, drinking,
+                hidePhone, hidePhoto, createdAt, updatedAt)
+             VALUES (?, ?, 10, 'NEVER_MARRIED', 'NO', 'NO', 0, 0, ?, ?)`,
+            [profileId, userId, now, now]
+          );
+
+          user.id            = userId;
+          user.role          = 'USER';
+          user.isPremium     = false;
+          user.isVerified    = false;
+          user.adminVerified = false;
+          user.needsPassword = true;
+          user.isNewUser     = true;
+          return true;
+        }
+
+        // ── Existing user ───────────────────────────────────────────────
+        if (!dbUser.isActive) return '/login?error=AccountSuspended';
+        if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) return '/login?error=PENDING_APPROVAL';
+
+        user.id            = dbUser.id;
+        user.role          = dbUser.role;
+        user.isPremium     = !!dbUser.isPremium;
+        user.isVerified    = !!dbUser.isVerified;
+        user.adminVerified = !!dbUser.adminVerified;
+        user.needsPassword = !!dbUser.needsPassword;
+        user.isNewUser     = false;
+        const trialActive  = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
+        user.freeTrialActive = !!trialActive;
+        user.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
+        return true;
+      } catch (err) {
+        console.error('Google signIn error:', err);
+        return false;
+      }
+    },
+
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.isPremium = user.isPremium;
+        token.id            = user.id;
+        token.role          = user.role;
+        token.isPremium     = user.isPremium;
         token.freeTrialActive = user.freeTrialActive;
         token.freeTrialExpiry = user.freeTrialExpiry || null;
-        token.isVerified = user.isVerified;
+        token.isVerified    = user.isVerified;
+        token.adminVerified = user.adminVerified;
+        token.needsPassword = user.needsPassword || false;
+        token.isNewUser     = user.isNewUser || false;
       }
       if (trigger === 'update' && session) {
-        token.isPremium = session.isPremium;
-        token.freeTrialActive = session.freeTrialActive;
-        token.freeTrialExpiry = session.freeTrialExpiry || null;
-        token.isVerified = session.isVerified;
+        if (session.isPremium     !== undefined) token.isPremium     = session.isPremium;
+        if (session.freeTrialActive !== undefined) token.freeTrialActive = session.freeTrialActive;
+        if (session.freeTrialExpiry !== undefined) token.freeTrialExpiry = session.freeTrialExpiry;
+        if (session.isVerified    !== undefined) token.isVerified    = session.isVerified;
+        if (session.needsPassword !== undefined) token.needsPassword = session.needsPassword;
+        if (session.isNewUser     !== undefined) token.isNewUser     = session.isNewUser;
       }
-      // Remove image/picture from token to prevent header too large error
       delete token.picture;
       delete token.image;
       return token;
     },
+
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.role = token.role;
-        session.user.isPremium = token.isPremium;
+        session.user.id             = token.id;
+        session.user.role           = token.role;
+        session.user.isPremium      = token.isPremium;
         session.user.freeTrialActive = token.freeTrialActive;
         session.user.freeTrialExpiry = token.freeTrialExpiry || null;
-        session.user.isVerified = token.isVerified;
+        session.user.isVerified     = token.isVerified;
+        session.user.adminVerified  = token.adminVerified;
+        session.user.needsPassword  = token.needsPassword || false;
+        session.user.isNewUser      = token.isNewUser || false;
       }
-      // Don't put image in session — fetch it from /api/profile instead
       delete session.user.image;
       return session;
     },
+
     async redirect({ url, baseUrl }) {
-      // Let the login page handle role-based redirect via query param
       if (url.startsWith(baseUrl)) return url;
       return baseUrl;
     },
   },
+
   pages: { signIn: '/login', error: '/login' },
   secret: process.env.NEXTAUTH_SECRET,
 };

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import SearchableSelect from '@/components/SearchableSelect';
@@ -93,6 +93,8 @@ const MARITAL_STATUS = [{ val: 'NEVER_MARRIED', label: 'Never Married' }, { val:
 export default function EditProfilePage() {
   const { status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isWelcome = searchParams?.get('welcome') === '1';
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -243,6 +245,20 @@ export default function EditProfilePage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-16">
+
+        {/* Welcome banner for new Google users */}
+        {isWelcome && (
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+            className="mb-6 gradient-bg rounded-2xl p-5 text-white flex items-start gap-4">
+            <div className="text-3xl flex-shrink-0">🎉</div>
+            <div>
+              <p className="font-bold text-lg">Welcome to Vivah Milan!</p>
+              <p className="text-white/85 text-sm mt-1">
+                You've signed in with Google. Please complete your profile — our admin team will review and approve it within 24 hours. After approval you can start finding matches!
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">

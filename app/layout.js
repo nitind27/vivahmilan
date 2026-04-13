@@ -3,6 +3,7 @@ import './globals.css';
 import Providers from '@/components/Providers';
 import SWRegister from '@/components/SWRegister';
 import ChatBot from '@/components/ChatBot';
+import SetPasswordModal from '@/components/SetPasswordModal';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <SWRegister />
           {children}
+          <SetPasswordModal />
           <ChatBot />
           <Toaster position="top-right" toastOptions={{
             style: { background: '#1f2937', color: '#fff', borderRadius: '12px' },
