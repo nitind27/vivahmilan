@@ -107,7 +107,7 @@ function HeroBanner({ name, profileComplete, photo }) {
               style={{ border: '3px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.2)' }}>
               {photo ? (
                 <>
-                {photo}
+                
                 <img src={photo} alt={name} className="w-full h-full object-cover" />
                 </>
               ) : (
