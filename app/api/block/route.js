@@ -43,10 +43,18 @@ export async function GET(req) {
     return NextResponse.json({ blocked: !!row });
   }
 
-  // Return all blocked user IDs
-  const rows = await queryOne(
-    'SELECT blockedId FROM block WHERE blockerId = ?',
+  // Return all blocked users with their profile details
+  const { query } = await import('@/lib/db');
+  const rows = await query(
+    `SELECT b.id as blockId, b.createdAt as blockedAt,
+            u.id, u.name, u.image,
+            p.gender, p.city, p.state, p.country, p.religion, p.profession, p.dob
+     FROM block b
+     JOIN \`user\` u ON u.id = b.blockedId
+     LEFT JOIN profile p ON p.userId = u.id
+     WHERE b.blockerId = ?
+     ORDER BY b.createdAt DESC`,
     [session.user.id]
   );
-  return NextResponse.json({ blockedIds: rows ? [rows.blockedId] : [] });
+  return NextResponse.json(rows);
 }

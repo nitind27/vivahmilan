@@ -46,11 +46,11 @@ function Chip({ label, onRemove }) {
 function FilterSelect({ label, value, onChange, options, icon: Icon }) {
   return (
     <div className="relative">
-      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
+      <label className="block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide">{label}</label>
       <div className="relative">
-        {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />}
+        {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light pointer-events-none" />}
         <select value={value} onChange={e => onChange(e.target.value)}
-          className={`w-full ${Icon ? 'pl-9' : 'pl-3'} pr-8 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm appearance-none cursor-pointer focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/30 transition-all`}>
+          className={`w-full ${Icon ? 'pl-9' : 'pl-3'} pr-8 py-2.5 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading appearance-none cursor-pointer focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all`}>
           <option value="">Any</option>
           {options.map(o => (
             <option key={typeof o === 'string' ? o : o.val} value={typeof o === 'string' ? o : o.val}>
@@ -58,7 +58,7 @@ function FilterSelect({ label, value, onChange, options, icon: Icon }) {
             </option>
           ))}
         </select>
-        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light pointer-events-none" />
       </div>
     </div>
   );
@@ -68,13 +68,13 @@ function FilterSelect({ label, value, onChange, options, icon: Icon }) {
 function RangeInput({ label, minVal, maxVal, onMinChange, onMaxChange, minPlaceholder, maxPlaceholder }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
+      <label className="block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide">{label}</label>
       <div className="flex items-center gap-2">
         <input type="number" value={minVal} onChange={e => onMinChange(e.target.value)} placeholder={minPlaceholder}
-          className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/30 transition-all" />
-        <span className="text-gray-400 text-xs flex-shrink-0">to</span>
+          className="w-full px-3 py-2.5 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all" />
+        <span className="text-vd-text-light text-xs flex-shrink-0">to</span>
         <input type="number" value={maxVal} onChange={e => onMaxChange(e.target.value)} placeholder={maxPlaceholder}
-          className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/30 transition-all" />
+          className="w-full px-3 py-2.5 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all" />
       </div>
     </div>
   );
@@ -129,14 +129,16 @@ function SearchInner() {
       <Navbar />
 
       {/* ── Hero search bar ── */}
-      <div className="vd-gradient-gold pt-24 pb-10 px-4">
+      <div className="pt-24 pb-12 px-4" style={{ background: 'linear-gradient(135deg, #A67C3D 0%, #C8A45C 40%, #D4AF37 70%, #A67C3D 100%)' }}>
         <div className="max-w-3xl mx-auto text-center">
           <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            className="text-3xl sm:text-4xl font-bold text-white mb-2">
+            className="text-3xl sm:text-4xl font-black mb-2 leading-tight"
+            style={{ color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.25)' }}>
             Find Your Perfect Match
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-            className="text-white/70 mb-6 text-sm">
+            className="mb-7 text-sm font-medium"
+            style={{ color: 'rgba(255,255,255,0.9)' }}>
             Search by name, profession, city and more
           </motion.p>
 
@@ -144,32 +146,37 @@ function SearchInner() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
             className="flex gap-2">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-vd-text-light" />
               <input
                 value={filters.q}
                 onChange={e => set('q', e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Search by name, profession, city…"
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-sm bg-white dark:bg-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-sm bg-vd-bg-section text-vd-text-heading placeholder:text-vd-text-light shadow-xl focus:outline-none focus:ring-2 focus:ring-white/40 transition-all"
               />
               {filters.q && (
-                <button onClick={() => set('q', '')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <button onClick={() => set('q', '')} className="absolute right-3 top-1/2 -translate-y-1/2 text-vd-text-light hover:text-vd-text-sub">
                   <X className="w-4 h-4" />
                 </button>
               )}
             </div>
             <button onClick={() => doSearch(1)}
-              className="bg-white text-vd-primary font-semibold px-6 py-3.5 rounded-2xl shadow-lg hover:bg-vd-accent-soft transition-colors flex items-center gap-2 flex-shrink-0">
+              className="font-semibold px-6 py-3.5 rounded-2xl shadow-xl transition-all flex items-center gap-2 flex-shrink-0"
+              style={{ background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', backdropFilter: 'blur(8px)' }}>
               <Search className="w-4 h-4" /> Search
             </button>
           </motion.div>
 
           {/* Quick gender filter */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className="flex justify-center gap-2 mt-4">
+            className="flex justify-center gap-2 mt-5">
             {[{ val: '', label: 'All' }, { val: 'FEMALE', label: '👩 Brides' }, { val: 'MALE', label: '👨 Grooms' }].map(g => (
               <button key={g.val} onClick={() => set('gender', g.val)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filters.gender === g.val ? 'bg-white text-vd-primary shadow' : 'bg-white/20 text-white hover:bg-white/30'}`}>
+                className="px-4 py-1.5 rounded-full text-sm font-semibold transition-all"
+                style={filters.gender === g.val
+                  ? { background: '#fff', color: '#A67C3D', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
+                  : { background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }
+                }>
                 {g.label}
               </button>
             ))}
@@ -199,13 +206,13 @@ function SearchInner() {
           </AnimatePresence>
 
           {activeFilters.length > 0 && (
-            <button onClick={reset} className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors ml-1">
+            <button onClick={reset} className="flex items-center gap-1 text-xs text-vd-text-light hover:text-red-500 transition-colors ml-1">
               <RotateCcw className="w-3 h-3" /> Reset all
             </button>
           )}
 
           {searched && (
-            <span className="ml-auto text-sm text-gray-500">
+            <span className="ml-auto text-sm text-vd-text-light">
               {total} result{total !== 1 ? 's' : ''} found
             </span>
           )}
@@ -235,15 +242,15 @@ function SearchInner() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">State / Province</label>
+                    <label className="block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide">State / Province</label>
                     <input value={filters.state} onChange={e => set('state', e.target.value)} placeholder="e.g. Maharashtra"
-                      className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/30 transition-all" />
+                      className="w-full px-3 py-2.5 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all" />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">City</label>
+                    <label className="block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide">City</label>
                     <input value={filters.city} onChange={e => set('city', e.target.value)} placeholder="e.g. Mumbai"
-                      className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/30 transition-all" />
+                      className="w-full px-3 py-2.5 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all" />
                   </div>
 
                   <RangeInput label="Age Range" minVal={filters.ageMin} maxVal={filters.ageMax}
@@ -260,7 +267,7 @@ function SearchInner() {
                     className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2">
                     <Search className="w-4 h-4" /> Apply & Search
                   </button>
-                  <button onClick={reset} className="border border-gray-200 dark:border-gray-600 px-5 py-2.5 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <button onClick={reset} className="border border-vd-border px-5 py-2.5 rounded-2xl text-sm hover:bg-vd-accent-soft transition-colors flex items-center gap-2 text-vd-text-sub">
                     <RotateCcw className="w-4 h-4" /> Reset
                   </button>
                 </div>
@@ -280,8 +287,8 @@ function SearchInner() {
             <div className="w-24 h-24 vd-gradient-gold rounded-full flex items-center justify-center mx-auto mb-5 opacity-80">
               <Search className="w-12 h-12 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">Start Your Search</h3>
-            <p className="text-gray-400 text-sm max-w-xs mx-auto">
+            <h3 className="text-xl font-bold text-vd-text-heading mb-2">Start Your Search</h3>
+            <p className="text-vd-text-sub text-sm max-w-xs mx-auto">
               Type a name, city, or profession above — or use filters to find your perfect match.
             </p>
             <div className="flex flex-wrap justify-center gap-2 mt-6">
@@ -296,8 +303,8 @@ function SearchInner() {
         ) : results.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No results found</h3>
-            <p className="text-gray-400 text-sm mb-5">Try different keywords or remove some filters</p>
+            <h3 className="text-xl font-semibold text-vd-text-sub mb-2">No results found</h3>
+            <p className="text-vd-text-light text-sm mb-5">Try different keywords or remove some filters</p>
             <button onClick={reset} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-medium text-sm hover:opacity-90 transition-opacity">
               Clear All Filters
             </button>

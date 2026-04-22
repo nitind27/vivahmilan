@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon } from 'lucide-react';
+import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -39,7 +39,7 @@ export default function Navbar() {
   }, [session]);
 
   return (
-    <nav suppressHydrationWarning className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${clientReady && scrolled ? 'bg-vd-bg-section/95 dark:bg-vd-bg-card/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
+    <nav suppressHydrationWarning className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-vd-bg-section dark:bg-vd-bg-card backdrop-blur-md shadow-sm`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -53,19 +53,19 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/matches" className={`text-sm font-medium hover:text-vd-primary transition-colors ${scrolled ? 'text-vd-text-sub' : 'text-white'}`}>Find Matches</Link>
-            <Link href="/search" className={`text-sm font-medium hover:text-vd-primary transition-colors ${scrolled ? 'text-vd-text-sub' : 'text-white'}`}>Search</Link>
-            <Link href="/premium" className={`text-sm font-medium hover:text-vd-primary transition-colors ${scrolled ? 'text-vd-text-sub' : 'text-white'}`}>Premium</Link>
+            <Link href="/matches" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Find Matches</Link>
+            <Link href="/search" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Search</Link>
+            <Link href="/premium" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Premium</Link>
           </div>
 
           {/* Right side */}
           <div className="flex items-center gap-3">
             {clientReady && session ? (
               <>
-                <Link href="/chat" className={`relative p-2 hover:text-vd-primary transition-colors ${scrolled ? 'text-vd-text-sub' : 'text-white'}`}>
+                <Link href="/chat" className="relative p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
                   <MessageCircle className="w-5 h-5" />
                 </Link>
-                <Link href="/notifications" className={`relative p-2 hover:text-vd-primary transition-colors ${scrolled ? 'text-vd-text-sub' : 'text-white'}`}>
+                <Link href="/notifications" className="relative p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
                   <Bell className="w-5 h-5" />
                   {unread > 0 && (
                     <span className="absolute top-1 right-1 w-4 h-4 bg-vd-accent text-white text-xs rounded-full flex items-center justify-center">{unread}</span>
@@ -105,6 +105,9 @@ export default function Navbar() {
                           <Link href="/profile/edit" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Settings className="w-4 h-4" /> Edit Profile
                           </Link>
+                          <Link href="/blocked" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <Ban className="w-4 h-4" /> Blocked Users
+                          </Link>
                           {session.user.role === 'ADMIN' && (
                             <Link href="/admin" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-vd-primary">
                               <Shield className="w-4 h-4" /> Admin Panel
@@ -126,7 +129,7 @@ export default function Navbar() {
             ) : null}
 
             {/* Mobile menu button */}
-            <button onClick={() => setMenuOpen(!menuOpen)} className={`md:hidden p-2 hover:text-vd-primary transition-colors ${scrolled ? 'text-vd-text-sub' : 'text-white'}`}>
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
 

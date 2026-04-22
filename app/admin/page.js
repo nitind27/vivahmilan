@@ -73,53 +73,126 @@ function Toggle({ value, onChange, label }) {
   );
 }
 
+// ── User Row (reusable) ───────────────────────────────────────────────────────
+function UserRow({ u, onView, onApprove, onReject, showActions, statusBadge }) {
+  return (
+    <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <div className="w-14 h-14 rounded-2xl overflow-hidden vd-gradient-gold flex items-center justify-center flex-shrink-0">
+        {u.image ? <img src={u.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-xl">{u.name?.[0]}</span>}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="font-semibold text-white">{u.name}</p>
+          {statusBadge === 'approved' && <span className="text-xs bg-green-900/30 text-green-400 px-2 py-0.5 rounded-full">✅ Approved</span>}
+          {statusBadge === 'rejected' && <span className="text-xs bg-red-900/30 text-red-400 px-2 py-0.5 rounded-full">❌ Rejected</span>}
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400 mt-0.5">
+          <span>{u.email}</span>
+          {u.phone && <span>{u.phone}</span>}
+          {u.profile?.city && <span>📍 {u.profile.city}, {u.profile.country}</span>}
+          <span>📅 {format(new Date(u.createdAt), 'dd MMM yyyy')}</span>
+        </div>
+        <div className="flex gap-2 mt-1.5 flex-wrap">
+          {u.documents?.length > 0 && <span className="text-xs bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">{u.documents.length} doc(s)</span>}
+          {u.profile?.religion && <span className="text-xs bg-vd-accent-soft text-vd-primary px-2 py-0.5 rounded-full">{u.profile.religion}</span>}
+          {u.profile?.gender && <span className="text-xs bg-vd-accent-soft text-vd-primary px-2 py-0.5 rounded-full">{u.profile.gender}</span>}
+        </div>
+      </div>
+      <div className="flex gap-2 flex-shrink-0 flex-wrap">
+        <button onClick={onView} className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-xs transition-colors flex items-center gap-1">
+          <Eye className="w-3.5 h-3.5" /> View
+        </button>
+        {showActions && (
+          <>
+            <button onClick={onApprove} className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-medium transition-colors flex items-center gap-1">
+              <CheckCircle className="w-3.5 h-3.5" /> Approve
+            </button>
+            <button onClick={onReject} className="px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-xs transition-colors flex items-center gap-1">
+              <XCircle className="w-3.5 h-3.5" /> Reject
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Pending Approval Tab ──────────────────────────────────────────────────────
-function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
+function PendingApprovalTab({ pendingUsers, allUsers, onApprove, onReject }) {
   const [selected, setSelected] = useState(null);
+  const [activeTab, setActiveTab] = useState('pending');
+
+  // Approved = adminVerified=true, active; Rejected = isActive=false
+  const approvedUsers = (allUsers || []).filter(u => u.adminVerified && u.isActive && u.role === 'USER');
+  const rejectedUsers = (allUsers || []).filter(u => !u.isActive && u.role === 'USER');
 
   const p = selected?.profile || {};
   const age = p.dob ? Math.floor((Date.now() - new Date(p.dob)) / 31557600000) : null;
 
   return (
     <div>
-      <p className="text-gray-400 text-sm mb-4">{pendingUsers.length} users waiting for admin approval.</p>
-      {pendingUsers.length === 0 ? (
-        <div className="text-center py-16 text-gray-500"><UserCheck className="w-12 h-12 mx-auto mb-3 text-gray-700" /><p>No pending approvals</p></div>
-      ) : (
-        <div className="space-y-3">
-          {pendingUsers.map(u => (
-            <div key={u.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              {/* Avatar */}
-              <div className="w-14 h-14 rounded-2xl overflow-hidden vd-gradient-gold flex items-center justify-center flex-shrink-0">
-                {u.image ? <img src={u.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-xl">{u.name?.[0]}</span>}
+      {/* Tab switcher */}
+      <div className="flex gap-2 mb-5">
+        <button onClick={() => setActiveTab('pending')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeTab === 'pending' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+          Pending
+          {pendingUsers.length > 0 && (
+            <span className={`text-xs w-5 h-5 rounded-full flex items-center justify-center ${activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-yellow-500 text-white'}`}>
+              {pendingUsers.length}
+            </span>
+          )}
+        </button>
+        <button onClick={() => setActiveTab('reviewed')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeTab === 'reviewed' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+          Approved & Rejected
+          <span className={`text-xs w-5 h-5 rounded-full flex items-center justify-center ${activeTab === 'reviewed' ? 'bg-white/20 text-white' : 'bg-gray-600 text-gray-300'}`}>
+            {approvedUsers.length + rejectedUsers.length}
+          </span>
+        </button>
+      </div>
+
+      {/* Pending tab */}
+      {activeTab === 'pending' && (
+        pendingUsers.length === 0 ? (
+          <div className="text-center py-16 text-gray-500"><UserCheck className="w-12 h-12 mx-auto mb-3 text-gray-700" /><p>No pending approvals</p></div>
+        ) : (
+          <div className="space-y-3">
+            {pendingUsers.map(u => (
+              <UserRow key={u.id} u={u} onView={() => setSelected(u)} onApprove={() => onApprove(u.id)} onReject={() => onReject(u.id)} showActions={true} />
+            ))}
+          </div>
+        )
+      )}
+
+      {/* Reviewed tab */}
+      {activeTab === 'reviewed' && (
+        <div className="space-y-6">
+          {/* Approved */}
+          <div>
+            <h3 className="font-bold text-green-400 mb-3 flex items-center gap-2 text-sm">
+              <CheckCircle className="w-4 h-4" /> Approved ({approvedUsers.length})
+            </h3>
+            {approvedUsers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700 text-sm">No approved users yet</div>
+            ) : (
+              <div className="space-y-3">
+                {approvedUsers.map(u => <UserRow key={u.id} u={u} onView={() => setSelected(u)} showActions={false} statusBadge="approved" />)}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-white">{u.name}</p>
-                <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400 mt-0.5">
-                  <span>{u.email}</span>
-                  {u.phone && <span>{u.phone}</span>}
-                  {u.profile?.city && <span>📍 {u.profile.city}, {u.profile.country}</span>}
-                  <span>📅 {format(new Date(u.createdAt), 'dd MMM yyyy')}</span>
-                </div>
-                <div className="flex gap-2 mt-1.5">
-                  {u.documents?.length > 0 && <span className="text-xs bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">{u.documents.length} doc(s)</span>}
-                  {u.profile?.religion && <span className="text-xs bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary px-2 py-0.5 rounded-full">{u.profile.religion}</span>}
-                  {u.profile?.gender && <span className="text-xs bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary px-2 py-0.5 rounded-full">{u.profile.gender}</span>}
-                </div>
+            )}
+          </div>
+          {/* Rejected */}
+          <div>
+            <h3 className="font-bold text-red-400 mb-3 flex items-center gap-2 text-sm">
+              <XCircle className="w-4 h-4" /> Rejected / Blocked ({rejectedUsers.length})
+            </h3>
+            {rejectedUsers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700 text-sm">No rejected users</div>
+            ) : (
+              <div className="space-y-3">
+                {rejectedUsers.map(u => <UserRow key={u.id} u={u} onView={() => setSelected(u)} showActions={false} statusBadge="rejected" />)}
               </div>
-              <div className="flex gap-2 flex-shrink-0 flex-wrap">
-                <button onClick={() => setSelected(u)} className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-xs transition-colors flex items-center gap-1">
-                  <Eye className="w-3.5 h-3.5" /> View
-                </button>
-                <button onClick={() => onApprove(u.id)} className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-medium transition-colors flex items-center gap-1">
-                  <CheckCircle className="w-3.5 h-3.5" /> Approve
-                </button>
-                <button onClick={() => onReject(u.id)} className="px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-xs transition-colors flex items-center gap-1">
-                  <XCircle className="w-3.5 h-3.5" /> Reject
-                </button>
-              </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
       )}
 
@@ -455,6 +528,95 @@ function OptionRow({ opt, onToggle, onDelete }) {
   );
 }
 
+// ── Verifications Tab ─────────────────────────────────────────────────────────
+function VerificationsTab({ verifications, onVerify }) {
+  const [activeTab, setActiveTab] = useState('pending');
+
+  const pending  = verifications.filter(d => d.status === 'PENDING');
+  const reviewed = verifications.filter(d => d.status !== 'PENDING');
+
+  const DocCard = ({ doc, showActions }) => (
+    <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+      <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <p className="font-semibold text-white">{doc.user?.name}</p>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${
+              doc.status === 'APPROVED' ? 'bg-green-900/30 text-green-400' :
+              doc.status === 'REJECTED' ? 'bg-red-900/30 text-red-400' :
+              'bg-yellow-900/30 text-yellow-400'
+            }`}>{doc.status}</span>
+          </div>
+          <p className="text-gray-400 text-sm">{doc.user?.email}</p>
+          <p className="text-gray-500 text-xs mt-1">Document: {doc.type}</p>
+          <p className="text-gray-500 text-xs">Submitted: {format(new Date(doc.createdAt), 'dd MMM yyyy, h:mm a')}</p>
+          {doc.url && <a href={doc.url} target="_blank" rel="noreferrer" className="text-vd-primary text-xs hover:underline mt-1 inline-block">View Document ↗</a>}
+        </div>
+        {showActions && (
+          <div className="flex gap-2 flex-shrink-0">
+            <button onClick={() => onVerify(doc.id, 'APPROVED')} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-colors">Approve</button>
+            <button onClick={() => onVerify(doc.id, 'REJECTED')} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-sm transition-colors">Reject</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      {/* Tab switcher */}
+      <div className="flex gap-2">
+        <button onClick={() => setActiveTab('pending')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeTab === 'pending' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+          Pending
+          {pending.length > 0 && (
+            <span className={`text-xs w-5 h-5 rounded-full flex items-center justify-center ${activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-yellow-500 text-white'}`}>
+              {pending.length}
+            </span>
+          )}
+        </button>
+        <button onClick={() => setActiveTab('reviewed')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeTab === 'reviewed' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+          Approved & Rejected
+          {reviewed.length > 0 && (
+            <span className={`text-xs w-5 h-5 rounded-full flex items-center justify-center ${activeTab === 'reviewed' ? 'bg-white/20 text-white' : 'bg-gray-600 text-gray-300'}`}>
+              {reviewed.length}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Pending tab */}
+      {activeTab === 'pending' && (
+        pending.length === 0 ? (
+          <div className="text-center py-16 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700">
+            <Shield className="w-12 h-12 mx-auto mb-3 text-gray-700" />
+            <p>No pending verifications</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {pending.map(doc => <DocCard key={doc.id} doc={doc} showActions={true} />)}
+          </div>
+        )
+      )}
+
+      {/* Reviewed tab */}
+      {activeTab === 'reviewed' && (
+        reviewed.length === 0 ? (
+          <div className="text-center py-16 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700">
+            <CheckCircle className="w-12 h-12 mx-auto mb-3 text-gray-700" />
+            <p>No reviewed verifications yet</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {reviewed.map(doc => <DocCard key={doc.id} doc={doc} showActions={false} />)}
+          </div>
+        )
+      )}
+    </div>
+  );
+}
+
 // ── Main Admin Page ───────────────────────────────────────────────────────────
 export default function AdminPage() {
   const { data: session, status } = useSession();
@@ -506,7 +668,9 @@ export default function AdminPage() {
     fetch('/api/admin/siteconfig').then(r => r.json()).then(setSiteConfig).catch(() => {});
     setLoading(false);  };
 
-  useEffect(() => { if (status === 'authenticated' && session?.user?.role === 'ADMIN') loadAll(); }, [status, session]);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.role === 'ADMIN') loadAll();
+  }, [status]); // Only trigger on auth status change, not on every session object update
 
   const updateUser = async (id, data) => {
     const res = await fetch(`/api/admin/users/${id}`, {
@@ -525,8 +689,9 @@ export default function AdminPage() {
     await fetch('/api/admin/verifications', {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ docId, status }),
     });
-    toast.success(status === 'APPROVED' ? 'Approved & email sent' : 'Rejected');
-    loadAll();
+    toast.success(status === 'APPROVED' ? '✅ Approved' : '❌ Rejected');
+    // Update locally — move from pending to approved/rejected without full reload
+    setVerifications(prev => prev.map(d => d.id === docId ? { ...d, status } : d));
   };
 
   const handleReport = async (reportId, status) => {
@@ -704,6 +869,7 @@ export default function AdminPage() {
         {tab === 'pending' && (
           <PendingApprovalTab
             pendingUsers={pendingUsers}
+            allUsers={users}
             onApprove={(id) => updateUser(id, { adminVerified: true })}
             onReject={(id) => updateUser(id, { isActive: false })}
           />
@@ -812,31 +978,10 @@ export default function AdminPage() {
 
         {/* ── ID VERIFICATIONS ── */}
         {tab === 'verifications' && (
-          <div>
-            {verifications.length === 0 ? (
-              <div className="text-center py-16 text-gray-500"><Shield className="w-12 h-12 mx-auto mb-3 text-gray-700" /><p>No pending verifications</p></div>
-            ) : (
-              <div className="space-y-4">
-                {verifications.map(doc => (
-                  <div key={doc.id} className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
-                    <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4">
-                      <div>
-                        <p className="font-semibold">{doc.user?.name}</p>
-                        <p className="text-gray-400 text-sm">{doc.user?.email}</p>
-                        <p className="text-gray-500 text-xs mt-1">Document type: {doc.type}</p>
-                        <p className="text-gray-500 text-xs">Submitted: {format(new Date(doc.createdAt), 'dd MMM yyyy, h:mm a')}</p>
-                        {doc.url && <a href={doc.url} target="_blank" rel="noreferrer" className="text-pink-400 text-xs hover:underline mt-1 inline-block">View Document ↗</a>}
-                      </div>
-                      <div className="flex gap-2 flex-shrink-0">
-                        <button onClick={() => handleVerification(doc.id, 'APPROVED')} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-colors">Approve</button>
-                        <button onClick={() => handleVerification(doc.id, 'REJECTED')} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-sm transition-colors">Reject</button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <VerificationsTab
+            verifications={verifications}
+            onVerify={handleVerification}
+          />
         )}
 
         {/* ── REPORTS ── */}
