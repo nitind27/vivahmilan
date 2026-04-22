@@ -1,59 +1,171 @@
-// Custom Next.js server with Socket.io integrated
-// Run with: node server.mjs  (replaces `next dev` / `next start`)
-import { createServer } from 'http';
-import { parse } from 'url';
-import { createReadStream, statSync, existsSync } from 'fs';
-import { join, extname } from 'path';
-import next from 'next';
-import { Server } from 'socket.io';
+/**
+ * server.mjs — Production-ready server with:
+ *  - Cluster mode (uses all CPU cores)
+ *  - Gzip compression
+ *  - In-memory response caching
+ *  - Rate limiting per IP
+ *  - Keep-alive + connection reuse
+ *  - Graceful shutdown
+ */
 
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
-const port = parseInt(process.env.PORT || '3000');
+import cluster from 'cluster';
+import os from 'os';
 
-const app = next({ dev, hostname, port });
-const handle = app.getRequestHandler();
+const NUM_WORKERS = process.env.WEB_CONCURRENCY
+  ? parseInt(process.env.WEB_CONCURRENCY)
+  : Math.min(os.cpus().length, 4);
 
-// MIME types for uploaded files
-const MIME = {
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-  '.png': 'image/png', '.webp': 'image/webp',
-  '.gif': 'image/gif', '.pdf': 'application/pdf',
-};
+// PRIMARY PROCESS
+if (cluster.isPrimary) {
+  console.log(`🚀 Primary ${process.pid} — spawning ${NUM_WORKERS} workers`);
+  for (let i = 0; i < NUM_WORKERS; i++) spawnWorker(i);
 
-const UPLOADS_DIR = join(process.cwd(), 'public', 'uploads');
+  cluster.on('exit', (worker, code, signal) => {
+    console.warn(`⚠️  Worker ${worker.process.pid} died (${signal || code}). Restarting…`);
+    setTimeout(() => spawnWorker(), 1000);
+  });
 
-app.prepare().then(() => {
+  process.on('SIGTERM', () => {
+    for (const id in cluster.workers) cluster.workers[id].send('shutdown');
+    setTimeout(() => process.exit(0), 5000);
+  });
+
+  function spawnWorker(index) {
+    const w = cluster.fork({ WORKER_INDEX: index ?? Object.keys(cluster.workers).length });
+    console.log(`  ✅ Worker ${w.process.pid} started`);
+  }
+} else {
+  await startWorker();
+}
+
+async function startWorker() {
+  const { createServer } = await import('http');
+  const { parse } = await import('url');
+  const { createReadStream, statSync, existsSync } = await import('fs');
+  const { join, extname } = await import('path');
+  const { default: next } = await import('next');
+  const { Server } = await import('socket.io');
+  const { default: compression } = await import('compression');
+  const { default: NodeCache } = await import('node-cache');
+
+  const dev = process.env.NODE_ENV !== 'production';
+  const port = parseInt(process.env.PORT || '3000');
+  const hostname = process.env.HOSTNAME || 'localhost';
+
+  // In-memory cache
+  const apiCache = new NodeCache({ stdTTL: 30, checkperiod: 60, useClones: false });
+
+  // Rate limiter (per IP)
+  const rateLimitMap = new Map();
+  const RATE_LIMIT = 200;
+  const RATE_WINDOW = 60_000;
+
+  function isRateLimited(ip) {
+    const now = Date.now();
+    let entry = rateLimitMap.get(ip);
+    if (!entry || now > entry.resetAt) {
+      rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+      return false;
+    }
+    entry.count++;
+    return entry.count > RATE_LIMIT;
+  }
+
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of rateLimitMap) {
+      if (now > entry.resetAt) rateLimitMap.delete(ip);
+    }
+  }, RATE_WINDOW);
+
+  const compress = compression({ level: 6, threshold: 1024 });
+
+  const MIME = {
+    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+    '.png': 'image/png', '.webp': 'image/webp',
+    '.gif': 'image/gif', '.pdf': 'application/pdf',
+  };
+
+  // Routes safe to cache (public, non-user-specific)
+  const CACHEABLE = [
+    '/api/profile-options',
+    '/api/location/countries',
+    '/api/location/states',
+    '/api/location/cities',
+  ];
+
+  const app = next({ dev, hostname, port });
+  const handle = app.getRequestHandler();
+  await app.prepare();
+
   const httpServer = createServer((req, res) => {
+    req.socket.setKeepAlive(true, 5000);
     req.socket.setMaxListeners(0);
-    const parsedUrl = parse(req.url, true);
 
-    // ── Serve /uploads/* directly from disk ──────────────────────────
-    if (parsedUrl.pathname?.startsWith('/uploads/')) {
-      const filePath = join(process.cwd(), 'public', parsedUrl.pathname);
+    // Rate limiting
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+      || req.socket.remoteAddress || 'unknown';
+
+    if (isRateLimited(ip)) {
+      res.writeHead(429, { 'Content-Type': 'application/json', 'Retry-After': '60' });
+      res.end(JSON.stringify({ error: 'Too many requests. Please slow down.' }));
+      return;
+    }
+
+    // Compression
+    compress(req, res, () => {});
+
+    const parsedUrl = parse(req.url, true);
+    const { pathname } = parsedUrl;
+
+    // Serve /uploads/* directly
+    if (pathname?.startsWith('/uploads/')) {
+      const filePath = join(process.cwd(), 'public', pathname);
       if (existsSync(filePath)) {
         const ext = extname(filePath).toLowerCase();
-        const mime = MIME[ext] || 'application/octet-stream';
-        res.setHeader('Content-Type', mime);
-        res.setHeader('Cache-Control', 'public, max-age=31536000');
+        res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         try {
           const stat = statSync(filePath);
           res.setHeader('Content-Length', stat.size);
           createReadStream(filePath).pipe(res);
-        } catch {
-          res.writeHead(500); res.end('Error reading file');
-        }
-        return;
-      } else {
-        res.writeHead(404); res.end('Not found');
+        } catch { res.writeHead(500); res.end('Error reading file'); }
         return;
       }
+      res.writeHead(404); res.end('Not found');
+      return;
     }
+
+    // API response caching (GET only, safe routes)
+    if (req.method === 'GET' && CACHEABLE.some(r => pathname?.startsWith(r))) {
+      const cacheKey = req.url;
+      const cached = apiCache.get(cacheKey);
+      if (cached) {
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('X-Cache', 'HIT');
+        res.writeHead(200);
+        res.end(cached);
+        return;
+      }
+      const chunks = [];
+      const origEnd = res.end.bind(res);
+      res.end = (chunk) => {
+        if (chunk) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        if (res.statusCode === 200) apiCache.set(cacheKey, Buffer.concat(chunks).toString());
+        res.setHeader('X-Cache', 'MISS');
+        return origEnd(chunk);
+      };
+    }
+
+    // Security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-Worker-PID', process.pid.toString());
 
     handle(req, res, parsedUrl);
   });
 
-  // ── Socket.io attached to the SAME server ──────────────────────────
+  // Socket.io
   const io = new Server(httpServer, {
     path: '/api/socket',
     addTrailingSlash: false,
@@ -65,34 +177,30 @@ app.prepare().then(() => {
     transports: ['websocket', 'polling'],
     pingTimeout: 60000,
     pingInterval: 25000,
+    maxHttpBufferSize: 1e6,
+    connectTimeout: 10000,
   });
 
-  // Track online users
-  const onlineUsers = new Map(); // userId -> socketId
+  const onlineUsers = new Map();
 
   io.on('connection', (socket) => {
-    // User comes online
     socket.on('user:online', (userId) => {
       onlineUsers.set(userId, socket.id);
       socket.userId = userId;
       io.emit('users:online', Array.from(onlineUsers.keys()));
     });
 
-    // Join a chat room
     socket.on('room:join', (roomId) => socket.join(roomId));
     socket.on('room:leave', (roomId) => socket.leave(roomId));
 
-    // Broadcast message to room
     socket.on('message:send', ({ roomId, message }) => {
       socket.to(roomId).emit('message:receive', message);
     });
 
-    // Read receipt — tell sender their messages were read
     socket.on('message:read', ({ roomId, readerId }) => {
       socket.to(roomId).emit('message:read', { roomId, readerId });
     });
 
-    // Typing indicators
     socket.on('typing:start', ({ roomId, userId }) => {
       socket.to(roomId).emit('typing:start', { userId });
     });
@@ -100,13 +208,11 @@ app.prepare().then(() => {
       socket.to(roomId).emit('typing:stop', { userId });
     });
 
-    // Interest notification to a specific user
     socket.on('interest:notify', ({ toUserId, fromUser }) => {
       const targetSocket = onlineUsers.get(toUserId);
       if (targetSocket) io.to(targetSocket).emit('interest:received', { fromUser });
     });
 
-    // Live location update
     socket.on('location:update', ({ roomId, msgId, latitude, longitude }) => {
       socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
     });
@@ -119,8 +225,21 @@ app.prepare().then(() => {
     });
   });
 
-  httpServer.listen(port, () => {
-    console.log(`✅ Ready on http://${hostname}:${port}`);
-    console.log(`🔌 Socket.io running on same port (path: /api/socket)`);
+  // Graceful shutdown
+  process.on('message', (msg) => {
+    if (msg === 'shutdown') {
+      httpServer.close(() => process.exit(0));
+      setTimeout(() => process.exit(0), 3000);
+    }
   });
-});
+
+  // Tune for high concurrency
+  httpServer.keepAliveTimeout = 65000;
+  httpServer.headersTimeout = 66000;
+  httpServer.maxConnections = 10000;
+
+  httpServer.listen(port, () => {
+    console.log(`  🔧 Worker ${process.pid} ready on http://${hostname}:${port}`);
+    console.log(`  🔌 Socket.io on /api/socket`);
+  });
+}
