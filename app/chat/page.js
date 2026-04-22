@@ -391,6 +391,15 @@ function ChatInner() {
         setRooms(sorted);
         setUnreadPerRoom(unreadData.perRoom || {});
         setLoading(false);
+
+        // Seed lastSeenMap from DB data (fallback for users not seen this session)
+        const seedLastSeen = {};
+        sorted.forEach(room => {
+          const myId = session?.user?.id;
+          const other = room.userAId === myId ? room.userB : room.userA;
+          if (other?.lastSeen) seedLastSeen[other.id] = new Date(other.lastSeen).toISOString();
+        });
+        setLastSeenMap(prev => ({ ...seedLastSeen, ...prev }));
         if (targetUserId) {
           const room = sorted.find(r => r.userAId === targetUserId || r.userBId === targetUserId);
           if (room) openRoom(room);

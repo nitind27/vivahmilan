@@ -54,6 +54,12 @@ async function startWorker() {
   const { default: compression } = await import('compression');
   const { default: NodeCache } = await import('node-cache');
 
+  // Ensure lastSeen column exists
+  try {
+    const { pool } = await import('./lib/db.js');
+    await pool.execute("ALTER TABLE `user` ADD COLUMN IF NOT EXISTS `lastSeen` DATETIME NULL DEFAULT NULL");
+  } catch (e) { /* column may already exist */ }
+
   const dev = process.env.NODE_ENV !== 'production';
   const port = parseInt(process.env.PORT || '3005');
   const hostname = process.env.HOSTNAME || 'localhost';
@@ -229,10 +235,16 @@ async function startWorker() {
 
     socket.on('disconnect', () => {
       if (socket.userId) {
+        const now = new Date().toISOString();
         onlineUsers.delete(socket.userId);
-        lastSeenMap.set(socket.userId, new Date().toISOString());
+        lastSeenMap.set(socket.userId, now);
         io.emit('users:online', Array.from(onlineUsers.keys()));
         io.emit('users:lastseen', Object.fromEntries(lastSeenMap));
+
+        // Persist lastSeen to DB
+        import('./lib/db.js').then(({ execute }) => {
+          execute('UPDATE `user` SET lastSeen = ? WHERE id = ?', [new Date(), socket.userId]).catch(() => {});
+        }).catch(() => {});
       }
     });
   });

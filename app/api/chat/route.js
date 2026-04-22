@@ -15,8 +15,8 @@ export async function GET(req) {
   const enriched = await Promise.all(rooms.map(async (room) => {
     const otherUserId = room.userAId === session.user.id ? room.userBId : room.userAId;
 
-    const userA = await queryOne('SELECT id, name, email, image, isPremium, isVerified FROM `user` WHERE id = ?', [room.userAId]);
-    const userB = await queryOne('SELECT id, name, email, image, isPremium, isVerified FROM `user` WHERE id = ?', [room.userBId]);
+    const userA = await queryOne('SELECT id, name, email, image, isPremium, isVerified, lastSeen FROM `user` WHERE id = ?', [room.userAId]);
+    const userB = await queryOne('SELECT id, name, email, image, isPremium, isVerified, lastSeen FROM `user` WHERE id = ?', [room.userBId]);
 
     const profileA = await queryOne('SELECT gender, city, country, profileComplete FROM profile WHERE userId = ?', [room.userAId]);
     const profileB = await queryOne('SELECT gender, city, country, profileComplete FROM profile WHERE userId = ?', [room.userBId]);
