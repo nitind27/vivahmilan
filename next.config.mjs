@@ -5,23 +5,28 @@ const nextConfig = {
 
   // Aggressive static asset caching
   async headers() {
-    return [
-      {
-        source: '/_next/static/(.*)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-      },
-      {
-        source: '/(.*)\\.(jpg|jpeg|png|webp|gif|svg|ico|woff2|woff)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
-      },
-      {
-        source: '/api/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-        ],
-      },
-    ];
+    const isProd = process.env.NODE_ENV === 'production';
+    const routes = [];
+    if (isProd) {
+      routes.push(
+        {
+          source: '/_next/static/(.*)',
+          headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+        },
+        {
+          source: '/(.*)\\.(jpg|jpeg|png|webp|gif|svg|ico|woff2|woff)',
+          headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
+        }
+      );
+    }
+    routes.push({
+      source: '/api/(.*)',
+      headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+      ],
+    });
+    return routes;
   },
 
   images: {

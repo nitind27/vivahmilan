@@ -11,13 +11,20 @@
 import cluster from 'cluster';
 import os from 'os';
 import { setupPrimary } from '@socket.io/cluster-adapter';
+import { config } from 'dotenv';
+config();
 
-const NUM_WORKERS = process.env.WEB_CONCURRENCY
-  ? parseInt(process.env.WEB_CONCURRENCY)
-  : Math.min(os.cpus().length, 4);
+const isDev = process.env.NODE_ENV !== 'production';
+const NUM_WORKERS = isDev ? 1 : (
+  process.env.WEB_CONCURRENCY
+    ? parseInt(process.env.WEB_CONCURRENCY)
+    : Math.min(os.cpus().length, 4)
+);
 
-// PRIMARY PROCESS
-if (cluster.isPrimary) {
+// In dev mode, skip cluster entirely — run as single process
+if (isDev) {
+  await startWorker();
+} else if (cluster.isPrimary) {
   console.log(`🚀 Primary ${process.pid} — spawning ${NUM_WORKERS} workers`);
 
   // Setup Socket.IO cluster adapter on primary (IPC-based, no Redis needed)
@@ -54,11 +61,17 @@ async function startWorker() {
   const { default: compression } = await import('compression');
   const { default: NodeCache } = await import('node-cache');
 
-  // Ensure lastSeen column exists
-  try {
-    const { pool } = await import('./lib/db.js');
-    await pool.execute("ALTER TABLE `user` ADD COLUMN IF NOT EXISTS `lastSeen` DATETIME NULL DEFAULT NULL");
-  } catch (e) { /* column may already exist */ }
+  // Ensure lastSeen column exists (only run on first worker)
+  if (process.env.WORKER_INDEX === '0' || process.env.WORKER_INDEX === undefined) {
+    try {
+      const { pool } = await import('./lib/db.js');
+      await pool.execute("ALTER TABLE `user` ADD COLUMN `lastSeen` DATETIME NULL DEFAULT NULL");
+      console.log('✅ lastSeen column added to user table');
+    } catch (e) {
+      // Column already exists (error code 1060) — that's fine
+      if (e.errno !== 1060) console.warn('lastSeen column check:', e.message);
+    }
+  }
 
   const dev = process.env.NODE_ENV !== 'production';
   const port = parseInt(process.env.PORT || '3005');
@@ -181,7 +194,7 @@ async function startWorker() {
   const io = new Server(httpServer, {
     path: '/api/socket',
     addTrailingSlash: false,
-    adapter: createAdapter(),
+    ...(dev ? {} : { adapter: createAdapter() }),
     cors: {
       origin: process.env.NEXTAUTH_URL || '*',
       methods: ['GET', 'POST'],
@@ -249,13 +262,15 @@ async function startWorker() {
     });
   });
 
-  // Graceful shutdown
-  process.on('message', (msg) => {
-    if (msg === 'shutdown') {
-      httpServer.close(() => process.exit(0));
-      setTimeout(() => process.exit(0), 3000);
-    }
-  });
+  // Graceful shutdown (only in cluster worker mode)
+  if (process.send) {
+    process.on('message', (msg) => {
+      if (msg === 'shutdown') {
+        httpServer.close(() => process.exit(0));
+        setTimeout(() => process.exit(0), 3000);
+      }
+    });
+  }
 
   // Tune for high concurrency
   httpServer.keepAliveTimeout = 65000;
