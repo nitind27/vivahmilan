@@ -10,6 +10,7 @@
 
 import cluster from 'cluster';
 import os from 'os';
+import { setupPrimary } from '@socket.io/cluster-adapter';
 
 const NUM_WORKERS = process.env.WEB_CONCURRENCY
   ? parseInt(process.env.WEB_CONCURRENCY)
@@ -18,6 +19,10 @@ const NUM_WORKERS = process.env.WEB_CONCURRENCY
 // PRIMARY PROCESS
 if (cluster.isPrimary) {
   console.log(`🚀 Primary ${process.pid} — spawning ${NUM_WORKERS} workers`);
+
+  // Setup Socket.IO cluster adapter on primary (IPC-based, no Redis needed)
+  setupPrimary();
+
   for (let i = 0; i < NUM_WORKERS; i++) spawnWorker(i);
 
   cluster.on('exit', (worker, code, signal) => {
@@ -45,11 +50,12 @@ async function startWorker() {
   const { join, extname } = await import('path');
   const { default: next } = await import('next');
   const { Server } = await import('socket.io');
+  const { createAdapter } = await import('@socket.io/cluster-adapter');
   const { default: compression } = await import('compression');
   const { default: NodeCache } = await import('node-cache');
 
   const dev = process.env.NODE_ENV !== 'production';
-  const port = parseInt(process.env.PORT || '3000');
+  const port = parseInt(process.env.PORT || '3005');
   const hostname = process.env.HOSTNAME || 'localhost';
 
   // In-memory cache
@@ -169,6 +175,7 @@ async function startWorker() {
   const io = new Server(httpServer, {
     path: '/api/socket',
     addTrailingSlash: false,
+    adapter: createAdapter(),
     cors: {
       origin: process.env.NEXTAUTH_URL || '*',
       methods: ['GET', 'POST'],
