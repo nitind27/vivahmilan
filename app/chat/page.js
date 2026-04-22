@@ -25,6 +25,21 @@ function formatMsgTime(date) {
   return format(d, 'MMM d');
 }
 
+function formatLastSeen(isoString) {
+  if (!isoString) return 'Offline';
+  const d = new Date(isoString);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+
+  if (diffMins < 1) return 'last seen just now';
+  if (diffMins < 60) return `last seen ${diffMins} min ago`;
+  if (diffHours < 24 && isToday(d)) return `last seen today at ${format(d, 'h:mm a')}`;
+  if (isYesterday(d)) return `last seen yesterday at ${format(d, 'h:mm a')}`;
+  return `last seen ${format(d, 'MMM d')} at ${format(d, 'h:mm a')}`;
+}
+
 // ── Message Bubble ────────────────────────────────────────────────────────────
 function MessageBubble({ msg, isMe }) {
   const [zoom, setZoom] = useState(false);
@@ -286,6 +301,7 @@ function ChatInner() {
   const [loading, setLoading]         = useState(true);
   const [sending, setSending]         = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [lastSeenMap, setLastSeenMap] = useState({});
   const [otherTyping, setOtherTyping] = useState(false);
   const [showEmoji, setShowEmoji]     = useState(false);
   const [showAttach, setShowAttach]   = useState(false);
@@ -323,6 +339,7 @@ function ChatInner() {
     const s = connectSocket(session.user.id);
     socketRef.current = s;
     s.on('users:online', setOnlineUsers);
+    s.on('users:lastseen', setLastSeenMap);
     s.on('message:receive', (msg) => {
       // If this room is currently open — don't increment unread, mark read immediately
       const currentRoom = activeRoomRef.current;
@@ -352,7 +369,7 @@ function ChatInner() {
     });
     s.on('typing:start', () => setOtherTyping(true));
     s.on('typing:stop',  () => setOtherTyping(false));
-    return () => { s.off('users:online'); s.off('message:receive'); s.off('message:read'); s.off('typing:start'); s.off('typing:stop'); };
+    return () => { s.off('users:online'); s.off('users:lastseen'); s.off('message:receive'); s.off('message:read'); s.off('typing:start'); s.off('typing:stop'); };
   }, [status, session]);
 
   // Load rooms
@@ -659,6 +676,9 @@ function ChatInner() {
                           </span>
                         )}
                       </div>
+                      {!online && lastSeenMap[other?.id] && (
+                        <p className="text-xs text-gray-400 truncate mt-0.5">{formatLastSeen(lastSeenMap[other?.id])}</p>
+                      )}
                     </div>
                   </button>
                 );
@@ -689,7 +709,7 @@ function ChatInner() {
                         {other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
                       </div>
                       <p className={`text-xs ${online ? 'text-green-500' : 'text-gray-400'}`}>
-                        {otherTyping ? <span className="text-vd-primary animate-pulse">typing…</span> : online ? 'Online' : 'Offline'}
+                        {otherTyping ? <span className="text-vd-primary animate-pulse">typing…</span> : online ? 'Online' : formatLastSeen(lastSeenMap[other?.id])}
                       </p>
                     </div>
                     <Link href={`/profile/${other?.id}`} className="text-xs text-vd-primary border border-vd-border px-3 py-1.5 rounded-xl hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20 transition-colors">

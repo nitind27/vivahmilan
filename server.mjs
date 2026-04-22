@@ -189,12 +189,15 @@ async function startWorker() {
   });
 
   const onlineUsers = new Map();
+  const lastSeenMap = new Map(); // userId -> ISO timestamp
 
   io.on('connection', (socket) => {
     socket.on('user:online', (userId) => {
       onlineUsers.set(userId, socket.id);
       socket.userId = userId;
+      lastSeenMap.delete(userId); // they're online now
       io.emit('users:online', Array.from(onlineUsers.keys()));
+      io.emit('users:lastseen', Object.fromEntries(lastSeenMap));
     });
 
     socket.on('room:join', (roomId) => socket.join(roomId));
@@ -227,7 +230,9 @@ async function startWorker() {
     socket.on('disconnect', () => {
       if (socket.userId) {
         onlineUsers.delete(socket.userId);
+        lastSeenMap.set(socket.userId, new Date().toISOString());
         io.emit('users:online', Array.from(onlineUsers.keys()));
+        io.emit('users:lastseen', Object.fromEntries(lastSeenMap));
       }
     });
   });
