@@ -26,15 +26,28 @@ function Field({ label, children }) {
   return <div><label className={labelCls}>{label}</label>{children}</div>;
 }
 
-function Select({ label, value, onChange, options, placeholder = 'Select' }) {
+function Select({ label, value, onChange, options, placeholder = 'Select', disabled = false }) {
   return (
     <Field label={label}>
-      <select value={value} onChange={e => onChange(e.target.value)} className={selectCls}>
-        <option value="">{placeholder}</option>
-        {options.map(o => <option key={typeof o === 'string' ? o : o.val} value={typeof o === 'string' ? o : o.val}>{typeof o === 'string' ? o : o.label}</option>)}
-      </select>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={e => !disabled && onChange(e.target.value)}
+          disabled={disabled}
+          className={selectCls + (disabled ? ' opacity-60 cursor-not-allowed bg-vd-bg-alt' : '')}>
+          <option value="">{placeholder}</option>
+          {options.map(o => <option key={typeof o === 'string' ? o : o.val} value={typeof o === 'string' ? o : o.val}>{typeof o === 'string' ? o : o.label}</option>)}
+        </select>
+        {disabled && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-vd-text-light font-medium pointer-events-none">
+            🔒
+          </div>
+        )}
+      </div>
     </Field>
   );
+
+
 }
 
 function Input({ label, value, onChange, type = 'text', placeholder = '' }) {
@@ -324,7 +337,7 @@ function EditProfilePage() {
               <div className="space-y-5">
                 <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-vd-primary" /> Religion & Community</h2>
                 <div className="grid grid-cols-2 gap-4">
-                  <Select label="Religion" value={form.religion} onChange={v => { set('religion', v); set('caste', ''); set('sect', ''); set('gotra', ''); }} options={ALL_RELIGIONS} />
+                  <Select label="Religion" value={form.religion} onChange={v => { set('religion', v); set('caste', ''); set('sect', ''); set('gotra', ''); }} options={ALL_RELIGIONS} disabled={!!form.religion} />
                   {form.religion && (
                     <SearchableSelect
                       label={form.religion === 'Muslim' ? 'Community / Biradari' : form.religion === 'Christian' ? 'Denomination' : 'Caste / Community'}

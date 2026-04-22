@@ -47,7 +47,8 @@ export async function GET(req) {
   const isPremium   = session.user.isPremium || trialActive;
 
   const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
-  const targetGender   = genderFilter || oppositeGender;
+  // Always use opposite gender — ignore any gender filter that matches own gender
+  const targetGender = oppositeGender || (genderFilter !== myGender ? genderFilter : null);
 
   // Blocked IDs
   const blocks = await query(

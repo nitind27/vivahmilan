@@ -126,12 +126,12 @@ async function main() {
 
   for (const opt of OPTIONS) {
     const [ex] = await conn.execute(
-      'SELECT id FROM ProfileOption WHERE category = ? AND value = ?',
+      'SELECT id FROM profileoption WHERE category = ? AND value = ?',
       [opt.category, opt.value]
     );
     if (ex.length > 0) { skipped++; continue; }
     await conn.execute(
-      'INSERT INTO ProfileOption (id, category, value, label, `group`, sortOrder, isActive, createdAt) VALUES (?, ?, ?, ?, ?, ?, 1, NOW())',
+      'INSERT INTO profileoption (id, category, value, label, `group`, sortOrder, isActive, createdAt) VALUES (?, ?, ?, ?, ?, ?, 1, NOW())',
       [randomUUID(), opt.category, opt.value, opt.label, opt.group || null, opt.sortOrder]
     );
     inserted++;

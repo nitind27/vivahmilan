@@ -2,21 +2,113 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
-import Image from 'next/image';
 import SmartImage from '@/components/SmartImage';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import {
-  Heart, MapPin, GraduationCap, Briefcase, BadgeCheck, Star,
+  Heart, MapPin, GraduationCap, Briefcase, Star,
   MessageCircle, Flag, Ban, ChevronLeft, Check, X, Lock,
   Eye, Users, Cigarette, Wine, Utensils, Ruler, Weight,
-  Send, Clock, CheckCircle2
+  Send, Clock, CheckCircle2, AlertTriangle, ShieldOff
 } from 'lucide-react';
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import KundaliChart from '@/components/KundaliChart';
+
+const REPORT_REASONS = [
+  'Fake profile / Impersonation',
+  'Inappropriate photos',
+  'Harassment or abusive behavior',
+  'Spam or scam',
+  'Underage user',
+  'Other',
+];
+
+// ── Block Confirmation Modal ──────────────────────────────────────────────────
+function BlockModal({ name, onConfirm, onCancel, loading }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+        className="relative bg-vd-bg-section rounded-3xl shadow-2xl border border-vd-border p-6 w-full max-w-sm">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-14 h-14 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
+            <ShieldOff className="w-7 h-7 text-red-500" />
+          </div>
+          <h3 className="text-lg font-bold text-vd-text-heading mb-1">Block {name?.split(' ')[0]}?</h3>
+          <p className="text-sm text-vd-text-sub mb-6">
+            They won't be able to view your profile, send you interests, or message you.
+          </p>
+          <div className="flex gap-3 w-full">
+            <button onClick={onCancel}
+              className="flex-1 py-3 rounded-2xl border border-vd-border text-sm font-medium text-vd-text-sub hover:bg-vd-accent-soft transition-colors">
+              Cancel
+            </button>
+            <button onClick={onConfirm} disabled={loading}
+              className="flex-1 py-3 rounded-2xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
+              {loading ? <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : <Ban className="w-4 h-4" />}
+              Block
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ── Report Modal ──────────────────────────────────────────────────────────────
+function ReportModal({ name, onSubmit, onCancel, loading }) {
+  const [reason, setReason] = useState('');
+  const [details, setDetails] = useState('');
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+        className="relative bg-vd-bg-section rounded-3xl shadow-2xl border border-vd-border p-6 w-full max-w-sm">
+        <button onClick={onCancel} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-vd-accent-soft transition-colors">
+          <X className="w-4 h-4 text-vd-text-light" />
+        </button>
+
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center flex-shrink-0">
+            <AlertTriangle className="w-5 h-5 text-orange-500" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-vd-text-heading">Report {name?.split(' ')[0]}</h3>
+            <p className="text-xs text-vd-text-light">Help us keep the community safe</p>
+          </div>
+        </div>
+
+        <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-2">Select a reason</p>
+        <div className="space-y-2 mb-4">
+          {REPORT_REASONS.map(r => (
+            <button key={r} type="button" onClick={() => setReason(r)}
+              className={`w-full text-left px-4 py-2.5 rounded-2xl text-sm border-2 transition-all ${
+                reason === r
+                  ? 'border-vd-primary bg-vd-accent-soft text-vd-text-heading font-medium'
+                  : 'border-vd-border text-vd-text-sub hover:border-vd-primary hover:bg-vd-accent-soft'
+              }`}>
+              {r}
+            </button>
+          ))}
+        </div>
+
+        <textarea value={details} onChange={e => setDetails(e.target.value)} rows={2}
+          placeholder="Additional details (optional)…"
+          className="w-full px-4 py-3 border border-vd-border rounded-2xl bg-vd-bg text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary resize-none mb-4" />
+
+        <button onClick={() => reason && onSubmit(reason, details)} disabled={!reason || loading}
+          className="w-full py-3 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+          {loading ? <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : <Flag className="w-4 h-4" />}
+          Submit Report
+        </button>
+      </motion.div>
+    </div>
+  );
+}
 
 // ── Interest Action Panel ─────────────────────────────────────────────────────
 function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, userId, session, onStatusChange }) {
@@ -170,9 +262,13 @@ export default function ProfilePage() {
   const [user, setUser]               = useState(null);
   const [loading, setLoading]         = useState(true);
   const [shortlisted, setShortlisted] = useState(false);
-  const [interestStatus, setInterestStatus] = useState(null); // { status, direction, id }
+  const [interestStatus, setInterestStatus] = useState(null);
   const [activePhoto, setActivePhoto] = useState(0);
-  const [kundali, setKundali]         = useState(undefined); // undefined = not fetched yet, null = not found
+  const [kundali, setKundali]         = useState(undefined);
+  const [showBlockModal, setShowBlockModal]   = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [blockLoading, setBlockLoading]   = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -215,15 +311,33 @@ export default function ProfilePage() {
     toast.success(data.shortlisted ? 'Added to shortlist ❤️' : 'Removed from shortlist');
   };
 
-  const reportUser = async () => {
-    const reason = prompt('Reason for reporting this profile:');
-    if (!reason) return;
-    await fetch('/api/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ targetId: id, reason }),
-    });
-    toast.success('Report submitted. We will review it.');
+  const reportUser = async (reason, details) => {
+    setReportLoading(true);
+    try {
+      const res = await fetch('/api/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetId: id, reason, details }),
+      });
+      if (res.ok) { toast.success('Report submitted. We will review it.'); setShowReportModal(false); }
+      else toast.error('Failed to submit report');
+    } finally { setReportLoading(false); }
+  };
+
+  const blockUser = async () => {
+    setBlockLoading(true);
+    try {
+      const res = await fetch('/api/block', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ blockedId: id }),
+      });
+      if (res.ok) {
+        toast.success('User blocked successfully');
+        setShowBlockModal(false);
+        router.push('/matches');
+      } else toast.error('Failed to block user');
+    } finally { setBlockLoading(false); }
   };
 
   // ── Loading skeleton ───────────────────────────────────────────────────────
@@ -339,11 +453,11 @@ export default function ProfilePage() {
 
                 {/* Report / Block */}
                 <div className="flex gap-2">
-                  <button onClick={reportUser}
+                  <button onClick={() => setShowReportModal(true)}
                     className="flex-1 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-400 text-xs flex items-center justify-center gap-1 hover:border-red-300 hover:text-red-500 transition-colors">
                     <Flag className="w-3.5 h-3.5" /> Report
                   </button>
-                  <button
+                  <button onClick={() => setShowBlockModal(true)}
                     className="flex-1 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-400 text-xs flex items-center justify-center gap-1 hover:border-red-300 hover:text-red-500 transition-colors">
                     <Ban className="w-3.5 h-3.5" /> Block
                   </button>
@@ -527,6 +641,26 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <AnimatePresence>
+        {showBlockModal && (
+          <BlockModal
+            name={user?.name}
+            onConfirm={blockUser}
+            onCancel={() => setShowBlockModal(false)}
+            loading={blockLoading}
+          />
+        )}
+        {showReportModal && (
+          <ReportModal
+            name={user?.name}
+            onSubmit={reportUser}
+            onCancel={() => setShowReportModal(false)}
+            loading={reportLoading}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

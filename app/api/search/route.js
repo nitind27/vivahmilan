@@ -28,17 +28,21 @@ export async function GET(req) {
   const heightMin     = searchParams.get('heightMin')     || '';
   const heightMax     = searchParams.get('heightMax')     || '';
 
-  // Get current user's profile for religion/gotra filtering
+  // Get current user's profile for religion/gotra/gender filtering
   const currentUser = await queryOne(
-    `SELECT u.isPremium, u.freeTrialExpiry, p.religion, p.gotra
+    `SELECT u.isPremium, u.freeTrialExpiry, p.religion, p.gotra, p.gender
      FROM \`user\` u LEFT JOIN profile p ON p.userId = u.id WHERE u.id = ?`,
     [session.user.id]
   );
 
   const myReligion = currentUser?.religion;
   const myGotra    = currentUser?.gotra;
+  const myGender   = currentUser?.gender; // MALE or FEMALE
   const trialActive = currentUser?.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
   const isPremium   = session.user.isPremium || trialActive;
+
+  // Opposite gender mapping
+  const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
 
   // Blocked IDs
   const blocks = await query(
@@ -75,7 +79,21 @@ export async function GET(req) {
     conditions.push('(u.name LIKE ? OR p.city LIKE ? OR p.profession LIKE ? OR p.country LIKE ?)');
     params.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
   }
-  if (gender)       { conditions.push('p.gender = ?'); params.push(gender); }
+  if (gender) {
+    // User explicitly selected a gender — but only allow opposite gender
+    // If they select same gender as themselves, ignore it and use opposite
+    if (oppositeGender && gender !== myGender) {
+      conditions.push('p.gender = ?');
+      params.push(gender);
+    } else if (oppositeGender) {
+      conditions.push('p.gender = ?');
+      params.push(oppositeGender);
+    }
+  } else if (oppositeGender) {
+    // Default: always show only opposite gender
+    conditions.push('p.gender = ?');
+    params.push(oppositeGender);
+  }
   if (country)      { conditions.push('p.country = ?'); params.push(country); }
   if (state)        { conditions.push('p.state LIKE ?'); params.push(`%${state}%`); }
   if (city)         { conditions.push('p.city LIKE ?'); params.push(`%${city}%`); }
