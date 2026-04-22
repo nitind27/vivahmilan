@@ -106,12 +106,9 @@ function HeroBanner({ name, profileComplete, photo }) {
             <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-2xl"
               style={{ border: '3px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.2)' }}>
               {photo ? (
-                <>
-                
                 <img src={photo} alt={name} className="w-full h-full object-cover" />
-                </>
               ) : (
-                <img src="https://png.pngtree.com/png-clipart/20240516/original/pngtree-user-flat-yellow-color-icon-character-adult-profile-photo-png-image_15103120.png" alt={name} className="w-full h-full object-cover" />
+                <img src="/images/default-avatar.png" alt={name} className="w-full h-full object-cover" />
               )}
             </div>
             <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}
@@ -382,7 +379,7 @@ export default function Dashboard() {
 
   const profileComplete  = profile?.profile?.profileComplete || 0;
   const pendingInterests = interests.filter(i => i.status === 'PENDING').length;
-  const userPhoto        = profile?.photos?.[0]?.url || null;
+  const userPhoto        = profile?.image || profile?.photos?.[0]?.url || null;
 
   const stats = [
     { icon: Heart,         label: 'Interests',      value: interests.length > 0 ? interests.length : '—',  color: 'text-vd-primary',   bg: 'bg-vd-accent-soft dark:bg-vd-accent/20',   href: '/interests',  badge: pendingInterests > 0 },
