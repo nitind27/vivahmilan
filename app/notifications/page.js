@@ -18,9 +18,9 @@ const iconMap = {
 };
 
 const colorMap = {
-  INTEREST_RECEIVED: 'bg-pink-500',
+  INTEREST_RECEIVED: 'bg-vd-primary',
   INTEREST_ACCEPTED: 'bg-green-500',
-  PROFILE_VIEWED: 'bg-purple-500',
+  PROFILE_VIEWED: 'bg-vd-primary',
   SUBSCRIPTION_EXPIRY: 'bg-yellow-500',
   VERIFICATION_APPROVED: 'bg-blue-500',
   SYSTEM: 'bg-gray-500',
@@ -82,7 +82,7 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-24 pb-12">
 
@@ -95,7 +95,7 @@ export default function NotificationsPage() {
           </div>
           {unreadCount > 0 && (
             <button onClick={markAllRead}
-              className="text-sm text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1.5 transition-colors">
+              className="text-sm text-vd-primary hover:text-vd-primary-dark font-medium flex items-center gap-1.5 transition-colors">
               <CheckCheck className="w-4 h-4" /> Mark all read
             </button>
           )}
@@ -130,7 +130,7 @@ export default function NotificationsPage() {
                         href={n.link || '#'}
                         onClick={() => !n.isRead && markOneRead(n.id)}
                         className={`flex items-start gap-4 p-4 rounded-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                          !n.isRead ? 'bg-pink-50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-900/20' : 'bg-white dark:bg-gray-800'
+                          !n.isRead ? 'bg-vd-accent-soft dark:bg-vd-accent/10 border border-vd-border' : 'bg-vd-bg-section dark:bg-vd-bg-card'
                         }`}
                       >
                         <div className={`w-10 h-10 ${iconBg} rounded-full flex items-center justify-center flex-shrink-0`}>
@@ -144,7 +144,7 @@ export default function NotificationsPage() {
                           </p>
                         </div>
                         {!n.isRead && (
-                          <div className="w-2.5 h-2.5 bg-pink-500 rounded-full mt-1.5 flex-shrink-0" />
+                          <div className="w-2.5 h-2.5 bg-vd-primary rounded-full mt-1.5 flex-shrink-0" />
                         )}
                       </Link>
                     </motion.div>
@@ -159,7 +159,7 @@ export default function NotificationsPage() {
                 <button
                   onClick={loadMore}
                   disabled={loadingMore}
-                  className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm font-medium hover:border-pink-300 hover:text-pink-500 transition-all disabled:opacity-60"
+                  className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-vd-bg-section dark:bg-vd-bg-card border border-vd-border rounded-2xl text-sm font-medium hover:border-vd-primary hover:text-vd-primary transition-all disabled:opacity-60"
                 >
                   {loadingMore
                     ? <><Loader2 className="w-4 h-4 animate-spin" /> Loading…</>

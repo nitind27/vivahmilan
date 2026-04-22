@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         {/* Prevent dark/light flash on load */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}` }} />
       </head>
-      <body className={`${inter.className} bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100`} suppressHydrationWarning>
+      <body className={`${inter.className} bg-vd-bg dark:bg-vd-bg text-vd-text-heading dark:text-vd-text-heading`} suppressHydrationWarning>
         <Providers>
           <SWRegister />
           {children}
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
           <ChatBot />
           <Toaster position="top-right" toastOptions={{
             style: { background: '#1f2937', color: '#fff', borderRadius: '12px' },
-            success: { iconTheme: { primary: '#ec4899', secondary: '#fff' } },
+            success: { iconTheme: { primary: 'var(--vd-primary)', secondary: '#fff' } },
           }} />
         </Providers>
       </body>

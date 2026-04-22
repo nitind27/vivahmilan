@@ -337,6 +337,7 @@ export type userWhereInput = {
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.profileWhereInput> | null
+  kundali?: Prisma.XOR<Prisma.KundaliNullableScalarRelationFilter, Prisma.kundaliWhereInput> | null
   photos?: Prisma.PhotoListRelationFilter
   sentInterests?: Prisma.InterestListRelationFilter
   receivedInterests?: Prisma.InterestListRelationFilter
@@ -356,6 +357,7 @@ export type userWhereInput = {
   blockedUsers?: Prisma.BlockListRelationFilter
   blockedBy?: Prisma.BlockListRelationFilter
   otps?: Prisma.OtpListRelationFilter
+  pushSubscriptions?: Prisma.PushsubscriptionListRelationFilter
 }
 
 export type userOrderByWithRelationInput = {
@@ -386,6 +388,7 @@ export type userOrderByWithRelationInput = {
   accounts?: Prisma.accountOrderByRelationAggregateInput
   sessions?: Prisma.sessionOrderByRelationAggregateInput
   profile?: Prisma.profileOrderByWithRelationInput
+  kundali?: Prisma.kundaliOrderByWithRelationInput
   photos?: Prisma.photoOrderByRelationAggregateInput
   sentInterests?: Prisma.interestOrderByRelationAggregateInput
   receivedInterests?: Prisma.interestOrderByRelationAggregateInput
@@ -405,6 +408,7 @@ export type userOrderByWithRelationInput = {
   blockedUsers?: Prisma.blockOrderByRelationAggregateInput
   blockedBy?: Prisma.blockOrderByRelationAggregateInput
   otps?: Prisma.otpOrderByRelationAggregateInput
+  pushSubscriptions?: Prisma.pushsubscriptionOrderByRelationAggregateInput
   _relevance?: Prisma.userOrderByRelevanceInput
 }
 
@@ -439,6 +443,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.profileWhereInput> | null
+  kundali?: Prisma.XOR<Prisma.KundaliNullableScalarRelationFilter, Prisma.kundaliWhereInput> | null
   photos?: Prisma.PhotoListRelationFilter
   sentInterests?: Prisma.InterestListRelationFilter
   receivedInterests?: Prisma.InterestListRelationFilter
@@ -458,6 +463,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   blockedUsers?: Prisma.BlockListRelationFilter
   blockedBy?: Prisma.BlockListRelationFilter
   otps?: Prisma.OtpListRelationFilter
+  pushSubscriptions?: Prisma.PushsubscriptionListRelationFilter
 }, "id" | "email" | "phone">
 
 export type userOrderByWithAggregationInput = {
@@ -548,6 +554,7 @@ export type userCreateInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -567,6 +574,7 @@ export type userCreateInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateInput = {
@@ -597,6 +605,7 @@ export type userUncheckedCreateInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -616,6 +625,7 @@ export type userUncheckedCreateInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userUpdateInput = {
@@ -646,6 +656,7 @@ export type userUpdateInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -665,6 +676,7 @@ export type userUpdateInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateInput = {
@@ -695,6 +707,7 @@ export type userUncheckedUpdateInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -714,6 +727,7 @@ export type userUncheckedUpdateInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateManyInput = {
@@ -1111,6 +1125,20 @@ export type userUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutNotificationsInput, Prisma.userUpdateWithoutNotificationsInput>, Prisma.userUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type userCreateNestedOneWithoutPushSubscriptionsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutPushSubscriptionsInput, Prisma.userUncheckedCreateWithoutPushSubscriptionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutPushSubscriptionsInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutPushSubscriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutPushSubscriptionsInput, Prisma.userUncheckedCreateWithoutPushSubscriptionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutPushSubscriptionsInput
+  upsert?: Prisma.userUpsertWithoutPushSubscriptionsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutPushSubscriptionsInput, Prisma.userUpdateWithoutPushSubscriptionsInput>, Prisma.userUncheckedUpdateWithoutPushSubscriptionsInput>
+}
+
 export type userCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.userCreateWithoutSubscriptionsInput, Prisma.userUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.userCreateOrConnectWithoutSubscriptionsInput
@@ -1209,6 +1237,20 @@ export type userUpdateOneRequiredWithoutOtpsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutOtpsInput, Prisma.userUpdateWithoutOtpsInput>, Prisma.userUncheckedUpdateWithoutOtpsInput>
 }
 
+export type userCreateNestedOneWithoutKundaliInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutKundaliInput, Prisma.userUncheckedCreateWithoutKundaliInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutKundaliInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutKundaliNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutKundaliInput, Prisma.userUncheckedCreateWithoutKundaliInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutKundaliInput
+  upsert?: Prisma.userUpsertWithoutKundaliInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutKundaliInput, Prisma.userUpdateWithoutKundaliInput>, Prisma.userUncheckedUpdateWithoutKundaliInput>
+}
+
 export type userCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -1236,6 +1278,7 @@ export type userCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -1255,6 +1298,7 @@ export type userCreateWithoutAccountsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutAccountsInput = {
@@ -1284,6 +1328,7 @@ export type userUncheckedCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -1303,6 +1348,7 @@ export type userUncheckedCreateWithoutAccountsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutAccountsInput = {
@@ -1348,6 +1394,7 @@ export type userUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -1367,6 +1414,7 @@ export type userUpdateWithoutAccountsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutAccountsInput = {
@@ -1396,6 +1444,7 @@ export type userUncheckedUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -1415,6 +1464,7 @@ export type userUncheckedUpdateWithoutAccountsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSessionsInput = {
@@ -1444,6 +1494,7 @@ export type userCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -1463,6 +1514,7 @@ export type userCreateWithoutSessionsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSessionsInput = {
@@ -1492,6 +1544,7 @@ export type userUncheckedCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -1511,6 +1564,7 @@ export type userUncheckedCreateWithoutSessionsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSessionsInput = {
@@ -1556,6 +1610,7 @@ export type userUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -1575,6 +1630,7 @@ export type userUpdateWithoutSessionsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSessionsInput = {
@@ -1604,6 +1660,7 @@ export type userUncheckedUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -1623,6 +1680,7 @@ export type userUncheckedUpdateWithoutSessionsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutProfileInput = {
@@ -1652,6 +1710,7 @@ export type userCreateWithoutProfileInput = {
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -1671,6 +1730,7 @@ export type userCreateWithoutProfileInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutProfileInput = {
@@ -1700,6 +1760,7 @@ export type userUncheckedCreateWithoutProfileInput = {
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -1719,6 +1780,7 @@ export type userUncheckedCreateWithoutProfileInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutProfileInput = {
@@ -1764,6 +1826,7 @@ export type userUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -1783,6 +1846,7 @@ export type userUpdateWithoutProfileInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutProfileInput = {
@@ -1812,6 +1876,7 @@ export type userUncheckedUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -1831,6 +1896,7 @@ export type userUncheckedUpdateWithoutProfileInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutPhotosInput = {
@@ -1861,6 +1927,7 @@ export type userCreateWithoutPhotosInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
   sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
@@ -1879,6 +1946,7 @@ export type userCreateWithoutPhotosInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutPhotosInput = {
@@ -1909,6 +1977,7 @@ export type userUncheckedCreateWithoutPhotosInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
   sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
@@ -1927,6 +1996,7 @@ export type userUncheckedCreateWithoutPhotosInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutPhotosInput = {
@@ -1973,6 +2043,7 @@ export type userUpdateWithoutPhotosInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
   sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
@@ -1991,6 +2062,7 @@ export type userUpdateWithoutPhotosInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutPhotosInput = {
@@ -2021,6 +2093,7 @@ export type userUncheckedUpdateWithoutPhotosInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
   sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2039,6 +2112,7 @@ export type userUncheckedUpdateWithoutPhotosInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSentInterestsInput = {
@@ -2069,6 +2143,7 @@ export type userCreateWithoutSentInterestsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
   sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
@@ -2087,6 +2162,7 @@ export type userCreateWithoutSentInterestsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSentInterestsInput = {
@@ -2117,6 +2193,7 @@ export type userUncheckedCreateWithoutSentInterestsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
   sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
@@ -2135,6 +2212,7 @@ export type userUncheckedCreateWithoutSentInterestsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSentInterestsInput = {
@@ -2170,6 +2248,7 @@ export type userCreateWithoutReceivedInterestsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
@@ -2188,6 +2267,7 @@ export type userCreateWithoutReceivedInterestsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReceivedInterestsInput = {
@@ -2218,6 +2298,7 @@ export type userUncheckedCreateWithoutReceivedInterestsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
@@ -2236,6 +2317,7 @@ export type userUncheckedCreateWithoutReceivedInterestsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReceivedInterestsInput = {
@@ -2282,6 +2364,7 @@ export type userUpdateWithoutSentInterestsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
   sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
@@ -2300,6 +2383,7 @@ export type userUpdateWithoutSentInterestsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSentInterestsInput = {
@@ -2330,6 +2414,7 @@ export type userUncheckedUpdateWithoutSentInterestsInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
   sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2348,6 +2433,7 @@ export type userUncheckedUpdateWithoutSentInterestsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutReceivedInterestsInput = {
@@ -2389,6 +2475,7 @@ export type userUpdateWithoutReceivedInterestsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
@@ -2407,6 +2494,7 @@ export type userUpdateWithoutReceivedInterestsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReceivedInterestsInput = {
@@ -2437,6 +2525,7 @@ export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2455,6 +2544,7 @@ export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutChatRoomsAInput = {
@@ -2485,6 +2575,7 @@ export type userCreateWithoutChatRoomsAInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -2503,6 +2594,7 @@ export type userCreateWithoutChatRoomsAInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutChatRoomsAInput = {
@@ -2533,6 +2625,7 @@ export type userUncheckedCreateWithoutChatRoomsAInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -2551,6 +2644,7 @@ export type userUncheckedCreateWithoutChatRoomsAInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutChatRoomsAInput = {
@@ -2586,6 +2680,7 @@ export type userCreateWithoutChatRoomsBInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -2604,6 +2699,7 @@ export type userCreateWithoutChatRoomsBInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutChatRoomsBInput = {
@@ -2634,6 +2730,7 @@ export type userUncheckedCreateWithoutChatRoomsBInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -2652,6 +2749,7 @@ export type userUncheckedCreateWithoutChatRoomsBInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutChatRoomsBInput = {
@@ -2698,6 +2796,7 @@ export type userUpdateWithoutChatRoomsAInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -2716,6 +2815,7 @@ export type userUpdateWithoutChatRoomsAInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutChatRoomsAInput = {
@@ -2746,6 +2846,7 @@ export type userUncheckedUpdateWithoutChatRoomsAInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -2764,6 +2865,7 @@ export type userUncheckedUpdateWithoutChatRoomsAInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutChatRoomsBInput = {
@@ -2805,6 +2907,7 @@ export type userUpdateWithoutChatRoomsBInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -2823,6 +2926,7 @@ export type userUpdateWithoutChatRoomsBInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutChatRoomsBInput = {
@@ -2853,6 +2957,7 @@ export type userUncheckedUpdateWithoutChatRoomsBInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -2871,6 +2976,7 @@ export type userUncheckedUpdateWithoutChatRoomsBInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSentMessagesInput = {
@@ -2901,6 +3007,7 @@ export type userCreateWithoutSentMessagesInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -2919,6 +3026,7 @@ export type userCreateWithoutSentMessagesInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSentMessagesInput = {
@@ -2949,6 +3057,7 @@ export type userUncheckedCreateWithoutSentMessagesInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -2967,6 +3076,7 @@ export type userUncheckedCreateWithoutSentMessagesInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSentMessagesInput = {
@@ -3002,6 +3112,7 @@ export type userCreateWithoutReceivedMessagesInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -3020,6 +3131,7 @@ export type userCreateWithoutReceivedMessagesInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReceivedMessagesInput = {
@@ -3050,6 +3162,7 @@ export type userUncheckedCreateWithoutReceivedMessagesInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -3068,6 +3181,7 @@ export type userUncheckedCreateWithoutReceivedMessagesInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReceivedMessagesInput = {
@@ -3114,6 +3228,7 @@ export type userUpdateWithoutSentMessagesInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -3132,6 +3247,7 @@ export type userUpdateWithoutSentMessagesInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSentMessagesInput = {
@@ -3162,6 +3278,7 @@ export type userUncheckedUpdateWithoutSentMessagesInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -3180,6 +3297,7 @@ export type userUncheckedUpdateWithoutSentMessagesInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutReceivedMessagesInput = {
@@ -3221,6 +3339,7 @@ export type userUpdateWithoutReceivedMessagesInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -3239,6 +3358,7 @@ export type userUpdateWithoutReceivedMessagesInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -3269,6 +3389,7 @@ export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -3287,6 +3408,7 @@ export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutShortlistedInput = {
@@ -3317,6 +3439,7 @@ export type userCreateWithoutShortlistedInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -3335,6 +3458,7 @@ export type userCreateWithoutShortlistedInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutShortlistedInput = {
@@ -3365,6 +3489,7 @@ export type userUncheckedCreateWithoutShortlistedInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -3383,6 +3508,7 @@ export type userUncheckedCreateWithoutShortlistedInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutShortlistedInput = {
@@ -3418,6 +3544,7 @@ export type userCreateWithoutShortlistedByInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -3436,6 +3563,7 @@ export type userCreateWithoutShortlistedByInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutShortlistedByInput = {
@@ -3466,6 +3594,7 @@ export type userUncheckedCreateWithoutShortlistedByInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -3484,6 +3613,7 @@ export type userUncheckedCreateWithoutShortlistedByInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutShortlistedByInput = {
@@ -3530,6 +3660,7 @@ export type userUpdateWithoutShortlistedInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -3548,6 +3679,7 @@ export type userUpdateWithoutShortlistedInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutShortlistedInput = {
@@ -3578,6 +3710,7 @@ export type userUncheckedUpdateWithoutShortlistedInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -3596,6 +3729,7 @@ export type userUncheckedUpdateWithoutShortlistedInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutShortlistedByInput = {
@@ -3637,6 +3771,7 @@ export type userUpdateWithoutShortlistedByInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -3655,6 +3790,7 @@ export type userUpdateWithoutShortlistedByInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutShortlistedByInput = {
@@ -3685,6 +3821,7 @@ export type userUncheckedUpdateWithoutShortlistedByInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -3703,6 +3840,7 @@ export type userUncheckedUpdateWithoutShortlistedByInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutViewedProfilesInput = {
@@ -3733,6 +3871,7 @@ export type userCreateWithoutViewedProfilesInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -3751,6 +3890,7 @@ export type userCreateWithoutViewedProfilesInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutViewedProfilesInput = {
@@ -3781,6 +3921,7 @@ export type userUncheckedCreateWithoutViewedProfilesInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -3799,6 +3940,7 @@ export type userUncheckedCreateWithoutViewedProfilesInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutViewedProfilesInput = {
@@ -3834,6 +3976,7 @@ export type userCreateWithoutProfileViewsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -3852,6 +3995,7 @@ export type userCreateWithoutProfileViewsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutProfileViewsInput = {
@@ -3882,6 +4026,7 @@ export type userUncheckedCreateWithoutProfileViewsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -3900,6 +4045,7 @@ export type userUncheckedCreateWithoutProfileViewsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutProfileViewsInput = {
@@ -3946,6 +4092,7 @@ export type userUpdateWithoutViewedProfilesInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -3964,6 +4111,7 @@ export type userUpdateWithoutViewedProfilesInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutViewedProfilesInput = {
@@ -3994,6 +4142,7 @@ export type userUncheckedUpdateWithoutViewedProfilesInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -4012,6 +4161,7 @@ export type userUncheckedUpdateWithoutViewedProfilesInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutProfileViewsInput = {
@@ -4053,6 +4203,7 @@ export type userUpdateWithoutProfileViewsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -4071,6 +4222,7 @@ export type userUpdateWithoutProfileViewsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutProfileViewsInput = {
@@ -4101,6 +4253,7 @@ export type userUncheckedUpdateWithoutProfileViewsInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -4119,6 +4272,7 @@ export type userUncheckedUpdateWithoutProfileViewsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutNotificationsInput = {
@@ -4149,6 +4303,7 @@ export type userCreateWithoutNotificationsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -4167,6 +4322,7 @@ export type userCreateWithoutNotificationsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutNotificationsInput = {
@@ -4197,6 +4353,7 @@ export type userUncheckedCreateWithoutNotificationsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -4215,6 +4372,7 @@ export type userUncheckedCreateWithoutNotificationsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutNotificationsInput = {
@@ -4261,6 +4419,7 @@ export type userUpdateWithoutNotificationsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -4279,6 +4438,7 @@ export type userUpdateWithoutNotificationsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutNotificationsInput = {
@@ -4309,6 +4469,7 @@ export type userUncheckedUpdateWithoutNotificationsInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -4320,6 +4481,223 @@ export type userUncheckedUpdateWithoutNotificationsInput = {
   shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
   viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
   profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutPushSubscriptionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  role?: $Enums.Role
+  isActive?: boolean
+  isVerified?: boolean
+  adminVerified?: boolean
+  verificationBadge?: boolean
+  isPremium?: boolean
+  premiumExpiry?: Date | string | null
+  premiumPlan?: string | null
+  profileBoost?: boolean
+  boostExpiry?: Date | string | null
+  loginOtpEnabled?: boolean
+  lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutPushSubscriptionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  role?: $Enums.Role
+  isActive?: boolean
+  isVerified?: boolean
+  adminVerified?: boolean
+  verificationBadge?: boolean
+  isPremium?: boolean
+  premiumExpiry?: Date | string | null
+  premiumPlan?: string | null
+  profileBoost?: boolean
+  boostExpiry?: Date | string | null
+  loginOtpEnabled?: boolean
+  lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutPushSubscriptionsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutPushSubscriptionsInput, Prisma.userUncheckedCreateWithoutPushSubscriptionsInput>
+}
+
+export type userUpsertWithoutPushSubscriptionsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutPushSubscriptionsInput, Prisma.userUncheckedUpdateWithoutPushSubscriptionsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutPushSubscriptionsInput, Prisma.userUncheckedCreateWithoutPushSubscriptionsInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutPushSubscriptionsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutPushSubscriptionsInput, Prisma.userUncheckedUpdateWithoutPushSubscriptionsInput>
+}
+
+export type userUpdateWithoutPushSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationBadge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutPushSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationBadge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
   reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
@@ -4357,6 +4735,7 @@ export type userCreateWithoutSubscriptionsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -4375,6 +4754,7 @@ export type userCreateWithoutSubscriptionsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSubscriptionsInput = {
@@ -4405,6 +4785,7 @@ export type userUncheckedCreateWithoutSubscriptionsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -4423,6 +4804,7 @@ export type userUncheckedCreateWithoutSubscriptionsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSubscriptionsInput = {
@@ -4469,6 +4851,7 @@ export type userUpdateWithoutSubscriptionsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -4487,6 +4870,7 @@ export type userUpdateWithoutSubscriptionsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSubscriptionsInput = {
@@ -4517,6 +4901,7 @@ export type userUncheckedUpdateWithoutSubscriptionsInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -4535,6 +4920,7 @@ export type userUncheckedUpdateWithoutSubscriptionsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutDocumentsInput = {
@@ -4565,6 +4951,7 @@ export type userCreateWithoutDocumentsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -4583,6 +4970,7 @@ export type userCreateWithoutDocumentsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutDocumentsInput = {
@@ -4613,6 +5001,7 @@ export type userUncheckedCreateWithoutDocumentsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -4631,6 +5020,7 @@ export type userUncheckedCreateWithoutDocumentsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutDocumentsInput = {
@@ -4677,6 +5067,7 @@ export type userUpdateWithoutDocumentsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -4695,6 +5086,7 @@ export type userUpdateWithoutDocumentsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutDocumentsInput = {
@@ -4725,6 +5117,7 @@ export type userUncheckedUpdateWithoutDocumentsInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -4743,6 +5136,7 @@ export type userUncheckedUpdateWithoutDocumentsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutReportsMadeInput = {
@@ -4773,6 +5167,7 @@ export type userCreateWithoutReportsMadeInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -4791,6 +5186,7 @@ export type userCreateWithoutReportsMadeInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReportsMadeInput = {
@@ -4821,6 +5217,7 @@ export type userUncheckedCreateWithoutReportsMadeInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -4839,6 +5236,7 @@ export type userUncheckedCreateWithoutReportsMadeInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReportsMadeInput = {
@@ -4874,6 +5272,7 @@ export type userCreateWithoutReportsReceivedInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -4892,6 +5291,7 @@ export type userCreateWithoutReportsReceivedInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReportsReceivedInput = {
@@ -4922,6 +5322,7 @@ export type userUncheckedCreateWithoutReportsReceivedInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -4940,6 +5341,7 @@ export type userUncheckedCreateWithoutReportsReceivedInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReportsReceivedInput = {
@@ -4986,6 +5388,7 @@ export type userUpdateWithoutReportsMadeInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -5004,6 +5407,7 @@ export type userUpdateWithoutReportsMadeInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReportsMadeInput = {
@@ -5034,6 +5438,7 @@ export type userUncheckedUpdateWithoutReportsMadeInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -5052,6 +5457,7 @@ export type userUncheckedUpdateWithoutReportsMadeInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutReportsReceivedInput = {
@@ -5093,6 +5499,7 @@ export type userUpdateWithoutReportsReceivedInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -5111,6 +5518,7 @@ export type userUpdateWithoutReportsReceivedInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReportsReceivedInput = {
@@ -5141,6 +5549,7 @@ export type userUncheckedUpdateWithoutReportsReceivedInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -5159,6 +5568,7 @@ export type userUncheckedUpdateWithoutReportsReceivedInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutBlockedUsersInput = {
@@ -5189,6 +5599,7 @@ export type userCreateWithoutBlockedUsersInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -5207,6 +5618,7 @@ export type userCreateWithoutBlockedUsersInput = {
   reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutBlockedUsersInput = {
@@ -5237,6 +5649,7 @@ export type userUncheckedCreateWithoutBlockedUsersInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -5255,6 +5668,7 @@ export type userUncheckedCreateWithoutBlockedUsersInput = {
   reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutBlockedUsersInput = {
@@ -5290,6 +5704,7 @@ export type userCreateWithoutBlockedByInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -5308,6 +5723,7 @@ export type userCreateWithoutBlockedByInput = {
   reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutBlockedByInput = {
@@ -5338,6 +5754,7 @@ export type userUncheckedCreateWithoutBlockedByInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -5356,6 +5773,7 @@ export type userUncheckedCreateWithoutBlockedByInput = {
   reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutBlockedByInput = {
@@ -5402,6 +5820,7 @@ export type userUpdateWithoutBlockedUsersInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -5420,6 +5839,7 @@ export type userUpdateWithoutBlockedUsersInput = {
   reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutBlockedUsersInput = {
@@ -5450,6 +5870,7 @@ export type userUncheckedUpdateWithoutBlockedUsersInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -5468,6 +5889,7 @@ export type userUncheckedUpdateWithoutBlockedUsersInput = {
   reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userUpsertWithoutBlockedByInput = {
@@ -5509,6 +5931,7 @@ export type userUpdateWithoutBlockedByInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -5527,6 +5950,7 @@ export type userUpdateWithoutBlockedByInput = {
   reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutBlockedByInput = {
@@ -5557,6 +5981,7 @@ export type userUncheckedUpdateWithoutBlockedByInput = {
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -5575,6 +6000,7 @@ export type userUncheckedUpdateWithoutBlockedByInput = {
   reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutOtpsInput = {
@@ -5605,6 +6031,7 @@ export type userCreateWithoutOtpsInput = {
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
   profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
   photos?: Prisma.photoCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
@@ -5623,6 +6050,7 @@ export type userCreateWithoutOtpsInput = {
   reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutOtpsInput = {
@@ -5653,6 +6081,7 @@ export type userUncheckedCreateWithoutOtpsInput = {
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
   photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
   sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
   receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
@@ -5671,6 +6100,7 @@ export type userUncheckedCreateWithoutOtpsInput = {
   reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutOtpsInput = {
@@ -5717,6 +6147,7 @@ export type userUpdateWithoutOtpsInput = {
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
@@ -5735,9 +6166,226 @@ export type userUpdateWithoutOtpsInput = {
   reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutOtpsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationBadge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutKundaliInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  role?: $Enums.Role
+  isActive?: boolean
+  isVerified?: boolean
+  adminVerified?: boolean
+  verificationBadge?: boolean
+  isPremium?: boolean
+  premiumExpiry?: Date | string | null
+  premiumPlan?: string | null
+  profileBoost?: boolean
+  boostExpiry?: Date | string | null
+  loginOtpEnabled?: boolean
+  lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutKundaliInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  role?: $Enums.Role
+  isActive?: boolean
+  isVerified?: boolean
+  adminVerified?: boolean
+  verificationBadge?: boolean
+  isPremium?: boolean
+  premiumExpiry?: Date | string | null
+  premiumPlan?: string | null
+  profileBoost?: boolean
+  boostExpiry?: Date | string | null
+  loginOtpEnabled?: boolean
+  lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutKundaliInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutKundaliInput, Prisma.userUncheckedCreateWithoutKundaliInput>
+}
+
+export type userUpsertWithoutKundaliInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutKundaliInput, Prisma.userUncheckedUpdateWithoutKundaliInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutKundaliInput, Prisma.userUncheckedCreateWithoutKundaliInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutKundaliInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutKundaliInput, Prisma.userUncheckedUpdateWithoutKundaliInput>
+}
+
+export type userUpdateWithoutKundaliInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationBadge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutKundaliInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5783,6 +6431,8 @@ export type userUncheckedUpdateWithoutOtpsInput = {
   reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -5812,6 +6462,7 @@ export type UserCountOutputType = {
   blockedUsers: number
   blockedBy: number
   otps: number
+  pushSubscriptions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5836,6 +6487,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   blockedUsers?: boolean | UserCountOutputTypeCountBlockedUsersArgs
   blockedBy?: boolean | UserCountOutputTypeCountBlockedByArgs
   otps?: boolean | UserCountOutputTypeCountOtpsArgs
+  pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
 }
 
 /**
@@ -5995,6 +6647,13 @@ export type UserCountOutputTypeCountOtpsArgs<ExtArgs extends runtime.Types.Exten
   where?: Prisma.otpWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPushSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.pushsubscriptionWhereInput
+}
+
 
 export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -6024,6 +6683,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
   profile?: boolean | Prisma.user$profileArgs<ExtArgs>
+  kundali?: boolean | Prisma.user$kundaliArgs<ExtArgs>
   photos?: boolean | Prisma.user$photosArgs<ExtArgs>
   sentInterests?: boolean | Prisma.user$sentInterestsArgs<ExtArgs>
   receivedInterests?: boolean | Prisma.user$receivedInterestsArgs<ExtArgs>
@@ -6043,6 +6703,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   blockedUsers?: boolean | Prisma.user$blockedUsersArgs<ExtArgs>
   blockedBy?: boolean | Prisma.user$blockedByArgs<ExtArgs>
   otps?: boolean | Prisma.user$otpsArgs<ExtArgs>
+  pushSubscriptions?: boolean | Prisma.user$pushSubscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -6080,6 +6741,7 @@ export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
   profile?: boolean | Prisma.user$profileArgs<ExtArgs>
+  kundali?: boolean | Prisma.user$kundaliArgs<ExtArgs>
   photos?: boolean | Prisma.user$photosArgs<ExtArgs>
   sentInterests?: boolean | Prisma.user$sentInterestsArgs<ExtArgs>
   receivedInterests?: boolean | Prisma.user$receivedInterestsArgs<ExtArgs>
@@ -6099,6 +6761,7 @@ export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   blockedUsers?: boolean | Prisma.user$blockedUsersArgs<ExtArgs>
   blockedBy?: boolean | Prisma.user$blockedByArgs<ExtArgs>
   otps?: boolean | Prisma.user$otpsArgs<ExtArgs>
+  pushSubscriptions?: boolean | Prisma.user$pushSubscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -6108,6 +6771,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     accounts: Prisma.$accountPayload<ExtArgs>[]
     sessions: Prisma.$sessionPayload<ExtArgs>[]
     profile: Prisma.$profilePayload<ExtArgs> | null
+    kundali: Prisma.$kundaliPayload<ExtArgs> | null
     photos: Prisma.$photoPayload<ExtArgs>[]
     sentInterests: Prisma.$interestPayload<ExtArgs>[]
     receivedInterests: Prisma.$interestPayload<ExtArgs>[]
@@ -6127,6 +6791,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     blockedUsers: Prisma.$blockPayload<ExtArgs>[]
     blockedBy: Prisma.$blockPayload<ExtArgs>[]
     otps: Prisma.$otpPayload<ExtArgs>[]
+    pushSubscriptions: Prisma.$pushsubscriptionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6496,6 +7161,7 @@ export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Typ
   accounts<T extends Prisma.user$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$accountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.user$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$sessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   profile<T extends Prisma.user$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$profileArgs<ExtArgs>>): Prisma.Prisma__profileClient<runtime.Types.Result.GetResult<Prisma.$profilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  kundali<T extends Prisma.user$kundaliArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$kundaliArgs<ExtArgs>>): Prisma.Prisma__kundaliClient<runtime.Types.Result.GetResult<Prisma.$kundaliPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   photos<T extends Prisma.user$photosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$photosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$photoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentInterests<T extends Prisma.user$sentInterestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$sentInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receivedInterests<T extends Prisma.user$receivedInterestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$receivedInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$interestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6515,6 +7181,7 @@ export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Typ
   blockedUsers<T extends Prisma.user$blockedUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$blockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blockedBy<T extends Prisma.user$blockedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$blockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   otps<T extends Prisma.user$otpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$otpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pushSubscriptions<T extends Prisma.user$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$pushsubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6983,6 +7650,25 @@ export type user$profileArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
+ * user.kundali
+ */
+export type user$kundaliArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the kundali
+   */
+  select?: Prisma.kundaliSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the kundali
+   */
+  omit?: Prisma.kundaliOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.kundaliInclude<ExtArgs> | null
+  where?: Prisma.kundaliWhereInput
+}
+
+/**
  * user.photos
  */
 export type user$photosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7436,6 +8122,30 @@ export type user$otpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.OtpScalarFieldEnum | Prisma.OtpScalarFieldEnum[]
+}
+
+/**
+ * user.pushSubscriptions
+ */
+export type user$pushSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the pushsubscription
+   */
+  select?: Prisma.pushsubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the pushsubscription
+   */
+  omit?: Prisma.pushsubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.pushsubscriptionInclude<ExtArgs> | null
+  where?: Prisma.pushsubscriptionWhereInput
+  orderBy?: Prisma.pushsubscriptionOrderByWithRelationInput | Prisma.pushsubscriptionOrderByWithRelationInput[]
+  cursor?: Prisma.pushsubscriptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PushsubscriptionScalarFieldEnum | Prisma.PushsubscriptionScalarFieldEnum[]
 }
 
 /**

@@ -75,19 +75,19 @@ export default function SetPasswordModal() {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+          className="relative w-full max-w-md bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl shadow-2xl border border-vd-border overflow-hidden"
         >
           {/* Top gradient bar */}
-          <div className="h-1.5 gradient-bg w-full" />
+          <div className="h-1.5 vd-gradient-gold w-full" />
 
           <div className="p-7">
             {/* Icon + heading */}
             <div className="flex flex-col items-center text-center mb-6">
-              <div className="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+              <div className="w-16 h-16 vd-gradient-gold rounded-2xl flex items-center justify-center mb-4 shadow-lg">
                 <Shield className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Set Your Password</h2>
-              <p className="text-gray-500 text-sm mt-2 max-w-xs">
+              <p className="text-vd-text-sub text-sm mt-2 max-w-xs">
                 You signed in with Google. Please set a password so you can also login with your email.
               </p>
             </div>
@@ -95,7 +95,7 @@ export default function SetPasswordModal() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-vd-text-sub mb-1.5">
                   New Password
                 </label>
                 <div className="relative">
@@ -106,7 +106,7 @@ export default function SetPasswordModal() {
                     onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                     placeholder="Min. 8 characters"
                     required
-                    className="w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-pink-500 transition-colors"
+                    className="w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-vd-primary transition-colors"
                   />
                   <button type="button" onClick={() => setShow(s => ({ ...s, password: !s.password }))}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -131,7 +131,7 @@ export default function SetPasswordModal() {
 
               {/* Confirm Password */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-vd-text-sub mb-1.5">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -147,7 +147,7 @@ export default function SetPasswordModal() {
                         ? 'border-red-400 focus:border-red-500'
                         : form.confirmPassword && form.password === form.confirmPassword
                         ? 'border-green-400 focus:border-green-500'
-                        : 'border-gray-200 dark:border-gray-600 focus:border-pink-500'
+                        : 'border-gray-200 dark:border-gray-600 focus:border-vd-primary'
                     }`}
                   />
                   <button type="button" onClick={() => setShow(s => ({ ...s, confirm: !s.confirm }))}
@@ -184,7 +184,7 @@ export default function SetPasswordModal() {
               <button
                 type="submit"
                 disabled={loading || form.password !== form.confirmPassword || form.password.length < 8}
-                className="w-full gradient-bg text-white py-3.5 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity text-sm"
+                className="w-full vd-gradient-gold text-white py-3.5 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity text-sm"
               >
                 {loading ? 'Setting password...' : 'Set Password & Continue'}
               </button>

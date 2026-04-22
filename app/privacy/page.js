@@ -11,7 +11,7 @@ const sections = [
         <ul className="space-y-2 ml-4">
           {['Full name, date of birth, gender', 'Email address and phone number', 'Profile photos and ID documents', 'Religion, caste, education, profession, and location details', 'Partner preferences and family information', 'Payment information (processed securely via Cashfree — we do not store card details)', 'Messages and communications on our platform'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -56,7 +56,7 @@ const sections = [
             'Business transfers — in case of merger, acquisition, or sale of assets',
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -96,12 +96,12 @@ const sections = [
             'Privacy controls — Hide your phone number or photos from non-premium users',
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
         </ul>
-        <p>To exercise any of these rights, contact us at <a href="mailto:privacy@vivahmilan.com" className="text-pink-500 hover:underline">privacy@vivahmilan.com</a></p>
+        <p>To exercise any of these rights, contact us at <a href="mailto:privacy@vivahmilan.com" className="text-vd-primary hover:underline">privacy@vivahmilan.com</a></p>
       </div>
     ),
   },
@@ -113,7 +113,7 @@ const sections = [
         <div className="space-y-2 mt-2">
           {[
             { type: 'Essential', desc: 'Required for the platform to function — login sessions, security', color: 'bg-blue-50 dark:bg-blue-900/10 text-blue-700 dark:text-blue-400' },
-            { type: 'Functional', desc: 'Remember your preferences like dark/light mode', color: 'bg-purple-50 dark:bg-purple-900/10 text-purple-700 dark:text-purple-400' },
+            { type: 'Functional', desc: 'Remember your preferences like dark/light mode', color: 'bg-vd-accent-soft dark:bg-vd-accent/10 text-vd-primary dark:text-vd-primary' },
             { type: 'Analytics', desc: 'Help us understand how users interact with our platform', color: 'bg-yellow-50 dark:bg-yellow-900/10 text-yellow-700 dark:text-yellow-400' },
           ].map((c, i) => (
             <div key={i} className={`flex items-start gap-3 p-3 rounded-xl ${c.color}`}>
@@ -132,7 +132,7 @@ const sections = [
         <p>We may update this Privacy Policy from time to time. We will notify you of significant changes via email or a prominent notice on our platform.</p>
         <p>For privacy-related questions or concerns, contact our Data Protection Officer:</p>
         <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl space-y-1 text-sm">
-          <p><span className="font-semibold">Email:</span> <a href="mailto:privacy@vivahmilan.com" className="text-pink-500 hover:underline">privacy@vivahmilan.com</a></p>
+          <p><span className="font-semibold">Email:</span> <a href="mailto:privacy@vivahmilan.com" className="text-vd-primary hover:underline">privacy@vivahmilan.com</a></p>
           <p><span className="font-semibold">Address:</span> Vivah Milan, Mumbai, Maharashtra, India</p>
           <p><span className="font-semibold">Response time:</span> Within 30 days</p>
         </div>
@@ -147,7 +147,7 @@ export default function PrivacyPage() {
       title="Privacy Policy"
       subtitle="How we collect, use, and protect your personal information"
       icon={Shield}
-      iconBg="bg-gradient-to-br from-blue-600 to-purple-600"
+      iconBg="vd-gradient-gold"
       lastUpdated="January 1, 2026"
       sections={sections}
       relatedLinks={[

@@ -22,7 +22,7 @@ const sections = [
         <ul className="space-y-2 ml-4">
           {['Be at least 18 years of age', 'Be legally eligible to marry under applicable laws', 'Provide accurate and truthful information', 'Not be currently married (unless divorced or widowed)', 'Have a valid email address and phone number', 'Not have been previously banned from our platform'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -85,7 +85,7 @@ const sections = [
         <ul className="space-y-2 ml-4">
           {['You agree to pay the applicable fees as described at the time of purchase', 'Payments are processed securely via Cashfree payment gateway', 'Subscriptions are one-time payments and do not auto-renew', 'Prices are in Indian Rupees (INR) and include applicable taxes', 'We reserve the right to modify pricing with 30 days notice'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -111,7 +111,7 @@ const sections = [
         <ul className="space-y-2 ml-4">
           {['We are not responsible for the conduct of users on or off the platform', 'We do not verify all information provided by users', 'We are not liable for any indirect, incidental, or consequential damages', 'Our total liability shall not exceed the amount paid by you in the last 3 months'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -127,7 +127,7 @@ const sections = [
         <ul className="space-y-2 ml-4">
           {['You may delete your account at any time from account settings or by contacting support', 'We may suspend or terminate accounts that violate these Terms', 'Upon termination, your right to use the platform ceases immediately', 'We may retain certain data as required by law or for legitimate business purposes'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -140,7 +140,7 @@ const sections = [
     content: (
       <div className="space-y-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
         <p>These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts in Mumbai, Maharashtra, India.</p>
-        <p>For any questions about these Terms, contact us at <a href="mailto:legal@vivahmilan.com" className="text-pink-500 hover:underline">legal@vivahmilan.com</a></p>
+        <p>For any questions about these Terms, contact us at <a href="mailto:legal@vivahmilan.com" className="text-vd-primary hover:underline">legal@vivahmilan.com</a></p>
       </div>
     ),
   },
@@ -152,7 +152,7 @@ export default function TermsPage() {
       title="Terms of Service"
       subtitle="Please read these terms carefully before using Vivah Milan"
       icon={FileText}
-      iconBg="bg-gradient-to-br from-pink-600 to-rose-600"
+      iconBg="vd-gradient-gold"
       lastUpdated="January 1, 2026"
       sections={sections}
       relatedLinks={[

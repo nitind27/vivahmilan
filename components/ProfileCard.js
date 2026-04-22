@@ -4,6 +4,7 @@ import SmartImage from '@/components/SmartImage';
 import Link from 'next/link';
 import { Heart, MapPin, GraduationCap, Briefcase, BadgeCheck, Star } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
@@ -11,6 +12,7 @@ import VerifiedBadge from '@/components/VerifiedBadge';
 export default function ProfileCard({ user, index = 0 }) {
   const [shortlisted, setShortlisted] = useState(user.isShortlisted || false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const profile = user.profile || {};
   const photo = user.photos?.[0]?.url;
@@ -42,15 +44,17 @@ export default function ProfileCard({ user, index = 0 }) {
       transition={{ delay: index * 0.05 }}
       className="card-hover"
     >
-      <Link href={`/profile/${user.id}`}>
-        <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 group">
+      <div
+        className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl overflow-hidden shadow-sm border border-vd-border group cursor-pointer"
+        onClick={() => router.push(`/profile/${user.id}`)}
+      >
           {/* Photo */}
-          <div className="relative h-56 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
+          <div className="relative h-56 bg-vd-accent-soft dark:bg-vd-accent/20">
             {photo ? (
               <SmartImage src={photo} alt={user.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full vd-gradient-gold flex items-center justify-center">
                   <span className="text-white text-3xl font-bold">{user.name?.[0]?.toUpperCase()}</span>
                 </div>
               </div>
@@ -70,7 +74,7 @@ export default function ProfileCard({ user, index = 0 }) {
             <button
               onClick={toggleShortlist}
               disabled={loading}
-              className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all ${shortlisted ? 'bg-pink-500 text-white' : 'bg-white/80 text-gray-500 hover:bg-pink-500 hover:text-white'}`}
+              className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all ${shortlisted ? 'bg-vd-primary text-white' : 'bg-white/80 text-gray-500 hover:bg-vd-primary hover:text-white'}`}
             >
               <Heart className={`w-4 h-4 ${shortlisted ? 'fill-white' : ''}`} />
             </button>
@@ -89,19 +93,19 @@ export default function ProfileCard({ user, index = 0 }) {
             <div className="space-y-1">
               {(profile.city || profile.country) && (
                 <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <MapPin className="w-3 h-3 text-pink-400" />
+                  <MapPin className="w-3 h-3 text-vd-primary" />
                   <span className="truncate">{[profile.city, profile.country].filter(Boolean).join(', ')}</span>
                 </div>
               )}
               {profile.education && (
                 <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <GraduationCap className="w-3 h-3 text-purple-400" />
+                  <GraduationCap className="w-3 h-3 text-vd-primary" />
                   <span className="truncate">{profile.education}</span>
                 </div>
               )}
               {profile.profession && (
                 <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <Briefcase className="w-3 h-3 text-indigo-400" />
+                  <Briefcase className="w-3 h-3 text-vd-primary" />
                   <span className="truncate">{profile.profession}</span>
                 </div>
               )}
@@ -109,12 +113,19 @@ export default function ProfileCard({ user, index = 0 }) {
 
             {profile.religion && (
               <div className="mt-3">
-                <span className="text-xs bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-2 py-1 rounded-full">{profile.religion}</span>
+                <span className="text-xs bg-vd-accent-soft text-vd-primary-dark px-2 py-1 rounded-full">{profile.religion}</span>
               </div>
             )}
+
+            <Link
+              href={`/profile/${user.id}`}
+              className="mt-3 w-full block text-center text-xs font-semibold text-vd-primary border border-vd-primary rounded-xl py-1.5 hover:bg-vd-accent-soft transition-colors"
+              onClick={e => e.stopPropagation()}
+            >
+              See Detail Profile
+            </Link>
           </div>
-        </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }

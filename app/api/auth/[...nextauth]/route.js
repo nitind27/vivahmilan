@@ -21,7 +21,7 @@ export const authOptions = {
         if (!credentials?.email || !credentials?.password) return null;
         try {
           const user = await queryOne(
-            'SELECT id, email, name, password, role, isActive, isPremium, isVerified, adminVerified, freeTrialExpiry, needsPassword FROM `user` WHERE email = ?',
+            'SELECT id, email, name, password, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE email = ?',
             [credentials.email]
           );
           if (!user || !user.password) return null;
@@ -36,11 +36,12 @@ export const authOptions = {
             name: user.name,
             role: user.role,
             isPremium: !!user.isPremium,
+            premiumPlan: user.premiumPlan || null,
             freeTrialActive: !!trialActive,
             freeTrialExpiry: user.freeTrialExpiry ? user.freeTrialExpiry.toISOString() : null,
             isVerified: !!user.isVerified,
             adminVerified: !!user.adminVerified,
-            needsPassword: !!user.needsPassword,
+            needsPassword: false,
             isNewUser: false,
           };
         } catch (err) {
@@ -105,6 +106,7 @@ export const authOptions = {
         user.id            = dbUser.id;
         user.role          = dbUser.role;
         user.isPremium     = !!dbUser.isPremium;
+        user.premiumPlan   = dbUser.premiumPlan || null;
         user.isVerified    = !!dbUser.isVerified;
         user.adminVerified = !!dbUser.adminVerified;
         user.needsPassword = !!dbUser.needsPassword;
@@ -125,6 +127,7 @@ export const authOptions = {
         token.id            = user.id;
         token.role          = user.role;
         token.isPremium     = user.isPremium;
+        token.premiumPlan   = user.premiumPlan;
         token.freeTrialActive = user.freeTrialActive;
         token.freeTrialExpiry = user.freeTrialExpiry || null;
         token.isVerified    = user.isVerified;
@@ -150,6 +153,7 @@ export const authOptions = {
         session.user.id             = token.id;
         session.user.role           = token.role;
         session.user.isPremium      = token.isPremium;
+        session.user.premiumPlan    = token.premiumPlan;
         session.user.freeTrialActive = token.freeTrialActive;
         session.user.freeTrialExpiry = token.freeTrialExpiry || null;
         session.user.isVerified     = token.isVerified;

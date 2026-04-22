@@ -34,7 +34,7 @@ function MessageBubble({ msg, isMe }) {
       <>
         <div className={`max-w-xs ${isMe ? 'ml-auto' : 'mr-auto'}`}>
           <div
-            className={`rounded-2xl overflow-hidden relative border-2 ${isMe ? 'border-pink-300' : 'border-gray-200 dark:border-gray-600'}`}
+            className={`rounded-2xl overflow-hidden relative border-2 ${isMe ? 'border-vd-primary' : 'border-gray-200 dark:border-gray-600'}`}
             style={{ minWidth: 180, minHeight: 120 }}
           >
             {/* Image — blurred for receiver until they click */}
@@ -111,14 +111,14 @@ function MessageBubble({ msg, isMe }) {
   if (msg.type === 'DOCUMENT') {
     return (
       <div className={`max-w-xs ${isMe ? 'ml-auto' : 'mr-auto'}`}>
-        <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl border relative overflow-hidden ${isMe ? 'gradient-bg text-white border-transparent' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600'}`}>
+        <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl border relative overflow-hidden ${isMe ? 'vd-gradient-gold text-white border-transparent' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600'}`}>
           {msg._uploading && (
             <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             </div>
           )}
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isMe ? 'bg-white/20' : 'bg-pink-50 dark:bg-pink-900/20'}`}>
-            <FileText className={`w-5 h-5 ${isMe ? 'text-white' : 'text-pink-500'}`} />
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isMe ? 'bg-white/20' : 'bg-vd-accent-soft dark:bg-vd-accent/20'}`}>
+            <FileText className={`w-5 h-5 ${isMe ? 'text-white' : 'text-vd-primary'}`} />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium truncate">{msg.fileName}</p>
@@ -159,7 +159,7 @@ function MessageBubble({ msg, isMe }) {
           href={mapsUrl}
           target="_blank"
           rel="noreferrer"
-          className={`block rounded-2xl overflow-hidden border-2 ${isMe ? 'border-pink-300' : 'border-gray-200 dark:border-gray-600'}`}
+          className={`block rounded-2xl overflow-hidden border-2 ${isMe ? 'border-vd-primary' : 'border-gray-200 dark:border-gray-600'}`}
           style={{ width: 240 }}
         >
           {/* Map thumbnail */}
@@ -189,7 +189,7 @@ function MessageBubble({ msg, isMe }) {
           </div>
 
           {/* Bottom bar */}
-          <div className={`px-3 py-2 ${isMe ? 'gradient-bg' : 'bg-white dark:bg-gray-700'}`}>
+          <div className={`px-3 py-2 ${isMe ? 'vd-gradient-gold' : 'bg-white dark:bg-gray-700'}`}>
             <div className="flex items-center justify-between">
               <div className="min-w-0">
                 <p className={`text-xs font-semibold ${isMe ? 'text-white' : 'text-gray-800 dark:text-gray-100'}`}>
@@ -199,7 +199,7 @@ function MessageBubble({ msg, isMe }) {
                   {isActive ? timeLeft : isExpired ? 'Expired' : `${msg.latitude?.toFixed(4)}, ${msg.longitude?.toFixed(4)}`}
                 </p>
               </div>
-              <div className={`text-xs font-medium ml-2 flex-shrink-0 px-2 py-1 rounded-lg ${isMe ? 'bg-white/20 text-white' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400'}`}>
+              <div className={`text-xs font-medium ml-2 flex-shrink-0 px-2 py-1 rounded-lg ${isMe ? 'bg-white/20 text-white' : 'bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary dark:text-vd-primary'}`}>
                 Open ↗
               </div>
             </div>
@@ -218,8 +218,8 @@ function MessageBubble({ msg, isMe }) {
     const isPremiumCard = msg.content.startsWith('🌟');
     return (
       <div className={`w-72 ${isMe ? 'ml-auto' : 'mr-auto'}`}>
-        <div className={`rounded-2xl overflow-hidden border-2 shadow-md ${isPremiumCard ? 'border-yellow-400 dark:border-yellow-600' : 'border-pink-200 dark:border-pink-800'}`}>
-          <div className={`px-4 py-2.5 ${isPremiumCard ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'gradient-bg'}`}>
+        <div className={`rounded-2xl overflow-hidden border-2 shadow-md ${isPremiumCard ? 'border-yellow-400 dark:border-yellow-600' : 'border-vd-border'}`}>
+          <div className={`px-4 py-2.5 ${isPremiumCard ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'vd-gradient-gold'}`}>
             <p className="text-white text-xs font-bold">{isPremiumCard ? '⭐ Premium Profile Details' : '✨ Profile Details'}</p>
           </div>
           <div className="bg-white dark:bg-gray-700 px-4 py-3 space-y-0.5">
@@ -250,7 +250,7 @@ function MessageBubble({ msg, isMe }) {
   return (
     <div className={`max-w-xs lg:max-w-sm xl:max-w-md ${isMe ? 'ml-auto' : 'mr-auto'}`}>
       <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-        isMe ? 'gradient-bg text-white rounded-br-sm' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-sm shadow-sm'
+        isMe ? 'vd-gradient-gold text-white rounded-br-sm' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-sm shadow-sm'
       }`}>
         {msg.content}
       </div>
@@ -596,18 +596,18 @@ function ChatInner() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 pt-20"><div className="h-[600px] skeleton rounded-3xl" /></div>
     </div>
   );
 
   return (
-    <div className="flex flex-col bg-gray-50 dark:bg-gray-950" style={{ height: '100dvh' }}>
+    <div className="flex flex-col bg-vd-bg" style={{ height: '100dvh' }}>
       <Navbar />
       {/* Chat container — fills remaining height after navbar */}
       <div className="flex-1 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-6 pb-2 sm:pb-4 flex flex-col overflow-hidden pt-16">
-        <div className="flex-1 flex gap-0 bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden min-h-0">
+        <div className="flex-1 flex gap-0 bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl sm:rounded-3xl border border-vd-border shadow-sm overflow-hidden min-h-0">
 
           {/* ── Sidebar ── */}
           <div className={`${activeRoom ? 'hidden md:flex' : 'flex'} w-full md:w-80 flex-col border-r border-gray-100 dark:border-gray-700 overflow-hidden`}>
@@ -620,7 +620,7 @@ function ChatInner() {
                 <div className="p-8 text-center">
                   <MessageCircle className="w-10 h-10 text-gray-200 dark:text-gray-700 mx-auto mb-3" />
                   <p className="text-gray-500 text-sm font-medium">No conversations yet</p>
-                  <Link href="/interests" className="text-pink-500 text-xs mt-2 inline-block hover:underline">View Interests →</Link>
+                  <Link href="/interests" className="text-vd-primary text-xs mt-2 inline-block hover:underline">View Interests →</Link>
                 </div>
               ) : rooms.map(room => {
                 const other = getOtherUser(room);
@@ -628,9 +628,9 @@ function ChatInner() {
                 const online = isOnline(other?.id);
                 return (
                   <button key={room.id} onClick={() => openRoom(room)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left border-b border-gray-50 dark:border-gray-700/50 ${activeRoom?.id === room.id ? 'bg-pink-50 dark:bg-pink-900/10 border-l-2 border-l-pink-500' : ''}`}>
+                    className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left border-b border-gray-50 dark:border-gray-700/50 ${activeRoom?.id === room.id ? 'bg-vd-accent-soft dark:bg-vd-accent/10 border-l-2 border-l-vd-primary' : ''}`}>
                     <div className="relative flex-shrink-0">
-                      <div className="w-11 h-11 rounded-full overflow-hidden gradient-bg flex items-center justify-center text-white font-bold">
+                      <div className="w-11 h-11 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold">
                         {other?.image
                           ? <SmartImage src={other.image} alt="" width={44} height={44} className="object-cover w-full h-full" />
                           : <span>{other?.name?.[0]}</span>
@@ -654,7 +654,7 @@ function ChatInner() {
                           {lastMsg?.type === 'IMAGE' ? '📷 Photo' : lastMsg?.type === 'DOCUMENT' ? '📄 Document' : lastMsg?.type === 'LOCATION' ? '📍 Location' : lastMsg?.content || 'Start chatting'}
                         </p>
                         {unreadPerRoom[room.id] > 0 && (
-                          <span className="flex-shrink-0 ml-2 min-w-5 h-5 gradient-bg text-white text-xs rounded-full flex items-center justify-center px-1.5 font-bold">
+                          <span className="flex-shrink-0 ml-2 min-w-5 h-5 vd-gradient-gold text-white text-xs rounded-full flex items-center justify-center px-1.5 font-bold">
                             {unreadPerRoom[room.id] > 99 ? '99+' : unreadPerRoom[room.id]}
                           </span>
                         )}
@@ -674,10 +674,10 @@ function ChatInner() {
               return (
                 <>
                   {/* Header */}
-                  <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 z-10 flex-shrink-0">
+                  <div className="flex items-center gap-3 px-4 py-3 border-b border-vd-border bg-vd-bg-section dark:bg-vd-bg-card z-10 flex-shrink-0">
                     <button onClick={() => setActiveRoom(null)} className="md:hidden p-1 text-gray-500"><ArrowLeft className="w-5 h-5" /></button>
                     <div className="relative">
-                      <div className="w-10 h-10 rounded-full overflow-hidden gradient-bg flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold">
                         {other?.image ? <SmartImage src={other.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <span>{other?.name?.[0]}</span>}
                       </div>
                       {online && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />}
@@ -689,10 +689,10 @@ function ChatInner() {
                         {other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
                       </div>
                       <p className={`text-xs ${online ? 'text-green-500' : 'text-gray-400'}`}>
-                        {otherTyping ? <span className="text-pink-500 animate-pulse">typing…</span> : online ? 'Online' : 'Offline'}
+                        {otherTyping ? <span className="text-vd-primary animate-pulse">typing…</span> : online ? 'Online' : 'Offline'}
                       </p>
                     </div>
-                    <Link href={`/profile/${other?.id}`} className="text-xs text-pink-500 border border-pink-200 dark:border-pink-800 px-3 py-1.5 rounded-xl hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-colors">
+                    <Link href={`/profile/${other?.id}`} className="text-xs text-vd-primary border border-vd-border px-3 py-1.5 rounded-xl hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20 transition-colors">
                       Profile
                     </Link>
                   </div>
@@ -745,7 +745,7 @@ function ChatInner() {
                           className="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl"
                           onClick={e => e.stopPropagation()}>
                           {/* Header */}
-                          <div className="gradient-bg px-5 py-4">
+                          <div className="vd-gradient-gold px-5 py-4">
                             <h3 className="text-white font-bold text-lg">Share Location</h3>
                             <p className="text-white/70 text-xs mt-0.5">Choose what to share</p>
                           </div>
@@ -753,7 +753,7 @@ function ChatInner() {
                           <div className="p-4 space-y-3">
                             {/* Current Location */}
                             <button onClick={() => doSendLocation('current', 0)}
-                              className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-all group">
+                            className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-vd-border hover:border-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/10 transition-all group">
                               <div className="w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-red-200 transition-colors">
                                 <MapPin className="w-6 h-6 text-red-500" />
                               </div>
@@ -819,7 +819,7 @@ function ChatInner() {
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                         className="absolute bottom-20 left-16 z-20 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-2 flex gap-2">
                         {[
-                          { icon: ImageIcon, label: 'Photo', color: 'text-pink-500 bg-pink-50 dark:bg-pink-900/20', action: () => fileInputRef.current?.click() },
+                          { icon: ImageIcon, label: 'Photo', color: 'text-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20', action: () => fileInputRef.current?.click() },
                           { icon: FileText, label: 'Document', color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20', action: () => docInputRef.current?.click() },
                           { icon: MapPin, label: 'Location', color: 'text-red-500 bg-red-50 dark:bg-red-900/20', action: sendLocation },
                         ].map(item => (
@@ -842,13 +842,13 @@ function ChatInner() {
                     onChange={e => { if (e.target.files?.[0]) sendFile(e.target.files[0], 'DOCUMENT'); e.target.value = ''; }} />
 
                   {/* Input bar */}
-                  <div className="flex items-end gap-2 p-3 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
+                  <div className="flex items-end gap-2 p-3 border-t border-vd-border bg-vd-bg-section dark:bg-vd-bg-card flex-shrink-0">
                     <button onClick={() => { setShowAttach(p => !p); setShowEmoji(false); }}
-                      className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${showAttach ? 'gradient-bg text-white' : 'text-gray-400 hover:text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-900/20'}`}>
+                      className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${showAttach ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:text-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20'}`}>
                       <Paperclip className="w-5 h-5" />
                     </button>
                     <button onClick={() => { setShowEmoji(p => !p); setShowAttach(false); }}
-                      className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${showEmoji ? 'gradient-bg text-white' : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'}`}>
+                      className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${showEmoji ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'}`}>
                       <Smile className="w-5 h-5" />
                     </button>
                     <div className="flex-1 relative">
@@ -862,7 +862,7 @@ function ChatInner() {
                       />
                     </div>
                     <button onClick={sendTextMessage} disabled={sending || !input.trim()}
-                      className="gradient-bg text-white p-2.5 rounded-xl hover:opacity-90 disabled:opacity-40 transition-all flex-shrink-0">
+                      className="vd-gradient-gold text-white p-2.5 rounded-xl hover:opacity-90 disabled:opacity-40 transition-all flex-shrink-0">
                       <Send className="w-5 h-5" />
                     </button>
                   </div>
@@ -871,7 +871,7 @@ function ChatInner() {
             })() : (
               <div className="flex-1 flex items-center justify-center text-center p-8">
                 <div>
-                  <div className="w-20 h-20 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4 opacity-20">
+                  <div className="w-20 h-20 vd-gradient-gold rounded-full flex items-center justify-center mx-auto mb-4 opacity-20">
                     <MessageCircle className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-500">Select a conversation</h3>
@@ -889,7 +889,7 @@ function ChatInner() {
 export default function ChatPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="min-h-screen bg-vd-bg">
         <Navbar />
         <div className="max-w-5xl mx-auto px-4 pt-24"><div className="h-[600px] skeleton rounded-3xl" /></div>
       </div>

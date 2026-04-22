@@ -76,18 +76,18 @@ function VerifyInner() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-vd-bg px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 vd-gradient-gold rounded-full flex items-center justify-center">
               <Heart className="w-5 h-5 text-white fill-white" />
             </div>
-            <span className="text-2xl font-bold gradient-text">Milan</span>
+            <span className="text-2xl font-bold vd-gradient-text">Milan</span>
           </Link>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+        <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl shadow-xl p-8 border border-vd-border">
           {verified ? (
             <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center py-4">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
@@ -96,12 +96,12 @@ function VerifyInner() {
           ) : (
             <>
               <div className="text-center mb-6">
-                <div className="w-14 h-14 bg-pink-50 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Mail className="w-7 h-7 text-pink-500" />
+                <div className="w-14 h-14 bg-vd-accent-soft dark:bg-vd-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Mail className="w-7 h-7 text-vd-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">Verify Your Email</h2>
                 <p className="text-gray-500 text-sm mt-2">We sent a 6-digit OTP to</p>
-                <p className="font-semibold text-pink-500 text-sm">{email}</p>
+                <p className="font-semibold text-vd-primary text-sm">{email}</p>
               </div>
 
               {/* OTP inputs */}
@@ -110,21 +110,21 @@ function VerifyInner() {
                   <input key={i} id={`otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={digit}
                     onChange={e => handleInput(i, e.target.value)}
                     onKeyDown={e => handleKeyDown(i, e)}
-                    className={`w-12 h-14 text-center text-xl font-bold border-2 rounded-2xl bg-gray-50 dark:bg-gray-700 focus:outline-none transition-all ${digit ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20' : 'border-gray-200 dark:border-gray-600 focus:border-pink-400'}`}
+                    className={`w-12 h-14 text-center text-xl font-bold border-2 rounded-2xl bg-vd-bg focus:outline-none transition-all ${digit ? 'border-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20' : 'border-vd-border focus:border-vd-primary'}`}
                   />
                 ))}
               </div>
 
               <button onClick={verify} disabled={loading || otp.join('').length !== 6}
-                className="w-full gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity mb-4">
+                className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity mb-4">
                 {loading ? 'Verifying…' : 'Verify OTP'}
               </button>
 
               <div className="text-center">
                 {countdown > 0 ? (
-                  <p className="text-sm text-gray-400">Resend OTP in <span className="text-pink-500 font-medium">{countdown}s</span></p>
+                  <p className="text-sm text-gray-400">Resend OTP in <span className="text-vd-primary font-medium">{countdown}s</span></p>
                 ) : (
-                  <button onClick={resend} disabled={resending} className="text-sm text-pink-500 hover:text-pink-600 flex items-center gap-1.5 mx-auto">
+                  <button onClick={resend} disabled={resending} className="text-sm text-vd-primary hover:text-vd-primary-dark flex items-center gap-1.5 mx-auto">
                     <RefreshCw className={`w-4 h-4 ${resending ? 'animate-spin' : ''}`} />
                     {resending ? 'Sending…' : 'Resend OTP'}
                   </button>
@@ -144,7 +144,7 @@ function VerifyInner() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vd-bg"><div className="w-8 h-8 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" /></div>}>
       <VerifyInner />
     </Suspense>
   );

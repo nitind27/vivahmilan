@@ -65,7 +65,7 @@ function Toggle({ value, onChange, label }) {
   return (
     <label className="flex items-center gap-2 cursor-pointer">
       <div onClick={() => onChange(!value)}
-        className={`w-10 h-5 rounded-full transition-all relative ${value ? 'bg-pink-500' : 'bg-gray-600'}`}>
+        className={`w-10 h-5 rounded-full transition-all relative ${value ? 'bg-vd-primary' : 'bg-gray-600'}`}>
         <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${value ? 'left-5' : 'left-0.5'}`} />
       </div>
       {label && <span className="text-sm text-gray-300">{label}</span>}
@@ -90,7 +90,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
           {pendingUsers.map(u => (
             <div key={u.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               {/* Avatar */}
-              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-14 h-14 rounded-2xl overflow-hidden vd-gradient-gold flex items-center justify-center flex-shrink-0">
                 {u.image ? <img src={u.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-xl">{u.name?.[0]}</span>}
               </div>
               <div className="flex-1 min-w-0">
@@ -103,8 +103,8 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
                 </div>
                 <div className="flex gap-2 mt-1.5">
                   {u.documents?.length > 0 && <span className="text-xs bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">{u.documents.length} doc(s)</span>}
-                  {u.profile?.religion && <span className="text-xs bg-purple-900/30 text-purple-400 px-2 py-0.5 rounded-full">{u.profile.religion}</span>}
-                  {u.profile?.gender && <span className="text-xs bg-pink-900/30 text-pink-400 px-2 py-0.5 rounded-full">{u.profile.gender}</span>}
+                  {u.profile?.religion && <span className="text-xs bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary px-2 py-0.5 rounded-full">{u.profile.religion}</span>}
+                  {u.profile?.gender && <span className="text-xs bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary px-2 py-0.5 rounded-full">{u.profile.gender}</span>}
                 </div>
               </div>
               <div className="flex gap-2 flex-shrink-0 flex-wrap">
@@ -128,7 +128,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
           <div className="bg-gray-900 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700 shadow-2xl" onClick={e => e.stopPropagation()}>
             {/* Header */}
-            <div className="gradient-bg p-5 rounded-t-3xl flex items-center gap-4">
+            <div className="vd-gradient-gold p-5 rounded-t-3xl flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/20 flex items-center justify-center flex-shrink-0">
                 {selected.image ? <img src={selected.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-2xl">{selected.name?.[0]}</span>}
               </div>
@@ -200,7 +200,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
                         <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-700">
                           <img src={selected.image} alt="Main" className="w-full h-full object-cover" />
                         </div>
-                        <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs px-1.5 py-0.5 rounded-full">Main</span>
+                    <span className="absolute -top-1 -right-1 bg-vd-primary text-white text-xs px-1.5 py-0.5 rounded-full">Main</span>
                       </div>
                     )}
                     {/* Other photos */}
@@ -244,7 +244,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
                                 style={{ imageRendering: 'auto' }}
                               />
                               <a href={doc.url} download={`${doc.type.replace(/ /g, '_')}.jpg`}
-                                className="mt-2 flex items-center gap-1.5 text-xs text-pink-400 hover:text-pink-300 transition-colors">
+                        className="mt-2 flex items-center gap-1.5 text-xs text-vd-primary hover:text-vd-primary-dark transition-colors">
                                 ⬇ Download Image
                               </a>
                             </div>
@@ -261,7 +261,7 @@ function PendingApprovalTab({ pendingUsers, onApprove, onReject }) {
                             </div>
                           ) : (
                             <div className="p-3 bg-gray-800">
-                              <a href={doc.url} target="_blank" rel="noreferrer" className="text-pink-400 text-xs hover:underline">View Document ↗</a>
+                              <a href={doc.url} target="_blank" rel="noreferrer" className="text-vd-primary text-xs hover:underline">View Document ↗</a>
                             </div>
                           )
                         ) : (
@@ -364,7 +364,7 @@ function ProfileOptionsTab({ options, category, setCategory, newOpt, setNewOpt, 
       <div className="flex flex-wrap gap-2">
         {OPTION_CATEGORIES.map(c => (
           <button key={c.key} onClick={() => setCategory(c.key)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${category === c.key ? 'gradient-bg text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${category === c.key ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
             {c.label}
             <span className="ml-1.5 opacity-60">{options.filter(o => o.category === c.key).length}</span>
           </button>
@@ -378,22 +378,22 @@ function ProfileOptionsTab({ options, category, setCategory, newOpt, setNewOpt, 
           <div>
             <label className="text-xs text-gray-400 mb-1 block">Value (stored in DB)</label>
             <input value={newOpt.value} onChange={e => setNewOpt(p => ({ ...p, value: e.target.value, label: p.label || e.target.value }))}
-              placeholder="e.g. Sharma" className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+              placeholder="e.g. Sharma" className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-vd-primary" />
           </div>
           <div>
             <label className="text-xs text-gray-400 mb-1 block">Display Label</label>
             <input value={newOpt.label} onChange={e => setNewOpt(p => ({ ...p, label: e.target.value }))}
-              placeholder="e.g. Sharma" className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+              placeholder="e.g. Sharma" className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-vd-primary" />
           </div>
           <div>
             <label className="text-xs text-gray-400 mb-1 block">Group (optional)</label>
             <input value={newOpt.group} onChange={e => setNewOpt(p => ({ ...p, group: e.target.value }))}
               placeholder="e.g. Brahmin - UP" list={`groups-${category}`}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-vd-primary" />
             <datalist id={`groups-${category}`}>{groups.map(g => <option key={g} value={g} />)}</datalist>
           </div>
         </div>
-        <button onClick={onAdd} className="mt-3 gradient-bg text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
+        <button onClick={onAdd} className="mt-3 vd-gradient-gold text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
           + Add Option
         </button>
       </div>
@@ -560,7 +560,7 @@ export default function AdminPage() {
   if (loading) return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center">
       <div className="text-center">
-        <div className="w-12 h-12 border-2 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <div className="w-12 h-12 border-2 border-vd-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
         <p className="text-gray-400">Loading admin panel…</p>
       </div>
     </div>
@@ -571,7 +571,7 @@ export default function AdminPage() {
       {/* ── Mobile top bar ── */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4 h-14">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 gradient-bg rounded-full flex items-center justify-center">
+          <div className="w-7 h-7 vd-gradient-gold rounded-full flex items-center justify-center">
             <Heart className="w-3.5 h-3.5 text-white fill-white" />
           </div>
           <span className="font-bold">Milan Admin</span>
@@ -591,7 +591,7 @@ export default function AdminPage() {
             <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => { setTab(t.id); setMobileMenuOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${tab === t.id ? 'gradient-bg text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${tab === t.id ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
                   <t.icon className="w-4 h-4 flex-shrink-0" />
                   <span className="flex-1 text-left">{t.label}</span>
                   {t.badge && stats?.[t.badge] > 0 && (
@@ -616,7 +616,7 @@ export default function AdminPage() {
       <aside className="hidden md:flex w-64 bg-gray-900 border-r border-gray-800 flex-col fixed h-full z-20">
         <div className="p-5 border-b border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 vd-gradient-gold rounded-full flex items-center justify-center">
               <Heart className="w-4 h-4 text-white fill-white" />
             </div>
             <span className="font-bold text-lg">Milan Admin</span>
@@ -626,7 +626,7 @@ export default function AdminPage() {
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${tab === t.id ? 'gradient-bg text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${tab === t.id ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
               <t.icon className="w-4 h-4 flex-shrink-0" />
               <span className="flex-1 text-left">{t.label}</span>
               {t.badge && stats?.[t.badge] > 0 && (
@@ -666,8 +666,8 @@ export default function AdminPage() {
               <StatCard icon={Star} label="Premium Users" value={stats?.premiumUsers} color="text-yellow-400" bg="bg-yellow-900/20" sub={`${stats?.activeSubscriptions} active subs`} />
               <StatCard icon={UserCheck} label="Pending Approval" value={stats?.pendingAdminVerify} color="text-orange-400" bg="bg-orange-900/20" sub="Awaiting admin verify" />
               <StatCard icon={Flag} label="Pending Reports" value={stats?.pendingReports} color="text-red-400" bg="bg-red-900/20" />
-              <StatCard icon={MessageCircle} label="Total Messages" value={stats?.totalMessages} color="text-purple-400" bg="bg-purple-900/20" />
-              <StatCard icon={Heart} label="Total Interests" value={stats?.totalInterests} color="text-pink-400" bg="bg-pink-900/20" />
+              <StatCard icon={MessageCircle} label="Total Messages" value={stats?.totalMessages} color="text-vd-primary" bg="bg-vd-accent-soft dark:bg-vd-accent/20" />
+              <StatCard icon={Heart} label="Total Interests" value={stats?.totalInterests} color="text-vd-primary" bg="bg-vd-accent-soft dark:bg-vd-accent/20" />
               <StatCard icon={TrendingUp} label="New This Month" value={stats?.newUsersMonth} color="text-green-400" bg="bg-green-900/20" />
               <StatCard icon={Shield} label="ID Verifications" value={stats?.pendingVerifications} color="text-cyan-400" bg="bg-cyan-900/20" sub="Pending review" />
             </div>
@@ -675,7 +675,7 @@ export default function AdminPage() {
               <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
                 <h3 className="font-semibold mb-4 text-gray-300">Gender Distribution</h3>
                 <div className="space-y-3">
-                  {[{ label: 'Male', val: stats?.maleUsers, color: 'bg-blue-500' }, { label: 'Female', val: stats?.femaleUsers, color: 'bg-pink-500' }].map(g => (
+                  {[{ label: 'Male', val: stats?.maleUsers, color: 'bg-blue-500' }, { label: 'Female', val: stats?.femaleUsers, color: 'bg-vd-primary' }].map(g => (
                     <div key={g.label}>
                       <div className="flex justify-between text-sm mb-1"><span className="text-gray-400">{g.label}</span><span className="text-white font-medium">{g.val}</span></div>
                       <div className="h-2 bg-gray-700 rounded-full"><div className={`h-2 ${g.color} rounded-full`} style={{ width: `${stats?.totalUsers ? (g.val / stats.totalUsers * 100) : 0}%` }} /></div>

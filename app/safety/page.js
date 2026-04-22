@@ -16,7 +16,7 @@ const TIPS = [
     ],
   },
   {
-    icon: Lock, color: 'bg-purple-100 dark:bg-purple-900/20 text-purple-600',
+    icon: Lock, color: 'bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary',
     title: 'Protect Your Personal Information',
     tips: [
       'Never share your home address, workplace, or daily routine with someone you just met.',
@@ -46,7 +46,7 @@ const TIPS = [
     ],
   },
   {
-    icon: Heart, color: 'bg-pink-100 dark:bg-pink-900/20 text-pink-600',
+    icon: Heart, color: 'bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary',
     title: 'Emotional Safety',
     tips: [
       'Take your time — there\'s no rush. A genuine person will respect your pace.',
@@ -77,11 +77,11 @@ const DONTS = [
 
 export default function SafetyPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="pt-16">
         {/* Hero */}
-        <div className="gradient-bg py-16 px-4 text-center">
+        <div className="vd-gradient-gold py-16 px-4 text-center">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
@@ -94,7 +94,7 @@ export default function SafetyPage() {
         <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
           {/* Do's and Don'ts */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-green-600">
                 <CheckCircle className="w-5 h-5" /> Do's
               </h2>
@@ -108,7 +108,7 @@ export default function SafetyPage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-red-600">
                 <XCircle className="w-5 h-5" /> Don'ts
               </h2>
@@ -127,7 +127,7 @@ export default function SafetyPage() {
           {/* Safety Tips */}
           {TIPS.map((section, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+              className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${section.color}`}>
                   <section.icon className="w-5 h-5" />
@@ -137,7 +137,7 @@ export default function SafetyPage() {
               <ul className="space-y-3">
                 {section.tips.map((tip, j) => (
                   <li key={j} className="flex items-start gap-2.5 text-sm text-gray-600 dark:text-gray-400">
-                    <div className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
                     {tip}
                   </li>
                 ))}

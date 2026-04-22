@@ -25,7 +25,7 @@ function sel(label, value, onChange, options, placeholder = 'Select') {
     <div>
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)}
-        className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-pink-500">
+        className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-vd-primary">
         <option value="">{placeholder}</option>
         {options.map(o => <option key={o} value={o}>{o}</option>)}
       </select>
@@ -38,7 +38,7 @@ function inp(label, value, onChange, type = 'text', placeholder = '') {
     <div>
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-pink-500" />
+        className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-vd-primary" />
     </div>
   );
 }
@@ -92,9 +92,9 @@ function CompleteInner() {
   // ── Done / Pending screen ─────────────────────────────────────────────────
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-vd-bg px-4">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700 text-center">
+          className="w-full max-w-md bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl shadow-xl p-8 border border-vd-border text-center">
           <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-5">
             <Clock className="w-10 h-10 text-amber-500" />
           </div>
@@ -115,10 +115,10 @@ function CompleteInner() {
             ))}
           </div>
           <p className="text-xs text-gray-400 mb-5">
-            Approval email will be sent to <strong className="text-pink-500">{email}</strong>
+            Approval email will be sent to <strong className="text-vd-primary">{email}</strong>
           </p>
           <Link href="/login"
-            className="block w-full gradient-bg text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity">
+            className="block w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity">
             Back to Login
           </Link>
         </motion.div>
@@ -129,15 +129,15 @@ function CompleteInner() {
   const currentStep = STEPS[step];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4 py-8">
+    <div className="min-h-screen bg-vd-bg px-4 py-8">
       <div className="max-w-lg mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 gradient-bg rounded-full flex items-center justify-center">
+            <div className="w-9 h-9 vd-gradient-gold rounded-full flex items-center justify-center">
               <Heart className="w-4 h-4 text-white fill-white" />
             </div>
-            <span className="text-xl font-bold gradient-text">Milan</span>
+            <span className="text-xl font-bold vd-gradient-text">Milan</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Complete Your Profile</h1>
           <p className="text-gray-500 text-sm mt-1">Hi <strong>{name || email}</strong>! Fill in your details to get started.</p>
@@ -148,14 +148,14 @@ function CompleteInner() {
           {STEPS.map((s, i) => (
             <div key={s.id} className="flex items-center gap-2">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                i < step ? 'gradient-bg text-white' :
-                i === step ? 'gradient-bg text-white ring-4 ring-pink-200 dark:ring-pink-900' :
+                i < step ? 'vd-gradient-gold text-white' :
+                i === step ? 'vd-gradient-gold text-white ring-4 ring-vd-accent-soft dark:ring-vd-accent/30' :
                 'bg-gray-200 dark:bg-gray-700 text-gray-500'
               }`}>
                 {i < step ? <CheckCircle className="w-4 h-4" /> : i + 1}
               </div>
               {i < STEPS.length - 1 && (
-                <div className={`w-8 h-0.5 ${i < step ? 'gradient-bg' : 'bg-gray-200 dark:bg-gray-700'}`} />
+                <div className={`w-8 h-0.5 ${i < step ? 'vd-gradient-gold' : 'bg-gray-200 dark:bg-gray-700'}`} />
               )}
             </div>
           ))}
@@ -163,10 +163,10 @@ function CompleteInner() {
 
         {/* Card */}
         <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
+          className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl shadow-xl p-6 border border-vd-border">
 
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 gradient-bg rounded-xl flex items-center justify-center">
+            <div className="w-8 h-8 vd-gradient-gold rounded-xl flex items-center justify-center">
               <currentStep.icon className="w-4 h-4 text-white" />
             </div>
             <h2 className="font-bold text-lg">{currentStep.label}</h2>
@@ -180,7 +180,7 @@ function CompleteInner() {
                 <div className="flex gap-2">
                   {GENDERS.map(g => (
                     <button key={g} type="button" onClick={() => set('gender')(g)}
-                      className={`flex-1 py-2.5 rounded-2xl text-sm font-medium border-2 transition-all ${form.gender === g ? 'gradient-bg text-white border-transparent' : 'border-gray-200 dark:border-gray-600 hover:border-pink-300'}`}>
+                      className={`flex-1 py-2.5 rounded-2xl text-sm font-medium border-2 transition-all ${form.gender === g ? 'vd-gradient-gold text-white border-transparent' : 'border-gray-200 dark:border-gray-600 hover:border-vd-primary'}`}>
                       {g === 'MALE' ? '👨 Male' : g === 'FEMALE' ? '👩 Female' : '⚧ Other'}
                     </button>
                   ))}
@@ -192,7 +192,7 @@ function CompleteInner() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">About Me</label>
                 <textarea value={form.aboutMe} onChange={e => set('aboutMe')(e.target.value)} rows={3} placeholder="Tell something about yourself..."
-                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-pink-500 resize-none" />
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-vd-primary resize-none" />
               </div>
             </>}
 
@@ -233,12 +233,12 @@ function CompleteInner() {
                 if (step === 1 && !form.religion) { toast.error('Religion is required'); return; }
                 setStep(s => s + 1);
               }}
-                className="flex-1 flex items-center justify-center gap-1 gradient-bg text-white py-3 rounded-2xl text-sm font-semibold hover:opacity-90 transition-opacity">
+                className="flex-1 flex items-center justify-center gap-1 vd-gradient-gold text-white py-3 rounded-2xl text-sm font-semibold hover:opacity-90 transition-opacity">
                 Next <ChevronRight className="w-4 h-4" />
               </button>
             ) : (
               <button onClick={handleSubmit} disabled={saving}
-                className="flex-1 gradient-bg text-white py-3 rounded-2xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
+                className="flex-1 vd-gradient-gold text-white py-3 rounded-2xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
                 {saving ? 'Submitting...' : '🎉 Submit Profile'}
               </button>
             )}
@@ -246,7 +246,7 @@ function CompleteInner() {
         </motion.div>
 
         <p className="text-center text-xs text-gray-400 mt-4">
-          Already have an account? <Link href="/login" className="text-pink-500 hover:underline">Login</Link>
+          Already have an account? <Link href="/login" className="text-vd-primary hover:underline">Login</Link>
         </p>
       </div>
     </div>
@@ -257,7 +257,7 @@ export default function CompleteProfilePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <CompleteInner />

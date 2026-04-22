@@ -117,6 +117,11 @@ export type planconfig = Prisma.planconfigModel
  */
 export type siteconfig = Prisma.siteconfigModel
 /**
+ * Model pushsubscription
+ * 
+ */
+export type pushsubscription = Prisma.pushsubscriptionModel
+/**
  * Model subscription
  * 
  */
@@ -141,3 +146,8 @@ export type block = Prisma.blockModel
  * 
  */
 export type otp = Prisma.otpModel
+/**
+ * Model kundali
+ * 
+ */
+export type kundali = Prisma.kundaliModel

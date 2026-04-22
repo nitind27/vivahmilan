@@ -399,11 +399,13 @@ export const ModelName = {
   profileoption: 'profileoption',
   planconfig: 'planconfig',
   siteconfig: 'siteconfig',
+  pushsubscription: 'pushsubscription',
   subscription: 'subscription',
   document: 'document',
   report: 'report',
   block: 'block',
-  otp: 'otp'
+  otp: 'otp',
+  kundali: 'kundali'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "subscription" | "document" | "report" | "block" | "otp"
+    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "pushsubscription" | "subscription" | "document" | "report" | "block" | "otp" | "kundali"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1413,6 +1415,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    pushsubscription: {
+      payload: Prisma.$pushsubscriptionPayload<ExtArgs>
+      fields: Prisma.pushsubscriptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.pushsubscriptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.pushsubscriptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>
+        }
+        findFirst: {
+          args: Prisma.pushsubscriptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.pushsubscriptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>
+        }
+        findMany: {
+          args: Prisma.pushsubscriptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>[]
+        }
+        create: {
+          args: Prisma.pushsubscriptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>
+        }
+        createMany: {
+          args: Prisma.pushsubscriptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.pushsubscriptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>
+        }
+        update: {
+          args: Prisma.pushsubscriptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.pushsubscriptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.pushsubscriptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.pushsubscriptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pushsubscriptionPayload>
+        }
+        aggregate: {
+          args: Prisma.PushsubscriptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePushsubscription>
+        }
+        groupBy: {
+          args: Prisma.pushsubscriptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PushsubscriptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.pushsubscriptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PushsubscriptionCountAggregateOutputType> | number
+        }
+      }
+    }
     subscription: {
       payload: Prisma.$subscriptionPayload<ExtArgs>
       fields: Prisma.subscriptionFieldRefs
@@ -1743,6 +1811,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    kundali: {
+      payload: Prisma.$kundaliPayload<ExtArgs>
+      fields: Prisma.kundaliFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.kundaliFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.kundaliFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>
+        }
+        findFirst: {
+          args: Prisma.kundaliFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.kundaliFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>
+        }
+        findMany: {
+          args: Prisma.kundaliFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>[]
+        }
+        create: {
+          args: Prisma.kundaliCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>
+        }
+        createMany: {
+          args: Prisma.kundaliCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.kundaliDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>
+        }
+        update: {
+          args: Prisma.kundaliUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>
+        }
+        deleteMany: {
+          args: Prisma.kundaliDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.kundaliUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.kundaliUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kundaliPayload>
+        }
+        aggregate: {
+          args: Prisma.KundaliAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKundali>
+        }
+        groupBy: {
+          args: Prisma.kundaliGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KundaliGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.kundaliCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KundaliCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2034,6 +2168,18 @@ export const SiteconfigScalarFieldEnum = {
 export type SiteconfigScalarFieldEnum = (typeof SiteconfigScalarFieldEnum)[keyof typeof SiteconfigScalarFieldEnum]
 
 
+export const PushsubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  createdAt: 'createdAt'
+} as const
+
+export type PushsubscriptionScalarFieldEnum = (typeof PushsubscriptionScalarFieldEnum)[keyof typeof PushsubscriptionScalarFieldEnum]
+
+
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2099,6 +2245,26 @@ export const OtpScalarFieldEnum = {
 } as const
 
 export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
+
+
+export const KundaliScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  birthTime: 'birthTime',
+  birthPlace: 'birthPlace',
+  lat: 'lat',
+  lng: 'lng',
+  lagna: 'lagna',
+  rashi: 'rashi',
+  nakshatra: 'nakshatra',
+  manglik: 'manglik',
+  planetaryPositions: 'planetaryPositions',
+  dashaSequence: 'dashaSequence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type KundaliScalarFieldEnum = (typeof KundaliScalarFieldEnum)[keyof typeof KundaliScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2304,6 +2470,17 @@ export const siteconfigOrderByRelevanceFieldEnum = {
 export type siteconfigOrderByRelevanceFieldEnum = (typeof siteconfigOrderByRelevanceFieldEnum)[keyof typeof siteconfigOrderByRelevanceFieldEnum]
 
 
+export const pushsubscriptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth'
+} as const
+
+export type pushsubscriptionOrderByRelevanceFieldEnum = (typeof pushsubscriptionOrderByRelevanceFieldEnum)[keyof typeof pushsubscriptionOrderByRelevanceFieldEnum]
+
+
 export const subscriptionOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2353,6 +2530,20 @@ export const otpOrderByRelevanceFieldEnum = {
 } as const
 
 export type otpOrderByRelevanceFieldEnum = (typeof otpOrderByRelevanceFieldEnum)[keyof typeof otpOrderByRelevanceFieldEnum]
+
+
+export const kundaliOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  birthPlace: 'birthPlace',
+  lagna: 'lagna',
+  rashi: 'rashi',
+  nakshatra: 'nakshatra',
+  planetaryPositions: 'planetaryPositions',
+  dashaSequence: 'dashaSequence'
+} as const
+
+export type kundaliOrderByRelevanceFieldEnum = (typeof kundaliOrderByRelevanceFieldEnum)[keyof typeof kundaliOrderByRelevanceFieldEnum]
 
 
 
@@ -2596,11 +2787,13 @@ export type GlobalOmitConfig = {
   profileoption?: Prisma.profileoptionOmit
   planconfig?: Prisma.planconfigOmit
   siteconfig?: Prisma.siteconfigOmit
+  pushsubscription?: Prisma.pushsubscriptionOmit
   subscription?: Prisma.subscriptionOmit
   document?: Prisma.documentOmit
   report?: Prisma.reportOmit
   block?: Prisma.blockOmit
   otp?: Prisma.otpOmit
+  kundali?: Prisma.kundaliOmit
 }
 
 /* Types for Logging */

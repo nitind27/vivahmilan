@@ -104,7 +104,7 @@ export default function LocationPicker({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-1">
-        <MapPin className="w-4 h-4 text-pink-500" />
+        <MapPin className="w-4 h-4 text-vd-primary" />
         <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Location</span>
       </div>
 
@@ -121,7 +121,7 @@ export default function LocationPicker({
       <div className="relative">
         {loadingStates && (
           <div className="absolute right-3 top-8 z-10">
-            <Loader2 className="w-4 h-4 text-pink-400 animate-spin" />
+            <Loader2 className="w-4 h-4 text-vd-primary animate-spin" />
           </div>
         )}
         <SearchableSelect
@@ -137,7 +137,7 @@ export default function LocationPicker({
       <div className="relative">
         {loadingCities && (
           <div className="absolute right-3 top-8 z-10">
-            <Loader2 className="w-4 h-4 text-pink-400 animate-spin" />
+            <Loader2 className="w-4 h-4 text-vd-primary animate-spin" />
           </div>
         )}
         <SearchableSelect
@@ -159,7 +159,7 @@ export default function LocationPicker({
             value={city}
             onChange={e => handleCity(e.target.value)}
             placeholder="Enter your city…"
-            className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 dark:focus:ring-pink-900/20 transition-all"
+            className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/20 transition-all"
           />
         </div>
       )}

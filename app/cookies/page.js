@@ -24,8 +24,8 @@ const sections = [
             examples: ['Authentication tokens (keep you logged in)', 'Security cookies (CSRF protection)', 'Session management', 'Load balancing'],
           },
           {
-            type: 'Functional Cookies', required: false, color: 'border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/10',
-            badge: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
+            type: 'Functional Cookies', required: false, color: 'border-vd-border bg-vd-accent-soft dark:bg-vd-accent/10',
+            badge: 'bg-vd-accent-soft dark:bg-vd-accent/30 text-vd-primary dark:text-vd-primary',
             desc: 'These cookies remember your preferences to enhance your experience.',
             examples: ['Dark/light mode preference', 'Language settings', 'Notification preferences', 'Last visited pages'],
           },
@@ -69,7 +69,7 @@ const sections = [
                 <p className="font-semibold text-xs text-gray-800 dark:text-gray-200">{t.name}</p>
                 <p className="text-xs text-gray-500 mt-0.5">{t.purpose}</p>
               </div>
-              <a href={t.link} target="_blank" rel="noreferrer" className="text-xs text-pink-500 hover:underline flex-shrink-0">Privacy Policy ↗</a>
+              <a href={t.link} target="_blank" rel="noreferrer" className="text-xs text-vd-primary hover:underline flex-shrink-0">Privacy Policy ↗</a>
             </div>
           ))}
         </div>
@@ -108,7 +108,7 @@ const sections = [
         <div className="space-y-2">
           {[
             { type: 'Session cookies', duration: 'Deleted when you close your browser', color: 'text-blue-600 dark:text-blue-400' },
-            { type: 'Authentication tokens', duration: '30 days (or until you log out)', color: 'text-purple-600 dark:text-purple-400' },
+            { type: 'Authentication tokens', duration: '30 days (or until you log out)', color: 'text-vd-primary dark:text-vd-primary' },
             { type: 'Preference cookies', duration: '1 year', color: 'text-green-600 dark:text-green-400' },
             { type: 'Analytics cookies', duration: '90 days', color: 'text-yellow-600 dark:text-yellow-400' },
           ].map((c, i) => (
@@ -129,7 +129,7 @@ export default function CookiesPage() {
       title="Cookie Policy"
       subtitle="How Vivah Milan uses cookies to improve your experience"
       icon={Cookie}
-      iconBg="bg-gradient-to-br from-amber-500 to-orange-600"
+      iconBg="vd-gradient-gold"
       lastUpdated="January 1, 2026"
       sections={sections}
       relatedLinks={[

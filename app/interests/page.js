@@ -88,7 +88,7 @@ export default function InterestsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-12">
 
@@ -98,7 +98,7 @@ export default function InterestsPage() {
             <p className="text-gray-500 text-sm mt-1">Manage your connection requests</p>
           </div>
           {tab === 'received' && counts.received > 0 && (
-            <span className="gradient-bg text-white text-sm px-3 py-1 rounded-full font-medium">
+            <span className="vd-gradient-gold text-white text-sm px-3 py-1 rounded-full font-medium">
               {counts.received} pending
             </span>
           )}
@@ -111,7 +111,7 @@ export default function InterestsPage() {
             { key: 'sent', label: 'Sent' },
           ].map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
-              className={`px-5 py-2 rounded-2xl font-medium text-sm transition-all ${tab === t.key ? 'gradient-bg text-white shadow-md' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-pink-300'}`}>
+              className={`px-5 py-2 rounded-2xl font-medium text-sm transition-all ${tab === t.key ? 'vd-gradient-gold text-white shadow-md' : 'bg-white dark:bg-gray-800 border border-vd-border hover:border-vd-primary'}`}>
               {t.label}
             </button>
           ))}
@@ -133,7 +133,7 @@ export default function InterestsPage() {
             </h3>
             {tab === 'received'
               ? <p className="text-gray-400 text-sm mt-1">Complete your profile to attract more matches</p>
-              : <Link href="/matches" className="text-pink-500 text-sm mt-2 inline-block hover:underline">Browse profiles →</Link>
+              : <Link href="/matches" className="text-vd-primary text-sm mt-2 inline-block hover:underline">Browse profiles →</Link>
             }
           </motion.div>
         ) : (
@@ -155,19 +155,19 @@ export default function InterestsPage() {
                     transition={{ delay: i * 0.05 }}
                     className={`bg-white dark:bg-gray-800 rounded-3xl border-2 overflow-hidden shadow-sm transition-all ${
                       isPending && tab === 'received'
-                        ? 'border-pink-200 dark:border-pink-800'
-                        : 'border-gray-100 dark:border-gray-700'
+                        ? 'border-vd-border'
+                        : 'border-vd-border'
                     }`}>
 
                     <div className="flex gap-0">
                       {/* Photo */}
                       <Link href={`/profile/${person?.id}`}
-                        className="relative w-32 sm:w-40 flex-shrink-0 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
+                        className="relative w-32 sm:w-40 flex-shrink-0 bg-vd-accent-soft dark:bg-vd-accent/20">
                         {photo ? (
                           <SmartImage src={photo} alt={person?.name} fill className="object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <div className="w-14 h-14 gradient-bg rounded-full flex items-center justify-center">
+                            <div className="w-14 h-14 vd-gradient-gold rounded-full flex items-center justify-center">
                               <span className="text-white text-2xl font-bold">{person?.name?.[0]}</span>
                             </div>
                           </div>
@@ -188,7 +188,7 @@ export default function InterestsPage() {
                         <div className="flex items-start justify-between gap-2 mb-2">
                           <div>
                             <Link href={`/profile/${person?.id}`}
-                              className="font-bold text-lg hover:text-pink-500 transition-colors flex items-center gap-2">
+                              className="font-bold text-lg hover:text-vd-primary transition-colors flex items-center gap-2">
                               {person?.name}
                               {person?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
                             </Link>
@@ -215,25 +215,25 @@ export default function InterestsPage() {
                         <div className="grid grid-cols-2 gap-x-4 gap-y-1 mb-3">
                           {profile.city && (
                             <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                              <MapPin className="w-3 h-3 text-pink-400 flex-shrink-0" />
+                              <MapPin className="w-3 h-3 text-vd-primary flex-shrink-0" />
                               <span className="truncate">{[profile.city, profile.country].filter(Boolean).join(', ')}</span>
                             </div>
                           )}
                           {profile.education && (
                             <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                              <GraduationCap className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                              <GraduationCap className="w-3 h-3 text-vd-primary flex-shrink-0" />
                               <span className="truncate">{profile.education}</span>
                             </div>
                           )}
                           {profile.profession && (
                             <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                              <Briefcase className="w-3 h-3 text-indigo-400 flex-shrink-0" />
+                              <Briefcase className="w-3 h-3 text-vd-primary flex-shrink-0" />
                               <span className="truncate">{profile.profession}</span>
                             </div>
                           )}
                           {profile.religion && (
                             <div className="flex items-center gap-1.5 text-xs">
-                              <span className="bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-2 py-0.5 rounded-full">
+                              <span className="bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary dark:text-vd-primary px-2 py-0.5 rounded-full">
                                 {profile.religion}
                               </span>
                             </div>
@@ -257,7 +257,7 @@ export default function InterestsPage() {
                         <div className="flex items-center gap-2 flex-wrap">
                           {/* View profile */}
                           <Link href={`/profile/${person?.id}`}
-                            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-pink-400 hover:text-pink-500 transition-colors">
+                            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-vd-primary hover:text-vd-primary transition-colors">
                             <Eye className="w-3.5 h-3.5" /> View Profile
                           </Link>
 
@@ -284,7 +284,7 @@ export default function InterestsPage() {
                           {isAccepted && (
                             session?.user?.isPremium ? (
                               <Link href={`/chat?userId=${person?.id}`}
-                                className="flex items-center gap-1.5 text-xs px-4 py-1.5 rounded-xl gradient-bg text-white hover:opacity-90 transition-opacity font-medium">
+                                className="flex items-center gap-1.5 text-xs px-4 py-1.5 rounded-xl vd-gradient-gold text-white hover:opacity-90 transition-opacity font-medium">
                                 <MessageCircle className="w-3.5 h-3.5" /> Open Chat
                               </Link>
                             ) : (

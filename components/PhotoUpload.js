@@ -191,7 +191,7 @@ export function PhotoUploadSection() {
         <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">Profile Photo</p>
         <div className="flex items-center gap-5">
           <div
-            className="relative w-28 h-28 rounded-3xl overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20 flex-shrink-0 cursor-pointer group"
+            className="relative w-28 h-28 rounded-3xl overflow-hidden bg-vd-accent-soft dark:bg-vd-accent/20 flex-shrink-0 cursor-pointer group"
             onClick={() => mainPhoto?.url && !mainPhoto._preview && allUrls.length > 0 && setLightbox({ images: allUrls, index: 0 })}
           >
             {mainPhoto?.url ? (
@@ -217,7 +217,7 @@ export function PhotoUploadSection() {
           <div>
             <p className="text-sm font-medium mb-1">Main Profile Photo</p>
             <p className="text-xs text-gray-400 mb-3">Appears on your profile card. Images only, max 10MB.</p>
-            <label className="cursor-pointer gradient-bg text-white text-xs px-4 py-2 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-1.5 w-fit">
+            <label className="cursor-pointer vd-gradient-gold text-white text-xs px-4 py-2 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-1.5 w-fit">
               <Upload className="w-3.5 h-3.5" />
               {mainUploading ? 'Uploading…' : 'Upload Photo'}
               <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden"
@@ -235,7 +235,7 @@ export function PhotoUploadSection() {
             Additional Photos ({otherPhotos.filter(p => !p._loading).length}/6)
           </p>
           {slotsLeft > 0 && (
-            <label className="cursor-pointer text-xs text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1 transition-colors">
+            <label className="cursor-pointer text-xs text-vd-primary hover:text-vd-primary-dark font-medium flex items-center gap-1 transition-colors">
               <Plus className="w-3.5 h-3.5" /> Add up to {slotsLeft} more
               <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple className="hidden"
                 onChange={e => e.target.files?.length && uploadMultiple(e.target.files)} />
@@ -275,7 +275,7 @@ export function PhotoUploadSection() {
           })}
 
           {slotsLeft > 0 && (
-            <label className="aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center cursor-pointer hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-all">
+            <label className="aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center cursor-pointer hover:border-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/10 transition-all">
               <Plus className="w-6 h-6 text-gray-400" />
               <span className="text-xs text-gray-400 mt-1">Add</span>
               <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple className="hidden"
@@ -337,15 +337,15 @@ export function DocumentUploadSection() {
         <div className="flex flex-wrap gap-2">
           {DOC_TYPES.map(t => (
             <button key={t} onClick={() => setSelectedType(t)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium border-2 transition-all ${selectedType === t ? 'gradient-bg text-white border-transparent' : 'border-gray-200 dark:border-gray-600 hover:border-pink-300'}`}>
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium border-2 transition-all ${selectedType === t ? 'vd-gradient-gold text-white border-transparent' : 'border-gray-200 dark:border-gray-600 hover:border-vd-primary'}`}>
               {t}
             </button>
           ))}
         </div>
       </div>
       <label className="block cursor-pointer">
-        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-all">
-          {uploading ? <Loader2 className="w-8 h-8 text-pink-400 animate-spin mx-auto mb-2" /> : <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />}
+        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/10 transition-all">
+          {uploading ? <Loader2 className="w-8 h-8 text-vd-primary animate-spin mx-auto mb-2" /> : <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />}
           <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{uploading ? 'Uploading…' : `Upload ${selectedType}`}</p>
           <p className="text-xs text-gray-400 mt-1">JPG, PNG, PDF — Max 5MB</p>
         </div>

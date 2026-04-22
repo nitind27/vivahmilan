@@ -4,12 +4,17 @@ import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, Bot, User, Headphones, ChevronDown, Loader2, PhoneOff } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
+// ── Pricing normalizer ────────────────────────────────────────────────────────
+export function normalizePricing(text) {
+  return text.replace(/\$(\d+)/g, '₹$1');
+}
+
 // ── Markdown-lite renderer ────────────────────────────────────────────────────
 function renderMarkdown(text) {
   if (!text) return '';
-  return text
+  return normalizePricing(text)
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-pink-400 underline hover:text-pink-300" target="_self">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-vd-primary underline hover:text-vd-primary-light" target="_self">$1</a>')
     .replace(/\n/g, '<br/>');
 }
 
@@ -21,7 +26,7 @@ function Bubble({ msg }) {
   return (
     <div className={`flex gap-2 mb-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
       <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${
-        isUser ? 'bg-pink-500' : isAdmin ? 'bg-purple-600' : 'bg-gray-600'
+        isUser ? 'bg-vd-primary' : isAdmin ? 'bg-vd-accent' : 'bg-gray-600'
       }`}>
         {isUser ? <User className="w-3.5 h-3.5 text-white" /> :
          isAdmin ? <Headphones className="w-3.5 h-3.5 text-white" /> :
@@ -29,14 +34,14 @@ function Bubble({ msg }) {
       </div>
       <div className={`max-w-[78%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
         isUser
-          ? 'bg-pink-500 text-white rounded-tr-sm'
+          ? 'bg-vd-primary text-white rounded-tr-sm'
           : isAdmin
-          ? 'bg-purple-700 text-white rounded-tl-sm'
+          ? 'bg-vd-accent text-white rounded-tl-sm'
           : 'bg-gray-700 text-gray-100 rounded-tl-sm'
       }`}>
-        {isAdmin && <p className="text-xs text-purple-300 mb-1 font-semibold">Support Agent</p>}
+        {isAdmin && <p className="text-xs text-vd-primary-light mb-1 font-semibold">Support Agent</p>}
         <span dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
-        <p className={`text-xs mt-1 ${isUser ? 'text-pink-200' : 'text-gray-400'}`}>
+        <p className={`text-xs mt-1 ${isUser ? 'text-vd-primary-light' : 'text-gray-400'}`}>
           {new Date(msg.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </p>
       </div>
@@ -196,7 +201,7 @@ export default function ChatBot() {
       {/* Floating button */}
       <button
         onClick={() => open ? setOpen(false) : handleOpen()}
-        className="fixed bottom-6 right-4 sm:right-6 z-40 w-14 h-14 gradient-bg rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-4 sm:right-6 z-40 w-14 h-14 vd-gradient-gold rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform"
         aria-label="Open chat support"
       >
         {open ? <X className="w-6 h-6 text-white" /> : <MessageCircle className="w-6 h-6 text-white" />}
@@ -213,13 +218,13 @@ export default function ChatBot() {
           style={{ height: '520px', maxHeight: 'calc(100vh - 120px)' }}>
 
           {/* Header */}
-          <div className="gradient-bg px-4 py-3 flex items-center gap-3">
+          <div className="vd-gradient-gold px-4 py-3 flex items-center gap-3">
             <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
               {status === 'live' ? <Headphones className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-white" />}
             </div>
             <div className="flex-1">
               <p className="text-white font-semibold text-sm">
-                {status === 'live' ? 'Support Agent' : 'Milan Assistant'}
+                {status === 'live' ? 'Support Agent' : 'Vivah Dwar Assistant'}
               </p>
               <p className="text-white/70 text-xs">
                 {status === 'live' ? '🟢 Agent connected' : status === 'ended' ? '⚫ Chat ended' : '🤖 AI Support'}
@@ -289,12 +294,12 @@ export default function ChatBot() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                 placeholder={status === 'live' ? 'Message agent...' : 'Ask anything...'}
-                className="flex-1 bg-gray-800 text-white text-sm px-3 py-2 rounded-xl border border-gray-600 focus:outline-none focus:border-pink-500 placeholder-gray-500"
+                className="flex-1 bg-gray-800 text-white text-sm px-3 py-2 rounded-xl border border-gray-600 focus:outline-none focus:border-vd-primary placeholder-gray-500"
                 disabled={loading}
               />
               <button onClick={() => sendMessage()}
                 disabled={loading || !input.trim()}
-                className="w-9 h-9 gradient-bg rounded-xl flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0">
+                className="w-9 h-9 vd-gradient-gold rounded-xl flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0">
                 <Send className="w-4 h-4 text-white" />
               </button>
             </div>
@@ -303,7 +308,7 @@ export default function ChatBot() {
           {status === 'ended' && (
             <div className="p-3 border-t border-gray-700 text-center">
               <button onClick={resetChat}
-                className="text-sm gradient-bg text-white px-4 py-2 rounded-xl hover:opacity-90 transition-opacity">
+                className="text-sm vd-gradient-gold text-white px-4 py-2 rounded-xl hover:opacity-90 transition-opacity">
                 Start New Chat
               </button>
             </div>

@@ -53,7 +53,7 @@ function MatchesPage() {
   const activeFilters = Object.values(filters).filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
 
@@ -64,20 +64,20 @@ function MatchesPage() {
             <p className="text-gray-500 mt-1">{total} profiles found</p>
           </div>
           <button onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-2xl border-2 font-medium transition-all ${showFilters ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20 text-pink-600' : 'border-gray-200 dark:border-gray-700 hover:border-pink-300'}`}>
+            className={`flex items-center gap-2 px-4 py-2 rounded-2xl border-2 font-medium transition-all ${showFilters ? 'border-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary-dark' : 'border-gray-200 dark:border-gray-700 hover:border-vd-primary'}`}>
             <SlidersHorizontal className="w-4 h-4" />
-            Filters {activeFilters > 0 && <span className="bg-pink-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{activeFilters}</span>}
+            Filters {activeFilters > 0 && <span className="bg-vd-primary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{activeFilters}</span>}
           </button>
         </div>
 
         {/* Filters panel */}
         {showFilters && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+            className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 mb-6 border border-vd-border shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">Filter Matches</h3>
               {activeFilters > 0 && (
-                <button onClick={clearFilters} className="text-sm text-pink-500 flex items-center gap-1 hover:text-pink-600">
+                <button onClick={clearFilters} className="text-sm text-vd-primary flex items-center gap-1 hover:text-vd-primary-dark">
                   <X className="w-4 h-4" /> Clear all
                 </button>
               )}
@@ -138,7 +138,7 @@ function MatchesPage() {
                 </select>
               </div>
             </div>
-            <button onClick={() => { setPage(1); fetchMatches(); }} className="mt-4 gradient-bg text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition-opacity">
+            <button onClick={() => { setPage(1); fetchMatches(); }} className="mt-4 vd-gradient-gold text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition-opacity">
               Apply Filters
             </button>
           </motion.div>
@@ -154,7 +154,7 @@ function MatchesPage() {
             <div className="text-6xl mb-4">💔</div>
             <h3 className="text-xl font-semibold mb-2">No matches found</h3>
             <p className="text-gray-500 mb-4">Try adjusting your filters</p>
-            <button onClick={clearFilters} className="gradient-bg text-white px-6 py-2 rounded-xl font-medium">Clear Filters</button>
+            <button onClick={clearFilters} className="vd-gradient-gold text-white px-6 py-2 rounded-xl font-medium">Clear Filters</button>
           </div>
         ) : (
           <>
@@ -177,7 +177,7 @@ function MatchesPage() {
                 </div>
 
                 {/* Overlay */}
-                <div className="relative z-10 gradient-bg rounded-3xl p-8 text-white text-center">
+                <div className="relative z-10 vd-gradient-gold rounded-3xl p-8 text-white text-center">
                   <div className="text-5xl mb-4">🔒</div>
                   <h3 className="text-2xl font-bold mb-2">
                     {total - users.length}+ More Profiles Waiting!
@@ -192,7 +192,7 @@ function MatchesPage() {
                     ))}
                   </div>
                   <a href="/premium"
-                    className="inline-block bg-white text-pink-600 font-bold px-8 py-3 rounded-2xl hover:bg-gray-50 transition-colors text-base shadow-lg">
+                    className="inline-block bg-white text-vd-primary font-bold px-8 py-3 rounded-2xl hover:bg-gray-50 transition-colors text-base shadow-lg">
                     Upgrade to Premium →
                   </a>
                 </div>
@@ -205,12 +205,12 @@ function MatchesPage() {
         {isPremium && totalPages > 1 && (
           <div className="flex items-center justify-center gap-3 mt-10">
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-              className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:border-pink-400 transition-colors">
+              className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:border-vd-primary transition-colors">
               <ChevronLeft className="w-5 h-5" />
             </button>
             <span className="text-sm text-gray-600 dark:text-gray-400">Page {page} of {totalPages}</span>
             <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-              className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:border-pink-400 transition-colors">
+              className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:border-vd-primary transition-colors">
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
@@ -223,8 +223,8 @@ function MatchesPage() {
 export default function MatchesPageWrapper() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-vd-bg flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <MatchesPage />

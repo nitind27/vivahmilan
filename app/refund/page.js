@@ -64,7 +64,7 @@ const sections = [
             { step: '4', title: 'Refund Issued', desc: 'If approved, refund will be credited within 5-7 business days', icon: '✅' },
           ].map((s, i) => (
             <div key={i} className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
-              <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+              <div className="w-10 h-10 vd-gradient-gold rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {s.step}
               </div>
               <div>
@@ -74,8 +74,8 @@ const sections = [
             </div>
           ))}
         </div>
-        <div className="p-4 bg-pink-50 dark:bg-pink-900/10 border border-pink-200 dark:border-pink-800 rounded-xl">
-          <p className="text-xs text-pink-700 dark:text-pink-400">
+        <div className="p-4 bg-vd-accent-soft dark:bg-vd-accent/10 border border-vd-border rounded-xl">
+          <p className="text-xs text-vd-primary dark:text-vd-primary">
             <strong>Refund Email:</strong> <a href="mailto:refunds@vivahmilan.com" className="underline">refunds@vivahmilan.com</a><br />
             <strong>Subject line:</strong> Refund Request — [Your Order ID]
           </p>
@@ -92,12 +92,12 @@ const sections = [
           {[
             { plan: 'Silver', price: '₹749', duration: '30 days', color: 'border-gray-300 dark:border-gray-600' },
             { plan: 'Gold', price: '₹1,499', duration: '30 days', color: 'border-yellow-400 dark:border-yellow-600', popular: true },
-            { plan: 'Platinum', price: '₹2,999', duration: '30 days', color: 'border-purple-400 dark:border-purple-600' },
+            { plan: 'Platinum', price: '₹2,999', duration: '30 days', color: 'border-vd-primary' },
           ].map((p, i) => (
             <div key={i} className={`p-4 rounded-2xl border-2 text-center relative ${p.color}`}>
               {p.popular && <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">Popular</span>}
               <p className="font-bold text-gray-800 dark:text-gray-200">{p.plan}</p>
-              <p className="text-2xl font-bold gradient-text mt-1">{p.price}</p>
+              <p className="text-2xl font-bold vd-gradient-text mt-1">{p.price}</p>
               <p className="text-xs text-gray-400">{p.duration}</p>
             </div>
           ))}
@@ -130,7 +130,7 @@ const sections = [
         <ul className="space-y-2 ml-4">
           {['Escalate to our senior support team at escalations@vivahmilan.com', 'File a dispute with your bank or card issuer (chargeback)', 'Contact the National Consumer Helpline (India): 1800-11-4000', 'Approach the Consumer Forum in your jurisdiction'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-400 flex-shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}
             </li>
           ))}
@@ -147,7 +147,7 @@ export default function RefundPage() {
       title="Refund Policy"
       subtitle="Our commitment to fair and transparent refund practices"
       icon={RefreshCw}
-      iconBg="bg-gradient-to-br from-green-600 to-teal-600"
+      iconBg="vd-gradient-gold"
       lastUpdated="January 1, 2026"
       sections={sections}
       relatedLinks={[

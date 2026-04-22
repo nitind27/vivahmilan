@@ -4,20 +4,22 @@ import { signIn, getSession, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, Mail, Lock, Eye, EyeOff, Clock, CheckCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Clock, CheckCircle, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// ── Inner component uses useSearchParams + useSession ─────────────────────────
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function LoginInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const [form, setForm] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pendingEmail, setPendingEmail] = useState(null);
 
-  // Handle Google auth error params
   useEffect(() => {
     const error = searchParams?.get('error');
     if (error === 'PENDING_APPROVAL') setPendingEmail('your Google account');
@@ -26,23 +28,43 @@ function LoginInner() {
     else if (error === 'AccessDenied') toast.error('Access denied. Please try again or contact support.');
   }, [searchParams]);
 
-  // After Google login — redirect based on user state
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
-      if (session.user.role === 'ADMIN') {
-        router.replace('/admin');
-      } else {
-        router.replace('/dashboard');
-      }
+      router.replace(session.user.role === 'ADMIN' ? '/admin' : '/dashboard');
     }
   }, [status, session, router]);
 
+  const validate = (f) => {
+    const e = {};
+    if (!f.email) e.email = 'Email is required';
+    else if (!emailRegex.test(f.email)) e.email = 'Enter a valid email address';
+    if (!f.password) e.password = 'Password is required';
+    else if (f.password.length < 6) e.password = 'Password must be at least 6 characters';
+    return e;
+  };
+
+  const handleBlur = (field) => {
+    setTouched(p => ({ ...p, [field]: true }));
+    setErrors(validate({ ...form }));
+  };
+
+  const handleChange = (field, value) => {
+    const updated = { ...form, [field]: value };
+    setForm(updated);
+    if (touched[field]) setErrors(validate(updated));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const allTouched = { email: true, password: true };
+    setTouched(allTouched);
+    const errs = validate(form);
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
     setLoading(true);
     const res = await signIn('credentials', { ...form, redirect: false });
     setLoading(false);
-
     if (res?.error) {
       if (res.error === 'PENDING_APPROVAL') { setPendingEmail(form.email); return; }
       toast.error(res.error === 'CredentialsSignin' ? 'Invalid email or password' : res.error);
@@ -53,36 +75,40 @@ function LoginInner() {
     }
   };
 
-  // ── Pending Approval Screen ───────────────────────────────────────────────
+  const fieldCls = (field) =>
+    `w-full pl-11 pr-4 py-3 border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light input-focus transition-all ${
+      touched[field] && errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-vd-border'
+    }`;
+
   if (pendingEmail) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-vd-bg px-4 py-8">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700 text-center">
-            <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-5">
-              <Clock className="w-10 h-10 text-amber-500" />
+          <div className="bg-vd-bg-section rounded-3xl shadow-2xl p-6 sm:p-8 border border-vd-border text-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-vd-accent-soft rounded-full flex items-center justify-center mx-auto mb-4">
+              <Clock className="w-8 h-8 sm:w-10 sm:h-10 text-vd-primary" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Profile Under Review</h2>
-            <p className="text-gray-500 text-sm mb-4">
-              Your profile is awaiting admin approval. This usually takes up to <strong className="text-gray-700 dark:text-gray-300">24 hours</strong>.
+            <h2 className="text-xl sm:text-2xl font-bold text-vd-text-heading mb-2">Profile Under Review</h2>
+            <p className="text-vd-text-sub text-sm mb-4">
+              Your profile is awaiting admin approval. This usually takes up to <strong className="text-vd-text-heading">24 hours</strong>.
             </p>
-            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 mb-6 text-left space-y-2">
+            <div className="bg-vd-bg-alt border border-vd-border rounded-2xl p-4 mb-5 text-left space-y-2">
               {[
-                { icon: CheckCircle, color: 'text-green-500', text: 'Registration complete' },
-                { icon: CheckCircle, color: 'text-green-500', text: 'Profile submitted' },
-                { icon: Clock,       color: 'text-amber-500', text: 'Waiting for admin verification' },
-              ].map(({ icon: Icon, color, text }) => (
+                { icon: CheckCircle, text: 'Registration complete' },
+                { icon: CheckCircle, text: 'Profile submitted' },
+                { icon: Clock, text: 'Waiting for admin verification' },
+              ].map(({ icon: Icon, text }, i) => (
                 <div key={text} className="flex items-center gap-2 text-sm">
-                  <Icon className={`w-4 h-4 ${color} flex-shrink-0`} />
-                  <span className="text-gray-600 dark:text-gray-400">{text}</span>
+                  <Icon className={`w-4 h-4 flex-shrink-0 ${i < 2 ? 'text-green-500' : 'text-vd-primary'}`} />
+                  <span className="text-vd-text-sub">{text}</span>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mb-6">
-              We'll email <strong className="text-pink-500">{pendingEmail}</strong> once approved.
+            <p className="text-xs text-vd-text-light mb-5">
+              We'll email <strong className="text-vd-primary">{pendingEmail}</strong> once approved.
             </p>
             <button onClick={() => setPendingEmail(null)}
-              className="w-full border border-gray-200 dark:border-gray-600 py-3 rounded-2xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              className="w-full border border-vd-border py-3 rounded-2xl text-sm font-medium text-vd-text-sub hover:bg-vd-accent-soft transition-colors">
               Back to Login
             </button>
           </div>
@@ -91,91 +117,120 @@ function LoginInner() {
     );
   }
 
-  // ── Login Form ────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
-              <Heart className="w-5 h-5 text-white fill-white" />
-            </div>
-            <span className="text-2xl font-bold gradient-text">Milan</span>
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
-          <p className="text-gray-500 mt-2">Sign in to continue your journey</p>
-        </div>
+    <div className="min-h-screen lg:h-screen flex flex-col lg:flex-row bg-vd-bg lg:overflow-hidden">
+      <div className="hidden lg:block lg:w-1/2 relative flex-shrink-0">
+        <img src="/images/logo-img-light.png" alt="Vivah Dwar"
+          className="absolute inset-0 w-full h-full object-cover dark:hidden" />
+        <img src="/images/logo-image.png" alt="Vivah Dwar"
+          className="absolute inset-0 w-full h-full object-cover hidden dark:block" />
+      </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+      <div className="flex-1 lg:overflow-y-auto flex items-center justify-center px-4 sm:px-6 py-8 bg-vd-bg">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+          className="w-full max-w-sm sm:max-w-md">
+
+          <div className="flex justify-center mb-6">
+            <img src="/logo/logo.png" alt="Vivah Dwar" className="h-12 sm:h-16 w-auto object-contain" />
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Sparkles className="w-4 h-4 text-vd-primary" />
+              <span className="text-xs font-medium text-vd-primary uppercase tracking-wider">Welcome Back</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-vd-text-heading">Sign in to your account</h1>
+            <p className="text-vd-text-sub text-sm mt-1">Continue your journey to find the perfect match</p>
+          </div>
+
           <button onClick={() => signIn('google', { callbackUrl: '/login' })}
-            className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 dark:border-gray-600 rounded-2xl py-3 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors mb-6">
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            className="w-full flex items-center justify-center gap-3 bg-vd-bg-section border border-vd-border rounded-2xl py-3 sm:py-3.5 font-medium text-sm text-vd-text-heading hover:bg-vd-accent-soft transition-all shadow-sm hover:shadow-md mb-5">
+            <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
             </svg>
             Continue with Google
           </button>
 
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600" />
-            <span className="text-sm text-gray-400">or</span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600" />
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-vd-border" />
+            <span className="text-xs text-vd-text-light font-medium px-2">OR</span>
+            <div className="flex-1 h-px bg-vd-border" />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+              <label className="block text-sm font-semibold text-vd-text-sub mb-1.5">Email address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input type="email" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 input-focus text-sm"
-                  placeholder="your@email.com" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />
+                <input type="email" value={form.email}
+                  onChange={e => handleChange('email', e.target.value)}
+                  onBlur={() => handleBlur('email')}
+                  className={fieldCls('email')}
+                  placeholder="you@example.com" />
               </div>
+              {touched.email && errors.email && (
+                <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-red-500 text-white text-center leading-3 flex-shrink-0">!</span>
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm font-semibold text-vd-text-sub">Password</label>
+                <Link href="/forgot-password" className="text-xs text-vd-primary hover:text-vd-primary-dark font-medium">Forgot password?</Link>
+              </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input type={showPass ? 'text' : 'password'} required value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 input-focus text-sm"
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />
+                <input type={showPass ? 'text' : 'password'} value={form.password}
+                  onChange={e => handleChange('password', e.target.value)}
+                  onBlur={() => handleBlur('password')}
+                  className={fieldCls('password') + ' pr-12'}
                   placeholder="••••••••" />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  {showPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-vd-text-light hover:text-vd-text-sub transition-colors">
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-            </div>
-
-            <div className="flex justify-end">
-              <Link href="/forgot-password" className="text-sm text-pink-500 hover:text-pink-600">Forgot password?</Link>
+              {touched.password && errors.password && (
+                <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-red-500 text-white text-center leading-3 flex-shrink-0">!</span>
+                  {errors.password}
+                </p>
+              )}
             </div>
 
             <button type="submit" disabled={loading}
-              className="w-full gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-60">
-              {loading ? 'Signing in...' : 'Sign In'}
+              className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ boxShadow: '0 4px 20px rgba(200,164,92,0.35)' }}>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Signing in...
+                </span>
+              ) : 'Sign In'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-vd-text-light mt-5 pb-4">
             Don't have an account?{' '}
-            <Link href="/register" className="text-pink-500 font-medium hover:text-pink-600">Register free</Link>
+            <Link href="/register" className="text-vd-primary font-semibold hover:text-vd-primary-dark">Register free</Link>
           </p>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }
 
-// ── Page export wrapped in Suspense (required for useSearchParams) ─────────────
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950">
-        <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-vd-bg">
+        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <LoginInner />

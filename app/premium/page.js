@@ -2,11 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import {
   CheckCircle, Star, Zap, Shield, MessageCircle,
-  Eye, TrendingUp, Lock, Crown, Sparkles
+  Eye, TrendingUp, Lock, Crown, Sparkles, ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -47,7 +47,8 @@ const PLANS = [
     name: 'Platinum',
     price: 2999,
     period: '/month',
-    color: 'from-purple-500 to-pink-600',
+    color: '',
+    colorClass: 'vd-gradient-gold',
     badge: 'Best Value',
     features: [
       'Everything in Gold',
@@ -74,6 +75,7 @@ export default function PremiumPage() {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [sdkLoaded, setSdkLoaded] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -132,18 +134,18 @@ export default function PremiumPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-24 pb-16 bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950">
+      <section className="pt-24 pb-16 bg-vd-bg">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Crown className="w-4 h-4 fill-yellow-500" /> Premium Membership
             </div>
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-              Unlock Your <span className="gradient-text">Perfect Match</span>
+              Unlock Your <span className="vd-gradient-text">Perfect Match</span>
             </h1>
             <p className="text-gray-500 text-lg max-w-xl mx-auto">
               Get unlimited access to all features and find your life partner faster.
@@ -161,19 +163,28 @@ export default function PremiumPage() {
       <section className="py-12 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-3 gap-6">
-            {PLANS.map((plan, i) => (
+            {PLANS.map((plan, i) => {
+              const userPlan = session?.user?.premiumPlan;
+              const isActive = plan.id === userPlan && session?.user?.isPremium;
+              return (
               <motion.div key={plan.id}
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                className={`relative bg-white dark:bg-gray-800 rounded-3xl p-6 border-2 shadow-sm transition-all hover:shadow-lg ${plan.badge === 'Most Popular' ? 'border-pink-500 shadow-pink-100 dark:shadow-pink-900/20 scale-105' : 'border-gray-100 dark:border-gray-700'}`}>
+                className={`relative bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl p-6 border-2 shadow-sm transition-all hover:shadow-lg ${isActive ? 'border-vd-primary ring-2 ring-green-500 scale-105' : plan.badge === 'Most Popular' ? 'border-vd-primary scale-105' : 'border-vd-border'}`}>
+
+                {isActive && (
+                  <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3" /> Active Plan
+                  </div>
+                )}
 
                 {plan.badge && (
-                  <div className={`absolute -top-4 left-1/2 -translate-x-1/2 text-white text-xs font-bold px-4 py-1.5 rounded-full ${plan.badge === 'Most Popular' ? 'gradient-bg' : 'bg-gradient-to-r from-purple-500 to-pink-600'}`}>
+                  <div className={`absolute -top-4 left-1/2 -translate-x-1/2 text-white text-xs font-bold px-4 py-1.5 rounded-full ${plan.badge === 'Most Popular' ? 'vd-gradient-gold' : 'vd-gradient-gold'}`}>
                     {plan.badge === 'Most Popular' ? '⭐ ' : '💎 '}{plan.badge}
                   </div>
                 )}
 
                 {/* Plan header */}
-                <div className={`w-12 h-12 bg-gradient-to-br ${plan.color} rounded-2xl flex items-center justify-center mb-4`}>
+                <div className={`w-12 h-12 ${plan.colorClass || `bg-gradient-to-br ${plan.color}`} rounded-2xl flex items-center justify-center mb-4`}>
                   <Star className="w-6 h-6 text-white fill-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
@@ -186,7 +197,7 @@ export default function PremiumPage() {
                 <ul className="space-y-2.5 mb-6">
                   {plan.features.map(f => (
                     <li key={f} className="flex items-start gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-4 h-4 text-vd-primary flex-shrink-0 mt-0.5" />
                       <span className="text-gray-600 dark:text-gray-400">{f}</span>
                     </li>
                   ))}
@@ -197,20 +208,23 @@ export default function PremiumPage() {
                   onClick={() => handleBuy(plan)}
                   disabled={loadingPlan === plan.id || !sdkLoaded || session?.user?.isPremium}
                   className={`w-full py-3 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
-                    plan.badge === 'Most Popular'
-                      ? 'gradient-bg text-white hover:opacity-90'
-                      : 'border-2 border-gray-200 dark:border-gray-600 hover:border-pink-400 hover:text-pink-500'
+                    isActive
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : plan.badge === 'Most Popular'
+                      ? 'vd-gradient-gold text-white hover:opacity-90'
+                      : 'border-2 border-gray-200 dark:border-gray-600 hover:border-vd-primary hover:text-vd-primary'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}>
                   {loadingPlan === plan.id ? (
                     <><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> Processing…</>
-                  ) : session?.user?.isPremium ? (
-                    <><CheckCircle className="w-4 h-4" /> Active Plan</>
+                  ) : isActive ? (
+                    <><CheckCircle className="w-4 h-4" /> Current Plan</>
                   ) : (
                     <><Lock className="w-4 h-4" /> Get {plan.name} — ₹{plan.price.toLocaleString()}</>
                   )}
                 </button>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Trust badges */}
@@ -218,14 +232,14 @@ export default function PremiumPage() {
             className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-gray-400">
             <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-green-500" /> 100% Secure Payment</span>
             <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-yellow-500" /> Instant Activation</span>
-            <span className="flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-pink-500" /> 7-day Refund Policy</span>
-            <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-purple-500" /> Powered by Cashfree</span>
+            <span className="flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-vd-primary" /> 7-day Refund Policy</span>
+            <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-vd-primary" /> Powered by Cashfree</span>
           </motion.div>
         </div>
       </section>
 
       {/* Perks */}
-      <section className="py-12 px-4 bg-white dark:bg-gray-900">
+      <section className="py-12 px-4 bg-vd-bg-section dark:bg-vd-bg-card">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-10">Everything Premium Includes</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -233,8 +247,8 @@ export default function PremiumPage() {
               <motion.div key={p.title}
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }} viewport={{ once: true }}
-                className="flex gap-4 p-5 bg-gray-50 dark:bg-gray-800 rounded-2xl">
-                <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center flex-shrink-0">
+                className="flex gap-4 p-5 bg-vd-bg dark:bg-vd-bg-card rounded-2xl">
+                <div className="w-10 h-10 vd-gradient-gold rounded-xl flex items-center justify-center flex-shrink-0">
                   <p.icon className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -248,7 +262,7 @@ export default function PremiumPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-12 px-4 bg-gray-50 dark:bg-gray-950">
+      <section className="py-12 px-4 bg-vd-bg dark:bg-vd-bg">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-8">Common Questions</h2>
           <div className="space-y-4">
@@ -259,9 +273,28 @@ export default function PremiumPage() {
               { q: 'How quickly is premium activated?', a: 'Instantly after successful payment. You will receive a confirmation notification.' },
             ].map((faq, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700">
-                <p className="font-semibold text-sm mb-1.5">{faq.q}</p>
-                <p className="text-gray-500 text-sm">{faq.a}</p>
+                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between gap-3 p-5 text-left font-semibold text-sm"
+                >
+                  <span>{faq.q}</span>
+                  <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                <AnimatePresence initial={false}>
+                  {openFaq === i && (
+                    <motion.div
+                      key="answer"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <p className="px-5 pb-5 text-gray-500 text-sm">{faq.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </div>

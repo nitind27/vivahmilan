@@ -53,18 +53,18 @@ export default function ReportAbusePage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="min-h-screen bg-vd-bg">
         <Navbar />
         <div className="pt-24 flex items-center justify-center px-4 pb-12">
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-3xl p-10 max-w-md w-full text-center border border-gray-100 dark:border-gray-700 shadow-xl">
+            className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl p-10 max-w-md w-full text-center border border-vd-border shadow-xl">
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-5">
               <CheckCircle className="w-10 h-10 text-green-500" />
             </div>
             <h2 className="text-2xl font-bold mb-2">Report Submitted</h2>
             <p className="text-gray-500 text-sm mb-6">Thank you for helping keep Vivah Milan safe. Our team will review your report within 24 hours and take appropriate action.</p>
             <div className="space-y-2">
-              <Link href="/dashboard" className="block gradient-bg text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity">
+              <Link href="/dashboard" className="block vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity">
                 Back to Dashboard
               </Link>
               <button onClick={() => { setSubmitted(false); setForm({ profileUrl: '', reason: '', details: '', email: '' }); }}
@@ -79,7 +79,7 @@ export default function ReportAbusePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="pt-16">
         {/* Hero */}
@@ -94,18 +94,18 @@ export default function ReportAbusePage() {
         <div className="max-w-2xl mx-auto px-4 py-10">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Profile URL */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
               <label className="block text-sm font-semibold mb-2">Profile URL or Name (optional)</label>
               <input
                 value={form.profileUrl}
                 onChange={e => setForm(p => ({ ...p, profileUrl: e.target.value }))}
                 placeholder="e.g. https://vivahmilan.com/profile/abc123 or person's name"
-                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:border-pink-400"
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary"
               />
             </div>
 
             {/* Reason */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
               <label className="block text-sm font-semibold mb-3">Reason for Report <span className="text-red-500">*</span></label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {REASONS.map(r => (
@@ -119,27 +119,27 @@ export default function ReportAbusePage() {
             </div>
 
             {/* Details */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
               <label className="block text-sm font-semibold mb-2">Details <span className="text-red-500">*</span></label>
               <textarea
                 value={form.details}
                 onChange={e => setForm(p => ({ ...p, details: e.target.value }))}
                 rows={4} maxLength={1000}
                 placeholder="Please describe the issue in detail. Include any relevant information that will help our team investigate."
-                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:border-pink-400 resize-none"
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary resize-none"
               />
               <p className="text-xs text-gray-400 mt-1 text-right">{form.details.length}/1000</p>
             </div>
 
             {/* Email if not logged in */}
             {!session && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+              <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
                 <label className="block text-sm font-semibold mb-2">Your Email <span className="text-red-500">*</span></label>
                 <input
                   type="email" value={form.email}
                   onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:border-pink-400"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary"
                 />
               </div>
             )}

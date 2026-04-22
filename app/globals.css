@@ -2,78 +2,151 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --vd-bg: #FFF8F3;
+  --vd-bg-section: #FFFFFF;
+  --vd-bg-alt: #F9EFE6;
+  --vd-bg-card: #FFFFFF;
+  --vd-primary: #C8A45C;
+  --vd-primary-dark: #A67C3D;
+  --vd-primary-light: #E5C88B;
+  --vd-accent: #E8B4B8;
+  --vd-accent-soft: #F3D6D8;
+  --vd-text-heading: #2B1E1E;
+  --vd-text-sub: #6B5B5B;
+  --vd-text-light: #A89A9A;
+  --vd-border: #EADFD6;
 }
 
+.dark {
+  --vd-bg: #0D0A0A;
+  --vd-bg-section: #161010;
+  --vd-bg-card: #1C1515;
+  --vd-bg-alt: #120D0D;
+  --vd-primary: #D4AF37;
+  --vd-primary-dark: #C8A45C;
+  --vd-primary-light: #E6C97A;
+  --vd-accent: #B76E79;
+  --vd-accent-soft: #2A1A1A;
+  --vd-text-heading: #F5E6D3;
+  --vd-text-sub: #C8B8B8;
+  --vd-text-light: #8A7A7A;
+  --vd-border: #2E2020;
+}
+
+/* ── Tailwind v4 theme ─────────────────────────────────────────────────────── */
+@theme inline {
+  --color-vd-bg: var(--vd-bg);
+  --color-vd-bg-section: var(--vd-bg-section);
+  --color-vd-bg-alt: var(--vd-bg-alt);
+  --color-vd-bg-card: var(--vd-bg-card);
+  --color-vd-primary: var(--vd-primary);
+  --color-vd-primary-dark: var(--vd-primary-dark);
+  --color-vd-primary-light: var(--vd-primary-light);
+  --color-vd-accent: var(--vd-accent);
+  --color-vd-accent-soft: var(--vd-accent-soft);
+  --color-vd-text-heading: var(--vd-text-heading);
+  --color-vd-text-sub: var(--vd-text-sub);
+  --color-vd-text-light: var(--vd-text-light);
+  --color-vd-border: var(--vd-border);
+}
+
+/* ── Base styles ───────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--vd-bg);
+  color: var(--vd-text-heading);
   font-family: 'Inter', sans-serif;
 }
 
-/* ── Light mode explicit defaults ─────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 { color: #111827; }
-p { color: #374151; }
-label { color: #374151; }
+h1, h2, h3, h4, h5, h6 { color: var(--vd-text-heading); }
+p { color: var(--vd-text-sub); }
+label { color: var(--vd-text-sub); }
 
-/* ── Dark mode overrides ──────────────────────────────────────────────────── */
-.dark {
-  --background: #030712;
-  --foreground: #f9fafb;
-}
-
+/* ── Dark mode: ensure text is readable ───────────────────────────────────── */
 .dark body {
-  background: #030712;
-  color: #f9fafb;
+  background: var(--vd-bg);
+  color: var(--vd-text-heading);
 }
 
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #f9fafb;
+  color: var(--vd-text-heading);
 }
 
-.dark p   { color: #d1d5db; }
-.dark label { color: #d1d5db; }
+.dark p {
+  color: var(--vd-text-sub);
+}
 
-/* Dark mode text utility overrides */
-.dark .text-gray-900 { color: #f9fafb; }
-.dark .text-gray-800 { color: #f3f4f6; }
-.dark .text-gray-700 { color: #e5e7eb; }
-.dark .text-gray-600 { color: #d1d5db; }
-.dark .text-gray-500 { color: #9ca3af; }
-.dark .text-gray-400 { color: #6b7280; }
+/* Ensure all text inside dark cards is readable */
+.dark * {
+  --tw-text-opacity: 1;
+}
 
-/* Dark mode surface overrides */
-.dark .bg-white      { background-color: #111827; }
-.dark .bg-gray-50    { background-color: #1f2937; }
-.dark .bg-gray-100   { background-color: #1f2937; }
+/* Fix: any element with vd-bg-section/card background needs proper text */
+.dark .bg-vd-bg-section,
+.dark .bg-vd-bg-card,
+.dark .bg-vd-bg {
+  color: var(--vd-text-heading);
+}
 
-/* Dark mode border overrides */
-.dark .border-gray-100 { border-color: #374151; }
-.dark .border-gray-200 { border-color: #374151; }
-.dark .border-gray-300 { border-color: #4b5563; }
+/* ── Dark mode Tailwind gray overrides ────────────────────────────────────── */
+.dark .text-gray-900 { color: var(--vd-text-heading) !important; }
+.dark .text-gray-800 { color: var(--vd-text-heading) !important; }
+.dark .text-gray-700 { color: var(--vd-text-sub) !important; }
+.dark .text-gray-600 { color: var(--vd-text-sub) !important; }
+.dark .text-gray-500 { color: var(--vd-text-light) !important; }
+.dark .text-gray-400 { color: var(--vd-text-light) !important; }
+.dark .text-gray-300 { color: #9A8F8F !important; }
 
-/* Dark mode inputs */
+/* ── Dark mode surface overrides ──────────────────────────────────────────── */
+.dark .bg-white      { background-color: var(--vd-bg-section) !important; }
+.dark .bg-gray-50    { background-color: var(--vd-bg-card) !important; }
+.dark .bg-gray-100   { background-color: var(--vd-bg-card) !important; }
+.dark .bg-gray-700   { background-color: #1E1515 !important; }
+.dark .bg-gray-800   { background-color: var(--vd-bg-card) !important; }
+.dark .bg-gray-900   { background-color: var(--vd-bg-section) !important; }
+.dark .bg-gray-950   { background-color: var(--vd-bg) !important; }
+
+/* Cream/warm backgrounds must become dark in dark mode */
+.dark [class*="bg-vd-bg"]:not([class*="dark:"]) {
+  /* handled via CSS variables automatically */
+}
+
+/* Force any remaining warm/cream inline backgrounds to dark */
+.dark .bg-amber-50   { background-color: #1C1515 !important; }
+.dark .bg-orange-50  { background-color: #1C1515 !important; }
+.dark .bg-yellow-50  { background-color: #1C1515 !important; }
+
+/* ── Dark mode border overrides ───────────────────────────────────────────── */
+.dark .border-gray-100 { border-color: var(--vd-border) !important; }
+.dark .border-gray-200 { border-color: var(--vd-border) !important; }
+.dark .border-gray-300 { border-color: var(--vd-border) !important; }
+.dark .border-gray-600 { border-color: var(--vd-border) !important; }
+.dark .border-gray-700 { border-color: var(--vd-border) !important; }
+
+/* ── Dark mode inputs ─────────────────────────────────────────────────────── */
 .dark input:not([class*="bg-"]),
 .dark textarea:not([class*="bg-"]),
 .dark select:not([class*="bg-"]) {
-  background-color: #1f2937;
-  color: #f9fafb;
-  border-color: #374151;
+  background-color: var(--vd-bg-card);
+  color: var(--vd-text-heading);
+  border-color: var(--vd-border);
 }
 .dark input::placeholder,
-.dark textarea::placeholder { color: #6b7280; }
+.dark textarea::placeholder {
+  color: var(--vd-text-light);
+}
 
 /* ── Custom scrollbar ─────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f1f1; }
+.dark ::-webkit-scrollbar-track { background: #1A1414; }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #ec4899, #8b5cf6);
+  background: linear-gradient(to bottom, #C8A45C, #E5C88B);
   border-radius: 3px;
 }
 
@@ -92,21 +165,28 @@ label { color: #374151; }
 }
 
 /* ── Gradient utilities ───────────────────────────────────────────────────── */
-.gradient-text {
-  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+.gradient-text,
+.vd-gradient-text {
+  background: linear-gradient(135deg, #C8A45C, #E5C88B);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.gradient-bg {
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+
+.gradient-bg,
+.vd-gradient-gold {
+  background: linear-gradient(135deg, #C8A45C, #E5C88B);
+}
+
+.vd-gradient-romantic {
+  background: linear-gradient(135deg, #E8B4B8, #C8A45C);
 }
 
 /* ── Card hover ───────────────────────────────────────────────────────────── */
 .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+  box-shadow: 0 20px 40px rgba(200, 164, 92, 0.15);
 }
 
 /* ── Skeleton loader ──────────────────────────────────────────────────────── */
@@ -134,7 +214,7 @@ label { color: #374151; }
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: rgba(236, 72, 153, 0.4);
+  background: rgba(200, 164, 92, 0.4);
   animation: pulse-ring 1.5s ease-out infinite;
 }
 
@@ -150,6 +230,11 @@ label { color: #374151; }
 .input-focus { transition: all 0.2s ease; }
 .input-focus:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
-  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(200, 164, 92, 0.25);
+  border-color: var(--vd-primary);
 }
+
+/* ── Dark mode hover states ───────────────────────────────────────────────── */
+.dark .hover\:bg-gray-50:hover  { background-color: var(--vd-bg-card) !important; }
+.dark .hover\:bg-gray-700:hover { background-color: #221818 !important; }
+.dark .hover\:bg-gray-800:hover { background-color: #221818 !important; }

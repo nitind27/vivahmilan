@@ -49,10 +49,10 @@ function StatusInner() {
 
   const states = {
     verifying: {
-      icon: <Loader2 className="w-16 h-16 text-pink-500 animate-spin" />,
+      icon: <Loader2 className="w-16 h-16 text-vd-primary animate-spin" />,
       title: 'Verifying Payment…',
       desc: 'Please wait while we confirm your payment.',
-      color: 'text-pink-500',
+      color: 'text-vd-primary',
     },
     success: {
       icon: <CheckCircle className="w-16 h-16 text-green-500" />,
@@ -77,16 +77,16 @@ function StatusInner() {
   const s = states[status];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-vd-bg flex items-center justify-center px-4">
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10 max-w-md w-full text-center border border-gray-100 dark:border-gray-700">
+        className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl shadow-2xl p-10 max-w-md w-full text-center border border-vd-border">
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 vd-gradient-gold rounded-full flex items-center justify-center">
             <Heart className="w-4 h-4 text-white fill-white" />
           </div>
-          <span className="text-xl font-bold gradient-text">Milan</span>
+          <span className="text-xl font-bold vd-gradient-text">Milan</span>
         </div>
 
         {/* Status icon */}
@@ -107,7 +107,7 @@ function StatusInner() {
         {/* Success confetti dots */}
         {status === 'success' && (
           <div className="flex justify-center gap-2 mt-4">
-            {['bg-pink-400', 'bg-purple-400', 'bg-yellow-400', 'bg-green-400', 'bg-blue-400'].map((c, i) => (
+            {['bg-vd-primary', 'bg-vd-primary', 'bg-yellow-400', 'bg-green-400', 'bg-blue-400'].map((c, i) => (
               <motion.div key={i} className={`w-2 h-2 rounded-full ${c}`}
                 animate={{ y: [0, -12, 0] }}
                 transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.1 }} />
@@ -118,13 +118,13 @@ function StatusInner() {
         {/* Actions */}
         <div className="flex flex-col gap-3 mt-8">
           {status === 'success' && (
-            <Link href="/dashboard" className="gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
+            <Link href="/dashboard" className="vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
               Go to Dashboard
             </Link>
           )}
           {status === 'failed' && (
             <>
-              <Link href="/premium" className="gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
+              <Link href="/premium" className="vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
                 Try Again
               </Link>
               <Link href="/dashboard" className="border border-gray-200 dark:border-gray-600 py-3 rounded-2xl text-sm text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
@@ -133,7 +133,7 @@ function StatusInner() {
             </>
           )}
           {status === 'pending' && (
-            <Link href="/dashboard" className="gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
+            <Link href="/dashboard" className="vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
               Go to Dashboard
             </Link>
           )}
@@ -147,7 +147,7 @@ export default function PaymentStatusPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-pink-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-vd-primary animate-spin" />
       </div>
     }>
       <StatusInner />

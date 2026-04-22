@@ -16,6 +16,7 @@ import {
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import KundaliChart from '@/components/KundaliChart';
 
 // ── Interest Action Panel ─────────────────────────────────────────────────────
 function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, userId, session, onStatusChange }) {
@@ -75,7 +76,7 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
         </p>
         {isPremium ? (
           <Link href={`/chat?userId=${userId}`}
-            className="flex items-center justify-center gap-2 w-full gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm">
+            className="flex items-center justify-center gap-2 w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm">
             <MessageCircle className="w-4 h-4" /> Open Chat
           </Link>
         ) : (
@@ -114,8 +115,8 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
   if (status === 'PENDING' && iReceived) {
     return (
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="bg-pink-50 dark:bg-pink-900/10 border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-4 space-y-3">
-        <p className="text-sm font-semibold text-pink-600 dark:text-pink-400 text-center">
+        className="bg-vd-accent-soft dark:bg-vd-accent/10 border-2 border-vd-border rounded-2xl p-4 space-y-3">
+        <p className="text-sm font-semibold text-vd-primary dark:text-vd-primary text-center">
           💌 They sent you an interest!
         </p>
         <div className="flex gap-2">
@@ -145,7 +146,7 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
         )}
       </AnimatePresence>
       <button onClick={showMsgBox ? sendInterest : () => setShowMsgBox(true)} disabled={loading}
-        className="w-full gradient-bg text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-60 transition-opacity text-sm">
+        className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-60 transition-opacity text-sm">
         {showMsgBox
           ? <><Send className="w-4 h-4" /> {loading ? 'Sending…' : 'Send Interest'}</>
           : <><Heart className="w-4 h-4" /> Send Interest</>
@@ -171,6 +172,7 @@ export default function ProfilePage() {
   const [shortlisted, setShortlisted] = useState(false);
   const [interestStatus, setInterestStatus] = useState(null); // { status, direction, id }
   const [activePhoto, setActivePhoto] = useState(0);
+  const [kundali, setKundali]         = useState(undefined); // undefined = not fetched yet, null = not found
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -194,6 +196,12 @@ export default function ProfilePage() {
         }
         setLoading(false);
       });
+
+    // Fetch kundali for this profile
+    fetch(`/api/kundali/${id}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => setKundali(data))
+      .catch(() => setKundali(null));
   }, [status, id]);
 
   const toggleShortlist = async () => {
@@ -220,7 +228,7 @@ export default function ProfilePage() {
 
   // ── Loading skeleton ───────────────────────────────────────────────────────
   if (loading) return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 pt-24 pb-12">
         <div className="grid md:grid-cols-3 gap-6">
@@ -238,12 +246,12 @@ export default function ProfilePage() {
 
   // ── Not found ──────────────────────────────────────────────────────────────
   if (!user || user.error) return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+    <div className="min-h-screen bg-vd-bg flex items-center justify-center">
       <Navbar />
       <div className="text-center">
         <div className="text-6xl mb-4">😔</div>
         <h2 className="text-2xl font-bold mb-2">Profile not available</h2>
-        <Link href="/matches" className="text-pink-500 hover:underline">Browse other profiles</Link>
+        <Link href="/matches" className="text-vd-primary hover:underline">Browse other profiles</Link>
       </div>
     </div>
   );
@@ -255,13 +263,13 @@ export default function ProfilePage() {
   const isPremium    = session?.user?.isPremium;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
 
         {/* Back */}
         <button onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-gray-500 hover:text-pink-500 mb-6 transition-colors text-sm">
+          className="flex items-center gap-1.5 text-gray-500 hover:text-vd-primary mb-6 transition-colors text-sm">
           <ChevronLeft className="w-4 h-4" /> Back
         </button>
 
@@ -271,12 +279,12 @@ export default function ProfilePage() {
           <div className="space-y-4">
 
             {/* Main photo */}
-            <div className="relative h-80 rounded-3xl overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20 shadow-md">
+            <div className="relative h-80 rounded-3xl overflow-hidden bg-vd-accent-soft dark:bg-vd-accent/20 shadow-md">
               {allPhotos.length > 0 ? (
                 <SmartImage src={allPhotos[activePhoto]?.url} alt={user.name} fill className="object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-24 h-24 gradient-bg rounded-full flex items-center justify-center">
+                  <div className="w-24 h-24 vd-gradient-gold rounded-full flex items-center justify-center">
                     <span className="text-white text-4xl font-bold">{user.name?.[0]}</span>
                   </div>
                 </div>
@@ -297,7 +305,7 @@ export default function ProfilePage() {
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {allPhotos.map((p, i) => (
                   <button key={i} onClick={() => setActivePhoto(i)}
-                    className={`relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border-2 transition-all ${activePhoto === i ? 'border-pink-500 scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}>
+                    className={`relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border-2 transition-all ${activePhoto === i ? 'border-vd-primary scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}>
                     <SmartImage src={p.url} alt="" fill className="object-cover" />
                   </button>
                 ))}
@@ -322,10 +330,10 @@ export default function ProfilePage() {
                 <button onClick={toggleShortlist}
                   className={`w-full py-2.5 rounded-2xl font-medium border-2 flex items-center justify-center gap-2 transition-all text-sm ${
                     shortlisted
-                      ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20 text-pink-600'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-pink-300 text-gray-600 dark:text-gray-400'
+                      ? 'border-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-vd-primary text-gray-600 dark:text-gray-400'
                   }`}>
-                  <Heart className={`w-4 h-4 ${shortlisted ? 'fill-pink-500 text-pink-500' : ''}`} />
+                  <Heart className={`w-4 h-4 ${shortlisted ? 'fill-vd-primary text-vd-primary' : ''}`} />
                   {shortlisted ? 'Shortlisted' : 'Add to Shortlist'}
                 </button>
 
@@ -343,7 +351,7 @@ export default function ProfilePage() {
               </div>
             ) : (
               <Link href="/profile/edit"
-                className="block w-full text-center gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm">
+                className="block w-full text-center vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm">
                 Edit My Profile
               </Link>
             )}
@@ -354,7 +362,7 @@ export default function ProfilePage() {
 
             {/* Name + quick stats */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+              className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
@@ -374,7 +382,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 {profile.religion && (
-                  <span className="bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 text-xs px-3 py-1 rounded-full font-medium">
+                  <span className="bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary dark:text-vd-primary text-xs px-3 py-1 rounded-full font-medium">
                     {profile.religion}
                   </span>
                 )}
@@ -383,19 +391,19 @@ export default function ProfilePage() {
               <div className="grid grid-cols-2 gap-3 mt-4">
                 {profile.city && (
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <MapPin className="w-4 h-4 text-pink-400 flex-shrink-0" />
+                    <MapPin className="w-4 h-4 text-vd-primary flex-shrink-0" />
                     <span className="truncate">{[profile.city, profile.state, profile.country].filter(Boolean).join(', ')}</span>
                   </div>
                 )}
                 {profile.education && (
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <GraduationCap className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <GraduationCap className="w-4 h-4 text-vd-primary flex-shrink-0" />
                     <span className="truncate">{profile.education}</span>
                   </div>
                 )}
                 {profile.profession && (
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <Briefcase className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                    <Briefcase className="w-4 h-4 text-vd-primary flex-shrink-0" />
                     <span className="truncate">{profile.profession}</span>
                   </div>
                 )}
@@ -411,9 +419,9 @@ export default function ProfilePage() {
             {/* About */}
             {profile.aboutMe && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-pink-400" /> About Me
+                  <Eye className="w-4 h-4 text-vd-primary" /> About Me
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{profile.aboutMe}</p>
               </motion.div>
@@ -421,7 +429,7 @@ export default function ProfilePage() {
 
             {/* Profile details */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+              className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
               <h3 className="font-semibold mb-4">Profile Details</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[
@@ -447,9 +455,9 @@ export default function ProfilePage() {
             {/* Family */}
             {(profile.familyType || profile.fatherOccupation || profile.siblings != null) && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
                 <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-purple-400" /> Family Details
+                  <Users className="w-4 h-4 text-vd-primary" /> Family Details
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
@@ -471,9 +479,9 @@ export default function ProfilePage() {
             {/* Partner preferences */}
             {(profile.partnerAgeMin || profile.partnerReligion || profile.partnerLocation) && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
                 <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-pink-400" /> Partner Preferences
+                  <Heart className="w-4 h-4 text-vd-primary" /> Partner Preferences
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {profile.partnerAgeMin && profile.partnerAgeMax && (
@@ -493,6 +501,27 @@ export default function ProfilePage() {
                     </div>
                   ))}
                 </div>
+              </motion.div>
+            )}
+
+            {/* Kundali Chart */}
+            {kundali !== undefined && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                {kundali ? (
+                  <KundaliChart kundali={kundali} />
+                ) : isOwnProfile ? (
+                  <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm text-center">
+                    <div className="text-4xl mb-2">🪐</div>
+                    <p className="text-sm font-semibold text-vd-text-heading mb-1">No Kundali Generated</p>
+                    <p className="text-xs text-vd-text-light mb-4">Generate your Vedic birth chart to enhance your profile.</p>
+                    <a
+                      href="/onboarding?email=&step=1"
+                      className="inline-block vd-gradient-gold text-white px-5 py-2.5 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity"
+                    >
+                      Generate Kundali
+                    </a>
+                  </div>
+                ) : null}
               </motion.div>
             )}
           </div>

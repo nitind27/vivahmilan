@@ -1,0 +1,1270 @@
+================================================================================
+         VIVAH DWAR MATRIMONIAL APP — COMPLETE API DOCUMENTATION
+================================================================================
+Base URL: http://localhost:3000  (Production: https://yourdomain.com)
+Auth: NextAuth JWT session (cookie-based). Protected routes require login.
+Content-Type: application/json  (unless noted as multipart/form-data)
+================================================================================
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1. AUTHENTICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1.1  NextAuth — Sign In / Sign Out / Session
+     Endpoint : /api/auth/[...nextauth]
+     Methods  : GET, POST (handled by NextAuth internally)
+     Usage    : POST /api/auth/signin  |  POST /api/auth/signout
+     Response : NextAuth session object
+
+1.2  Register (New User)
+     Endpoint : POST /api/register
+     Auth     : Public
+     Body:
+       {
+         "name"     : "Rahul Sharma",
+         "email"    : "rahul@example.com",
+         "password" : "password123",
+         "phone"    : "9876543210",   (optional)
+         "gender"   : "MALE"          (optional: MALE | FEMALE)
+       }
+     Success 201:
+       {
+         "user"       : { "id": "uuid", "name": "Rahul Sharma", "email": "rahul@example.com" },
+         "message"    : "Registration successful. Please verify your email.",
+         "requiresOTP": true
+       }
+     Errors:
+       400 — Name, email and password are required
+       400 — Password must be at least 8 characters
+       409 — This email is already registered. Please login.
+       409 — This phone number is already registered.
+       500 — Server error
+
+1.3  Verify OTP (Email Verification)
+     Endpoint : POST /api/auth/verify-otp
+     Auth     : Public
+     Body:
+       {
+         "email" : "rahul@example.com",
+         "otp"   : "123456",
+         "type"  : "EMAIL_VERIFY"   (default: EMAIL_VERIFY | PASSWORD_RESET)
+       }
+     Success 200:
+       { "success": true, "message": "OTP verified successfully" }
+     Errors:
+       400 — Email and OTP are required
+       400 — OTP not found. Request a new one.
+       400 — OTP expired. Request a new one.
+       400 — Invalid OTP
+       404 — User not found
+
+1.4  Resend OTP
+     Endpoint : POST /api/auth/resend-otp
+     Auth     : Public
+     Body:
+       {
+         "email" : "rahul@example.com",
+         "type"  : "EMAIL_VERIFY"   (EMAIL_VERIFY | PASSWORD_RESET)
+       }
+     Success 200:
+       { "success": true, "message": "OTP sent to your email" }
+     Errors:
+       404 — User not found
+
+1.5  Forgot Password (Send OTP)
+     Endpoint : POST /api/auth/forgot-password
+     Auth     : Public
+     Body:
+       { "email": "rahul@example.com" }
+     Success 200:
+       { "success": true, "message": "OTP sent to your email" }
+     Errors:
+       400 — Email required
+       404 — No account found with this email
+
+1.6  Reset Password
+     Endpoint : POST /api/auth/reset-password
+     Auth     : Public
+     Body:
+       {
+         "email"    : "rahul@example.com",
+         "otp"      : "123456",
+         "password" : "newpassword123"
+       }
+     Success 200:
+       { "success": true, "message": "Password reset successfully" }
+     Errors:
+       400 — All fields required
+       400 — Password must be at least 8 characters
+       400 — OTP not found / OTP expired / Invalid OTP
+       404 — User not found
+
+1.7  Set Password (Google users who need to set a password)
+     Endpoint : POST /api/auth/set-password
+     Auth     : Required (logged in)
+     Body:
+       {
+         "password"        : "newpassword123",
+         "confirmPassword" : "newpassword123"
+       }
+     Success 200:
+       { "ok": true }
+     Errors:
+       400 — Password must be at least 8 characters
+       400 — Passwords do not match
+       401 — Unauthorized
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 2. ONBOARDING & PROFILE SETUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2.1  Complete Profile (Onboarding — after email verify)
+     Endpoint : POST /api/onboarding
+     Auth     : Public (uses email to identify user)
+     Body:
+       {
+         "email"        : "rahul@example.com",
+         "name"         : "Rahul Sharma",
+         "phone"        : "9876543210",
+         "gender"       : "MALE",
+         "dob"          : "1995-06-15",
+         "height"       : 175,
+         "religion"     : "Hindu",
+         "caste"        : "Brahmin",
+         "motherTongue" : "Hindi",
+         "education"    : "B.Tech",
+         "profession"   : "Software Engineer",
+         "country"      : "India",
+         "city"         : "Delhi",
+         "aboutMe"      : "I love travelling..."
+       }
+     Success 200:
+       { "success": true }
+     Errors:
+       400 — Email required
+       403 — Email not verified
+       404 — User not found
+       500 — Server error
+
+2.2  Register Complete Profile (Google users)
+     Endpoint : POST /api/register/complete-profile
+     Auth     : Public (uses email)
+     Body     : Same as onboarding body above
+     Success  : { "success": true }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 3. PROFILE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3.1  Get My Profile
+     Endpoint : GET /api/profile
+     Auth     : Required
+     Response 200:
+       {
+         "id"               : "uuid",
+         "name"             : "Rahul Sharma",
+         "email"            : "rahul@example.com",
+         "phone"            : "9876543210",
+         "isPremium"        : false,
+         "isVerified"       : false,
+         "verificationBadge": false,
+         "profile"          : {
+           "gender"         : "MALE",
+           "dob"            : "1995-06-15T00:00:00.000Z",
+           "height"         : 175,
+           "religion"       : "Hindu",
+           "caste"          : "Brahmin",
+           "education"      : "B.Tech",
+           "profession"     : "Software Engineer",
+           "country"        : "India",
+           "city"           : "Delhi",
+           "aboutMe"        : "...",
+           "profileComplete": 80
+         },
+         "photos"           : [ { "id": "uuid", "url": "/uploads/photos/...", "isMain": 1 } ]
+       }
+     Errors:
+       401 — Unauthorized
+
+3.2  Update My Profile
+     Endpoint : PUT /api/profile
+     Auth     : Required
+     Body     : Any combination of profile fields:
+       {
+         "name"             : "Rahul Sharma",
+         "phone"            : "9876543210",
+         "gender"           : "MALE",
+         "dob"              : "1995-06-15",
+         "height"           : 175,
+         "weight"           : 70,
+         "religion"         : "Hindu",
+         "caste"            : "Brahmin",
+         "subCaste"         : "",
+         "motherTongue"     : "Hindi",
+         "education"        : "B.Tech",
+         "profession"       : "Software Engineer",
+         "income"           : "5-10 LPA",
+         "country"          : "India",
+         "state"            : "Delhi",
+         "city"             : "New Delhi",
+         "aboutMe"          : "...",
+         "maritalStatus"    : "NEVER_MARRIED",
+         "diet"             : "VEGETARIAN",
+         "smoking"          : "NO",
+         "drinking"         : "NO",
+         "partnerAgeMin"    : 22,
+         "partnerAgeMax"    : 30,
+         "partnerReligion"  : "Hindu",
+         "hidePhone"        : false,
+         "hidePhoto"        : false
+       }
+     Response 200: Same as GET /api/profile (updated user + profile + photos)
+     Errors:
+       401 — Unauthorized
+
+3.3  Get Any User's Profile (by ID)
+     Endpoint : GET /api/profile/[id]
+     Auth     : Required
+     Params   : id = user UUID
+     Response 200:
+       {
+         "id"              : "uuid",
+         "name"            : "Priya Singh",
+         "isPremium"       : true,
+         "verificationBadge": true,
+         "profile"         : { ...profile fields... },
+         "photos"          : [ { "url": "..." } ],
+         "interestStatus"  : "PENDING" | "ACCEPTED" | "REJECTED" | null,
+         "interestDirection": "sent" | "received" | null,
+         "interestId"      : "uuid" | null,
+         "isShortlisted"   : false
+       }
+     Errors:
+       401 — Unauthorized
+       403 — Profile unavailable (blocked)
+       404 — Not found
+
+3.4  Profile Options (dropdown values)
+     Endpoint : GET /api/profile-options
+     Auth     : Public
+     Response 200:
+       {
+         "religions"     : ["Hindu", "Muslim", "Christian", ...],
+         "educations"    : ["10th", "12th", "B.Tech", ...],
+         "professions"   : ["Software Engineer", "Doctor", ...],
+         "maritalStatuses": ["NEVER_MARRIED", "DIVORCED", ...],
+         "diets"         : ["VEGETARIAN", "NON_VEGETARIAN", ...],
+         "incomes"       : ["Below 2 LPA", "2-5 LPA", ...]
+       }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 4. PHOTO & DOCUMENT UPLOAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4.1  Upload Photo
+     Endpoint : POST /api/upload/photo
+     Auth     : Required
+     Content-Type: multipart/form-data
+     Form Fields:
+       photo  — image file (max 10MB, must be image/*)
+       isMain — "true" | "false"
+     Response 201:
+       {
+         "id"       : "uuid",
+         "userId"   : "uuid",
+         "url"      : "/uploads/photos/uuid_filename.jpg",
+         "isMain"   : 1,
+         "createdAt": "2026-04-21T..."
+       }
+     Errors:
+       400 — No file
+       400 — Max size 10MB
+       400 — Only images allowed
+       401 — Unauthorized
+
+4.2  Delete Photo
+     Endpoint : DELETE /api/upload/photo
+     Auth     : Required
+     Body:
+       { "photoId": "uuid" }
+     Response 200:
+       { "success": true }
+     Errors:
+       401 — Unauthorized
+
+4.3  Upload Document (for verification)
+     Endpoint : POST /api/upload/document
+     Auth     : Required
+     Content-Type: multipart/form-data
+     Form Fields:
+       document — file (max 5MB, JPG/PNG/WebP/PDF)
+       type     — "Aadhaar Card" | "PAN Card" | "Voter ID Card" | "Passport" | "Driving License"
+     Response 201:
+       {
+         "id"    : "uuid",
+         "type"  : "Aadhaar Card",
+         "status": "PENDING"
+       }
+     Errors:
+       400 — No file
+       400 — Invalid document type
+       400 — Max size 5MB
+       400 — Only JPG, PNG, WebP or PDF allowed
+       401 — Unauthorized
+
+4.4  Get My Documents
+     Endpoint : GET /api/upload/document
+     Auth     : Required
+     Response 200:
+       [
+         {
+           "id"        : "uuid",
+           "type"      : "Aadhaar Card",
+           "status"    : "PENDING" | "APPROVED" | "REJECTED",
+           "adminNote" : null | "Reason...",
+           "createdAt" : "2026-04-21T..."
+         }
+       ]
+
+4.5  Onboarding Photo Upload
+     Endpoint : POST /api/onboarding/photo
+     Auth     : Required
+     Content-Type: multipart/form-data
+     Form Fields: photo (image file)
+     Response 201: { "url": "/uploads/..." }
+
+4.6  Onboarding Document Upload
+     Endpoint : POST /api/onboarding/document
+     Auth     : Required
+     Content-Type: multipart/form-data
+     Form Fields: document (file), type (document type string)
+     Response 201: { "id": "uuid", "type": "...", "status": "PENDING" }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 5. MATCHES & SEARCH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5.1  Get Matches (Smart Matching)
+     Endpoint : GET /api/matches
+     Auth     : Required
+     Query Params (all optional):
+       page         — page number (default: 1)
+       limit        — results per page (default: 12)
+       gender       — MALE | FEMALE
+       religion     — Hindu | Muslim | Christian | ...
+       country      — India | USA | ...
+       state        — Delhi | Maharashtra | ...
+       city         — Mumbai | Delhi | ...
+       education    — B.Tech | MBBS | ...
+       profession   — Software Engineer | Doctor | ...
+       maritalStatus— NEVER_MARRIED | DIVORCED | ...
+       ageMin       — minimum age (e.g. 22)
+       ageMax       — maximum age (e.g. 35)
+       heightMin    — minimum height in cm
+       heightMax    — maximum height in cm
+     Response 200:
+       {
+         "users"      : [
+           {
+             "id"              : "uuid",
+             "name"            : "Priya Singh",
+             "isPremium"       : true,
+             "verificationBadge": true,
+             "profile"         : {
+               "gender"        : "FEMALE",
+               "dob"           : "1998-03-10T...",
+               "height"        : 162,
+               "religion"      : "Hindu",
+               "education"     : "MBA",
+               "profession"    : "Manager",
+               "city"          : "Mumbai",
+               "country"       : "India",
+               "profileComplete": 90
+             },
+             "photos"          : [ { "url": "/uploads/..." } ]
+           }
+         ],
+         "total"      : 150,
+         "page"       : 1,
+         "totalPages" : 13,
+         "isPremium"  : false,
+         "freeLimit"  : 5,
+         "isLimited"  : true
+       }
+     Note: Free users see max 5 profiles. Premium/trial users see all.
+     Errors:
+       401 — Unauthorized
+
+5.2  Search Profiles (Advanced Search)
+     Endpoint : GET /api/search
+     Auth     : Required
+     Query Params (all optional):
+       q            — keyword search (name, city, profession)
+       page, limit  — pagination
+       gender, religion, country, state, city
+       education, profession, maritalStatus
+       ageMin, ageMax, heightMin, heightMax
+     Response 200: Same structure as /api/matches response
+     Errors:
+       401 — Unauthorized
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 6. INTERESTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6.1  Send Interest
+     Endpoint : POST /api/interest
+     Auth     : Required
+     Body:
+       {
+         "receiverId": "uuid",
+         "message"   : "Hi, I liked your profile!"  (optional)
+       }
+     Response 201:
+       {
+         "id"        : "uuid",
+         "senderId"  : "uuid",
+         "receiverId": "uuid",
+         "status"    : "PENDING"
+       }
+     Errors:
+       401 — Unauthorized
+       409 — Interest already sent
+
+6.2  Get Interests (Received or Sent)
+     Endpoint : GET /api/interest?type=received
+     Auth     : Required
+     Query Params:
+       type — "received" (default) | "sent"
+     Response 200:
+       [
+         {
+           "id"        : "uuid",
+           "senderId"  : "uuid",
+           "receiverId": "uuid",
+           "status"    : "PENDING" | "ACCEPTED" | "REJECTED",
+           "message"   : "Hi...",
+           "createdAt" : "2026-04-21T...",
+           "sender"    : {
+             "id"     : "uuid",
+             "name"   : "Rahul Sharma",
+             "profile": { "gender": "MALE", "city": "Delhi", ... },
+             "photos" : [ { "url": "..." } ]
+           },
+           "receiver"  : null
+         }
+       ]
+     Errors:
+       401 — Unauthorized
+
+6.3  Accept / Reject Interest
+     Endpoint : PATCH /api/interest/[id]
+     Auth     : Required
+     Params   : id = interest UUID
+     Body:
+       { "status": "ACCEPTED" | "REJECTED" }
+     Response 200:
+       {
+         "id"        : "uuid",
+         "status"    : "ACCEPTED",
+         "updatedAt" : "2026-04-21T..."
+       }
+     Note: On ACCEPTED — a chat room is automatically created and profile
+           details are sent as the first message.
+     Errors:
+       401 — Unauthorized
+       404 — Not found (or not your interest to respond to)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 7. CHAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7.1  Get All Chat Rooms
+     Endpoint : GET /api/chat
+     Auth     : Required
+     Response 200:
+       [
+         {
+           "id"      : "uuid",
+           "userAId" : "uuid",
+           "userBId" : "uuid",
+           "userA"   : { "id": "uuid", "name": "...", "profile": {...}, "photos": [...] },
+           "userB"   : { "id": "uuid", "name": "...", "profile": {...}, "photos": [...] },
+           "messages": [ { last message object } ]
+         }
+       ]
+     Errors:
+       401 — Unauthorized
+
+7.2  Get Messages in a Room
+     Endpoint : GET /api/chat/[roomId]
+     Auth     : Required (must be member of room)
+     Params   : roomId = chat room UUID
+     Response 200:
+       [
+         {
+           "id"          : "uuid",
+           "chatRoomId"  : "uuid",
+           "senderId"    : "uuid",
+           "receiverId"  : "uuid",
+           "content"     : "Hello!",
+           "type"        : "TEXT" | "IMAGE" | "DOCUMENT" | "LOCATION",
+           "fileUrl"     : null | "/uploads/chat/...",
+           "fileName"    : null | "photo.jpg",
+           "fileSize"    : null | 204800,
+           "latitude"    : null | 28.6139,
+           "longitude"   : null | 77.2090,
+           "locationType": null | "current" | "live",
+           "isRead"      : 1,
+           "createdAt"   : "2026-04-21T..."
+         }
+       ]
+     Note: Also marks all messages as read for current user.
+     Errors:
+       401 — Unauthorized
+       403 — Forbidden (not a member of this room)
+
+7.3  Send Message
+     Endpoint : POST /api/chat/[roomId]
+     Auth     : Required (Premium or active free trial)
+     Params   : roomId = chat room UUID
+
+     For TEXT message (JSON):
+       Content-Type: application/json
+       Body: { "content": "Hello!", "type": "TEXT" }
+
+     For LOCATION message (JSON):
+       Body:
+         {
+           "type"           : "LOCATION",
+           "latitude"       : 28.6139,
+           "longitude"      : 77.2090,
+           "locationType"   : "current" | "live",
+           "locationExpiry" : "2026-04-21T12:00:00Z"  (for live location)
+         }
+
+     For IMAGE/DOCUMENT (multipart/form-data):
+       Content-Type: multipart/form-data
+       Form Fields:
+         file     — file (max 15MB)
+         type     — "IMAGE" | "DOCUMENT"
+
+     Response 201:
+       {
+         "id"         : "uuid",
+         "chatRoomId" : "uuid",
+         "senderId"   : "uuid",
+         "receiverId" : "uuid",
+         "content"    : "Hello!",
+         "type"       : "TEXT",
+         "isRead"     : 0,
+         "createdAt"  : "2026-04-21T...",
+         "_senderName": "Rahul Sharma"
+       }
+     Errors:
+       401 — Unauthorized
+       403 — Chat requires a Premium subscription
+       403 — Forbidden (not a member of this room)
+       400 — Empty message / No file
+
+7.4  Get Unread Message Count
+     Endpoint : GET /api/chat/unread
+     Auth     : Required
+     Response 200:
+       {
+         "total"  : 5,
+         "perRoom": { "roomUUID1": 3, "roomUUID2": 2 }
+       }
+
+7.5  Get Live Location for a Message
+     Endpoint : GET /api/chat/location/[msgId]
+     Auth     : Required
+     Params   : msgId = message UUID
+     Response 200:
+       {
+         "latitude"      : 28.6139,
+         "longitude"     : 77.2090,
+         "locationType"  : "live",
+         "locationExpiry": "2026-04-21T12:00:00Z",
+         "isExpired"     : false
+       }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 8. NOTIFICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8.1  Get Notifications
+     Endpoint : GET /api/notifications
+     Auth     : Required
+     Query Params:
+       skip  — offset (default: 0)
+       limit — results per page (default: 10)
+     Response 200:
+       {
+         "notifications": [
+           {
+             "id"       : "uuid",
+             "userId"   : "uuid",
+             "type"     : "INTEREST_RECEIVED" | "INTEREST_ACCEPTED" | "VERIFICATION_APPROVED"
+                          | "SUBSCRIPTION_EXPIRY" | "SYSTEM",
+             "title"    : "New Interest Received",
+             "message"  : "Rahul has sent you an interest request.",
+             "isRead"   : false,
+             "link"     : "/profile/uuid",
+             "createdAt": "2026-04-21T..."
+           }
+         ],
+         "unreadCount": 3,
+         "total"      : 25,
+         "hasMore"    : true
+       }
+     Errors:
+       401 — Unauthorized
+
+8.2  Mark Notification(s) as Read
+     Endpoint : PATCH /api/notifications
+     Auth     : Required
+     Body:
+       { "id": "uuid" }       — mark specific notification as read
+       {}                     — mark ALL notifications as read
+     Response 200:
+       { "success": true }
+     Errors:
+       401 — Unauthorized
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 9. PAYMENT (Cashfree)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Plans:
+  SILVER   — ₹749/month
+  GOLD     — ₹1499/month
+  PLATINUM — ₹2999/month
+
+9.1  Create Payment Order
+     Endpoint : POST /api/payment/create-order
+     Auth     : Required
+     Body:
+       { "plan": "GOLD" }   (SILVER | GOLD | PLATINUM)
+     Response 200:
+       {
+         "orderId"         : "MILAN_ABCD1234_1713700000000",
+         "paymentSessionId": "session_xyz...",
+         "orderAmount"     : 1499,
+         "plan"            : "GOLD"
+       }
+     Errors:
+       400 — Invalid plan
+       401 — Unauthorized
+       500 — Failed to create order
+
+9.2  Verify Payment (after redirect back)
+     Endpoint : POST /api/payment/verify
+     Auth     : Required
+     Body:
+       {
+         "orderId": "MILAN_ABCD1234_1713700000000",
+         "plan"   : "GOLD"
+       }
+     Response 200 (if paid):
+       {
+         "status"       : "PAID",
+         "isPremium"    : true,
+         "premiumExpiry": "2026-05-21T..."
+       }
+     Response 200 (if not paid):
+       { "status": "ACTIVE" | "PENDING" | "FAILED" }
+     Errors:
+       401 — Unauthorized
+       500 — Verification failed
+
+9.3  Payment Webhook (Cashfree → Server)
+     Endpoint : POST /api/payment/webhook
+     Auth     : Cashfree signature verification (x-webhook-signature header)
+     Body     : Cashfree webhook event JSON
+     Events handled:
+       PAYMENT_SUCCESS_WEBHOOK — activates premium, creates notification
+       PAYMENT_FAILED_WEBHOOK  — cancels subscription
+     Response 200:
+       { "ok": true }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 10. SHORTLIST & BLOCK & REPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+10.1  Get Shortlisted Profiles
+      Endpoint : GET /api/shortlist
+      Auth     : Required
+      Response 200:
+        [
+          {
+            "id"      : "uuid",
+            "ownerId" : "uuid",
+            "targetId": "uuid",
+            "target"  : { "id": "uuid", "name": "...", "profile": {...}, "photos": [...] },
+            "createdAt": "2026-04-21T..."
+          }
+        ]
+
+10.2  Add / Remove Shortlist (Toggle)
+      Endpoint : POST /api/shortlist
+      Auth     : Required
+      Body:
+        { "targetId": "uuid" }
+      Response 200 (removed):
+        { "shortlisted": false }
+      Response 201 (added):
+        { "shortlisted": true }
+      Errors:
+        401 — Unauthorized
+
+10.3  Block / Unblock User (Toggle)
+      Endpoint : POST /api/block
+      Auth     : Required
+      Body:
+        { "blockedId": "uuid" }
+      Response 200 (unblocked):
+        { "blocked": false }
+      Response 200 (blocked):
+        { "blocked": true }
+      Errors:
+        400 — blockedId required
+        401 — Unauthorized
+
+10.4  Check Block Status
+      Endpoint : GET /api/block?userId=uuid
+      Auth     : Required
+      Response 200:
+        { "blocked": true | false }
+
+10.5  Report a User
+      Endpoint : POST /api/report
+      Auth     : Required
+      Body:
+        {
+          "targetId": "uuid",
+          "reason"  : "Fake Profile" | "Harassment" | "Spam" | ...,
+          "details" : "This person is sending inappropriate messages."
+        }
+      Response 201:
+        {
+          "id"        : "uuid",
+          "reporterId": "uuid",
+          "targetId"  : "uuid",
+          "reason"    : "Fake Profile",
+          "details"   : "...",
+          "status"    : "PENDING",
+          "createdAt" : "2026-04-21T..."
+        }
+      Errors:
+        401 — Unauthorized
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 11. CHATBOT (AI Support)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+11.1  Initialize Chatbot Tables
+      Endpoint : POST /api/chatbot/init
+      Auth     : Public
+      Body     : (empty)
+      Response 200:
+        { "ok": true }
+
+11.2  Send Message to Chatbot / Get Bot Reply
+      Endpoint : POST /api/chatbot/message
+      Auth     : Public
+      Body:
+        {
+          "sessionId": null,          (null for new session, UUID for existing)
+          "message"  : "How to register?",
+          "userId"   : "uuid"         (optional, for logged-in users)
+        }
+      Response 200:
+        {
+          "sessionId": "uuid",
+          "status"   : "bot" | "live" | "ended",
+          "botReply" : "📝 **How to Register on Vivah Milan:**...",
+          "intent"   : "register" | "login" | "premium" | "profile" | "matches"
+                       | "chat" | "verification" | "payment" | "agent" | "greeting" | "fallback"
+        }
+      Note: Supports Hindi and English. Type "9" or "agent" to connect to live support.
+      Errors:
+        400 — Empty message
+        404 — Session not found
+
+11.3  Get Chatbot Session Messages
+      Endpoint : GET /api/chatbot/message?sessionId=uuid
+      Auth     : Public
+      Response 200:
+        {
+          "messages": [
+            {
+              "id"       : "uuid",
+              "sessionId": "uuid",
+              "sender"   : "user" | "bot" | "admin",
+              "content"  : "Hello!",
+              "createdAt": "2026-04-21T..."
+            }
+          ],
+          "session": {
+            "id"      : "uuid",
+            "status"  : "bot" | "live" | "ended",
+            "language": "en" | "hi"
+          }
+        }
+
+11.4  Admin — Get All Live Support Sessions
+      Endpoint : GET /api/chatbot/support
+      Auth     : Required (ADMIN only)
+      Response 200:
+        [
+          {
+            "id"          : "uuid",
+            "userId"      : "uuid" | null,
+            "userName"    : "Rahul Sharma",
+            "userEmail"   : "rahul@example.com",
+            "status"      : "live" | "bot",
+            "lastMessage" : { message object },
+            "unreadCount" : 3,
+            "updatedAt"   : "2026-04-21T..."
+          }
+        ]
+
+11.5  Admin — Get Messages for a Session
+      Endpoint : GET /api/chatbot/support?sessionId=uuid
+      Auth     : Required (ADMIN only)
+      Response 200:
+        { "messages": [...], "session": {...} }
+
+11.6  Admin — Send Message or End Chat
+      Endpoint : POST /api/chatbot/support
+      Auth     : Required (ADMIN only)
+      Body (send message):
+        { "sessionId": "uuid", "message": "How can I help you?" }
+      Body (end chat):
+        { "sessionId": "uuid", "action": "end" }
+      Response 200:
+        { "ok": true }
+        { "ok": true, "status": "ended" }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 12. LOCATION (Country / State / City)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+12.1  Get All Countries
+      Endpoint : GET /api/location/countries
+      Auth     : Public
+      Response 200:
+        [
+          { "isoCode": "IN", "name": "India", "flag": "🇮🇳", "phonecode": "91" },
+          { "isoCode": "US", "name": "United States", "flag": "🇺🇸", "phonecode": "1" },
+          ...
+        ]
+
+12.2  Get States of a Country
+      Endpoint : GET /api/location/states?country=IN
+      Auth     : Public
+      Query Params:
+        country — ISO country code (e.g. IN, US, GB)
+      Response 200:
+        [
+          { "isoCode": "DL", "name": "Delhi", "countryCode": "IN" },
+          { "isoCode": "MH", "name": "Maharashtra", "countryCode": "IN" },
+          ...
+        ]
+
+12.3  Get Cities of a State
+      Endpoint : GET /api/location/cities?country=IN&state=DL
+      Auth     : Public
+      Query Params:
+        country — ISO country code
+        state   — ISO state code
+      Response 200:
+        [
+          { "name": "New Delhi" },
+          { "name": "Dwarka" },
+          ...
+        ]
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 13. PUSH NOTIFICATIONS (Web Push)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+13.1  Subscribe to Push Notifications
+      Endpoint : POST /api/push/subscribe
+      Auth     : Required
+      Body:
+        {
+          "endpoint": "https://fcm.googleapis.com/...",
+          "keys"    : {
+            "p256dh": "BNcRdreALRFXTkOOUHK...",
+            "auth"  : "tBHItJI5svbpez7KI4CCXg=="
+          }
+        }
+      Response 200:
+        { "success": true }
+      Errors:
+        400 — Invalid subscription
+        401 — Unauthorized
+
+13.2  Unsubscribe from Push Notifications
+      Endpoint : DELETE /api/push/subscribe
+      Auth     : Required
+      Body:
+        { "endpoint": "https://fcm.googleapis.com/..." }
+      Response 200:
+        { "success": true }
+
+13.3  Check Push Subscription Status
+      Endpoint : GET /api/push/test
+      Auth     : Required
+      Response 200:
+        {
+          "vapidPublicKey" : "SET" | "MISSING",
+          "vapidPrivateKey": "SET" | "MISSING",
+          "subscriptions"  : 1,
+          "subEndpoints"   : ["https://fcm.googleapis.com/..."]
+        }
+
+13.4  Send Test Push Notification
+      Endpoint : POST /api/push/test
+      Auth     : Required
+      Body     : (empty)
+      Response 200:
+        { "success": true, "message": "Push sent!" }
+      Errors:
+        500 — Push error message
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 14. REMINDERS (Dashboard)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+14.1  Get Reminders & Premium Status
+      Endpoint : POST /api/reminders
+      Auth     : Required
+      Body     : (empty)
+      Response 200:
+        {
+          "created"     : ["premium_expiry", "birthday"],
+          "premiumInfo" : {
+            "isPremium" : true,
+            "plan"      : "GOLD",
+            "expiry"    : "2026-05-21T...",
+            "daysLeft"  : 30
+          },
+          "birthdayInfo": {
+            "isBirthday" : false,
+            "daysUntil"  : 45
+          }
+        }
+      Note: Also creates notifications for premium expiry (2 days before)
+            and birthday (on the day). Called on every dashboard load.
+      Errors:
+        401 — Unauthorized
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 15. ADMIN PANEL APIs  (Role: ADMIN only — returns 403 for non-admins)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+15.1  Get All Users
+      Endpoint : GET /api/admin/users
+      Auth     : ADMIN
+      Query Params:
+        page   — page number (default: 1)
+        limit  — results per page (default: 50)
+        search — search by name or email
+      Response 200:
+        {
+          "users"     : [
+            {
+              "id"              : "uuid",
+              "name"            : "Rahul Sharma",
+              "email"           : "rahul@example.com",
+              "role"            : "USER",
+              "isActive"        : true,
+              "isPremium"       : false,
+              "adminVerified"   : true,
+              "verificationBadge": false,
+              "createdAt"       : "2026-04-21T...",
+              "profile"         : { ...profile fields... },
+              "photos"          : [ { "url": "..." } ],
+              "documents"       : [ { "id": "uuid", "type": "Aadhaar Card", "status": "PENDING" } ]
+            }
+          ],
+          "total"     : 500,
+          "totalPages": 10
+        }
+
+15.2  Update User (Approve / Suspend / Edit)
+      Endpoint : PATCH /api/admin/users/[id]
+      Auth     : ADMIN
+      Params   : id = user UUID
+      Body (any combination):
+        {
+          "adminVerified": true,    — approve user (also activates free trial)
+          "isActive"     : false,   — suspend user
+          "isPremium"    : true,    — manually grant premium
+          "role"         : "ADMIN"  — change role
+        }
+      Response 200: Updated user object
+      Note: On adminVerified=true, sends approval email + notification + push.
+
+15.3  Delete User
+      Endpoint : DELETE /api/admin/users/[id]
+      Auth     : ADMIN
+      Params   : id = user UUID
+      Response 200:
+        { "success": true }
+
+15.4  Get Dashboard Stats
+      Endpoint : GET /api/admin/stats
+      Auth     : ADMIN
+      Response 200:
+        {
+          "totalUsers"          : 1500,
+          "premiumUsers"        : 120,
+          "pendingVerifications": 8,
+          "pendingReports"      : 3,
+          "totalMessages"       : 45000,
+          "newUsersToday"       : 12,
+          "newUsersMonth"       : 230,
+          "pendingAdminVerify"  : 15,
+          "totalSubscriptions"  : 200,
+          "activeSubscriptions" : 120,
+          "totalInterests"      : 8500,
+          "totalChats"          : 600,
+          "maleUsers"           : 800,
+          "femaleUsers"         : 700
+        }
+
+15.5  Get All Subscriptions
+      Endpoint : GET /api/admin/subscriptions
+      Auth     : ADMIN
+      Response 200:
+        [
+          {
+            "id"       : "uuid",
+            "userId"   : "uuid",
+            "plan"     : "GOLD",
+            "status"   : "ACTIVE",
+            "amount"   : 1499,
+            "currency" : "INR",
+            "startDate": "2026-04-21T...",
+            "endDate"  : "2026-05-21T...",
+            "user"     : { "name": "Rahul Sharma", "email": "rahul@example.com" }
+          }
+        ]
+
+15.6  Get Pending Document Verifications
+      Endpoint : GET /api/admin/verifications
+      Auth     : ADMIN
+      Response 200:
+        [
+          {
+            "id"       : "uuid",
+            "userId"   : "uuid",
+            "type"     : "Aadhaar Card",
+            "url"      : "/uploads/documents/...",
+            "status"   : "PENDING",
+            "createdAt": "2026-04-21T...",
+            "user"     : { "id": "uuid", "name": "Rahul", "email": "rahul@example.com" }
+          }
+        ]
+
+15.7  Approve / Reject Document
+      Endpoint : PATCH /api/admin/verifications
+      Auth     : ADMIN
+      Body:
+        {
+          "docId"    : "uuid",
+          "status"   : "APPROVED" | "REJECTED",
+          "adminNote": "Document is clear."
+        }
+      Response 200: Updated document object
+      Note: On APPROVED — user gets isVerified=true, verificationBadge=true + notification.
+
+15.8  Get All Reports
+      Endpoint : GET /api/admin/reports
+      Auth     : ADMIN
+      Response 200:
+        [
+          {
+            "id"       : "uuid",
+            "reason"   : "Fake Profile",
+            "details"  : "...",
+            "status"   : "PENDING",
+            "reporter" : { "id": "uuid", "name": "...", "email": "..." },
+            "target"   : { "id": "uuid", "name": "...", "email": "..." },
+            "createdAt": "2026-04-21T..."
+          }
+        ]
+
+15.9  Update Report Status
+      Endpoint : PATCH /api/admin/reports
+      Auth     : ADMIN
+      Body:
+        { "reportId": "uuid", "status": "RESOLVED" | "DISMISSED" }
+      Response 200: Updated report object
+
+15.10 Get / Update Site Config
+      Endpoint : GET /api/admin/siteconfig
+      Auth     : Public (GET) | ADMIN (POST)
+      GET Response 200:
+        {
+          "freeTrialDays"   : "1",
+          "siteName"        : "Vivah Dwar",
+          "maintenanceMode" : "false",
+          ...
+        }
+      POST Body:
+        { "key": "freeTrialDays", "value": "3" }
+      POST Response 200:
+        { "key": "freeTrialDays", "value": "3" }
+
+15.11 Get / Create Plan Config
+      Endpoint : GET /api/admin/plans
+      Auth     : Public (GET) | ADMIN (POST)
+      GET Response 200:
+        [
+          {
+            "plan"        : "GOLD",
+            "displayName" : "Gold Plan",
+            "price"       : 1499,
+            "currency"    : "INR",
+            "durationDays": 30,
+            "permissions" : "{\"chat\":true,\"unlimitedInterests\":true}",
+            "description" : "Best for active users",
+            "isActive"    : true
+          }
+        ]
+      POST Body:
+        {
+          "plan"        : "GOLD",
+          "displayName" : "Gold Plan",
+          "price"       : 1499,
+          "currency"    : "INR",
+          "durationDays": 30,
+          "permissions" : { "chat": true, "unlimitedInterests": true },
+          "description" : "Best for active users",
+          "isActive"    : true
+        }
+      POST Response 200/201: Created or updated plan object
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 16. QUICK REFERENCE — ALL ENDPOINTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METHOD  ENDPOINT                              AUTH        DESCRIPTION
+------  ------------------------------------  ----------  -------------------------
+POST    /api/register                         Public      Register new user
+POST    /api/auth/verify-otp                  Public      Verify email OTP
+POST    /api/auth/resend-otp                  Public      Resend OTP
+POST    /api/auth/forgot-password             Public      Send password reset OTP
+POST    /api/auth/reset-password              Public      Reset password with OTP
+POST    /api/auth/set-password                Required    Set password (Google users)
+GET     /api/auth/[...nextauth]               Public      NextAuth session
+POST    /api/auth/[...nextauth]               Public      NextAuth sign in/out
+
+POST    /api/onboarding                       Public      Complete profile (onboarding)
+POST    /api/register/complete-profile        Public      Complete profile (Google)
+
+GET     /api/profile                          Required    Get my profile
+PUT     /api/profile                          Required    Update my profile
+GET     /api/profile/[id]                     Required    Get any user's profile
+GET     /api/profile-options                  Public      Get dropdown options
+
+POST    /api/upload/photo                     Required    Upload profile photo
+DELETE  /api/upload/photo                     Required    Delete photo
+POST    /api/upload/document                  Required    Upload ID document
+GET     /api/upload/document                  Required    Get my documents
+POST    /api/onboarding/photo                 Required    Upload photo (onboarding)
+POST    /api/onboarding/document              Required    Upload doc (onboarding)
+
+GET     /api/matches                          Required    Get smart matches
+GET     /api/search                           Required    Advanced search
+
+POST    /api/interest                         Required    Send interest
+GET     /api/interest                         Required    Get interests (sent/received)
+PATCH   /api/interest/[id]                    Required    Accept/Reject interest
+
+GET     /api/chat                             Required    Get all chat rooms
+GET     /api/chat/[roomId]                    Required    Get messages in room
+POST    /api/chat/[roomId]                    Premium     Send message
+GET     /api/chat/unread                      Required    Get unread count
+GET     /api/chat/location/[msgId]            Required    Get live location
+
+GET     /api/notifications                    Required    Get notifications
+PATCH   /api/notifications                    Required    Mark as read
+
+POST    /api/payment/create-order             Required    Create Cashfree order
+POST    /api/payment/verify                   Required    Verify payment
+POST    /api/payment/webhook                  Cashfree    Payment webhook
+
+GET     /api/shortlist                        Required    Get shortlisted profiles
+POST    /api/shortlist                        Required    Add/remove shortlist
+POST    /api/block                            Required    Block/unblock user
+GET     /api/block                            Required    Check block status
+POST    /api/report                           Required    Report a user
+
+POST    /api/chatbot/init                     Public      Init chatbot tables
+POST    /api/chatbot/message                  Public      Send message to bot
+GET     /api/chatbot/message                  Public      Get session messages
+GET     /api/chatbot/support                  ADMIN       Get live sessions
+POST    /api/chatbot/support                  ADMIN       Admin reply / end chat
+
+GET     /api/location/countries               Public      Get all countries
+GET     /api/location/states                  Public      Get states of country
+GET     /api/location/cities                  Public      Get cities of state
+
+POST    /api/push/subscribe                   Required    Subscribe to push
+DELETE  /api/push/subscribe                   Required    Unsubscribe from push
+GET     /api/push/test                        Required    Check push status
+POST    /api/push/test                        Required    Send test push
+
+POST    /api/reminders                        Required    Get reminders & premium info
+
+GET     /api/admin/users                      ADMIN       List all users
+PATCH   /api/admin/users/[id]                 ADMIN       Update user
+DELETE  /api/admin/users/[id]                 ADMIN       Delete user
+GET     /api/admin/stats                      ADMIN       Dashboard stats
+GET     /api/admin/subscriptions              ADMIN       All subscriptions
+GET     /api/admin/verifications              ADMIN       Pending verifications
+PATCH   /api/admin/verifications              ADMIN       Approve/reject document
+GET     /api/admin/reports                    ADMIN       All reports
+PATCH   /api/admin/reports                    ADMIN       Update report status
+GET     /api/admin/siteconfig                 Public      Get site config
+POST    /api/admin/siteconfig                 ADMIN       Update site config
+GET     /api/admin/plans                      Public      Get plan configs
+POST    /api/admin/plans                      ADMIN       Create/update plan
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ COMMON HTTP STATUS CODES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  200 — OK (success)
+  201 — Created (new resource)
+  400 — Bad Request (missing/invalid fields)
+  401 — Unauthorized (not logged in)
+  403 — Forbidden (no permission / premium required)
+  404 — Not Found
+  409 — Conflict (duplicate entry)
+  500 — Internal Server Error
+
+================================================================================
+ END OF DOCUMENTATION
+================================================================================

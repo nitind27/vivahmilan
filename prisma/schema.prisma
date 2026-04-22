@@ -70,6 +70,7 @@ model user {
   accounts          account[]
   sessions          session[]
   profile           profile?
+  kundali           kundali?
   photos            photo[]
   sentInterests     interest[]    @relation("SentInterests")
   receivedInterests interest[]    @relation("ReceivedInterests")
@@ -432,4 +433,23 @@ enum OTPType {
   EMAIL_VERIFY
   PHONE_VERIFY
   PASSWORD_RESET
+}
+
+model kundali {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  birthTime          DateTime
+  birthPlace         String
+  lat                Float
+  lng                Float
+  lagna              String
+  rashi              String
+  nakshatra          String
+  manglik            Boolean  @default(false)
+  planetaryPositions String   @db.Text
+  dashaSequence      String   @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

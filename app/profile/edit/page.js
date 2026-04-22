@@ -14,9 +14,11 @@ import {
   getExtraFields, getMotherTongues, getSects, getGotra, RELIGION_DATA
 } from '@/lib/religionData';
 import { getCastesByReligion } from '@/lib/casteData';
+import BirthDetailsForm from '@/components/BirthDetailsForm';
+import KundaliChart from '@/components/KundaliChart';
 
 // ── Reusable field components ─────────────────────────────────────────────────
-const inputCls = "w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 dark:focus:ring-pink-900/20 transition-all";
+const inputCls = "w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/20 transition-all";
 const selectCls = inputCls + " appearance-none cursor-pointer";
 const labelCls = "block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide";
 
@@ -57,7 +59,7 @@ function RadioGroup({ label, value, onChange, options }) {
       <div className="flex flex-wrap gap-2">
         {options.map(o => (
           <button key={o} type="button" onClick={() => onChange(o)}
-            className={`px-3 py-1.5 rounded-xl text-sm border-2 transition-all ${value === o ? 'gradient-bg text-white border-transparent' : 'border-gray-200 dark:border-gray-600 hover:border-pink-300'}`}>
+            className={`px-3 py-1.5 rounded-xl text-sm border-2 transition-all ${value === o ? 'vd-gradient-gold text-white border-transparent' : 'border-gray-200 dark:border-gray-600 hover:border-vd-primary'}`}>
             {o}
           </button>
         ))}
@@ -99,6 +101,8 @@ function EditProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savedSteps, setSavedSteps] = useState([]);
+  const [kundali, setKundali] = useState(null);
+  const [kundaliLoading, setKundaliLoading] = useState(false);
 
   const [form, setForm] = useState({
     // Basic
@@ -192,6 +196,9 @@ function EditProfilePage() {
       }));
       setLoading(false);
     });
+
+    // Fetch existing kundali
+    fetch('/api/kundali/me').then(r => r.ok ? r.json() : null).then(data => setKundali(data)).catch(() => {});
   }, [status]);
 
   const saveCurrentStep = async () => {
@@ -233,7 +240,7 @@ function EditProfilePage() {
   })();
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg dark:bg-vd-bg">
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 pt-24 space-y-4">
         {[...Array(5)].map((_, i) => <div key={i} className="h-14 skeleton rounded-2xl" />)}
@@ -242,14 +249,14 @@ function EditProfilePage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-16">
 
         {/* Welcome banner for new Google users */}
         {isWelcome && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            className="mb-6 gradient-bg rounded-2xl p-5 text-white flex items-start gap-4">
+            className="mb-6 vd-gradient-gold rounded-2xl p-5 text-white flex items-start gap-4">
             <div className="text-3xl flex-shrink-0">🎉</div>
             <div>
               <p className="font-bold text-lg">Welcome to Vivah Milan!</p>
@@ -271,7 +278,7 @@ function EditProfilePage() {
               <circle cx="18" cy="18" r="15.9" fill="none" stroke="#f3f4f6" strokeWidth="3" />
               <circle cx="18" cy="18" r="15.9" fill="none" stroke="url(#grad)" strokeWidth="3"
                 strokeDasharray={`${profileComplete} ${100 - profileComplete}`} strokeLinecap="round" />
-              <defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#ec4899" /><stop offset="100%" stopColor="#8b5cf6" /></linearGradient></defs>
+              <defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#C8A45C" /><stop offset="100%" stopColor="#E5C88B" /></linearGradient></defs>
             </svg>
             <span className="absolute inset-0 flex items-center justify-center text-xs font-bold">{profileComplete}%</span>
           </div>
@@ -281,7 +288,7 @@ function EditProfilePage() {
         <div className="flex gap-1 overflow-x-auto pb-2 mb-6 scrollbar-hide">
           {STEPS.map((s, i) => (
             <button key={s.id} onClick={() => setStep(i)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all flex-shrink-0 ${step === i ? 'gradient-bg text-white shadow-md' : savedSteps.includes(i) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-pink-300'}`}>
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all flex-shrink-0 ${step === i ? 'vd-gradient-gold text-white shadow-md' : savedSteps.includes(i) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-vd-primary'}`}>
               {savedSteps.includes(i) && step !== i ? <Check className="w-3 h-3" /> : <s.icon className="w-3 h-3" />}
               {s.label}
             </button>
@@ -291,12 +298,12 @@ function EditProfilePage() {
         {/* Step content */}
         <AnimatePresence mode="wait">
           <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-            className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+            className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl border border-vd-border shadow-sm p-6">
 
             {/* ── STEP 0: Basic Info ── */}
             {step === 0 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><User className="w-5 h-5 text-pink-500" /> Basic Information</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><User className="w-5 h-5 text-vd-primary" /> Basic Information</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2"><Input label="Full Name" value={form.name} onChange={v => set('name', v)} placeholder="Your full name" /></div>
                   <Select label="Gender" value={form.gender} onChange={v => set('gender', v)} options={[{ val: 'MALE', label: 'Male' }, { val: 'FEMALE', label: 'Female' }, { val: 'OTHER', label: 'Other' }]} />
@@ -315,7 +322,7 @@ function EditProfilePage() {
             {/* ── STEP 1: Religion ── */}
             {step === 1 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-pink-500" /> Religion & Community</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-vd-primary" /> Religion & Community</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <Select label="Religion" value={form.religion} onChange={v => { set('religion', v); set('caste', ''); set('sect', ''); set('gotra', ''); }} options={ALL_RELIGIONS} />
                   {form.religion && (
@@ -351,7 +358,7 @@ function EditProfilePage() {
 
                 {/* Hindu Horoscope Section */}
                 {horoConfig.required && form.religion === 'Hindu' && (
-                  <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-700">
+                  <div className="mt-6 pt-5 border-t border-vd-border">
                     <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
                       <span className="text-xl">🔯</span> Horoscope / Kundli Details
                     </h3>
@@ -365,6 +372,29 @@ function EditProfilePage() {
                         <RadioGroup label="Kundli Match Required?" value={form.kundliMatch} onChange={v => set('kundliMatch', v)} options={horoConfig.kundliMatch || ['Must Match', 'Preferred', 'Not Required']} />
                       </div>
                     </div>
+
+                    {/* Kundali generation — only when Must Match */}
+                    {form.kundliMatch === 'Must Match' && (
+                      <div className="mt-4">
+                        {kundali ? (
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-sm font-semibold text-vd-text-heading flex items-center gap-2">🪐 Your Kundali</p>
+                              <button type="button" onClick={() => setKundali(null)}
+                                className="text-xs text-vd-primary hover:text-vd-primary-dark underline">
+                                Regenerate
+                              </button>
+                            </div>
+                            <KundaliChart kundali={kundali} />
+                          </div>
+                        ) : (
+                          <BirthDetailsForm
+                            onSubmit={(data) => { setKundali(data); setKundaliLoading(false); }}
+                            loading={kundaliLoading}
+                          />
+                        )}
+                      </div>
+                    )}
                     <div className="mt-3 p-3 bg-orange-50 dark:bg-orange-900/10 rounded-xl text-xs text-orange-700 dark:text-orange-400">
                       💡 Kundli details help in finding compatible matches based on Vedic astrology.
                     </div>
@@ -383,7 +413,7 @@ function EditProfilePage() {
             {/* ── STEP 2: Location ── */}
             {step === 2 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><MapPin className="w-5 h-5 text-pink-500" /> Location</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><MapPin className="w-5 h-5 text-vd-primary" /> Location</h2>
                 <LocationPicker
                   country={form.country}
                   state={form.state}
@@ -398,7 +428,7 @@ function EditProfilePage() {
             {/* ── STEP 3: Career ── */}
             {step === 3 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-pink-500" /> Education & Career</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-vd-primary" /> Education & Career</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <Select label="Highest Education" value={form.education} onChange={v => set('education', v)} options={EDUCATIONS} />
                   <Select label="Profession" value={form.profession} onChange={v => set('profession', v)} options={PROFESSIONS} />
@@ -410,7 +440,7 @@ function EditProfilePage() {
             {/* ── STEP 4: Lifestyle ── */}
             {step === 4 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Heart className="w-5 h-5 text-pink-500" /> Lifestyle & Privacy</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Heart className="w-5 h-5 text-vd-primary" /> Lifestyle & Privacy</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <Select label="Diet" value={form.diet} onChange={v => set('diet', v)} options={DIETS} />
                   <div className="col-span-2">
@@ -420,11 +450,11 @@ function EditProfilePage() {
                     <RadioGroup label="Drinking" value={form.drinking} onChange={v => set('drinking', v)} options={['NO', 'OCCASIONALLY', 'YES']} />
                   </div>
                 </div>
-                <div className="border-t border-gray-100 dark:border-gray-700 pt-4 space-y-3">
+                <div className="border-t border-vd-border pt-4 space-y-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Privacy Settings</p>
                   {[{ key: 'hidePhone', label: 'Hide phone number from non-premium users' }, { key: 'hidePhoto', label: 'Hide photos from non-premium users' }].map(s => (
                     <label key={s.key} className="flex items-center gap-3 cursor-pointer">
-                      <div onClick={() => set(s.key, !form[s.key])} className={`w-11 h-6 rounded-full transition-all relative flex-shrink-0 ${form[s.key] ? 'gradient-bg' : 'bg-gray-200 dark:bg-gray-600'}`}>
+                      <div onClick={() => set(s.key, !form[s.key])} className={`w-11 h-6 rounded-full transition-all relative flex-shrink-0 ${form[s.key] ? 'vd-gradient-gold' : 'bg-gray-200 dark:bg-gray-600'}`}>
                         <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form[s.key] ? 'left-6' : 'left-1'}`} />
                       </div>
                       <span className="text-sm text-gray-600 dark:text-gray-400">{s.label}</span>
@@ -437,7 +467,7 @@ function EditProfilePage() {
             {/* ── STEP 5: Family ── */}
             {step === 5 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-pink-500" /> Family Details</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-vd-primary" /> Family Details</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <Select label="Family Type" value={form.familyType} onChange={v => set('familyType', v)} options={FAMILY_TYPES} />
                   <Select label="Family Status" value={form.familyStatus} onChange={v => set('familyStatus', v)} options={FAMILY_STATUS} />
@@ -451,7 +481,7 @@ function EditProfilePage() {
             {/* ── STEP 6: Partner Preferences ── */}
             {step === 6 && (
               <div className="space-y-5">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Heart className="w-5 h-5 text-pink-500" /> Partner Preferences</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Heart className="w-5 h-5 text-vd-primary" /> Partner Preferences</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <Input label="Min Age" value={form.partnerAgeMin} onChange={v => set('partnerAgeMin', v)} type="number" placeholder="22" />
                   <Input label="Max Age" value={form.partnerAgeMax} onChange={v => set('partnerAgeMax', v)} type="number" placeholder="35" />
@@ -476,9 +506,9 @@ function EditProfilePage() {
             {/* ── STEP 7: Photos & Documents ── */}
             {step === 7 && (
               <div className="space-y-8">
-                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-pink-500" /> Photos & ID Verification</h2>
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-vd-primary" /> Photos & ID Verification</h2>
                 <PhotoUploadSection />
-                <div className="border-t border-gray-100 dark:border-gray-700 pt-6">
+                <div className="border-t border-vd-border pt-6">
                   <DocumentUploadSection />
                 </div>
               </div>
@@ -489,26 +519,26 @@ function EditProfilePage() {
         {/* Navigation buttons */}
         <div className="flex items-center justify-between mt-6">
           <button onClick={() => step > 0 && setStep(s => s - 1)} disabled={step === 0}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium disabled:opacity-40 hover:border-pink-300 transition-colors">
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium disabled:opacity-40 hover:border-vd-primary transition-colors">
             <ChevronLeft className="w-4 h-4" /> Previous
           </button>
 
           <div className="flex gap-2">
             {/* Save only */}
             <button onClick={saveCurrentStep} disabled={saving}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-pink-400 text-pink-600 dark:text-pink-400 text-sm font-semibold hover:bg-pink-50 dark:hover:bg-pink-900/10 disabled:opacity-60 transition-all">
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-vd-primary text-vd-primary dark:text-vd-primary text-sm font-semibold hover:bg-vd-accent-soft dark:hover:bg-vd-accent/10 disabled:opacity-60 transition-all">
               <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save'}
             </button>
 
             {/* Save & Next */}
             {step < STEPS.length - 1 ? (
               <button onClick={saveAndNext} disabled={saving}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl vd-gradient-gold text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
                 Save & Next <ChevronRight className="w-4 h-4" />
               </button>
             ) : (
               <button onClick={async () => { await saveCurrentStep(); router.push('/dashboard'); }} disabled={saving}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl vd-gradient-gold text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
                 <Check className="w-4 h-4" /> Finish
               </button>
             )}
@@ -519,7 +549,7 @@ function EditProfilePage() {
         <div className="flex justify-center gap-2 mt-4">
           {STEPS.map((_, i) => (
             <button key={i} onClick={() => setStep(i)}
-              className={`transition-all rounded-full ${i === step ? 'w-6 h-2 gradient-bg' : savedSteps.includes(i) ? 'w-2 h-2 bg-green-400' : 'w-2 h-2 bg-gray-300 dark:bg-gray-600'}`} />
+              className={`transition-all rounded-full ${i === step ? 'w-6 h-2 vd-gradient-gold' : savedSteps.includes(i) ? 'w-2 h-2 bg-green-400' : 'w-2 h-2 bg-gray-300 dark:bg-gray-600'}`} />
           ))}
         </div>
       </div>
@@ -531,8 +561,8 @@ function EditProfilePage() {
 export default function EditProfilePageWrapper() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-vd-bg flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <EditProfilePage />

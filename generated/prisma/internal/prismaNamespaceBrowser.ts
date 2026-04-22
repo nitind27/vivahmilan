@@ -66,11 +66,13 @@ export const ModelName = {
   profileoption: 'profileoption',
   planconfig: 'planconfig',
   siteconfig: 'siteconfig',
+  pushsubscription: 'pushsubscription',
   subscription: 'subscription',
   document: 'document',
   report: 'report',
   block: 'block',
-  otp: 'otp'
+  otp: 'otp',
+  kundali: 'kundali'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -341,6 +343,18 @@ export const SiteconfigScalarFieldEnum = {
 export type SiteconfigScalarFieldEnum = (typeof SiteconfigScalarFieldEnum)[keyof typeof SiteconfigScalarFieldEnum]
 
 
+export const PushsubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  createdAt: 'createdAt'
+} as const
+
+export type PushsubscriptionScalarFieldEnum = (typeof PushsubscriptionScalarFieldEnum)[keyof typeof PushsubscriptionScalarFieldEnum]
+
+
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -406,6 +420,26 @@ export const OtpScalarFieldEnum = {
 } as const
 
 export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
+
+
+export const KundaliScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  birthTime: 'birthTime',
+  birthPlace: 'birthPlace',
+  lat: 'lat',
+  lng: 'lng',
+  lagna: 'lagna',
+  rashi: 'rashi',
+  nakshatra: 'nakshatra',
+  manglik: 'manglik',
+  planetaryPositions: 'planetaryPositions',
+  dashaSequence: 'dashaSequence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type KundaliScalarFieldEnum = (typeof KundaliScalarFieldEnum)[keyof typeof KundaliScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -611,6 +645,17 @@ export const siteconfigOrderByRelevanceFieldEnum = {
 export type siteconfigOrderByRelevanceFieldEnum = (typeof siteconfigOrderByRelevanceFieldEnum)[keyof typeof siteconfigOrderByRelevanceFieldEnum]
 
 
+export const pushsubscriptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth'
+} as const
+
+export type pushsubscriptionOrderByRelevanceFieldEnum = (typeof pushsubscriptionOrderByRelevanceFieldEnum)[keyof typeof pushsubscriptionOrderByRelevanceFieldEnum]
+
+
 export const subscriptionOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -660,4 +705,18 @@ export const otpOrderByRelevanceFieldEnum = {
 } as const
 
 export type otpOrderByRelevanceFieldEnum = (typeof otpOrderByRelevanceFieldEnum)[keyof typeof otpOrderByRelevanceFieldEnum]
+
+
+export const kundaliOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  birthPlace: 'birthPlace',
+  lagna: 'lagna',
+  rashi: 'rashi',
+  nakshatra: 'nakshatra',
+  planetaryPositions: 'planetaryPositions',
+  dashaSequence: 'dashaSequence'
+} as const
+
+export type kundaliOrderByRelevanceFieldEnum = (typeof kundaliOrderByRelevanceFieldEnum)[keyof typeof kundaliOrderByRelevanceFieldEnum]
 

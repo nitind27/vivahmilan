@@ -6,7 +6,7 @@ function renderMarkdown(text) {
   if (!text) return '';
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-pink-400 underline" target="_self">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-vd-primary underline" target="_self">$1</a>')
     .replace(/\n/g, '<br/>');
 }
 
@@ -16,7 +16,7 @@ function Bubble({ msg }) {
   return (
     <div className={`flex gap-2 mb-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
       <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${
-        isUser ? 'bg-pink-500' : isAdmin ? 'bg-purple-600' : 'bg-gray-600'
+        isUser ? 'bg-vd-primary' : isAdmin ? 'bg-vd-accent' : 'bg-gray-600'
       }`}>
         {isUser ? <User className="w-3.5 h-3.5 text-white" /> :
          isAdmin ? <Headphones className="w-3.5 h-3.5 text-white" /> :
@@ -24,10 +24,10 @@ function Bubble({ msg }) {
       </div>
       <div className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm ${
         isUser ? 'bg-gray-700 text-gray-100 rounded-tr-sm' :
-        isAdmin ? 'bg-purple-700 text-white rounded-tl-sm' :
+        isAdmin ? 'bg-vd-accent text-white rounded-tl-sm' :
         'bg-gray-800 text-gray-300 rounded-tl-sm'
       }`}>
-        {isAdmin && <p className="text-xs text-purple-300 mb-1 font-semibold">You (Admin)</p>}
+        {isAdmin && <p className="text-xs text-vd-primary-light mb-1 font-semibold">You (Admin)</p>}
         {!isUser && !isAdmin && <p className="text-xs text-gray-500 mb-1">Bot</p>}
         <span dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
         <p className="text-xs mt-1 text-gray-500">
@@ -206,11 +206,11 @@ export default function AdminSupportChat() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Reply to user..."
-                className="flex-1 bg-gray-800 text-white text-sm px-3 py-2 rounded-xl border border-gray-600 focus:outline-none focus:border-pink-500 placeholder-gray-500"
+                className="flex-1 bg-gray-800 text-white text-sm px-3 py-2 rounded-xl border border-gray-600 focus:outline-none focus:border-vd-primary placeholder-gray-500"
                 disabled={sending}
               />
               <button onClick={sendMessage} disabled={sending || !input.trim()}
-                className="w-9 h-9 gradient-bg rounded-xl flex items-center justify-center disabled:opacity-40">
+                className="w-9 h-9 vd-gradient-gold rounded-xl flex items-center justify-center disabled:opacity-40">
                 <Send className="w-4 h-4 text-white" />
               </button>
             </div>
@@ -233,11 +233,11 @@ function SessionItem({ s, selected, onSelect }) {
     <button
       onClick={() => onSelect(s)}
       className={`w-full px-4 py-3 text-left hover:bg-gray-800 transition-colors border-b border-gray-800 ${
-        selected?.id === s.id ? 'bg-gray-800 border-l-2 border-l-pink-500' : ''
+        selected?.id === s.id ? 'bg-gray-800 border-l-2 border-l-vd-primary' : ''
       }`}
     >
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 rounded-full vd-gradient-gold flex items-center justify-center flex-shrink-0">
           <span className="text-white text-xs font-bold">{(s.userName || 'G')[0].toUpperCase()}</span>
         </div>
         <div className="flex-1 min-w-0">

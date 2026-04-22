@@ -93,14 +93,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-vd-bg px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 vd-gradient-gold rounded-full flex items-center justify-center">
               <Heart className="w-5 h-5 text-white fill-white" />
             </div>
-            <span className="text-2xl font-bold gradient-text">Milan</span>
+            <span className="text-2xl font-bold vd-gradient-text">Milan</span>
           </Link>
           <h1 className="text-3xl font-bold">Reset Password</h1>
           <p className="text-gray-500 mt-2 text-sm">
@@ -111,13 +111,13 @@ export default function ForgotPasswordPage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+        <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl shadow-xl p-8 border border-vd-border">
           {/* Progress dots */}
           <div className="flex justify-center gap-2 mb-6">
             {['email','otp','password'].map((s, i) => (
               <div key={s} className={`h-1.5 rounded-full transition-all ${
-                STEPS.indexOf(step) > i ? 'w-8 gradient-bg' :
-                step === s ? 'w-8 gradient-bg' : 'w-4 bg-gray-200 dark:bg-gray-600'
+                STEPS.indexOf(step) > i ? 'w-8 vd-gradient-gold' :
+                step === s ? 'w-8 vd-gradient-gold' : 'w-4 bg-gray-200 dark:bg-gray-600'
               }`} />
             ))}
           </div>
@@ -132,12 +132,12 @@ export default function ForgotPasswordPage() {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && sendOTP()}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 input-focus text-sm"
+                      className="w-full pl-10 pr-4 py-3 border border-vd-border rounded-2xl bg-vd-bg input-focus text-sm"
                       placeholder="your@email.com" />
                   </div>
                 </div>
                 <button onClick={sendOTP} disabled={loading || !email}
-                  className="w-full gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
+                  className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
                   {loading ? 'Sending OTP…' : 'Send OTP'}
                 </button>
               </motion.div>
@@ -151,19 +151,19 @@ export default function ForgotPasswordPage() {
                     <input key={i} id={`fp-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={digit}
                       onChange={e => handleOtpInput(i, e.target.value)}
                       onKeyDown={e => handleOtpKey(i, e)}
-                      className={`w-12 h-14 text-center text-xl font-bold border-2 rounded-2xl bg-gray-50 dark:bg-gray-700 focus:outline-none transition-all ${digit ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20' : 'border-gray-200 dark:border-gray-600 focus:border-pink-400'}`}
+                      className={`w-12 h-14 text-center text-xl font-bold border-2 rounded-2xl bg-vd-bg focus:outline-none transition-all ${digit ? 'border-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20' : 'border-vd-border focus:border-vd-primary'}`}
                     />
                   ))}
                 </div>
                 <button onClick={verifyOTP} disabled={loading || otp.join('').length !== 6}
-                  className="w-full gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
+                  className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
                   {loading ? 'Verifying…' : 'Verify OTP'}
                 </button>
                 <div className="text-center">
                   {countdown > 0 ? (
-                    <p className="text-sm text-gray-400">Resend in <span className="text-pink-500 font-medium">{countdown}s</span></p>
+                    <p className="text-sm text-gray-400">Resend in <span className="text-vd-primary font-medium">{countdown}s</span></p>
                   ) : (
-                    <button onClick={resendOTP} disabled={loading} className="text-sm text-pink-500 hover:text-pink-600 flex items-center gap-1.5 mx-auto">
+                    <button onClick={resendOTP} disabled={loading} className="text-sm text-vd-primary hover:text-vd-primary-dark flex items-center gap-1.5 mx-auto">
                       <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Resend OTP
                     </button>
                   )}
@@ -179,7 +179,7 @@ export default function ForgotPasswordPage() {
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 input-focus text-sm"
+                      className="w-full pl-10 pr-12 py-3 border border-vd-border rounded-2xl bg-vd-bg input-focus text-sm"
                       placeholder="Min 8 characters" />
                     <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                       {showPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -191,13 +191,13 @@ export default function ForgotPasswordPage() {
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 input-focus text-sm"
+                      className="w-full pl-10 pr-4 py-3 border border-vd-border rounded-2xl bg-vd-bg input-focus text-sm"
                       placeholder="Repeat password" />
                   </div>
                   {confirm && password !== confirm && <p className="text-xs text-red-500 mt-1">Passwords don't match</p>}
                 </div>
                 <button onClick={resetPassword} disabled={loading || !password || password !== confirm}
-                  className="w-full gradient-bg text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
+                  className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity">
                   {loading ? 'Resetting…' : 'Reset Password'}
                 </button>
               </motion.div>
