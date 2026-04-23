@@ -1,268 +1,62 @@
-/**
- * server.mjs — Production-ready server with:
- *  - Cluster mode (uses all CPU cores)
- *  - Gzip compression
- *  - In-memory response caching
- *  - Rate limiting per IP
- *  - Keep-alive + connection reuse
- *  - Graceful shutdown
- */
+// Custom Next.js server with Socket.io integrated
+// Run with: node server.mjs  (replaces `next dev` / `next start`)
+import { createServer } from 'http';
+import { parse } from 'url';
+import { createReadStream, statSync, existsSync } from 'fs';
+import { join, extname } from 'path';
+import next from 'next';
+import { Server } from 'socket.io';
 
-import cluster from 'cluster';
-import os from 'os';
-import { setupPrimary } from '@socket.io/cluster-adapter';
-import { config } from 'dotenv';
-import { existsSync, readFileSync } from 'fs';
-import { resolve } from 'path';
+const dev = process.env.NODE_ENV !== 'production';
+const hostname = 'localhost';
+const port = parseInt(process.env.PORT || '3000');
 
-// Load env file BEFORE anything else
-const envFile = process.env.NODE_ENV === 'production' && existsSync('.env.production')
-  ? '.env.production'
-  : '.env';
+const app = next({ dev, hostname, port });
+const handle = app.getRequestHandler();
 
-// Force load with override so dotenvx can't interfere
-config({ path: resolve(process.cwd(), envFile), override: true });
+// MIME types for uploaded files
+const MIME = {
+  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+  '.png': 'image/png', '.webp': 'image/webp',
+  '.gif': 'image/gif', '.pdf': 'application/pdf',
+};
 
-// Verify critical env vars loaded
-if (!process.env.DATABASE_URL && !process.env.DATABASE_HOST) {
-  // Try manual parse as fallback
-  try {
-    const raw = readFileSync(resolve(process.cwd(), envFile), 'utf8');
-    for (const line of raw.split('\n')) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('#')) continue;
-      const idx = trimmed.indexOf('=');
-      if (idx === -1) continue;
-      const key = trimmed.slice(0, idx).trim();
-      const val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
-      if (!process.env[key]) process.env[key] = val;
-    }
-    console.log('✅ Env loaded via manual fallback from', envFile);
-  } catch (e) {
-    console.error('❌ Failed to load env file:', e.message);
-  }
-} else {
-  console.log('✅ Env loaded from', envFile, '| DB_HOST:', process.env.DATABASE_HOST || 'from URL');
-}
+const UPLOADS_DIR = join(process.cwd(), 'public', 'uploads');
 
-const isDev = process.env.NODE_ENV !== 'production';
-const NUM_WORKERS = isDev ? 1 : (
-  process.env.WEB_CONCURRENCY
-    ? parseInt(process.env.WEB_CONCURRENCY)
-    : Math.min(os.cpus().length, 4)
-);
-
-// In dev mode, skip cluster entirely — run as single process
-if (isDev) {
-  await startWorker();
-} else if (cluster.isPrimary) {
-  console.log(`🚀 Primary ${process.pid} — spawning ${NUM_WORKERS} workers`);
-
-  // Setup Socket.IO cluster adapter on primary (IPC-based, no Redis needed)
-  setupPrimary();
-
-  for (let i = 0; i < NUM_WORKERS; i++) spawnWorker(i);
-
-  cluster.on('exit', (worker, code, signal) => {
-    console.warn(`⚠️  Worker ${worker.process.pid} died (${signal || code}). Restarting…`);
-    setTimeout(() => spawnWorker(), 1000);
-  });
-
-  process.on('SIGTERM', () => {
-    for (const id in cluster.workers) cluster.workers[id].send('shutdown');
-    setTimeout(() => process.exit(0), 5000);
-  });
-
-  function spawnWorker(index) {
-    const w = cluster.fork({ WORKER_INDEX: index ?? Object.keys(cluster.workers).length });
-    console.log(`  ✅ Worker ${w.process.pid} started`);
-  }
-} else {
-  await startWorker();
-}
-
-async function startWorker() {
-  const { createServer } = await import('http');
-  const { parse } = await import('url');
-  const { createReadStream, statSync, existsSync } = await import('fs');
-  const { join, extname } = await import('path');
-  const { default: next } = await import('next');
-  const { Server } = await import('socket.io');
-  const { createAdapter } = await import('@socket.io/cluster-adapter');
-  const { default: compression } = await import('compression');
-  const { default: NodeCache } = await import('node-cache');
-
-  // Ensure lastSeen column exists (only run on first worker)
-  if (process.env.WORKER_INDEX === '0' || process.env.WORKER_INDEX === undefined) {
-    try {
-      const { pool } = await import('./lib/db.js');
-      await pool.execute("ALTER TABLE `user` ADD COLUMN `lastSeen` DATETIME NULL DEFAULT NULL");
-      console.log('✅ lastSeen column added to user table');
-    } catch (e) {
-      // Column already exists (error code 1060) — that's fine
-      if (e.errno !== 1060) console.warn('lastSeen column check:', e.message);
-    }
-  }
-
-  const dev = process.env.NODE_ENV !== 'production';
-  const port = parseInt(process.env.PORT || '3006');
-  const hostname = process.env.DATABASE_HOST || 'localhost';
-
-  // In-memory cache — longer TTL for static data
-  const apiCache = new NodeCache({ stdTTL: 300, checkperiod: 120, useClones: false });
-
-  // Rate limiter (per IP)
-  const rateLimitMap = new Map();
-  const RATE_LIMIT = 200;
-  const RATE_WINDOW = 60_000;
-
-  function isRateLimited(ip) {
-    const now = Date.now();
-    let entry = rateLimitMap.get(ip);
-    if (!entry || now > entry.resetAt) {
-      rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
-      return false;
-    }
-    entry.count++;
-    return entry.count > RATE_LIMIT;
-  }
-
-  setInterval(() => {
-    const now = Date.now();
-    for (const [ip, entry] of rateLimitMap) {
-      if (now > entry.resetAt) rateLimitMap.delete(ip);
-    }
-  }, RATE_WINDOW);
-
-  const compress = compression({ level: 6, threshold: 1024 });
-
-  const MIME = {
-    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-    '.png': 'image/png', '.webp': 'image/webp',
-    '.gif': 'image/gif', '.pdf': 'application/pdf',
-  };
-
-  // Routes safe to cache (public, non-user-specific)
-  const CACHEABLE = [
-    '/api/profile-options',
-    '/api/location/countries',
-    '/api/location/states',
-    '/api/location/cities',
-    '/api/admin/plans',
-  ];
-
-  const app = next({ dev, hostname, port });
-  const handle = app.getRequestHandler();
-  await app.prepare();
-
+app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
-    req.socket.setKeepAlive(true, 5000);
     req.socket.setMaxListeners(0);
-
-    // Rate limiting
-    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
-      || req.socket.remoteAddress || 'unknown';
-
-    if (isRateLimited(ip)) {
-      res.writeHead(429, { 'Content-Type': 'application/json', 'Retry-After': '60' });
-      res.end(JSON.stringify({ error: 'Too many requests. Please slow down.' }));
-      return;
-    }
-
-    // Compression
-    compress(req, res, () => {});
-
     const parsedUrl = parse(req.url, true);
-    const { pathname } = parsedUrl;
 
-    // ── PREVIEW AUTH GATE ────────────────────────────────────────────
-    // TO REMOVE: Delete the block between START and END comments
-    // ── START PREVIEW GATE ──
-    const PREVIEW_COOKIE_NAME  = 'vd_preview_auth';
-    const PREVIEW_COOKIE_VALUE = 'granted_2710';
-    const BYPASS_PATHS = [
-      '/welcome.html',
-      '/_next/',
-      '/favicon.ico',
-      '/logo/',
-      '/audio/',
-      '/video/',
-      '/images/',
-      '/uploads/',
-      '/api/auth/',
-    ];
-    const isBypassed = BYPASS_PATHS.some(p => pathname?.startsWith(p))
-      || (pathname?.includes('.') && !pathname?.endsWith('.html'));
-
-    if (!isBypassed) {
-      const cookieHeader = req.headers.cookie || '';
-      const cookies = Object.fromEntries(
-        cookieHeader.split(';').map(c => {
-          const [k, ...v] = c.trim().split('=');
-          return [k?.trim(), v.join('=').trim()];
-        }).filter(([k]) => k)
-      );
-      if (cookies[PREVIEW_COOKIE_NAME] !== PREVIEW_COOKIE_VALUE) {
-        const redirectTo = encodeURIComponent(pathname || '/');
-        res.writeHead(302, { Location: `/welcome.html?login&redirect=${redirectTo}` });
-        res.end();
-        return;
-      }
-    }
-    // ── END PREVIEW GATE ────────────────────────────────────────────
-
-    // Serve /uploads/* directly
-    if (pathname?.startsWith('/uploads/')) {
-      const filePath = join(process.cwd(), 'public', pathname);
+    // ── Serve /uploads/* directly from disk ──────────────────────────
+    if (parsedUrl.pathname?.startsWith('/uploads/')) {
+      const filePath = join(process.cwd(), 'public', parsedUrl.pathname);
       if (existsSync(filePath)) {
         const ext = extname(filePath).toLowerCase();
-        res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        const mime = MIME[ext] || 'application/octet-stream';
+        res.setHeader('Content-Type', mime);
+        res.setHeader('Cache-Control', 'public, max-age=31536000');
         try {
           const stat = statSync(filePath);
           res.setHeader('Content-Length', stat.size);
           createReadStream(filePath).pipe(res);
-        } catch { res.writeHead(500); res.end('Error reading file'); }
+        } catch {
+          res.writeHead(500); res.end('Error reading file');
+        }
+        return;
+      } else {
+        res.writeHead(404); res.end('Not found');
         return;
       }
-      res.writeHead(404); res.end('Not found');
-      return;
     }
-
-    // API response caching (GET only, safe routes)
-    if (req.method === 'GET' && CACHEABLE.some(r => pathname?.startsWith(r))) {
-      const cacheKey = req.url;
-      const cached = apiCache.get(cacheKey);
-      if (cached) {
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('X-Cache', 'HIT');
-        res.writeHead(200);
-        res.end(cached);
-        return;
-      }
-      const chunks = [];
-      const origEnd = res.end.bind(res);
-      res.end = (chunk) => {
-        if (chunk) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-        if (res.statusCode === 200) apiCache.set(cacheKey, Buffer.concat(chunks).toString());
-        res.setHeader('X-Cache', 'MISS');
-        return origEnd(chunk);
-      };
-    }
-
-    // Security headers
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('X-Worker-PID', process.pid.toString());
 
     handle(req, res, parsedUrl);
   });
 
-  // Socket.io
+  // ── Socket.io attached to the SAME server ──────────────────────────
   const io = new Server(httpServer, {
     path: '/api/socket',
     addTrailingSlash: false,
-    ...(dev ? {} : { adapter: createAdapter() }),
     cors: {
       origin: process.env.NEXTAUTH_URL || '*',
       methods: ['GET', 'POST'],
@@ -271,33 +65,34 @@ async function startWorker() {
     transports: ['websocket', 'polling'],
     pingTimeout: 60000,
     pingInterval: 25000,
-    maxHttpBufferSize: 1e6,
-    connectTimeout: 10000,
   });
 
-  const onlineUsers = new Map();
-  const lastSeenMap = new Map(); // userId -> ISO timestamp
+  // Track online users
+  const onlineUsers = new Map(); // userId -> socketId
 
   io.on('connection', (socket) => {
+    // User comes online
     socket.on('user:online', (userId) => {
       onlineUsers.set(userId, socket.id);
       socket.userId = userId;
-      lastSeenMap.delete(userId); // they're online now
       io.emit('users:online', Array.from(onlineUsers.keys()));
-      io.emit('users:lastseen', Object.fromEntries(lastSeenMap));
     });
 
+    // Join a chat room
     socket.on('room:join', (roomId) => socket.join(roomId));
     socket.on('room:leave', (roomId) => socket.leave(roomId));
 
+    // Broadcast message to room
     socket.on('message:send', ({ roomId, message }) => {
       socket.to(roomId).emit('message:receive', message);
     });
 
+    // Read receipt — tell sender their messages were read
     socket.on('message:read', ({ roomId, readerId }) => {
       socket.to(roomId).emit('message:read', { roomId, readerId });
     });
 
+    // Typing indicators
     socket.on('typing:start', ({ roomId, userId }) => {
       socket.to(roomId).emit('typing:start', { userId });
     });
@@ -305,48 +100,27 @@ async function startWorker() {
       socket.to(roomId).emit('typing:stop', { userId });
     });
 
+    // Interest notification to a specific user
     socket.on('interest:notify', ({ toUserId, fromUser }) => {
       const targetSocket = onlineUsers.get(toUserId);
       if (targetSocket) io.to(targetSocket).emit('interest:received', { fromUser });
     });
 
+    // Live location update
     socket.on('location:update', ({ roomId, msgId, latitude, longitude }) => {
       socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
     });
 
     socket.on('disconnect', () => {
       if (socket.userId) {
-        const now = new Date().toISOString();
         onlineUsers.delete(socket.userId);
-        lastSeenMap.set(socket.userId, now);
         io.emit('users:online', Array.from(onlineUsers.keys()));
-        io.emit('users:lastseen', Object.fromEntries(lastSeenMap));
-
-        // Persist lastSeen to DB
-        import('./lib/db.js').then(({ execute }) => {
-          execute('UPDATE `user` SET lastSeen = ? WHERE id = ?', [new Date(), socket.userId]).catch(() => {});
-        }).catch(() => {});
       }
     });
   });
-
-  // Graceful shutdown (only in cluster worker mode)
-  if (process.send) {
-    process.on('message', (msg) => {
-      if (msg === 'shutdown') {
-        httpServer.close(() => process.exit(0));
-        setTimeout(() => process.exit(0), 3000);
-      }
-    });
-  }
-
-  // Tune for high concurrency
-  httpServer.keepAliveTimeout = 65000;
-  httpServer.headersTimeout = 66000;
-  httpServer.maxConnections = 10000;
 
   httpServer.listen(port, () => {
-    console.log(`  🔧 Worker ${process.pid} ready on http://${hostname}:${port}`);
-    console.log(`  🔌 Socket.io on /api/socket`);
+    console.log(`✅ Ready on http://${hostname}:${port}`);
+    console.log(`🔌 Socket.io running on same port (path: /api/socket)`);
   });
-}
+});
