@@ -8,16 +8,36 @@ export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const list = await query(
-    'SELECT * FROM shortlist WHERE ownerId = ? ORDER BY createdAt DESC',
-    [session.user.id]
+  const { searchParams } = new URL(req.url);
+  const limit  = parseInt(searchParams.get('limit') || '50');
+  const offset = parseInt(searchParams.get('offset') || '0');
+
+  // Single JOIN — no N+1
+  const rows = await query(
+    `SELECT
+       s.id, s.ownerId, s.targetId, s.createdAt,
+       u.id AS u_id, u.name AS u_name, u.email AS u_email,
+       u.image AS u_image, u.isPremium AS u_isPremium, u.isVerified AS u_isVerified,
+       p.gender, p.dob, p.religion, p.city, p.country, p.education, p.profession, p.profileComplete,
+       ph.url AS photo_url
+     FROM shortlist s
+     JOIN \`user\` u ON u.id = s.targetId
+     LEFT JOIN profile p ON p.userId = s.targetId
+     LEFT JOIN photo ph ON ph.userId = s.targetId AND ph.isMain = 1
+     WHERE s.ownerId = ?
+     ORDER BY s.createdAt DESC
+     LIMIT ? OFFSET ?`,
+    [session.user.id, limit, offset]
   );
 
-  const enriched = await Promise.all(list.map(async (s) => {
-    const user = await queryOne('SELECT id, name, email, image, isPremium, isVerified FROM `user` WHERE id = ?', [s.targetId]);
-    const profile = await queryOne('SELECT gender, dob, religion, city, country, education, profession, profileComplete FROM profile WHERE userId = ?', [s.targetId]);
-    const photo = await queryOne('SELECT url FROM photo WHERE userId = ? AND isMain = 1 LIMIT 1', [s.targetId]);
-    return { ...s, target: { ...user, profile, photos: photo ? [photo] : [] } };
+  const enriched = rows.map((r) => ({
+    id: r.id, ownerId: r.ownerId, targetId: r.targetId, createdAt: r.createdAt,
+    target: {
+      id: r.u_id, name: r.u_name, email: r.u_email,
+      image: r.u_image, isPremium: r.u_isPremium, isVerified: r.u_isVerified,
+      profile: { gender: r.gender, dob: r.dob, religion: r.religion, city: r.city, country: r.country, education: r.education, profession: r.profession, profileComplete: r.profileComplete },
+      photos: r.photo_url ? [{ url: r.photo_url }] : [],
+    },
   }));
 
   return NextResponse.json(enriched);

@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 import SmartImage from '@/components/SmartImage';
 import Link from 'next/link';
 import { Heart, MapPin, GraduationCap, Briefcase, BadgeCheck, Star } from 'lucide-react';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { useRouter } from 'next/navigation';
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 
-export default function ProfileCard({ user, index = 0 }) {
+function ProfileCard({ user, index = 0 }) {
   const [shortlisted, setShortlisted] = useState(user.isShortlisted || false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -129,3 +129,5 @@ export default function ProfileCard({ user, index = 0 }) {
     </motion.div>
   );
 }
+
+export default memo(ProfileCard);

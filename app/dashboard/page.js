@@ -342,20 +342,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (status !== 'authenticated') return;
+    const safeFetch = (url, opts) => fetch(url, opts).then(r => r.ok ? r.json() : null).catch(() => null);
     Promise.all([
-      fetch('/api/matches?limit=6').then(r => r.json()),
-      fetch('/api/interest?type=received').then(r => r.json()),
-      fetch('/api/notifications').then(r => r.json()),
-      fetch('/api/profile').then(r => r.json()),
-      fetch('/api/chat/unread').then(r => r.json()),
-      fetch('/api/reminders', { method: 'POST' }).then(r => r.json()),
+      safeFetch('/api/matches?limit=6'),
+      safeFetch('/api/interest?type=received&limit=20'),
+      safeFetch('/api/notifications'),
+      safeFetch('/api/profile'),
+      safeFetch('/api/chat/unread'),
+      safeFetch('/api/reminders', { method: 'POST' }),
     ]).then(([m, i, n, p, u, rem]) => {
-      setMatches(m.users || []);
+      setMatches(m?.users || []);
       setInterests(i || []);
-      setNotifications(n.notifications || []);
+      setNotifications(n?.notifications || []);
       setProfile(p);
-      setUnreadChat(u.total || 0);
-      setReminders(rem);
+      setUnreadChat(u?.total || 0);
+      setReminders(rem || { premiumInfo: null, birthdayInfo: null });
       setLoading(false);
     });
   }, [status]);

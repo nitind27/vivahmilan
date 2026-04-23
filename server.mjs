@@ -77,8 +77,8 @@ async function startWorker() {
   const port = parseInt(process.env.PORT || '3005');
   const hostname = process.env.HOSTNAME || 'localhost';
 
-  // In-memory cache
-  const apiCache = new NodeCache({ stdTTL: 30, checkperiod: 60, useClones: false });
+  // In-memory cache — longer TTL for static data
+  const apiCache = new NodeCache({ stdTTL: 300, checkperiod: 120, useClones: false });
 
   // Rate limiter (per IP)
   const rateLimitMap = new Map();
@@ -117,6 +117,7 @@ async function startWorker() {
     '/api/location/countries',
     '/api/location/states',
     '/api/location/cities',
+    '/api/admin/plans',
   ];
 
   const app = next({ dev, hostname, port });

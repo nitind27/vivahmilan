@@ -48,6 +48,7 @@ const nextConfig = {
   ],
 
   experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'date-fns'],
     serverActions: {
       allowedOrigins: [
         'localhost:3000',

@@ -28,7 +28,6 @@ export async function POST(req) {
     [randomUUID(), receiverId, `${session.user.name} has sent you an interest request.`, `/profile/${session.user.id}`]
   );
 
-  // Web Push
   try {
     const { sendPushToUser } = await import('@/lib/webpush');
     await sendPushToUser(receiverId, {
@@ -46,27 +45,43 @@ export async function GET(req) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
-  const type = searchParams.get('type') || 'received';
+  const type   = searchParams.get('type') || 'received';
+  const limit  = parseInt(searchParams.get('limit') || '50');
+  const offset = parseInt(searchParams.get('offset') || '0');
 
-  const interests = await query(
-    type === 'received'
-      ? 'SELECT * FROM interest WHERE receiverId = ? ORDER BY createdAt DESC'
-      : 'SELECT * FROM interest WHERE senderId = ? ORDER BY createdAt DESC',
-    [session.user.id]
+  // Single JOIN query — no N+1
+  const col = type === 'received' ? 'i.senderId' : 'i.receiverId';
+  const rows = await query(
+    `SELECT
+       i.id, i.senderId, i.receiverId, i.message, i.status, i.createdAt, i.updatedAt,
+       u.id AS u_id, u.name AS u_name, u.email AS u_email,
+       u.image AS u_image, u.isPremium AS u_isPremium, u.isVerified AS u_isVerified,
+       p.gender, p.dob, p.religion, p.city, p.country, p.education, p.profession, p.profileComplete,
+       ph.url AS photo_url
+     FROM interest i
+     JOIN \`user\` u ON u.id = ${col}
+     LEFT JOIN profile p ON p.userId = ${col}
+     LEFT JOIN photo ph ON ph.userId = ${col} AND ph.isMain = 1
+     WHERE ${type === 'received' ? 'i.receiverId' : 'i.senderId'} = ?
+     ORDER BY i.createdAt DESC
+     LIMIT ? OFFSET ?`,
+    [session.user.id, limit, offset]
   );
 
-  // Attach user info
-  const enriched = await Promise.all(interests.map(async (i) => {
-    const otherId = type === 'received' ? i.senderId : i.receiverId;
-    const user = await queryOne('SELECT id, name, email, image, isPremium, isVerified FROM `user` WHERE id = ?', [otherId]);
-    const profile = await queryOne('SELECT gender, dob, religion, city, country, education, profession, profileComplete FROM profile WHERE userId = ?', [otherId]);
-    const photo = await queryOne('SELECT url FROM photo WHERE userId = ? AND isMain = 1 LIMIT 1', [otherId]);
-    return {
-      ...i,
-      sender: type === 'received' ? { ...user, profile, photos: photo ? [photo] : [] } : null,
-      receiver: type === 'sent' ? { ...user, profile, photos: photo ? [photo] : [] } : null,
+  const enriched = rows.map((r) => {
+    const user = {
+      id: r.u_id, name: r.u_name, email: r.u_email,
+      image: r.u_image, isPremium: r.u_isPremium, isVerified: r.u_isVerified,
+      profile: { gender: r.gender, dob: r.dob, religion: r.religion, city: r.city, country: r.country, education: r.education, profession: r.profession, profileComplete: r.profileComplete },
+      photos: r.photo_url ? [{ url: r.photo_url }] : [],
     };
-  }));
+    return {
+      id: r.id, senderId: r.senderId, receiverId: r.receiverId,
+      message: r.message, status: r.status, createdAt: r.createdAt, updatedAt: r.updatedAt,
+      sender:   type === 'received' ? user : null,
+      receiver: type === 'sent'     ? user : null,
+    };
+  });
 
   return NextResponse.json(enriched);
 }

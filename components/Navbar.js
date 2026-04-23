@@ -33,7 +33,7 @@ export default function Navbar() {
       };
 
       checkNotifs();
-      const interval = setInterval(checkNotifs, 30000);
+      const interval = setInterval(checkNotifs, 60000); // 60s instead of 30s
       return () => clearInterval(interval);
     }
   }, [session]);

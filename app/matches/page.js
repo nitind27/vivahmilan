@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback, Suspense } from 'react';
+import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -28,6 +28,19 @@ function MatchesPage() {
     heightMin: '', heightMax: '', maritalStatus: '',
   });
 
+  // Debounced filters — only fire fetch 500ms after user stops changing
+  const [debouncedFilters, setDebouncedFilters] = useState(filters);
+  const debounceRef = useRef(null);
+  const updateFilter = (key, value) => {
+    const next = { ...filters, [key]: value };
+    setFilters(next);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedFilters(next);
+      setPage(1);
+    }, 500);
+  };
+
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
   }, [status, router]);
@@ -35,20 +48,27 @@ function MatchesPage() {
   const fetchMatches = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams({ page, limit: 12 });
-    Object.entries(filters).forEach(([k, v]) => { if (v) params.set(k, v); });
-    const res = await fetch(`/api/matches?${params}`);
-    const data = await res.json();
-    setUsers(data.users || []);
-    setTotal(data.total || 0);
-    setTotalPages(data.totalPages || 1);
-    setIsLimited(data.isLimited || false);
-    setIsPremium(data.isPremium || false);
+    Object.entries(debouncedFilters).forEach(([k, v]) => { if (v) params.set(k, v); });
+    try {
+      const res = await fetch(`/api/matches?${params}`);
+      const data = await res.json();
+      setUsers(data.users || []);
+      setTotal(data.total || 0);
+      setTotalPages(data.totalPages || 1);
+      setIsLimited(data.isLimited || false);
+      setIsPremium(data.isPremium || false);
+    } catch { /* keep previous results on error */ }
     setLoading(false);
-  }, [page, filters]);
+  }, [page, debouncedFilters]);
 
   useEffect(() => { if (status === 'authenticated') fetchMatches(); }, [status, fetchMatches]);
 
-  const clearFilters = () => setFilters({ ageMin: '', ageMax: '', religion: '', country: '', education: '', heightMin: '', heightMax: '', maritalStatus: '' });
+  const clearFilters = () => {
+    const empty = { ageMin: '', ageMax: '', religion: '', country: '', education: '', heightMin: '', heightMax: '', maritalStatus: '' };
+    setFilters(empty);
+    setDebouncedFilters(empty);
+    setPage(1);
+  };
 
   const activeFilters = Object.values(filters).filter(Boolean).length;
 
@@ -85,17 +105,17 @@ function MatchesPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Age Min</label>
-                <input type="number" min="18" max="70" value={filters.ageMin} onChange={e => setFilters(p => ({ ...p, ageMin: e.target.value }))}
+                <input type="number" min="18" max="70" value={filters.ageMin} onChange={e => updateFilter('ageMin', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="18" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Age Max</label>
-                <input type="number" min="18" max="70" value={filters.ageMax} onChange={e => setFilters(p => ({ ...p, ageMax: e.target.value }))}
+                <input type="number" min="18" max="70" value={filters.ageMax} onChange={e => updateFilter('ageMax', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="40" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Religion</label>
-                <select value={filters.religion} onChange={e => setFilters(p => ({ ...p, religion: e.target.value }))}
+                <select value={filters.religion} onChange={e => updateFilter('religion', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus">
                   <option value="">Any</option>
                   {religions.map(r => <option key={r} value={r}>{r}</option>)}
@@ -103,7 +123,7 @@ function MatchesPage() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Country</label>
-                <select value={filters.country} onChange={e => setFilters(p => ({ ...p, country: e.target.value }))}
+                <select value={filters.country} onChange={e => updateFilter('country', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus">
                   <option value="">Any</option>
                   {countries.map(c => <option key={c} value={c}>{c}</option>)}
@@ -111,7 +131,7 @@ function MatchesPage() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Education</label>
-                <select value={filters.education} onChange={e => setFilters(p => ({ ...p, education: e.target.value }))}
+                <select value={filters.education} onChange={e => updateFilter('education', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus">
                   <option value="">Any</option>
                   {educations.map(e => <option key={e} value={e}>{e}</option>)}
@@ -119,17 +139,17 @@ function MatchesPage() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Height Min (cm)</label>
-                <input type="number" value={filters.heightMin} onChange={e => setFilters(p => ({ ...p, heightMin: e.target.value }))}
+                <input type="number" value={filters.heightMin} onChange={e => updateFilter('heightMin', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="150" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Height Max (cm)</label>
-                <input type="number" value={filters.heightMax} onChange={e => setFilters(p => ({ ...p, heightMax: e.target.value }))}
+                <input type="number" value={filters.heightMax} onChange={e => updateFilter('heightMax', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="190" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Marital Status</label>
-                <select value={filters.maritalStatus} onChange={e => setFilters(p => ({ ...p, maritalStatus: e.target.value }))}
+                <select value={filters.maritalStatus} onChange={e => updateFilter('maritalStatus', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus">
                   <option value="">Any</option>
                   <option value="NEVER_MARRIED">Never Married</option>
@@ -138,7 +158,7 @@ function MatchesPage() {
                 </select>
               </div>
             </div>
-            <button onClick={() => { setPage(1); fetchMatches(); }} className="mt-4 vd-gradient-gold text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition-opacity">
+            <button onClick={() => { setDebouncedFilters(filters); setPage(1); }} className="mt-4 vd-gradient-gold text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition-opacity">
               Apply Filters
             </button>
           </motion.div>
