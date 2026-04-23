@@ -12,7 +12,13 @@ import cluster from 'cluster';
 import os from 'os';
 import { setupPrimary } from '@socket.io/cluster-adapter';
 import { config } from 'dotenv';
-config();
+import { existsSync } from 'fs';
+
+// Load .env.production in production, else .env
+const envFile = process.env.NODE_ENV === 'production' && existsSync('.env.production')
+  ? '.env.production'
+  : '.env';
+config({ path: envFile });
 
 const isDev = process.env.NODE_ENV !== 'production';
 const NUM_WORKERS = isDev ? 1 : (
