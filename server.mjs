@@ -1,5 +1,10 @@
+// ✅ LOAD ENV (MOST IMPORTANT)
+import { config } from 'dotenv';
+config({
+  path: '.env.production'
+});
+
 // Custom Next.js server with Socket.io integrated
-// Run with: node server.mjs  (replaces `next dev` / `next start`)
 import { createServer } from 'http';
 import { parse } from 'url';
 import { createReadStream, statSync, existsSync } from 'fs';
@@ -8,7 +13,7 @@ import next from 'next';
 import { Server } from 'socket.io';
 
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
+const hostname = '0.0.0.0'; // VPS pe better hai
 const port = parseInt(process.env.PORT || '3006');
 
 const app = next({ dev, hostname, port });
@@ -21,14 +26,12 @@ const MIME = {
   '.gif': 'image/gif', '.pdf': 'application/pdf',
 };
 
-const UPLOADS_DIR = join(process.cwd(), 'public', 'uploads');
-
 app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
     req.socket.setMaxListeners(0);
     const parsedUrl = parse(req.url, true);
 
-    // ── Serve /uploads/* directly from disk ──────────────────────────
+    // ── Serve /uploads/* directly ──────────────────────────
     if (parsedUrl.pathname?.startsWith('/uploads/')) {
       const filePath = join(process.cwd(), 'public', parsedUrl.pathname);
       if (existsSync(filePath)) {
@@ -36,16 +39,19 @@ app.prepare().then(() => {
         const mime = MIME[ext] || 'application/octet-stream';
         res.setHeader('Content-Type', mime);
         res.setHeader('Cache-Control', 'public, max-age=31536000');
+
         try {
           const stat = statSync(filePath);
           res.setHeader('Content-Length', stat.size);
           createReadStream(filePath).pipe(res);
         } catch {
-          res.writeHead(500); res.end('Error reading file');
+          res.writeHead(500);
+          res.end('Error reading file');
         }
         return;
       } else {
-        res.writeHead(404); res.end('Not found');
+        res.writeHead(404);
+        res.end('Not found');
         return;
       }
     }
@@ -53,7 +59,7 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
-  // ── Socket.io attached to the SAME server ──────────────────────────
+  // ── Socket.io ──────────────────────────
   const io = new Server(httpServer, {
     path: '/api/socket',
     addTrailingSlash: false,
@@ -67,48 +73,47 @@ app.prepare().then(() => {
     pingInterval: 25000,
   });
 
-  // Track online users
-  const onlineUsers = new Map(); // userId -> socketId
+  const onlineUsers = new Map();
 
   io.on('connection', (socket) => {
-    // User comes online
     socket.on('user:online', (userId) => {
       onlineUsers.set(userId, socket.id);
       socket.userId = userId;
       io.emit('users:online', Array.from(onlineUsers.keys()));
     });
 
-    // Join a chat room
     socket.on('room:join', (roomId) => socket.join(roomId));
     socket.on('room:leave', (roomId) => socket.leave(roomId));
 
-    // Broadcast message to room
     socket.on('message:send', ({ roomId, message }) => {
       socket.to(roomId).emit('message:receive', message);
     });
 
-    // Read receipt — tell sender their messages were read
     socket.on('message:read', ({ roomId, readerId }) => {
       socket.to(roomId).emit('message:read', { roomId, readerId });
     });
 
-    // Typing indicators
     socket.on('typing:start', ({ roomId, userId }) => {
       socket.to(roomId).emit('typing:start', { userId });
     });
+
     socket.on('typing:stop', ({ roomId, userId }) => {
       socket.to(roomId).emit('typing:stop', { userId });
     });
 
-    // Interest notification to a specific user
     socket.on('interest:notify', ({ toUserId, fromUser }) => {
       const targetSocket = onlineUsers.get(toUserId);
-      if (targetSocket) io.to(targetSocket).emit('interest:received', { fromUser });
+      if (targetSocket) {
+        io.to(targetSocket).emit('interest:received', { fromUser });
+      }
     });
 
-    // Live location update
     socket.on('location:update', ({ roomId, msgId, latitude, longitude }) => {
-      socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
+      socket.to(roomId).emit('location:update', {
+        msgId,
+        latitude,
+        longitude
+      });
     });
 
     socket.on('disconnect', () => {
@@ -120,7 +125,8 @@ app.prepare().then(() => {
   });
 
   httpServer.listen(port, () => {
-    console.log(`✅ Ready on http://${hostname}:${port}`);
-    console.log(`🔌 Socket.io running on same port (path: /api/socket)`);
+    console.log(`🚀 Server running on http://${hostname}:${port}`);
+    console.log(`📡 Socket.io running on /api/socket`);
+    console.log(`🟢 DB HOST: ${process.env.DATABASE_HOST}`);
   });
 });
