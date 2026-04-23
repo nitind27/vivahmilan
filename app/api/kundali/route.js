@@ -4,7 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { queryOne, pool } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
-const { calculateKundali } = require('../../../lib/kundaliCalculator');
+import { calculateKundali } from '@/lib/kundaliCalculator';
 
 export async function POST(req) {
   let body;

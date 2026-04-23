@@ -2,6 +2,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 /* ── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
   --vd-bg: #FFF8F3;

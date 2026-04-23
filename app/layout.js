@@ -1,4 +1,3 @@
-import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
 import SWRegister from '@/components/SWRegister';
@@ -6,7 +5,6 @@ import ChatBot from '@/components/ChatBot';
 import SetPasswordModal from '@/components/SetPasswordModal';
 import { Toaster } from 'react-hot-toast';
 
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Milan Matrimony – Find Your Perfect Life Partner',
@@ -25,8 +23,11 @@ export default function RootLayout({ children }) {
       <head>
         {/* Prevent dark/light flash on load */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}` }} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${inter.className} bg-vd-bg dark:bg-vd-bg text-vd-text-heading dark:text-vd-text-heading`} suppressHydrationWarning>
+      <body className={`bg-vd-bg dark:bg-vd-bg text-vd-text-heading dark:text-vd-text-heading`} suppressHydrationWarning>
         <Providers>
           <SWRegister />
           {children}
