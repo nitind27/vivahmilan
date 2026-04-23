@@ -106,7 +106,7 @@ async function startWorker() {
 
   const dev = process.env.NODE_ENV !== 'production';
   const port = parseInt(process.env.PORT || '3006');
-  const hostname = process.env.HOSTNAME || 'localhost';
+  const hostname = process.env.DATABASE_HOST || 'localhost';
 
   // In-memory cache — longer TTL for static data
   const apiCache = new NodeCache({ stdTTL: 300, checkperiod: 120, useClones: false });
