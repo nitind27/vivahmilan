@@ -469,7 +469,7 @@ function ChatInner() {
       if (!res.ok) { const d = await res.json(); toast.error(d.error); setInput(content); return; }
       const msg = await res.json();
       setMessages(prev => [...prev, msg]);
-      socketRef.current?.emit('message:send', { roomId: activeRoom.id, message: msg });
+      // Server emits to receiver via socket
       setRooms(prev => { const u = prev.map(r => r.id === activeRoom.id ? { ...r, messages: [msg] } : r); return u.sort((a,b) => new Date(b.messages?.[0]?.createdAt||b.createdAt) - new Date(a.messages?.[0]?.createdAt||a.createdAt)); });
     } finally { setSending(false); }
   };
@@ -535,7 +535,7 @@ function ChatInner() {
       // ── STEP 3: Replace optimistic with real message ──────────────────
       setMessages(prev => prev.map(m => m._tempId === tempId ? { ...realMsg } : m));
       URL.revokeObjectURL(blobUrl);
-      socketRef.current?.emit('message:send', { roomId: activeRoom.id, message: realMsg });
+      // Server emits to receiver via socket
       setRooms(prev => { const u = prev.map(r => r.id === activeRoom.id ? { ...r, messages: [realMsg] } : r); return u.sort((a,b) => new Date(b.messages?.[0]?.createdAt||b.createdAt) - new Date(a.messages?.[0]?.createdAt||a.createdAt)); });
     } catch (err) {
       console.error('Upload error:', err);
@@ -596,7 +596,7 @@ function ChatInner() {
       if (!res.ok) { toast.error('Failed to send location'); return; }
       const msg = await res.json();
       setMessages(prev => [...prev, msg]);
-      socketRef.current?.emit('message:send', { roomId: activeRoom.id, message: msg });
+      // Server emits to receiver via socket
       setRooms(prev => { const u = prev.map(r => r.id === activeRoom.id ? { ...r, messages: [msg] } : r); return u.sort((a,b) => new Date(b.messages?.[0]?.createdAt||b.createdAt) - new Date(a.messages?.[0]?.createdAt||a.createdAt)); });
       if (locationType === 'live') {
         const watchId = navigator.geolocation.watchPosition(async (p) => {

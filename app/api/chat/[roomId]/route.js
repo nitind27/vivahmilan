@@ -120,5 +120,14 @@ export async function POST(req, { params }) {
   } catch (e) { console.error('Push error:', e.message); }
 
   const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
+
+  // Server-side socket emit — reliable real-time delivery
+  try {
+    const io = global.getIO?.();
+    if (io) {
+      io.to(roomId).emit('message:receive', { ...message, _senderName: session.user.name });
+    }
+  } catch (e) { console.error('Socket emit error:', e.message); }
+
   return NextResponse.json({ ...message, _senderName: session.user.name }, { status: 201 });
 }

@@ -23,6 +23,9 @@ const MIME = {
   '.gif': 'image/gif', '.pdf': 'application/pdf',
 };
 
+// Global io accessor for API routes
+global.getIO = () => global.__io || null;
+
 app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
     req.socket.setMaxListeners(0);
@@ -102,6 +105,9 @@ app.prepare().then(() => {
     pingTimeout: 60000,
     pingInterval: 25000,
   });
+
+  // Store io globally so API routes can emit events
+  global.__io = io;
 
   const onlineUsers = new Map();
 
