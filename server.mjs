@@ -12,13 +12,38 @@ import cluster from 'cluster';
 import os from 'os';
 import { setupPrimary } from '@socket.io/cluster-adapter';
 import { config } from 'dotenv';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
+import { resolve } from 'path';
 
-// Load .env.production in production, else .env
+// Load env file BEFORE anything else
 const envFile = process.env.NODE_ENV === 'production' && existsSync('.env.production')
   ? '.env.production'
   : '.env';
-config({ path: envFile });
+
+// Force load with override so dotenvx can't interfere
+config({ path: resolve(process.cwd(), envFile), override: true });
+
+// Verify critical env vars loaded
+if (!process.env.DATABASE_URL && !process.env.DATABASE_HOST) {
+  // Try manual parse as fallback
+  try {
+    const raw = readFileSync(resolve(process.cwd(), envFile), 'utf8');
+    for (const line of raw.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const idx = trimmed.indexOf('=');
+      if (idx === -1) continue;
+      const key = trimmed.slice(0, idx).trim();
+      const val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+      if (!process.env[key]) process.env[key] = val;
+    }
+    console.log('✅ Env loaded via manual fallback from', envFile);
+  } catch (e) {
+    console.error('❌ Failed to load env file:', e.message);
+  }
+} else {
+  console.log('✅ Env loaded from', envFile, '| DB_HOST:', process.env.DATABASE_HOST || 'from URL');
+}
 
 const isDev = process.env.NODE_ENV !== 'production';
 const NUM_WORKERS = isDev ? 1 : (
