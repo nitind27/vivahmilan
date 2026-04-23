@@ -1,8 +1,6 @@
 // ✅ LOAD ENV (MOST IMPORTANT)
 import { config } from 'dotenv';
-config({
-  path: '.env.production'
-});
+config({ path: '.env.production' });
 
 // Custom Next.js server with Socket.io integrated
 import { createServer } from 'http';
@@ -13,13 +11,12 @@ import next from 'next';
 import { Server } from 'socket.io';
 
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = '0.0.0.0'; // VPS pe better hai
+const hostname = '0.0.0.0';
 const port = parseInt(process.env.PORT || '3006');
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
-// MIME types for uploaded files
 const MIME = {
   '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.png': 'image/png', '.webp': 'image/webp',
@@ -30,16 +27,49 @@ app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
     req.socket.setMaxListeners(0);
     const parsedUrl = parse(req.url, true);
+    const pathname = parsedUrl.pathname || '/';
+
+    // ── START PREVIEW GATE ──────────────────────────────────
+    // TO REMOVE: delete from here to END PREVIEW GATE comment
+    const PREVIEW_COOKIE_NAME  = 'vd_preview_auth';
+    const PREVIEW_COOKIE_VALUE = 'granted_2710';
+    const BYPASS_PATHS = [
+      '/welcome.html',
+      '/_next/',
+      '/favicon.ico',
+      '/logo/',
+      '/audio/',
+      '/video/',
+      '/images/',
+      '/uploads/',
+      '/api/auth/',
+    ];
+    const isBypassed = BYPASS_PATHS.some(p => pathname.startsWith(p))
+      || (pathname.includes('.') && !pathname.endsWith('.html'));
+
+    if (!isBypassed) {
+      const cookieHeader = req.headers.cookie || '';
+      const cookies = Object.fromEntries(
+        cookieHeader.split(';')
+          .map(c => { const [k, ...v] = c.trim().split('='); return [k?.trim(), v.join('=').trim()]; })
+          .filter(([k]) => k)
+      );
+      if (cookies[PREVIEW_COOKIE_NAME] !== PREVIEW_COOKIE_VALUE) {
+        const redirectTo = encodeURIComponent(pathname);
+        res.writeHead(302, { Location: `/welcome.html?login&redirect=${redirectTo}` });
+        res.end();
+        return;
+      }
+    }
+    // ── END PREVIEW GATE ────────────────────────────────────
 
     // ── Serve /uploads/* directly ──────────────────────────
-    if (parsedUrl.pathname?.startsWith('/uploads/')) {
-      const filePath = join(process.cwd(), 'public', parsedUrl.pathname);
+    if (pathname.startsWith('/uploads/')) {
+      const filePath = join(process.cwd(), 'public', pathname);
       if (existsSync(filePath)) {
         const ext = extname(filePath).toLowerCase();
-        const mime = MIME[ext] || 'application/octet-stream';
-        res.setHeader('Content-Type', mime);
+        res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
         res.setHeader('Cache-Control', 'public, max-age=31536000');
-
         try {
           const stat = statSync(filePath);
           res.setHeader('Content-Length', stat.size);
@@ -59,7 +89,7 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
-  // ── Socket.io ──────────────────────────
+  // ── Socket.io ──────────────────────────────────────────────
   const io = new Server(httpServer, {
     path: '/api/socket',
     addTrailingSlash: false,
@@ -103,17 +133,11 @@ app.prepare().then(() => {
 
     socket.on('interest:notify', ({ toUserId, fromUser }) => {
       const targetSocket = onlineUsers.get(toUserId);
-      if (targetSocket) {
-        io.to(targetSocket).emit('interest:received', { fromUser });
-      }
+      if (targetSocket) io.to(targetSocket).emit('interest:received', { fromUser });
     });
 
     socket.on('location:update', ({ roomId, msgId, latitude, longitude }) => {
-      socket.to(roomId).emit('location:update', {
-        msgId,
-        latitude,
-        longitude
-      });
+      socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
     });
 
     socket.on('disconnect', () => {
