@@ -28,13 +28,14 @@ function formatMsgTime(date) {
 function formatLastSeen(isoString) {
   if (!isoString) return 'Offline';
   const d = new Date(isoString);
+  if (isNaN(d.getTime())) return 'Offline';
   const now = new Date();
   const diffMs = now - d;
+  if (diffMs < 0) return 'last seen just now'; // clock skew
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
-
   if (diffMins < 1) return 'last seen just now';
-  if (diffMins < 60) return `last seen ${diffMins} min ago`;
+  if (diffMins < 60) return `last seen ${diffMins}m ago`;
   if (diffHours < 24 && isToday(d)) return `last seen today at ${format(d, 'h:mm a')}`;
   if (isYesterday(d)) return `last seen yesterday at ${format(d, 'h:mm a')}`;
   return `last seen ${format(d, 'MMM d')} at ${format(d, 'h:mm a')}`;
@@ -307,6 +308,7 @@ function ChatInner() {
   const [showAttach, setShowAttach]   = useState(false);
   const [showLocPicker, setShowLocPicker] = useState(false);
   const [unreadPerRoom, setUnreadPerRoom] = useState({});
+  const [, setTick] = useState(0); // forces re-render every minute for last seen
 
   const messagesEndRef  = useRef(null);
   const typingTimeout   = useRef(null);
@@ -330,6 +332,12 @@ function ChatInner() {
       }
     }
   }, [status, session, router]);
+
+  // Tick every 30s to keep last seen text fresh
+  useEffect(() => {
+    const t = setInterval(() => setTick(n => n + 1), 30000);
+    return () => clearInterval(t);
+  }, []);
 
   // Socket setup
   useEffect(() => {
@@ -685,9 +693,7 @@ function ChatInner() {
                           </span>
                         )}
                       </div>
-                      {!online && lastSeenMap[other?.id] && (
-                        <p className="text-xs text-gray-400 truncate mt-0.5">{formatLastSeen(lastSeenMap[other?.id])}</p>
-                      )}
+                      {/* last seen removed from sidebar */}
                     </div>
                   </button>
                 );
