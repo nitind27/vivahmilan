@@ -7,15 +7,15 @@ const nextConfig = {
       { protocol: 'https', hostname: 'randomuser.me' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'staticmap.openstreetmap.de' },
-      { protocol: 'https', hostname: 'vivahmilan.codeatinfotech.com' },
+      { protocol: 'https', hostname: 'vivahdwar.com' },
     ],
     localPatterns: [{ pathname: '/uploads/**' }],
     unoptimized: true,
   },
    // ✅ THIS IS THE MAIN FIX
   allowedDevOrigins: [
-    'http://vivahmilan.codeatinfotech.com',
-    'https://vivahmilan.codeatinfotech.com',
+    'http://vivahdwar.com',
+    'https://vivahdwar.com',
   ],
 
   experimental: {
@@ -23,7 +23,7 @@ const nextConfig = {
       allowedOrigins: [
         'localhost:3000',
         '192.168.29.125:3000',
-        'vivahmilan.codeatinfotech.com',
+        'vivahdwar.com',
       ],
       bodySizeLimit: '20mb',
     },
