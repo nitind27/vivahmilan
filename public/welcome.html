@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivah Dwar - Coming Soon | Opening Doors to Happiness</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+        }
+
+        /* ── Animated Background ── */
+        .bg-animation {
+            position: fixed;
+            width: 100%; height: 100%;
+            top: 0; left: 0; z-index: -1;
+            background: linear-gradient(135deg, #1a0f0a 0%, #2d1f1a 50%, #1a0f0a 100%);
+            overflow: hidden;
+        }
+        .floating-particles { position: absolute; width: 100%; height: 100%; overflow: hidden; }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: rgba(212,175,125,0.6);
+            border-radius: 50%;
+            animation: float 15s infinite;
+            box-shadow: 0 0 10px rgba(212,175,125,0.8);
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10%      { opacity: 1; }
+            90%      { opacity: 1; }
+            100%     { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        .arch-decoration {
+            position: absolute; top: -50px; left: 50%;
+            transform: translateX(-50%);
+            width: 600px; height: 300px; opacity: 0.1;
+            background: radial-gradient(ellipse at center, #d4af37 0%, transparent 70%);
+            border-radius: 50% 50% 0 0;
+            animation: archPulse 4s ease-in-out infinite;
+        }
+        @keyframes archPulse {
+            0%,100% { transform: translateX(-50%) scale(1); opacity: 0.1; }
+            50%      { transform: translateX(-50%) scale(1.1); opacity: 0.2; }
+        }
+
+        /* ── Ornaments ── */
+        .ornament {
+            position: absolute; width: 100px; height: 100px;
+            opacity: 0.3; animation: rotate 20s linear infinite;
+        }
+        .ornament-top-left    { top:50px; left:50px;   border-top:3px solid #d4af37; border-left:3px solid #d4af37; }
+        .ornament-top-right   { top:50px; right:50px;  border-top:3px solid #d4af37; border-right:3px solid #d4af37; }
+        .ornament-bottom-left { bottom:50px; left:50px; border-bottom:3px solid #d4af37; border-left:3px solid #d4af37; }
+        .ornament-bottom-right{ bottom:50px; right:50px;border-bottom:3px solid #d4af37; border-right:3px solid #d4af37; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* ── Loader ── */
+        .loader {
+            position: fixed; inset: 0;
+            background: #0a0a0a;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.5s ease;
+        }
+        .loader.hidden { opacity: 0; pointer-events: none; }
+        .loader-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem; color: #d4af37;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.95)} }
+        .loader-text { color:#c9b896; margin-top:10px; font-size:0.9rem; letter-spacing:3px; text-align:center; }
+
+        /* ── Main container ── */
+        .container {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; position: relative;
+        }
+        .content-wrapper {
+            text-align: center; max-width: 900px; width: 100%;
+            animation: fadeInUp 1.5s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(50px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ── Logo ── */
+        .logo-section { margin-bottom:40px; animation: logoGlow 3s ease-in-out infinite; }
+        @keyframes logoGlow {
+            0%,100% { filter: drop-shadow(0 0 20px rgba(212,175,125,0.5)); }
+            50%      { filter: drop-shadow(0 0 40px rgba(212,175,125,0.8)); }
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem; font-weight: 700;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 50%, #d4af37 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            letter-spacing: 8px; margin-bottom: 10px;
+            position: relative; display: inline-block;
+        }
+        .logo::after {
+            content: ''; position: absolute; bottom: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 200px; height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        }
+        .tagline {
+            font-size: 1.2rem; color: #c9b896;
+            letter-spacing: 4px; text-transform: uppercase;
+            margin-top: 20px; font-weight: 300;
+        }
+
+        /* ── Coming Soon text ── */
+        .coming-soon {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem; color: #d4af37;
+            margin: 40px 0; letter-spacing: 12px;
+            animation: textShine 3s infinite;
+            background: linear-gradient(90deg, #d4af37, #f4e5c2, #d4af37);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        @keyframes textShine { to { background-position: 200% center; } }
+
+        /* ── Message box ── */
+        .message-box {
+            background: rgba(212,175,125,0.05);
+            border: 1px solid rgba(212,175,125,0.2);
+            border-radius: 15px; padding: 40px; margin: 40px 0;
+            backdrop-filter: blur(10px);
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+        @keyframes borderGlow {
+            0%,100% { border-color:rgba(212,175,125,0.2); box-shadow:0 0 20px rgba(212,175,125,0.1); }
+            50%      { border-color:rgba(212,175,125,0.5); box-shadow:0 0 40px rgba(212,175,125,0.3); }
+        }
+        .message-title { font-family:'Playfair Display',serif; font-size:2rem; color:#f4e5c2; margin-bottom:20px; font-weight:600; }
+        .message-text  { font-size:1.1rem; color:#c9b896; line-height:1.8; max-width:700px; margin:0 auto; }
+
+        /* ── Contact / Social ── */
+        .contact-section { margin: 50px 0; }
+        .contact-title   { font-size:1.3rem; color:#f4e5c2; margin-bottom:30px; font-weight:500; }
+        .social-links    { display:flex; justify-content:center; gap:30px; flex-wrap:wrap; }
+        .social-card {
+            background: rgba(212,175,125,0.1);
+            border: 2px solid rgba(212,175,125,0.3);
+            border-radius: 15px; padding: 30px 40px; min-width: 200px;
+            backdrop-filter: blur(10px); transition: all 0.3s ease;
+            text-decoration: none; display: flex; flex-direction: column;
+            align-items: center; gap: 15px;
+            animation: cardFloat 3s ease-in-out infinite;
+        }
+        .social-card:nth-child(2) { animation-delay: 0.5s; }
+        @keyframes cardFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .social-card:hover { transform:translateY(-15px); border-color:rgba(212,175,125,0.6); box-shadow:0 15px 40px rgba(212,175,125,0.4); }
+        .social-icon { width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; transition:all 0.3s ease; }
+        .instagram-icon { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color:#fff; box-shadow:0 5px 20px rgba(220,39,67,0.4); }
+        .whatsapp-icon  { background:linear-gradient(45deg,#25D366,#128C7E); color:#fff; box-shadow:0 5px 20px rgba(37,211,102,0.4); }
+        .social-card:hover .social-icon { transform:scale(1.1) rotate(10deg); }
+        .social-text   { color:#f4e5c2; font-size:1.1rem; font-weight:500; }
+        .social-number { color:#c9b896; font-size:0.95rem; letter-spacing:1px; }
+
+        /* ── Preview Login Button ── */
+        .preview-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 32px;
+            border: 1px solid rgba(212,175,125,0.35);
+            border-radius: 50px;
+            color: rgba(201,184,150,0.6);
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .preview-btn:hover {
+            border-color: rgba(212,175,125,0.7);
+            color: #d4af37;
+            box-shadow: 0 0 20px rgba(212,175,125,0.15);
+        }
+
+        /* ══════════════════════════════════════
+           LOGIN OVERLAY
+        ══════════════════════════════════════ */
+        .login-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
+        }
+        .login-overlay.active { display: flex; }
+
+        .login-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(212,175,125,0.25);
+            border-radius: 24px;
+            padding: 50px 44px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(212,175,125,0.08);
+            animation: fadeInUp 0.5s ease-out;
+            position: relative;
+        }
+        .login-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; font-weight: 700;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 50%, #d4af37 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            letter-spacing: 4px; text-align: center; margin-bottom: 6px;
+        }
+        .login-tagline {
+            text-align: center; color: #c9b896;
+            font-size: 0.72rem; letter-spacing: 3px;
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+        .login-divider {
+            width: 60px; height: 2px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            margin: 0 auto 30px;
+        }
+        .login-subtitle {
+            text-align: center; color: rgba(201,184,150,0.7);
+            font-size: 0.82rem; margin-bottom: 28px;
+        }
+        .form-label {
+            display: block; color: #c9b896;
+            font-size: 0.75rem; letter-spacing: 1.5px;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(212,175,125,0.2);
+            border-radius: 12px; padding: 13px 16px;
+            color: #f4e5c2; font-size: 0.92rem;
+            font-family: 'Poppins', sans-serif;
+            outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 18px;
+        }
+        .form-input:focus { border-color: rgba(212,175,125,0.6); box-shadow: 0 0 0 3px rgba(212,175,125,0.1); }
+        .form-input::placeholder { color: rgba(201,184,150,0.35); }
+        .login-btn {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #d4af37 0%, #c9a227 100%);
+            color: #1a0f0a; font-size: 0.95rem; font-weight: 600;
+            font-family: 'Poppins', sans-serif; letter-spacing: 1px;
+            cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 24px rgba(212,175,125,0.35); margin-top: 4px;
+        }
+        .login-btn:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 10px 30px rgba(212,175,125,0.45); }
+        .login-btn:active { transform: translateY(0); }
+        .error-msg {
+            display: none;
+            background: rgba(220,38,38,0.15);
+            border: 1px solid rgba(220,38,38,0.35);
+            border-radius: 10px; color: #fca5a5;
+            font-size: 0.83rem; padding: 11px 16px;
+            margin-bottom: 16px; text-align: center;
+        }
+        .error-msg.show { display: block; }
+        .close-login {
+            position: absolute; top: 18px; right: 20px;
+            background: none; border: none;
+            color: rgba(201,184,150,0.5); font-size: 1.4rem;
+            cursor: pointer; line-height: 1;
+            transition: color 0.2s;
+        }
+        .close-login:hover { color: #d4af37; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .logo { font-size: 3rem; letter-spacing: 4px; }
+            .coming-soon { font-size: 2rem; letter-spacing: 6px; }
+            .message-box { padding: 25px 20px; }
+            .message-title { font-size: 1.5rem; }
+            .message-text { font-size: 1rem; }
+            .social-card { min-width: 150px; padding: 25px 30px; }
+            .social-icon { width: 60px; height: 60px; font-size: 1.7rem; }
+            .ornament { width: 50px; height: 50px; }
+            .ornament-top-left, .ornament-top-right { top: 20px; }
+            .ornament-bottom-left, .ornament-bottom-right { bottom: 20px; }
+            .login-card { padding: 36px 24px; margin: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div>
+            <div class="loader-logo">VIVAH DWAR</div>
+            <div class="loader-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="arch-decoration"></div>
+        <div class="floating-particles" id="particles"></div>
+    </div>
+
+    <!-- Ornaments -->
+    <div class="ornament ornament-top-left"></div>
+    <div class="ornament ornament-top-right"></div>
+    <div class="ornament ornament-bottom-left"></div>
+    <div class="ornament ornament-bottom-right"></div>
+
+    <!-- ══ COMING SOON CONTENT ══ -->
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="logo-section">
+                <h1 class="logo">VIVAH DWAR</h1>
+                <p class="tagline">Opening Doors to Happiness</p>
+            </div>
+
+            <h2 class="coming-soon">COMING SOON</h2>
+
+            <div class="message-box">
+                <h3 class="message-title">Something Beautiful is Being Created</h3>
+                <p class="message-text">
+                    We're crafting an extraordinary platform to help you find your perfect match.
+                    Vivah Dwar is your gateway to lifelong happiness, where traditions meet modernity
+                    and dreams become reality. Stay tuned for a transformative journey towards your
+                    special someone.
+                </p>
+            </div>
+
+            <div class="contact-section">
+                <p class="contact-title">Connect With Us</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/vivah_dwar/?utm_source=ig_web_button_share_sheet"
+                       class="social-card" target="_blank" rel="noopener noreferrer">
+                        <div class="social-icon instagram-icon"><i class="fab fa-instagram"></i></div>
+                        <span class="social-text">Follow on Instagram</span>
+                        <span class="social-number">@vivah_dwar</span>
+                    </a>
+                    <a href="https://wa.me/918735995467"
+                       class="social-card" target="_blank" rel="noopener noreferrer">
+                        <div class="social-icon whatsapp-icon"><i class="fab fa-whatsapp"></i></div>
+                        <span class="social-text">Chat on WhatsApp</span>
+                        <span class="social-number">+91 87359 95467</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hidden preview access button -->
+            <button class="preview-btn" onclick="showLogin()">Preview Access</button>
+        </div>
+    </div>
+
+    <!-- ══ LOGIN OVERLAY ══ -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-card">
+            <button class="close-login" onclick="hideLogin()" title="Close">&times;</button>
+            <div class="login-logo">VIVAH DWAR</div>
+            <div class="login-tagline">Opening Doors to Happiness</div>
+            <div class="login-divider"></div>
+            <p class="login-subtitle">Preview access — authorized personnel only</p>
+
+            <div class="error-msg" id="errorMsg">Invalid credentials. Please try again.</div>
+
+            <form onsubmit="handleLogin(event)">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-input" type="email" id="email" placeholder="Enter email" autocomplete="username" required />
+
+                <label class="form-label" for="password">Password</label>
+                <input class="form-input" type="password" id="password" placeholder="Enter password" autocomplete="current-password" required />
+
+                <button class="login-btn" type="submit">Enter Website</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ── Credentials ──
+        const VALID_EMAIL    = 'vivahdwar@gmail.com';
+        const VALID_PASSWORD = 'Vivahdwar@2710';
+        const COOKIE_NAME    = 'vd_preview_auth';
+        const COOKIE_VALUE   = 'granted_2710';
+
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+        }
+
+        function showLogin() {
+            document.getElementById('loginOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('email').focus(), 100);
+        }
+
+        function hideLogin() {
+            document.getElementById('loginOverlay').classList.remove('active');
+            document.getElementById('errorMsg').classList.remove('show');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email    = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errEl    = document.getElementById('errorMsg');
+
+            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+                errEl.classList.remove('show');
+                setCookie(COOKIE_NAME, COOKIE_VALUE, 7);
+                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/';
+                window.location.href = redirect;
+            } else {
+                errEl.classList.add('show');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+
+        // Auto-open login if ?login param present (set by server redirect)
+        if (new URLSearchParams(window.location.search).has('login')) {
+            window.addEventListener('load', () => {
+                setTimeout(showLogin, 600);
+            });
+        }
+
+        // Close overlay on backdrop click
+        document.getElementById('loginOverlay').addEventListener('click', function(e) {
+            if (e.target === this) hideLogin();
+        });
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1200);
+        });
+
+        // Particles
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDelay = Math.random() * 15 + 's';
+            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            container.appendChild(p);
+        }
+
+        // Parallax ornaments
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.ornament').forEach((o, i) => {
+                const speed = (i + 1) * 20;
+                const x = (window.innerWidth  - e.pageX * speed) / 100;
+                const y = (window.innerHeight - e.pageY * speed) / 100;
+                o.style.transform = `translateX(${x}px) translateY(${y}px) rotate(${i * 90}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>

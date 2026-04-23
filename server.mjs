@@ -175,6 +175,42 @@ async function startWorker() {
     const parsedUrl = parse(req.url, true);
     const { pathname } = parsedUrl;
 
+    // ── PREVIEW AUTH GATE ────────────────────────────────────────────
+    // TO REMOVE: Delete the block between START and END comments
+    // ── START PREVIEW GATE ──
+    const PREVIEW_COOKIE_NAME  = 'vd_preview_auth';
+    const PREVIEW_COOKIE_VALUE = 'granted_2710';
+    const BYPASS_PATHS = [
+      '/welcome.html',
+      '/_next/',
+      '/favicon.ico',
+      '/logo/',
+      '/audio/',
+      '/video/',
+      '/images/',
+      '/uploads/',
+      '/api/auth/',
+    ];
+    const isBypassed = BYPASS_PATHS.some(p => pathname?.startsWith(p))
+      || (pathname?.includes('.') && !pathname?.endsWith('.html'));
+
+    if (!isBypassed) {
+      const cookieHeader = req.headers.cookie || '';
+      const cookies = Object.fromEntries(
+        cookieHeader.split(';').map(c => {
+          const [k, ...v] = c.trim().split('=');
+          return [k?.trim(), v.join('=').trim()];
+        }).filter(([k]) => k)
+      );
+      if (cookies[PREVIEW_COOKIE_NAME] !== PREVIEW_COOKIE_VALUE) {
+        const redirectTo = encodeURIComponent(pathname || '/');
+        res.writeHead(302, { Location: `/welcome.html?login&redirect=${redirectTo}` });
+        res.end();
+        return;
+      }
+    }
+    // ── END PREVIEW GATE ────────────────────────────────────────────
+
     // Serve /uploads/* directly
     if (pathname?.startsWith('/uploads/')) {
       const filePath = join(process.cwd(), 'public', pathname);
