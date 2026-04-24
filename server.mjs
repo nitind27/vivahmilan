@@ -125,6 +125,7 @@ app.prepare().then(() => {
     ];
     const isMaintenanceBypassed =
       pathname.startsWith('/admin') ||
+      pathname.startsWith('/login') ||
       MAINTENANCE_BYPASS.some(p => pathname.startsWith(p)) ||
       (pathname.includes('.') && !pathname.endsWith('.html'));
 
