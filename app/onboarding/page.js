@@ -345,7 +345,7 @@ function OnboardingInner() {
                       <Sel label="Rashi (Moon Sign)" value={form.horoscopeSign} onChange={v => set('horoscopeSign', v)} options={horoConfig.signs || []} />
                       <Sel label="Nakshatra" value={form.nakshatra} onChange={v => set('nakshatra', v)} options={horoConfig.nakshatra || []} />
                       <div className="col-span-2"><Radio label="Manglik Status" value={form.manglik} onChange={v => set('manglik', v)} options={horoConfig.manglik || ['Yes','No',"Don't Know"]} /></div>
-                      <div className="col-span-2"><Radio label="Kundli Match Required?" value={form.kundliMatch} onChange={v => { set('kundliMatch', v); if (v !== 'Must Match') setKundali(null); }} options={horoConfig.kundliMatch || ['Must Match','Preferred','Not Required']} /></div>
+                      <div className="col-span-2"><Radio label="Kundli Match Required?" value={form.kundliMatch} onChange={v => { set('kundliMatch', v); }} options={horoConfig.kundliMatch || ['Must Match','Preferred','Not Required']} /></div>
                     </div>
                   </div>
                 )}

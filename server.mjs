@@ -76,6 +76,14 @@ app.prepare().then(() => {
       '/uploads/',
       '/api/auth/',
       '/api/flutter/',
+      '/api/register',
+      '/api/onboarding',
+      '/register',
+      '/verify-email',
+      '/onboarding',
+      '/login',
+      '/forgot-password',
+      '/kyc/',
     ];
     const isBypassed = BYPASS_PATHS.some(p => pathname.startsWith(p))
       || (pathname.includes('.') && !pathname.endsWith('.html'));
@@ -123,6 +131,7 @@ app.prepare().then(() => {
     const MAINTENANCE_BYPASS = [
       '/maintenance', '/api/', '/_next', '/favicon', '/logo',
       '/images', '/uploads', '/audio', '/video', '/welcome',
+      '/register', '/verify-email', '/onboarding', '/forgot-password', '/kyc/',
     ];
     const isMaintenanceBypassed =
       pathname.startsWith('/admin') ||

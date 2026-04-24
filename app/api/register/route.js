@@ -57,7 +57,8 @@ export async function POST(req) {
       await sendOTPEmail(email, name, otp, 'EMAIL_VERIFY');
       await sendWelcomeEmail(email, name);
     } catch (emailErr) {
-      console.error('Email send failed:', emailErr.message);
+      console.error('Email send failed:', emailErr.message, emailErr.code, emailErr.response);
+      // Don't block registration — user can resend OTP
     }
 
     return NextResponse.json({
