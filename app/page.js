@@ -46,12 +46,6 @@ const features = [
   { icon: Heart, title: 'Real Connections', desc: 'Meaningful conversations with interest-based chat system.' },
 ];
 
-const testimonials = [
-  { name: 'Priya & Arjun', location: 'Mumbai, India', text: 'We found each other on Vivah Dwar and got married last year. The matching algorithm was spot on!', img: 'https://randomuser.me/api/portraits/women/44.jpg' },
-  { name: 'Sarah & James', location: 'London, UK', text: 'As an NRI, I was worried about finding the right match. Vivah Dwar made it so easy and safe.', img: 'https://randomuser.me/api/portraits/women/68.jpg' },
-  { name: 'Fatima & Omar', location: 'Dubai, UAE', text: 'The verified profiles gave us confidence. We are now happily married for 2 years!', img: 'https://randomuser.me/api/portraits/women/65.jpg' },
-];
-
 const STATS = [
   { icon: Users, value: 20, suffix: 'M+', label: 'Members' },
   { icon: Heart, value: 5, suffix: 'M+', label: 'Happy Couples' },
@@ -105,19 +99,68 @@ function StatCard({ icon: Icon, value, suffix, label, delay }) {
   );
 }
 
-const plans = [
-  { name: 'Free', price: '$0', period: 'forever', features: ['Create Profile', 'Browse Matches', 'Send 5 Interests', 'Basic Search'], cta: 'Get Started', highlight: false },
-  { name: 'Gold', price: '$19', period: '/month', features: ['Unlimited Interests', 'See Contact Details', 'Advanced Filters', 'Read Receipts', 'Priority Support'], cta: 'Go Gold', highlight: true },
-  { name: 'Platinum', price: '$39', period: '/month', features: ['Everything in Gold', 'Unlimited Chat', 'Profile Boost', 'AI Match Score', 'Dedicated Manager'], cta: 'Go Platinum', highlight: false },
+const DURATION_OPTIONS = [
+  { label: '3 Months', months: 3 },
+  { label: '6 Months', months: 6 },
+  { label: '12 Months', months: 12 },
+  { label: 'Lifetime', months: 0 },  // 0 = lifetime
 ];
+
+function formatINR(amount) {
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
+}
 
 export default function Home() {
   const [slide, setSlide] = useState(0);
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
   const [mounted, setMounted] = useState(false);
+  const [pricingPlans, setPricingPlans] = useState([]);
+  const [selectedMonths, setSelectedMonths] = useState(3);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponStatus, setCouponStatus] = useState(null); // null | { valid, discountPct, code } | { error }
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [stories, setStories] = useState([]);
+  const [storySlide, setStorySlide] = useState(0);
+  const storyTimerRef = useRef(null);
 
   useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    fetch('/api/admin/plans').then(r => r.json()).then(data => {
+      if (Array.isArray(data)) setPricingPlans(data.filter(p => p.isActive !== false));
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/stories').then(r => r.json()).then(data => {
+      if (Array.isArray(data)) setStories(data);
+    }).catch(() => {});
+  }, []);
+
+  // Auto-slide stories every 4s
+  useEffect(() => {
+    if (stories.length <= 1) return;
+    storyTimerRef.current = setInterval(() => {
+      setStorySlide(s => (s + 1) % stories.length);
+    }, 4000);
+    return () => clearInterval(storyTimerRef.current);
+  }, [stories.length]);
+
+  const validateCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    setCouponStatus(null);
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim() }),
+      });
+      const data = await res.json();
+      setCouponStatus(res.ok ? { valid: true, discountPct: data.discountPct, code: data.code } : { error: data.error });
+    } catch { setCouponStatus({ error: 'Something went wrong' }); }
+    finally { setCouponLoading(false); }
+  };
 
   // Play audio once per session
   useEffect(() => {
@@ -281,7 +324,7 @@ export default function Home() {
 
         {/* BOTTOM WAVE */}
         <div className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none">
-          <svg viewBox="0 0 1440 60" className="w-full fill-vd-bg" preserveAspectRatio="none">
+          <svg viewBox="0 0 1440 60" className="w-full fill-vd-bg block" preserveAspectRatio="none" style={{ display: 'block', marginBottom: -1 }}>
             <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" />
           </svg>
         </div>
@@ -313,11 +356,10 @@ export default function Home() {
                 <motion.div
                   whileHover={{ rotate: [0, -10, 10, 0] }}
                   transition={{ duration: 0.4 }}
-                  className="w-12 h-12 vd-gradient-gold rounded-2xl flex items-center justify-center mb-4"
-                >
+                  className="w-12 h-12 vd-gradient-gold rounded-2xl flex items-center justify-center mb-4">
                   <f.icon className="w-6 h-6 text-white" />
                 </motion.div>
-                <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
+                <h3 className="font-semibold text-vd-text-heading mb-2">{f.title}</h3>
                 <p className="text-vd-text-sub text-sm leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
@@ -326,73 +368,194 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-vd-bg-section">
+      <section className="py-20 bg-vd-bg-section overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Success <span className="vd-gradient-text">Stories</span></h2>
             <p className="text-vd-text-sub">Real couples, real love stories.</p>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <motion.div key={t.name} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15, duration: 0.5 }} viewport={{ once: true }}
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="bg-vd-bg-alt rounded-2xl p-6 border border-vd-border cursor-default">
-                <div className="flex items-center gap-3 mb-4">
-                  <motion.div whileHover={{ scale: 1.1, rotate: 5 }}>
-                    <Image src={t.img} alt={t.name} width={48} height={48} className="rounded-full" />
+
+          {stories.length === 0 ? (
+            <p className="text-center text-vd-text-sub py-8">Loading stories…</p>
+          ) : (
+            <div className="relative">
+              {/* Slides */}
+              <div className="overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={storySlide}
+                    initial={{ opacity: 0, x: 60 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -60 }}
+                    transition={{ duration: 0.45, ease: 'easeInOut' }}
+                    className="grid md:grid-cols-3 gap-6"
+                  >
+                    {[0, 1, 2].map(offset => {
+                      const t = stories[(storySlide + offset) % stories.length];
+                      if (!t) return null;
+                      return (
+                        <div key={t.id} className="bg-vd-bg-alt rounded-2xl p-6 border border-vd-border">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 rounded-full vd-gradient-gold flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                              {t.coupleName?.[0] || '♥'}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-sm">{t.coupleName}</p>
+                              <p className="text-xs text-vd-text-sub">{t.location}</p>
+                            </div>
+                          </div>
+                          <p className="text-vd-text-sub text-sm leading-relaxed">"{t.story}"</p>
+                          <div className="flex gap-1 mt-3">
+                            {[...Array(5)].map((_, j) => (
+                              <Star key={j} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </motion.div>
-                  <div>
-                    <p className="font-semibold text-sm">{t.name}</p>
-                    <p className="text-xs text-vd-text-sub">{t.location}</p>
-                  </div>
-                </div>
-                <p className="text-vd-text-sub text-sm leading-relaxed">"{t.text}"</p>
-                <div className="flex gap-1 mt-3">
-                  {[...Array(5)].map((_, j) => (
-                    <motion.div key={j} initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.15 + j * 0.05 }} viewport={{ once: true }}>
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                </AnimatePresence>
+              </div>
+
+              {/* Prev / Next */}
+              <button onClick={() => { clearInterval(storyTimerRef.current); setStorySlide(s => (s - 1 + stories.length) % stories.length); }}
+                className="absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-vd-bg-alt border border-vd-border flex items-center justify-center text-vd-text-sub hover:text-vd-primary hover:border-vd-primary transition-colors shadow-md z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <button onClick={() => { clearInterval(storyTimerRef.current); setStorySlide(s => (s + 1) % stories.length); }}
+                className="absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-vd-bg-alt border border-vd-border flex items-center justify-center text-vd-text-sub hover:text-vd-primary hover:border-vd-primary transition-colors shadow-md z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+
+              {/* Dots */}
+              <div className="flex justify-center gap-2 mt-8">
+                {stories.map((_, i) => (
+                  <button key={i} onClick={() => { clearInterval(storyTimerRef.current); setStorySlide(i); }}
+                    className="transition-all duration-300 rounded-full"
+                    style={{ width: i === storySlide ? 24 : 8, height: 8, background: i === storySlide ? 'rgba(200,164,92,1)' : 'rgba(150,150,150,0.3)' }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Pricing */}
       <section className="py-20 bg-vd-bg-alt">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
             <h2 className="text-4xl font-bold mb-4">Simple <span className="vd-gradient-text">Pricing</span></h2>
-            <p className="text-vd-text-sub">Choose the plan that works for you.</p>
+            <p className="text-vd-text-sub mb-6">Choose the plan that works for you.</p>
+            {/* Duration Tabs */}
+            <div className="inline-flex bg-vd-bg-section border border-vd-border rounded-2xl p-1 gap-1 flex-wrap justify-center">
+              {DURATION_OPTIONS.map(opt => (
+                <button key={opt.months} onClick={() => setSelectedMonths(opt.months)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedMonths === opt.months ? 'vd-gradient-gold text-white shadow' : 'text-vd-text-sub hover:text-white'}`}>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {plans.map((p, i) => (
-              <motion.div key={p.name} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15, duration: 0.5 }} viewport={{ once: true }}
-                whileHover={{ y: -6, scale: p.highlight ? 1.07 : 1.03 }}
-                className={`rounded-2xl p-6 border-2 relative ${p.highlight ? 'vd-gradient-gold text-white border-transparent shadow-2xl scale-105' : 'bg-vd-bg-section border-vd-border'}`}>
-                {p.highlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full">Most Popular</div>}
-                <h3 className={`text-xl font-bold mb-1 ${p.highlight ? 'text-white' : ''}`}>{p.name}</h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-bold">{p.price}</span>
-                  <span className={`text-sm ${p.highlight ? 'text-white/80' : 'text-vd-text-sub'}`}>{p.period}</span>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  {p.features.map(f => (
-                    <li key={f} className="flex items-center gap-2 text-sm">
-                      <CheckCircle className={`w-4 h-4 flex-shrink-0 ${p.highlight ? 'text-white' : 'text-vd-primary'}`} />
-                      <span className={p.highlight ? 'text-white/90' : 'text-vd-text-sub'}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href={p.name === 'Free' ? '/register' : '/premium'}
-                  className={`block text-center py-3 rounded-xl font-semibold transition-all ${p.highlight ? 'bg-white text-vd-primary hover:bg-gray-50' : 'vd-gradient-gold text-white hover:opacity-90'}`}>
-                  {p.cta}
-                </Link>
-              </motion.div>
-            ))}
+
+          {/* Coupon Input */}
+          <div className="flex justify-center mb-10">
+            <div className="flex items-center gap-2 bg-vd-bg-section border border-vd-border rounded-2xl px-4 py-2 w-full max-w-sm">
+              <input
+                value={couponCode}
+                onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponStatus(null); }}
+                onKeyDown={e => e.key === 'Enter' && validateCoupon()}
+                placeholder="Have a coupon code?"
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-vd-text-sub tracking-widest"
+              />
+              <button onClick={validateCoupon} disabled={couponLoading || !couponCode.trim()}
+                className="text-xs font-semibold px-3 py-1.5 vd-gradient-gold text-white rounded-xl disabled:opacity-50 transition-all">
+                {couponLoading ? '…' : 'Apply'}
+              </button>
+            </div>
           </div>
+          {couponStatus?.valid && (
+            <p className="text-center text-green-400 text-sm mb-6 font-medium">
+              🎉 Coupon applied! {couponStatus.discountPct}% off on all plans
+            </p>
+          )}
+          {couponStatus?.error && (
+            <p className="text-center text-red-400 text-sm mb-6">{couponStatus.error}</p>
+          )}
+
+          {pricingPlans.length === 0 ? (
+            <div className="text-center text-vd-text-sub py-10">Loading plans…</div>
+          ) : (
+            <div className={`grid gap-6 max-w-5xl mx-auto ${pricingPlans.length <= 2 ? 'md:grid-cols-2' : pricingPlans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
+              {pricingPlans.map((p, i) => {
+                const basePrice = Number(p.price || 0);
+                const baseDays = Number(p.durationDays || 30);
+                const pricePerDay = baseDays > 0 ? basePrice / baseDays : 0;
+                const isLifetime = selectedMonths === 0;
+                const isFree = basePrice === 0;
+                // Lifetime = fixed ₹4999 for paid plans
+                const totalDays = isLifetime ? 0 : selectedMonths * 30;
+                let totalPrice = isFree ? 0 : isLifetime ? 4999 : Math.round(pricePerDay * totalDays);
+                // Apply coupon discount
+                const discount = couponStatus?.valid ? couponStatus.discountPct : 0;
+                const discountedPrice = isFree ? 0 : Math.round(totalPrice * (1 - discount / 100));
+                const isHighlight = p.plan === 'GOLD';
+                const perms = (() => { try { return JSON.parse(p.permissions || '{}'); } catch { return {}; } })();
+                const features = [
+                  perms.canChat && 'Unlimited Chat',
+                  perms.canSeeContact && 'See Contact Details',
+                  perms.canBoostProfile && 'Profile Boost',
+                  perms.canSeeWhoViewed && 'See Who Viewed You',
+                  perms.unlimitedInterests && 'Unlimited Interests',
+                  perms.aiMatchScore && 'AI Match Score',
+                  !perms.unlimitedInterests && perms.interestLimit > 0 && `Send ${perms.interestLimit} Interests`,
+                  'Browse Matches',
+                  'Create Profile',
+                ].filter(Boolean);
+
+                return (
+                  <motion.div key={p.plan} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.12, duration: 0.5 }} viewport={{ once: true }}
+                    whileHover={{ y: -6, scale: isHighlight ? 1.04 : 1.02 }}
+                    className={`rounded-2xl p-6 border-2 relative ${isHighlight ? 'vd-gradient-gold text-white border-transparent shadow-2xl scale-105' : 'bg-vd-bg-section border-vd-border'}`}>
+                    {isHighlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Most Popular</div>}
+                    {isLifetime && !isFree && <div className="absolute -top-3 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Best Value</div>}
+                    <h3 className={`text-xl font-bold mb-1 ${isHighlight ? 'text-white' : ''}`}>{p.displayName || p.plan}</h3>
+                    {p.description && <p className={`text-xs mb-3 ${isHighlight ? 'text-white/70' : 'text-vd-text-sub'}`}>{p.description}</p>}
+                    <div className="flex items-baseline gap-1 mb-1">
+                      {isFree ? (
+                        <span className="text-4xl font-bold">Free</span>
+                      ) : (
+                        <>
+                          {discount > 0 && <span className={`text-lg line-through ${isHighlight ? 'text-white/50' : 'text-vd-text-sub'}`}>{formatINR(totalPrice)}</span>}
+                          <span className="text-4xl font-bold">{formatINR(discountedPrice)}</span>
+                        </>
+                      )}
+                    </div>
+                    {!isFree && (
+                      <p className={`text-xs mb-5 ${isHighlight ? 'text-white/70' : 'text-vd-text-sub'}`}>
+                        {isLifetime ? 'one-time · lifetime access' : `for ${selectedMonths} month${selectedMonths > 1 ? 's' : ''}`}
+                        {discount > 0 && <span className="ml-1 text-green-400 font-semibold">({discount}% off)</span>}
+                      </p>
+                    )}
+                    {isFree && <p className={`text-xs mb-5 ${isHighlight ? 'text-white/70' : 'text-vd-text-sub'}`}>forever</p>}
+                    <ul className="space-y-3 mb-6">
+                      {features.map(f => (
+                        <li key={f} className="flex items-center gap-2 text-sm">
+                          <CheckCircle className={`w-4 h-4 flex-shrink-0 ${isHighlight ? 'text-white' : 'text-vd-primary'}`} />
+                          <span className={isHighlight ? 'text-white/90' : 'text-vd-text-sub'}>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href={isFree ? '/register' : '/premium'}
+                      className={`block text-center py-3 rounded-xl font-semibold transition-all ${isHighlight ? 'bg-white text-vd-primary hover:bg-gray-50' : 'vd-gradient-gold text-white hover:opacity-90'}`}>
+                      {isFree ? 'Get Started' : `Get ${p.displayName || p.plan}`}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -411,15 +574,15 @@ export default function Home() {
         />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Find Your Soulmate?</h2>
             <motion.div
               animate={{ scale: [1, 1.15, 1] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
               className="inline-block mb-4"
             >
-              <Heart className="w-12 h-12 fill-white text-white mx-auto" />
+              <Heart className="w-12 h-12 fill-red-500 text-red-500 mx-auto" />
             </motion.div>
-            <h2 className="text-4xl font-bold text-white mb-4">Ready to Find Your Soulmate?</h2>
-            <p className="text-white/90 mb-8 text-lg">Join 20 million members and start your journey today. It&apos;s free!</p>
+            <p className="text-gray-800 mb-8 text-lg">Join 20 million members and start your journey today. It&apos;s free!</p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
               <Link href="/register" className="bg-white text-vd-primary px-10 py-4 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-colors inline-flex items-center gap-2 shadow-xl">
                 Create Free Profile <Heart className="w-5 h-5 fill-vd-primary" />
@@ -439,6 +602,22 @@ export default function Home() {
                 <span className="text-vd-text-heading font-bold text-xl">Vivah Dwar</span>
               </div>
               <p className="text-sm leading-relaxed">The world&apos;s most trusted matrimonial platform connecting hearts across 150+ countries.</p>
+              <div className="flex items-center gap-3 mt-4">
+                {[
+                  { href: 'https://facebook.com', label: 'Facebook', svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /> },
+                  { href: 'https://instagram.com', label: 'Instagram', svg: <><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></> },
+                  { href: 'https://twitter.com', label: 'X / Twitter', svg: <path d="M4 4l16 16M4 20L20 4" strokeLinecap="round" /> },
+                  { href: 'https://youtube.com', label: 'YouTube', svg: <><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></> },
+                  { href: 'https://wa.me', label: 'WhatsApp', svg: <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /> },
+                ].map(({ href, label, svg }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                    className="w-8 h-8 rounded-full bg-vd-bg-section border border-vd-border flex items-center justify-center text-vd-text-sub hover:text-vd-primary hover:border-vd-primary transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      {svg}
+                    </svg>
+                  </a>
+                ))}
+              </div>
             </div>
             {[
               { title: 'Company', links: [{ label: 'About Us', href: '#' }, { label: 'Careers', href: '#' }, { label: 'Press', href: '#' }, { label: 'Blog', href: '#' }] },

@@ -24,6 +24,8 @@ const TABS = [
   { id: 'reports',       label: 'Reports',         icon: Flag, badge: 'pendingReports' },
   { id: 'subscriptions', label: 'Subscriptions',   icon: Star },
   { id: 'plans',         label: 'Plan Config',     icon: Settings },
+  { id: 'coupons',       label: 'Coupon Codes',    icon: Star },
+  { id: 'stories',       label: 'Success Stories', icon: Heart },
   { id: 'options',       label: 'Profile Options', icon: Edit2 },
   { id: 'siteconfig',    label: 'Site Settings',   icon: Lock },
   { id: 'support',       label: 'Support Chat',    icon: MessageCircle },
@@ -630,6 +632,11 @@ export default function AdminPage() {
   const [verifications, setVerifications] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
   const [plans, setPlans] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [newCoupon, setNewCoupon] = useState({ code: '', discountPct: 10, maxUses: 100, expiresAt: '' });
+  const [stories, setStories] = useState([]);
+  const [editStory, setEditStory] = useState(null);
+  const [newStory, setNewStory] = useState({ coupleName: '', location: '', story: '', imageUrl: '', sortOrder: 0 });
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [editPlan, setEditPlan] = useState(null);
@@ -647,13 +654,15 @@ export default function AdminPage() {
 
   const loadAll = async () => {
     setLoading(true);
-    const [s, u, r, v, sub, pl] = await Promise.all([
+    const [s, u, r, v, sub, pl, couponsData, storiesData] = await Promise.all([
       fetch('/api/admin/stats').then(r => r.json()),
       fetch('/api/admin/users?limit=100').then(r => r.json()),
       fetch('/api/admin/reports').then(r => r.json()),
       fetch('/api/admin/verifications').then(r => r.json()),
       fetch('/api/admin/subscriptions').then(r => r.json()).catch(() => []),
       fetch('/api/admin/plans').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/coupons').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/stories').then(r => r.json()).catch(() => []),
     ]);
     setStats(s);
     setUsers(u.users || []);
@@ -662,6 +671,8 @@ export default function AdminPage() {
     setVerifications(v);
     setSubscriptions(sub);
     setPlans(pl);
+    setCoupons(Array.isArray(couponsData) ? couponsData : []);
+    setStories(Array.isArray(storiesData) ? storiesData : []);
     // Load profile options
     fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions).catch(() => {});
     // Load site config
@@ -708,6 +719,57 @@ export default function AdminPage() {
       body: JSON.stringify({ ...editPlan, permissions: editPlan.permissions }),
     });
     if (res.ok) { toast.success('Plan saved'); setEditPlan(null); loadAll(); } else toast.error('Failed');
+  };
+
+  const createCoupon = async () => {
+    if (!newCoupon.code.trim()) { toast.error('Enter a coupon code'); return; }
+    const res = await fetch('/api/admin/coupons', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...newCoupon, code: newCoupon.code.toUpperCase() }),
+    });
+    if (res.ok) {
+      toast.success('Coupon created');
+      setNewCoupon({ code: '', discountPct: 10, maxUses: 100, expiresAt: '' });
+      loadAll();
+    } else { const d = await res.json(); toast.error(d.error || 'Failed'); }
+  };
+
+  const toggleCoupon = async (id, isActive) => {
+    await fetch('/api/admin/coupons', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, isActive: !isActive }),
+    });
+    loadAll();
+  };
+
+  const deleteCoupon = async (id) => {
+    if (!confirm('Delete this coupon?')) return;
+    await fetch('/api/admin/coupons', {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    toast.success('Deleted'); loadAll();
+  };
+
+  const generateCode = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const code = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    setNewCoupon(p => ({ ...p, code }));
+  };
+
+  const saveStory = async (data) => {
+    const res = await fetch('/api/admin/stories', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (res.ok) { toast.success(data.id ? 'Story updated' : 'Story added'); setEditStory(null); setNewStory({ coupleName: '', location: '', story: '', imageUrl: '', sortOrder: 0 }); loadAll(); }
+    else toast.error('Failed');
+  };
+
+  const deleteStory = async (id) => {
+    if (!confirm('Delete this story?')) return;
+    await fetch('/api/admin/stories', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    toast.success('Deleted'); loadAll();
   };
 
   const filteredUsers = users.filter(u => {
@@ -1082,7 +1144,12 @@ export default function AdminPage() {
                       </button>
                     </div>
                     <div className="space-y-2 text-sm">
-                      <div className="flex justify-between"><span className="text-gray-400">Price</span><span className="text-white font-semibold">₹{Number(existing?.price || 0).toLocaleString()}/{existing?.durationDays || 30}d</span></div>
+                      <div className="flex justify-between"><span className="text-gray-400">Price</span><span className="text-white font-semibold">₹{Number(existing?.price || 0).toLocaleString()} / {
+                        existing?.durationDays === 365 ? '12 months' :
+                        existing?.durationDays === 180 ? '6 months' :
+                        existing?.durationDays === 90 ? '3 months' :
+                        `${existing?.durationDays || 30} days`
+                      }</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Status</span><span className={existing?.isActive !== false ? 'text-green-400' : 'text-red-400'}>{existing?.isActive !== false ? 'Active' : 'Inactive'}</span></div>
                       <div className="border-t border-gray-700 pt-2 mt-2 space-y-1">
                         {Object.entries(perms).map(([k, v]) => (
@@ -1109,7 +1176,14 @@ export default function AdminPage() {
                     <div><label className="text-xs text-gray-400 mb-1 block">Display Name</label><input value={editPlan.displayName} onChange={e => setEditPlan(p => ({ ...p, displayName: e.target.value }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
                     <div className="grid grid-cols-2 gap-3">
                       <div><label className="text-xs text-gray-400 mb-1 block">Price (₹)</label><input type="number" value={editPlan.price} onChange={e => setEditPlan(p => ({ ...p, price: e.target.value }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
-                      <div><label className="text-xs text-gray-400 mb-1 block">Duration (days)</label><input type="number" value={editPlan.durationDays} onChange={e => setEditPlan(p => ({ ...p, durationDays: parseInt(e.target.value) }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                      <div>
+                        <label className="text-xs text-gray-400 mb-1 block">Duration</label>
+                        <select value={editPlan.durationDays} onChange={e => setEditPlan(p => ({ ...p, durationDays: parseInt(e.target.value) }))} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500">
+                          <option value={90}>3 Months (90 days)</option>
+                          <option value={180}>6 Months (180 days)</option>
+                          <option value={365}>12 Months (365 days)</option>
+                        </select>
+                      </div>
                     </div>
                     <div><label className="text-xs text-gray-400 mb-1 block">Description</label><textarea value={editPlan.description} onChange={e => setEditPlan(p => ({ ...p, description: e.target.value }))} rows={2} className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 resize-none" /></div>
                     <div className="border-t border-gray-700 pt-4">
@@ -1148,6 +1222,188 @@ export default function AdminPage() {
             )}
           </div>
         )}
+        {/* ── COUPON CODES ── */}
+        {tab === 'coupons' && (
+          <div className="space-y-6">
+            <p className="text-gray-400 text-sm">Generate coupon codes with percentage discounts. Share codes with users manually.</p>
+
+            {/* Create Coupon */}
+            <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+              <h3 className="font-bold text-lg mb-4">Create New Coupon</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Coupon Code</label>
+                  <div className="flex gap-2">
+                    <input value={newCoupon.code} onChange={e => setNewCoupon(p => ({ ...p, code: e.target.value.toUpperCase() }))}
+                      placeholder="e.g. SAVE20" maxLength={20}
+                      className="flex-1 px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 tracking-widest font-mono" />
+                    <button onClick={generateCode} title="Auto-generate"
+                      className="px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-xs text-gray-300 hover:bg-gray-600 transition-colors whitespace-nowrap">
+                      Generate
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Discount %</label>
+                  <input type="number" min={1} max={100} value={newCoupon.discountPct}
+                    onChange={e => setNewCoupon(p => ({ ...p, discountPct: e.target.value }))}
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Max Uses (users)</label>
+                  <input type="number" min={1} value={newCoupon.maxUses}
+                    onChange={e => setNewCoupon(p => ({ ...p, maxUses: e.target.value }))}
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Expiry Date (optional)</label>
+                  <input type="date" value={newCoupon.expiresAt}
+                    onChange={e => setNewCoupon(p => ({ ...p, expiresAt: e.target.value }))}
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                </div>
+              </div>
+              <button onClick={createCoupon}
+                className="mt-4 px-6 py-2.5 vd-gradient-gold text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity">
+                Create Coupon
+              </button>
+            </div>
+
+            {/* Coupons List */}
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+              {coupons.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">No coupons yet. Create one above.</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-700/50">
+                      <tr>{['Code', 'Discount', 'Used / Max', 'Expires', 'Status', 'Actions'].map(h =>
+                        <th key={h} className="text-left px-4 py-3 text-gray-400 font-medium whitespace-nowrap">{h}</th>
+                      )}</tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-700/50">
+                      {coupons.map(c => (
+                        <tr key={c.id} className="hover:bg-gray-700/30 transition-colors">
+                          <td className="px-4 py-3 font-mono font-bold text-white tracking-widest">{c.code}</td>
+                          <td className="px-4 py-3 text-green-400 font-semibold">{c.discountPct}% off</td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <span className={c.usedCount >= c.maxUses ? 'text-red-400' : 'text-white'}>{c.usedCount}</span>
+                              <span className="text-gray-500">/</span>
+                              <span className="text-gray-400">{c.maxUses}</span>
+                              <div className="w-16 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                <div className="h-full bg-vd-primary rounded-full" style={{ width: `${Math.min(100, (c.usedCount / c.maxUses) * 100)}%` }} />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-gray-400 text-xs">
+                            {c.expiresAt ? format(new Date(c.expiresAt), 'dd MMM yyyy') : '—'}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={`text-xs px-2 py-0.5 rounded-full ${c.isActive && c.usedCount < c.maxUses ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>
+                              {!c.isActive ? 'Disabled' : c.usedCount >= c.maxUses ? 'Exhausted' : 'Active'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex gap-1.5">
+                              <button onClick={() => toggleCoupon(c.id, c.isActive)}
+                                className={`p-1.5 rounded-lg text-xs transition-colors ${c.isActive ? 'bg-red-900/30 text-red-400 hover:bg-red-900/50' : 'bg-green-900/30 text-green-400 hover:bg-green-900/50'}`}
+                                title={c.isActive ? 'Disable' : 'Enable'}>
+                                {c.isActive ? <Ban className="w-3.5 h-3.5" /> : <CheckCircle className="w-3.5 h-3.5" />}
+                              </button>
+                              <button onClick={() => deleteCoupon(c.id)}
+                                className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors" title="Delete">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── SUCCESS STORIES ── */}
+        {tab === 'stories' && (
+          <div className="space-y-6">
+            <p className="text-gray-400 text-sm">Manage success stories shown on the homepage carousel.</p>
+
+            {/* Add Story Form */}
+            <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+              <h3 className="font-bold text-lg mb-4">Add New Story</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div><label className="text-xs text-gray-400 mb-1 block">Couple Name</label>
+                  <input value={newStory.coupleName} onChange={e => setNewStory(p => ({ ...p, coupleName: e.target.value }))} placeholder="e.g. Priya & Arjun"
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                <div><label className="text-xs text-gray-400 mb-1 block">Location</label>
+                  <input value={newStory.location} onChange={e => setNewStory(p => ({ ...p, location: e.target.value }))} placeholder="e.g. Mumbai, India"
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                <div className="sm:col-span-2"><label className="text-xs text-gray-400 mb-1 block">Story</label>
+                  <textarea value={newStory.story} onChange={e => setNewStory(p => ({ ...p, story: e.target.value }))} rows={3} placeholder="Their love story…"
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 resize-none" /></div>
+                <div><label className="text-xs text-gray-400 mb-1 block">Image URL (optional)</label>
+                  <input value={newStory.imageUrl} onChange={e => setNewStory(p => ({ ...p, imageUrl: e.target.value }))} placeholder="https://…"
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+                <div><label className="text-xs text-gray-400 mb-1 block">Sort Order</label>
+                  <input type="number" value={newStory.sortOrder} onChange={e => setNewStory(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))}
+                    className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" /></div>
+              </div>
+              <button onClick={() => saveStory(newStory)} className="mt-4 px-6 py-2.5 vd-gradient-gold text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity">
+                Add Story
+              </button>
+            </div>
+
+            {/* Stories List */}
+            <div className="space-y-3">
+              {stories.length === 0 && <div className="text-center py-10 text-gray-500">No stories yet.</div>}
+              {stories.map(s => (
+                <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                  {editStory?.id === s.id ? (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input value={editStory.coupleName} onChange={e => setEditStory(p => ({ ...p, coupleName: e.target.value }))} placeholder="Couple Name"
+                          className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                        <input value={editStory.location} onChange={e => setEditStory(p => ({ ...p, location: e.target.value }))} placeholder="Location"
+                          className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                        <textarea value={editStory.story} onChange={e => setEditStory(p => ({ ...p, story: e.target.value }))} rows={2} placeholder="Story"
+                          className="sm:col-span-2 px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 resize-none" />
+                        <input value={editStory.imageUrl || ''} onChange={e => setEditStory(p => ({ ...p, imageUrl: e.target.value }))} placeholder="Image URL"
+                          className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                        <input type="number" value={editStory.sortOrder} onChange={e => setEditStory(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))} placeholder="Sort Order"
+                          className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500" />
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => saveStory(editStory)} className="px-4 py-2 vd-gradient-gold text-white rounded-xl text-sm font-semibold hover:opacity-90">Save</button>
+                        <button onClick={() => setEditStory(null)} className="px-4 py-2 border border-gray-600 rounded-xl text-sm hover:bg-gray-700">Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <div className="w-10 h-10 rounded-full vd-gradient-gold flex items-center justify-center text-white font-bold flex-shrink-0">
+                          {s.coupleName?.[0] || '♥'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-white">{s.coupleName}</p>
+                          <p className="text-xs text-gray-400">{s.location}</p>
+                          <p className="text-sm text-gray-300 mt-1 line-clamp-2">"{s.story}"</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1.5 flex-shrink-0">
+                        <button onClick={() => setEditStory({ ...s })} className="p-1.5 bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 rounded-lg transition-colors"><Edit2 className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => deleteStory(s.id)} className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── PROFILE OPTIONS ── */}
         {tab === 'options' && (
           <ProfileOptionsTab

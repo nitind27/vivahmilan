@@ -435,6 +435,18 @@ enum OTPType {
   PASSWORD_RESET
 }
 
+model couponcode {
+  id           String    @id @default(cuid())
+  code         String    @unique
+  discountPct  Int
+  maxUses      Int
+  usedCount    Int       @default(0)
+  isActive     Boolean   @default(true)
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
 model kundali {
   id                 String   @id @default(cuid())
   userId             String   @unique
@@ -452,4 +464,16 @@ model kundali {
   updatedAt          DateTime @updatedAt
 
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model successstory {
+  id        String   @id @default(cuid())
+  coupleName String
+  location  String
+  story     String   @db.Text
+  imageUrl  String?  @db.Text
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

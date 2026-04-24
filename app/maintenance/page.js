@@ -242,7 +242,7 @@ export default function MaintenancePage() {
           <div className="m-divider" />
 
           <p className="m-footer">
-            Questions? <a href="mailto:support@vivahdwar.com">support@vivahdwar.com</a>
+            Questions? <a href="mailto:supportvivahdwar@gmail.com">supportvivahdwar@gmail.com</a>
           </p>
         </div>
       </div>
