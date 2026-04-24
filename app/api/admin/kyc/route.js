@@ -51,7 +51,7 @@ export async function POST(req) {
     [id, userId, session.user.id, token, expiresAt]
   );
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://vivahdwar.com';
   const kycLink = `${appUrl}/kyc/${token}`;
 
   try {
