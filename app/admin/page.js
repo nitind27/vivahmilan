@@ -1195,28 +1195,29 @@ export default function AdminPage() {
             {/* Maintenance Mode */}
             <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
               <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${siteConfig.maintenance_mode === '1' ? 'bg-red-900/30' : 'bg-green-900/20'}`}>
-                  {siteConfig.maintenance_mode === '1'
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${siteConfig.maintenance_mode !== '1' ? 'bg-red-900/30' : 'bg-green-900/20'}`}>
+                  {siteConfig.maintenance_mode !== '1'
                     ? <Lock className="w-5 h-5 text-red-400" />
                     : <Unlock className="w-5 h-5 text-green-400" />}
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Maintenance Mode</h3>
-                  <p className="text-xs text-gray-500">When ON, all visitors see the maintenance page. Admin panel stays accessible.</p>
+                  <p className="text-xs text-gray-500">Value 1 = Site Live. Value 0 = Maintenance page shown to all visitors. Admin panel always accessible.</p>
                 </div>
               </div>
-              <div className={`flex items-center justify-between p-4 rounded-xl border ${siteConfig.maintenance_mode === '1' ? 'bg-red-900/10 border-red-800/40' : 'bg-green-900/10 border-green-800/30'}`}>
+              <div className={`flex items-center justify-between p-4 rounded-xl border ${siteConfig.maintenance_mode !== '1' ? 'bg-red-900/10 border-red-800/40' : 'bg-green-900/10 border-green-800/30'}`}>
                 <div>
                   <p className="text-sm font-semibold text-white">
                     Site is currently{' '}
-                    <span className={siteConfig.maintenance_mode === '1' ? 'text-red-400' : 'text-green-400'}>
-                      {siteConfig.maintenance_mode === '1' ? '🔴 Under Maintenance' : '🟢 Live'}
+                    <span className={siteConfig.maintenance_mode !== '1' ? 'text-red-400' : 'text-green-400'}>
+                      {siteConfig.maintenance_mode !== '1' ? '🔴 Under Maintenance' : '🟢 Live'}
                     </span>
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {siteConfig.maintenance_mode === '1' ? 'Users see the maintenance page' : 'Site is accessible to all users'}
+                    {siteConfig.maintenance_mode !== '1' ? 'Users see the maintenance page (DB value = 0)' : 'Site is accessible to all users (DB value = 1)'}
                   </p>
                 </div>
+                {/* Toggle ON = site live (value 1), Toggle OFF = maintenance (value 0) */}
                 <Toggle
                   value={siteConfig.maintenance_mode === '1'}
                   onChange={async (val) => {
@@ -1227,7 +1228,7 @@ export default function AdminPage() {
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ key: 'maintenance_mode', value: newVal }),
                     });
-                    if (res.ok) toast.success(val ? '🔴 Maintenance mode ON' : '🟢 Site is now Live');
+                    if (res.ok) toast.success(val ? '🟢 Site is now Live' : '🔴 Maintenance mode ON');
                     else { toast.error('Failed'); setSiteConfig(p => ({ ...p, maintenance_mode: val ? '0' : '1' })); }
                   }}
                 />
