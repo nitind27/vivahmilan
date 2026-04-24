@@ -12,7 +12,7 @@ async function ensureTable() {
       id VARCHAR(36) PRIMARY KEY,
       userId VARCHAR(36) NOT NULL,
       adminId VARCHAR(36) NOT NULL,
-      token VARCHAR(64) NOT NULL UNIQUE,
+      token VARCHAR(128) NOT NULL UNIQUE,
       status ENUM('PENDING','ACTIVE','COMPLETED','EXPIRED') DEFAULT 'PENDING',
       capturedImages JSON,
       notes TEXT,
@@ -23,6 +23,10 @@ async function ensureTable() {
       INDEX idx_userId (userId)
     )
   `);
+  // Ensure token column is wide enough (fix if created with VARCHAR(64))
+  try {
+    await execute(`ALTER TABLE kycsession MODIFY COLUMN token VARCHAR(128) NOT NULL`);
+  } catch { /* already correct size, ignore */ }
 }
 
 // POST /api/admin/kyc — create session & send email

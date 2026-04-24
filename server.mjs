@@ -78,6 +78,7 @@ app.prepare().then(() => {
       '/api/flutter/',
       '/api/register',
       '/api/onboarding',
+      '/api/kyc/',
       '/register',
       '/verify-email',
       '/onboarding',
