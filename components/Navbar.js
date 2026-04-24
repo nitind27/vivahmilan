@@ -43,13 +43,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <img
-              src="/logo/logo.png"
-              alt="Vivah Dwar Logo"
-              className="h-25 w-auto object-contain"
-            />
-          </div>
+          <Link href="/">
+            <div className="flex items-center">
+              <img
+                src="/logo/logo.png"
+                alt="Vivah Dwar Logo"
+                className="h-25 w-auto object-contain"
+              />
+            </div>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
@@ -150,24 +152,26 @@ export default function Navbar() {
       </div>
 
       {/* Mobile menu */}
-      {clientReady && (
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-vd-bg-section dark:bg-vd-bg border-t border-vd-border"
-            >
-              <div className="px-4 py-3 space-y-1">
-                <Link href="/matches" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Find Matches</Link>
-                <Link href="/search" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Search</Link>
-                <Link href="/premium" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Premium</Link>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      )}
-    </nav>
+      {
+        clientReady && (
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="md:hidden bg-vd-bg-section dark:bg-vd-bg border-t border-vd-border"
+              >
+                <div className="px-4 py-3 space-y-1">
+                  <Link href="/matches" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Find Matches</Link>
+                  <Link href="/search" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Search</Link>
+                  <Link href="/premium" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Premium</Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )
+      }
+    </nav >
   );
 }
