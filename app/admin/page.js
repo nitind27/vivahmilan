@@ -534,9 +534,32 @@ function OptionRow({ opt, onToggle, onDelete }) {
 // ── Verifications Tab ─────────────────────────────────────────────────────────
 function VerificationsTab({ verifications, onVerify }) {
   const [activeTab, setActiveTab] = useState('pending');
+  const [kycLoading, setKycLoading] = useState(null);
 
   const pending  = verifications.filter(d => d.status === 'PENDING');
   const reviewed = verifications.filter(d => d.status !== 'PENDING');
+
+  const startKyc = async (userId) => {
+    setKycLoading(userId);
+    try {
+      const res = await fetch('/api/admin/kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json();
+      if (data.sessionId) {
+        toast.success('KYC invite sent to user\'s email');
+        window.open(`/admin/kyc/${data.sessionId}`, '_blank');
+      } else {
+        toast.error(data.error || 'Failed to start KYC');
+      }
+    } catch {
+      toast.error('Failed to start KYC');
+    } finally {
+      setKycLoading(null);
+    }
+  };
 
   const DocCard = ({ doc, showActions }) => (
     <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
@@ -555,12 +578,27 @@ function VerificationsTab({ verifications, onVerify }) {
           <p className="text-gray-500 text-xs">Submitted: {format(new Date(doc.createdAt), 'dd MMM yyyy, h:mm a')}</p>
           {doc.url && <a href={doc.url} target="_blank" rel="noreferrer" className="text-vd-primary text-xs hover:underline mt-1 inline-block">View Document ↗</a>}
         </div>
-        {showActions && (
-          <div className="flex gap-2 flex-shrink-0">
-            <button onClick={() => onVerify(doc.id, 'APPROVED')} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-colors">Approve</button>
-            <button onClick={() => onVerify(doc.id, 'REJECTED')} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-sm transition-colors">Reject</button>
-          </div>
-        )}
+        <div className="flex flex-col gap-2 flex-shrink-0">
+          {/* Video KYC button — always visible for approved docs */}
+          <button
+            onClick={() => startKyc(doc.user?.id || doc.userId)}
+            disabled={kycLoading === (doc.user?.id || doc.userId)}
+            className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-medium transition-colors flex items-center gap-1.5 disabled:opacity-50"
+          >
+            {kycLoading === (doc.user?.id || doc.userId) ? (
+              <span className="w-3.5 h-3.5 border border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <span>🎥</span>
+            )}
+            Video KYC
+          </button>
+          {showActions && (
+            <>
+              <button onClick={() => onVerify(doc.id, 'APPROVED')} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-colors">Approve</button>
+              <button onClick={() => onVerify(doc.id, 'REJECTED')} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-sm transition-colors">Reject</button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

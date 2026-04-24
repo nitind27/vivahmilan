@@ -1,0 +1,562 @@
+{
+  "info": {
+    "name": "Vivah Dwar - Flutter API",
+    "description": "Complete REST API collection for Vivah Dwar Flutter mobile app.\n\nBase URL: https://vivahdwar.com\n\nAuth Flow:\n1. Register → 2. Verify OTP → 3. Login → 4. Use token in all protected APIs\n\nAll protected APIs need: Authorization: Bearer {token}",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://vivahdwar.com", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "1. Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/register", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"phone\": \"+919876543210\",\n  \"password\": \"test1234\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Register a new user. OTP will be sent to email.\n\nRequired: name, email, password\nOptional: phone\n\nResponse: { success, message, userId, email }"
+          }
+        },
+        {
+          "name": "2. Verify OTP (Email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/verify-otp", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","verify-otp"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"otp\": \"123456\",\n  \"type\": \"EMAIL_VERIFY\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Verify email OTP after registration.\n\ntype options: EMAIL_VERIFY | PASSWORD_RESET | LOGIN_OTP\n\nResponse: { success, message, token, user }\n\n⚠️ Save the token from response!"
+          }
+        },
+        {
+          "name": "3. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "  pm.collectionVariables.set('token', res.token);",
+                  "  console.log('Token saved!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/login", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"test1234\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Login with email & password.\n\nResponse: { success, token, user }\n\nError codes:\n- EMAIL_NOT_VERIFIED → go to verify-otp\n- PENDING_APPROVAL → wait for admin\n\n✅ Token auto-saved to collection variable"
+          }
+        },
+        {
+          "name": "4. Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/resend-otp", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","resend-otp"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"type\": \"EMAIL_VERIFY\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Resend OTP to email.\n\ntype: EMAIL_VERIFY | PASSWORD_RESET | LOGIN_OTP"
+          }
+        },
+        {
+          "name": "5. Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/forgot-password", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","forgot-password"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Send password reset OTP to email."
+          }
+        },
+        {
+          "name": "6. Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/reset-password", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","reset-password"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"otp\": \"123456\",\n  \"password\": \"newpassword123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Reset password using OTP from forgot-password.\n\nRequired: email, otp, password (min 8 chars)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Profile",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/profile/me", "host": ["{{baseUrl}}"], "path": ["api","flutter","profile","me"] },
+            "description": "Get current logged-in user's full profile.\n\nReturns: id, name, email, phone, profile (all fields), photos[]"
+          }
+        },
+        {
+          "name": "Get User Profile by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/profile/:id", "host": ["{{baseUrl}}"], "path": ["api","flutter","profile",":id"], "variable": [{ "key": "id", "value": "USER_ID_HERE" }] },
+            "description": "Get any user's profile by their ID.\n\nNote: phone/email hidden for non-premium viewers"
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/onboarding", "host": ["{{baseUrl}}"], "path": ["api","onboarding"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"name\": \"Updated Name\",\n  \"phone\": \"+919876543210\",\n  \"gender\": \"MALE\",\n  \"dob\": \"1995-06-15\",\n  \"height\": 175,\n  \"weight\": 70,\n  \"religion\": \"Hindu\",\n  \"caste\": \"Brahmin\",\n  \"subCaste\": \"Sharma\",\n  \"gotra\": \"Bharadwaj\",\n  \"motherTongue\": \"Hindi\",\n  \"education\": \"B.Tech\",\n  \"profession\": \"Software Engineer\",\n  \"income\": \"10-15 LPA\",\n  \"country\": \"India\",\n  \"state\": \"Maharashtra\",\n  \"city\": \"Mumbai\",\n  \"aboutMe\": \"I am a software engineer looking for a life partner.\",\n  \"maritalStatus\": \"NEVER_MARRIED\",\n  \"complexion\": \"Fair\",\n  \"bodyType\": \"Athletic\",\n  \"diet\": \"Vegetarian\",\n  \"smoking\": \"NO\",\n  \"drinking\": \"NO\",\n  \"familyType\": \"Nuclear\",\n  \"familyStatus\": \"Middle Class\",\n  \"partnerAgeMin\": 22,\n  \"partnerAgeMax\": 28,\n  \"partnerHeightMin\": 155,\n  \"partnerHeightMax\": 170,\n  \"partnerReligion\": \"Hindu\",\n  \"partnerEducation\": \"Graduate\",\n  \"partnerProfession\": \"Any\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Update user profile. Send only fields you want to update.\n\nRequired: email (to identify user)\nAll other fields optional."
+          }
+        }
+      ]
+    },
+    {
+      "name": "💑 Matches",
+      "item": [
+        {
+          "name": "Get Matches (Browse)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/matches?page=1&limit=12",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","matches"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "12" },
+                { "key": "ageMin", "value": "22", "disabled": true },
+                { "key": "ageMax", "value": "30", "disabled": true },
+                { "key": "religion", "value": "Hindu", "disabled": true },
+                { "key": "country", "value": "India", "disabled": true },
+                { "key": "state", "value": "Maharashtra", "disabled": true },
+                { "key": "city", "value": "Mumbai", "disabled": true },
+                { "key": "education", "value": "B.Tech", "disabled": true },
+                { "key": "profession", "value": "Software Engineer", "disabled": true },
+                { "key": "heightMin", "value": "155", "disabled": true },
+                { "key": "heightMax", "value": "175", "disabled": true },
+                { "key": "maritalStatus", "value": "NEVER_MARRIED", "disabled": true }
+              ]
+            },
+            "description": "Browse match profiles. Auto-filters opposite gender.\n\nFree users: max 5 profiles\nPremium users: unlimited with pagination\n\nOptional filters (enable in Postman):\n- ageMin, ageMax\n- religion\n- country, state, city\n- education, profession\n- heightMin, heightMax\n- maritalStatus"
+          }
+        },
+        {
+          "name": "Search Profiles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/search?q=engineer&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","search"],
+              "query": [
+                { "key": "q", "value": "engineer" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Search profiles by name, city, profession etc."
+          }
+        }
+      ]
+    },
+    {
+      "name": "💌 Interests",
+      "item": [
+        {
+          "name": "Send Interest",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/interest", "host": ["{{baseUrl}}"], "path": ["api","interest"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiverId\": \"TARGET_USER_ID\",\n  \"message\": \"Hi, I liked your profile!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Send interest to another user.\n\nRequired: receiverId\nOptional: message"
+          }
+        },
+        {
+          "name": "Get Received Interests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/interest?type=received&limit=20&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","interest"],
+              "query": [
+                { "key": "type", "value": "received" },
+                { "key": "limit", "value": "20" },
+                { "key": "offset", "value": "0" }
+              ]
+            },
+            "description": "Get interests received from other users."
+          }
+        },
+        {
+          "name": "Get Sent Interests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/interest?type=sent&limit=20&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","interest"],
+              "query": [
+                { "key": "type", "value": "sent" },
+                { "key": "limit", "value": "20" },
+                { "key": "offset", "value": "0" }
+              ]
+            },
+            "description": "Get interests you have sent."
+          }
+        },
+        {
+          "name": "Accept / Reject Interest",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/interest/:id", "host": ["{{baseUrl}}"], "path": ["api","interest",":id"], "variable": [{ "key": "id", "value": "INTEREST_ID" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACCEPTED\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Accept or reject an interest.\n\nstatus: ACCEPTED | REJECTED"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💬 Chat",
+      "item": [
+        {
+          "name": "Get All Chat Rooms",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/chat", "host": ["{{baseUrl}}"], "path": ["api","chat"] },
+            "description": "Get all chat rooms for current user with last message."
+          }
+        },
+        {
+          "name": "Get Messages in Room",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/:roomId?limit=50&before=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","chat",":roomId"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "before", "value": "", "description": "Message ID for pagination" }
+              ],
+              "variable": [{ "key": "roomId", "value": "ROOM_ID_HERE" }]
+            },
+            "description": "Get messages in a chat room.\n\nFor pagination: pass 'before' = last message ID"
+          }
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/chat", "host": ["{{baseUrl}}"], "path": ["api","chat"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiverId\": \"TARGET_USER_ID\",\n  \"content\": \"Hello! How are you?\",\n  \"type\": \"TEXT\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Send a message. Creates chat room if not exists.\n\ntype: TEXT | IMAGE | AUDIO | VIDEO | DOCUMENT | LOCATION\n\nRequired: receiverId, content"
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/chat/unread", "host": ["{{baseUrl}}"], "path": ["api","chat","unread"] },
+            "description": "Get total unread message count."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications?skip=0&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","notifications"],
+              "query": [
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "description": "Get notifications with unread count.\n\nResponse: { notifications[], unreadCount, total, hasMore }"
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/notifications", "host": ["{{baseUrl}}"], "path": ["api","notifications"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Mark all notifications as read.\n\nTo mark single: { \"id\": \"NOTIFICATION_ID\" }"
+          }
+        }
+      ]
+    },
+    {
+      "name": "⭐ Kundali / Horoscope",
+      "item": [
+        {
+          "name": "Get My Kundali",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/kundali/me", "host": ["{{baseUrl}}"], "path": ["api","kundali","me"] },
+            "description": "Get current user's kundali details."
+          }
+        },
+        {
+          "name": "Save / Update Kundali",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/kundali", "host": ["{{baseUrl}}"], "path": ["api","kundali"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dob\": \"1995-06-15\",\n  \"tob\": \"10:30\",\n  \"pob\": \"Mumbai, Maharashtra\",\n  \"manglik\": \"NO\",\n  \"horoscopeSign\": \"Gemini\",\n  \"nakshatra\": \"Mrigashira\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Save kundali details.\n\nmanglik: YES | NO | PARTIAL\ntob: time of birth (HH:MM)\npob: place of birth"
+          }
+        },
+        {
+          "name": "Get User Kundali by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/kundali/:userId", "host": ["{{baseUrl}}"], "path": ["api","kundali",":userId"], "variable": [{ "key": "userId", "value": "USER_ID_HERE" }] },
+            "description": "Get another user's kundali."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚫 Block",
+      "item": [
+        {
+          "name": "Block / Unblock User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/block", "host": ["{{baseUrl}}"], "path": ["api","block"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blockedId\": \"USER_ID_TO_BLOCK\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Block a user. Call again to unblock (toggle)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📍 Location",
+      "item": [
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location/countries", "host": ["{{baseUrl}}"], "path": ["api","location","countries"] },
+            "description": "Get list of all countries."
+          }
+        },
+        {
+          "name": "Get States",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/location/states?country=India",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","location","states"],
+              "query": [{ "key": "country", "value": "India" }]
+            },
+            "description": "Get states for a country."
+          }
+        },
+        {
+          "name": "Get Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/location/cities?state=Maharashtra",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","location","cities"],
+              "query": [{ "key": "state", "value": "Maharashtra" }]
+            },
+            "description": "Get cities for a state."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏠 Homepage",
+      "item": [
+        {
+          "name": "Get Success Stories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/stories", "host": ["{{baseUrl}}"], "path": ["api","stories"] },
+            "description": "Get active success stories for homepage carousel."
+          }
+        },
+        {
+          "name": "Get Subscription Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/plans", "host": ["{{baseUrl}}"], "path": ["api","admin","plans"] },
+            "description": "Get all active subscription plans with pricing."
+          }
+        },
+        {
+          "name": "Validate Coupon",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/coupons/validate", "host": ["{{baseUrl}}"], "path": ["api","coupons","validate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SAVE20\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Validate a coupon code.\n\nResponse: { valid, discountPct, code }"
+          }
+        },
+        {
+          "name": "Get Homepage Slides",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/homepage/slides", "host": ["{{baseUrl}}"], "path": ["api","admin","homepage","slides"] },
+            "description": "Get hero slides for homepage."
+          }
+        },
+        {
+          "name": "Get Homepage Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/homepage/stats", "host": ["{{baseUrl}}"], "path": ["api","admin","homepage","stats"] },
+            "description": "Get stats section data."
+          }
+        },
+        {
+          "name": "Get Homepage Features",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/homepage/features", "host": ["{{baseUrl}}"], "path": ["api","admin","homepage","features"] },
+            "description": "Get features section data."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚙️ Profile Options",
+      "item": [
+        {
+          "name": "Get All Profile Options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/profile-options", "host": ["{{baseUrl}}"], "path": ["api","profile-options"] },
+            "description": "Get all dropdown options for profile form.\n\nCategories: religion, caste_Hindu, caste_Muslim, gotra, motherTongue, education, profession, income, diet, bodyType, complexion, familyType, familyStatus, horoscopeSign, nakshatra"
+          }
+        }
+      ]
+    }
+  ]
+}

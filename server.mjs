@@ -206,6 +206,36 @@ app.prepare().then(() => {
       socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
     });
 
+    // ── Video KYC WebRTC Signaling ─────────────────────────────
+    socket.on('kyc:join', ({ sessionId, role }) => {
+      socket.join(`kyc:${sessionId}`);
+      socket.kycSessionId = sessionId;
+      socket.kycRole = role; // 'admin' | 'user'
+      socket.to(`kyc:${sessionId}`).emit('kyc:peer-joined', { role });
+    });
+
+    socket.on('kyc:offer', ({ sessionId, offer }) => {
+      socket.to(`kyc:${sessionId}`).emit('kyc:offer', { offer });
+    });
+
+    socket.on('kyc:answer', ({ sessionId, answer }) => {
+      socket.to(`kyc:${sessionId}`).emit('kyc:answer', { answer });
+    });
+
+    socket.on('kyc:ice-candidate', ({ sessionId, candidate }) => {
+      socket.to(`kyc:${sessionId}`).emit('kyc:ice-candidate', { candidate });
+    });
+
+    socket.on('kyc:switch-camera', ({ sessionId }) => {
+      // Admin requests user to switch to back camera
+      socket.to(`kyc:${sessionId}`).emit('kyc:switch-camera');
+    });
+
+    socket.on('kyc:end', ({ sessionId }) => {
+      socket.to(`kyc:${sessionId}`).emit('kyc:ended');
+      io.socketsLeave(`kyc:${sessionId}`);
+    });
+
     socket.on('disconnect', async () => {
       if (socket.userId) {
         const now = new Date().toISOString();
