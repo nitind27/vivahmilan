@@ -75,6 +75,7 @@ app.prepare().then(() => {
       '/images/',
       '/uploads/',
       '/api/auth/',
+      '/api/flutter/',
     ];
     const isBypassed = BYPASS_PATHS.some(p => pathname.startsWith(p))
       || (pathname.includes('.') && !pathname.endsWith('.html'));
