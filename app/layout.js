@@ -5,7 +5,6 @@ import ChatBot from '@/components/ChatBot';
 import SetPasswordModal from '@/components/SetPasswordModal';
 import { Toaster } from 'react-hot-toast';
 
-
 export const metadata = {
   title: 'Milan Matrimony – Find Your Perfect Life Partner',
   description: 'Join millions of happy couples. Find your perfect match based on religion, location, profession and more.',
@@ -40,4 +39,5 @@ export default function RootLayout({ children }) {
         </Providers>
       </body>
     </html>
-  );}
+  );
+}

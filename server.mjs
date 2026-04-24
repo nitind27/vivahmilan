@@ -56,7 +56,7 @@ const MIME = {
 global.getIO = () => global.__io || null;
 
 app.prepare().then(() => {
-  const httpServer = createServer((req, res) => {
+  const httpServer = createServer(async (req, res) => {
     req.socket.setMaxListeners(0);
     const parsedUrl = parse(req.url, true);
     const pathname = parsedUrl.pathname || '/';
@@ -115,6 +115,35 @@ app.prepare().then(() => {
         res.writeHead(404);
         res.end('Not found');
         return;
+      }
+    }
+
+    // ── Maintenance Mode Check ─────────────────────────────
+    const MAINTENANCE_BYPASS = [
+      '/maintenance', '/api/', '/_next', '/favicon', '/logo',
+      '/images', '/uploads', '/audio', '/video', '/welcome',
+    ];
+    const isMaintenanceBypassed =
+      pathname.startsWith('/admin') ||
+      MAINTENANCE_BYPASS.some(p => pathname.startsWith(p)) ||
+      (pathname.includes('.') && !pathname.endsWith('.html'));
+
+    if (!isMaintenanceBypassed) {
+      try {
+        const pool = getDbPool();
+        const [rows] = await pool.execute(
+          "SELECT value FROM siteconfig WHERE `key` = 'maintenance_mode' LIMIT 1"
+        );
+        // value '1' = LIVE, value '0' or missing = show maintenance
+        const isLive = rows[0]?.value === '1';
+        if (!isLive) {
+          // Rewrite internally to /maintenance page via Next.js
+          parsedUrl.pathname = '/maintenance';
+          handle(req, res, parsedUrl);
+          return;
+        }
+      } catch {
+        // DB error — don't block
       }
     }
 
