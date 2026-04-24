@@ -347,7 +347,7 @@ function ChatInner() {
     const s = connectSocket(session.user.id);
     socketRef.current = s;
     s.on('users:online', setOnlineUsers);
-    s.on('users:lastseen', setLastSeenMap);
+    s.on('users:lastseen', (update) => setLastSeenMap(prev => ({ ...prev, ...update })));
     s.on('message:receive', (msg) => {
       // If this room is currently open — don't increment unread, mark read immediately
       const currentRoom = activeRoomRef.current;

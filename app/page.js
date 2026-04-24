@@ -144,7 +144,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           HERO — full-screen video background
       ══════════════════════════════════════════ */}
-      <section className="relative h-screen min-h-[640px] max-h-[1080px] flex items-end overflow-hidden">
+      <section className="relative flex items-end overflow-hidden" style={{ height: '100svh', minHeight: '560px', maxHeight: '1080px' }}>
 
         {/* ── VIDEO ── */}
         <motion.div

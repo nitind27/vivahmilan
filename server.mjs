@@ -9,6 +9,35 @@ import { createReadStream, statSync, existsSync } from 'fs';
 import { join, extname } from 'path';
 import next from 'next';
 import { Server } from 'socket.io';
+import mysql from 'mysql2/promise';
+
+// ── DB pool for lastSeen updates ──────────────────────────────
+let dbPool;
+function getDbPool() {
+  if (!dbPool) {
+    dbPool = mysql.createPool({
+      host: process.env.DATABASE_HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      port: parseInt(process.env.DATABASE_PORT || '3306'),
+      family: 4,
+      connectionLimit: 3,
+      waitForConnections: true,
+      timezone: '+00:00',
+    });
+  }
+  return dbPool;
+}
+
+async function updateLastSeen(userId) {
+  try {
+    const pool = getDbPool();
+    await pool.execute('UPDATE `user` SET lastSeen = NOW() WHERE id = ?', [userId]);
+  } catch (err) {
+    console.error('[Socket] lastSeen update error:', err.message);
+  }
+}
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = '0.0.0.0';
@@ -146,10 +175,15 @@ app.prepare().then(() => {
       socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
       if (socket.userId) {
+        const now = new Date().toISOString();
         onlineUsers.delete(socket.userId);
         io.emit('users:online', Array.from(onlineUsers.keys()));
+        // Broadcast real lastSeen time to all clients
+        io.emit('users:lastseen', { [socket.userId]: now });
+        // Persist to DB
+        await updateLastSeen(socket.userId);
       }
     });
   });
