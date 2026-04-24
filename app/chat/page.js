@@ -349,6 +349,8 @@ function ChatInner() {
     s.on('users:online', setOnlineUsers);
     s.on('users:lastseen', (update) => setLastSeenMap(prev => ({ ...prev, ...update })));
     s.on('message:receive', (msg) => {
+      // Ignore messages sent by self — already added optimistically via API response
+      if (msg.senderId === session.user.id) return;
       // If this room is currently open — don't increment unread, mark read immediately
       const currentRoom = activeRoomRef.current;
       if (currentRoom?.id === msg.chatRoomId) {
