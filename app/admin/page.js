@@ -26,6 +26,7 @@ const TABS = [
   { id: 'plans',         label: 'Plan Config',     icon: Settings },
   { id: 'coupons',       label: 'Coupon Codes',    icon: Star },
   { id: 'stories',       label: 'Success Stories', icon: Heart },
+  { id: 'homepage',      label: 'Homepage Content', icon: FileText },
   { id: 'options',       label: 'Profile Options', icon: Edit2 },
   { id: 'siteconfig',    label: 'Site Settings',   icon: Lock },
   { id: 'support',       label: 'Support Chat',    icon: MessageCircle },
@@ -647,6 +648,22 @@ export default function AdminPage() {
   const [siteConfig, setSiteConfig] = useState({ freeTrialDays: '1' });
   const [savingConfig, setSavingConfig] = useState(false);
 
+  // Homepage content state
+  const [hpSlides, setHpSlides] = useState([]);
+  const [hpStats, setHpStats] = useState([]);
+  const [hpFeatures, setHpFeatures] = useState([]);
+  const [hpTab, setHpTab] = useState('slides');
+  const [hpSaving, setHpSaving] = useState(false);
+  const [hpEditSlide, setHpEditSlide] = useState(null);
+  const [hpEditStat, setHpEditStat] = useState(null);
+  const [hpEditFeature, setHpEditFeature] = useState(null);
+  const BLANK_SLIDE = { tag: '', headline: '', highlight: '', sub: '', sortOrder: 0 };
+  const BLANK_STAT = { icon: 'Heart', value: 0, suffix: '', label: '', sortOrder: 0 };
+  const BLANK_FEATURE = { icon: 'Heart', title: '', desc: '', sortOrder: 0 };
+  const [newSlide, setNewSlide] = useState(BLANK_SLIDE);
+  const [newStat, setNewStat] = useState(BLANK_STAT);
+  const [newFeature, setNewFeature] = useState(BLANK_FEATURE);
+
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
     if (status === 'authenticated' && session?.user?.role !== 'ADMIN') router.push('/dashboard');
@@ -654,7 +671,7 @@ export default function AdminPage() {
 
   const loadAll = async () => {
     setLoading(true);
-    const [s, u, r, v, sub, pl, couponsData, storiesData] = await Promise.all([
+    const [s, u, r, v, sub, pl, couponsData, storiesData, slidesData, statsData, featuresData] = await Promise.all([
       fetch('/api/admin/stats').then(r => r.json()),
       fetch('/api/admin/users?limit=100').then(r => r.json()),
       fetch('/api/admin/reports').then(r => r.json()),
@@ -663,6 +680,9 @@ export default function AdminPage() {
       fetch('/api/admin/plans').then(r => r.json()).catch(() => []),
       fetch('/api/admin/coupons').then(r => r.json()).catch(() => []),
       fetch('/api/admin/stories').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/homepage/slides').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/homepage/stats').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/homepage/features').then(r => r.json()).catch(() => []),
     ]);
     setStats(s);
     setUsers(u.users || []);
@@ -673,11 +693,15 @@ export default function AdminPage() {
     setPlans(pl);
     setCoupons(Array.isArray(couponsData) ? couponsData : []);
     setStories(Array.isArray(storiesData) ? storiesData : []);
+    setHpSlides(Array.isArray(slidesData) ? slidesData : []);
+    setHpStats(Array.isArray(statsData) ? statsData : []);
+    setHpFeatures(Array.isArray(featuresData) ? featuresData : []);
     // Load profile options
     fetch('/api/profile-options').then(r => r.json()).then(setProfileOptions).catch(() => {});
     // Load site config
     fetch('/api/admin/siteconfig').then(r => r.json()).then(setSiteConfig).catch(() => {});
-    setLoading(false);  };
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.role === 'ADMIN') loadAll();
@@ -769,6 +793,22 @@ export default function AdminPage() {
   const deleteStory = async (id) => {
     if (!confirm('Delete this story?')) return;
     await fetch('/api/admin/stories', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    toast.success('Deleted'); loadAll();
+  };
+
+  // ── Homepage content helpers ──────────────────────────────────────────────
+  const saveHpItem = async (endpoint, data, onSuccess) => {
+    setHpSaving(true);
+    try {
+      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      if (res.ok) { toast.success('Saved'); onSuccess(); loadAll(); }
+      else toast.error('Failed to save');
+    } finally { setHpSaving(false); }
+  };
+
+  const deleteHpItem = async (endpoint, id) => {
+    if (!confirm('Delete this item?')) return;
+    await fetch(endpoint, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
     toast.success('Deleted'); loadAll();
   };
 
@@ -1404,6 +1444,248 @@ export default function AdminPage() {
           </div>
         )}
 
+        {/* ── HOMEPAGE CONTENT ── */}
+        {tab === 'homepage' && (
+          <div className="space-y-6">
+            <p className="text-gray-400 text-sm">Manage homepage hero slides, stats, and features. Changes appear immediately on the homepage.</p>
+
+            {/* Sub-tabs */}
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { id: 'slides', label: 'Hero Slides', count: hpSlides.length },
+                { id: 'stats', label: 'Stats', count: hpStats.length },
+                { id: 'features', label: 'Features', count: hpFeatures.length },
+              ].map(t => (
+                <button key={t.id} onClick={() => setHpTab(t.id)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${hpTab === t.id ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'}`}>
+                  {t.label} <span className="ml-1.5 opacity-60">({t.count})</span>
+                </button>
+              ))}
+            </div>
+
+            {/* ── SLIDES ── */}
+            {hpTab === 'slides' && (
+              <div className="space-y-6">
+                {/* Add form */}
+                <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                  <h3 className="font-bold text-lg mb-4">Add New Slide</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label className="text-xs text-gray-400 mb-1 block">Tag (badge)</label>
+                      <input value={newSlide.tag} onChange={e => setNewSlide(p => ({ ...p, tag: e.target.value }))} placeholder="e.g. 💑 5M+ Happy Couples"
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Sort Order</label>
+                      <input type="number" value={newSlide.sortOrder} onChange={e => setNewSlide(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))}
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Headline (first part)</label>
+                      <input value={newSlide.headline} onChange={e => setNewSlide(p => ({ ...p, headline: e.target.value }))} placeholder="e.g. Find Your"
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Highlight (gradient text)</label>
+                      <input value={newSlide.highlight} onChange={e => setNewSlide(p => ({ ...p, highlight: e.target.value }))} placeholder="e.g. Perfect Match"
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div className="sm:col-span-2"><label className="text-xs text-gray-400 mb-1 block">Subtitle</label>
+                      <textarea value={newSlide.sub} onChange={e => setNewSlide(p => ({ ...p, sub: e.target.value }))} rows={2} placeholder="Description..."
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white resize-none" /></div>
+                  </div>
+                  <button disabled={hpSaving} onClick={() => saveHpItem('/api/admin/homepage/slides', newSlide, () => setNewSlide(BLANK_SLIDE))}
+                    className="mt-4 px-6 py-2.5 vd-gradient-gold text-white rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                    {hpSaving ? 'Saving…' : 'Add Slide'}
+                  </button>
+                </div>
+
+                {/* List */}
+                <div className="space-y-3">
+                  {hpSlides.length === 0 && <div className="text-center py-10 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700">No slides yet.</div>}
+                  {hpSlides.map(s => (
+                    <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                      {hpEditSlide?.id === s.id ? (
+                        <div className="space-y-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input value={hpEditSlide.tag} onChange={e => setHpEditSlide(p => ({ ...p, tag: e.target.value }))} placeholder="Tag"
+                              className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+                            <input type="number" value={hpEditSlide.sortOrder} onChange={e => setHpEditSlide(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))} placeholder="Sort"
+                              className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+                            <input value={hpEditSlide.headline} onChange={e => setHpEditSlide(p => ({ ...p, headline: e.target.value }))} placeholder="Headline"
+                              className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+                            <input value={hpEditSlide.highlight} onChange={e => setHpEditSlide(p => ({ ...p, highlight: e.target.value }))} placeholder="Highlight"
+                              className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+                            <textarea value={hpEditSlide.sub} onChange={e => setHpEditSlide(p => ({ ...p, sub: e.target.value }))} rows={2} placeholder="Subtitle"
+                              className="sm:col-span-2 px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white resize-none" />
+                          </div>
+                          <div className="flex gap-2">
+                            <button disabled={hpSaving} onClick={() => saveHpItem('/api/admin/homepage/slides', hpEditSlide, () => setHpEditSlide(null))}
+                              className="px-4 py-2 vd-gradient-gold text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60">
+                              {hpSaving ? 'Saving…' : 'Save'}
+                            </button>
+                            <button onClick={() => setHpEditSlide(null)} className="px-4 py-2 border border-gray-600 rounded-xl text-sm hover:bg-gray-700">Cancel</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs bg-vd-accent-soft text-vd-primary px-2 py-0.5 rounded-full">{s.tag}</span>
+                              <span className="text-xs text-gray-500">#{s.sortOrder}</span>
+                            </div>
+                            <p className="font-semibold text-white">{s.headline} <span className="vd-gradient-text">{s.highlight}</span></p>
+                            <p className="text-sm text-gray-400 mt-1">{s.sub}</p>
+                          </div>
+                          <div className="flex gap-1.5 flex-shrink-0">
+                            <button onClick={() => setHpEditSlide({ ...s })} className="p-1.5 bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 rounded-lg transition-colors"><Edit2 className="w-3.5 h-3.5" /></button>
+                            <button onClick={() => deleteHpItem('/api/admin/homepage/slides', s.id)} className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── STATS ── */}
+            {hpTab === 'stats' && (
+              <div className="space-y-6">
+                <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                  <h3 className="font-bold text-lg mb-4">Add New Stat</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div><label className="text-xs text-gray-400 mb-1 block">Icon</label>
+                      <select value={newStat.icon} onChange={e => setNewStat(p => ({ ...p, icon: e.target.value }))}
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white">
+                        {['Users', 'Heart', 'Globe', 'Award', 'Star', 'TrendingUp'].map(i => <option key={i} value={i}>{i}</option>)}
+                      </select></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Value</label>
+                      <input type="number" value={newStat.value} onChange={e => setNewStat(p => ({ ...p, value: parseInt(e.target.value) || 0 }))}
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Suffix</label>
+                      <input value={newStat.suffix} onChange={e => setNewStat(p => ({ ...p, suffix: e.target.value }))} placeholder="e.g. M+, %"
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Label</label>
+                      <input value={newStat.label} onChange={e => setNewStat(p => ({ ...p, label: e.target.value }))} placeholder="e.g. Members"
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Sort Order</label>
+                      <input type="number" value={newStat.sortOrder} onChange={e => setNewStat(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))}
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                  </div>
+                  <button disabled={hpSaving} onClick={() => saveHpItem('/api/admin/homepage/stats', newStat, () => setNewStat(BLANK_STAT))}
+                    className="mt-4 px-6 py-2.5 vd-gradient-gold text-white rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                    {hpSaving ? 'Saving…' : 'Add Stat'}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {hpStats.length === 0 && <div className="col-span-2 text-center py-10 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700">No stats yet.</div>}
+                  {hpStats.map(s => (
+                    <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                      {hpEditStat?.id === s.id ? (
+                        <div className="space-y-2">
+                          <select value={hpEditStat.icon} onChange={e => setHpEditStat(p => ({ ...p, icon: e.target.value }))}
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white">
+                            {['Users', 'Heart', 'Globe', 'Award', 'Star', 'TrendingUp'].map(i => <option key={i} value={i}>{i}</option>)}
+                          </select>
+                          <div className="grid grid-cols-2 gap-2">
+                            <input type="number" value={hpEditStat.value} onChange={e => setHpEditStat(p => ({ ...p, value: parseInt(e.target.value) || 0 }))} placeholder="Value"
+                              className="px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white" />
+                            <input value={hpEditStat.suffix} onChange={e => setHpEditStat(p => ({ ...p, suffix: e.target.value }))} placeholder="Suffix"
+                              className="px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white" />
+                          </div>
+                          <input value={hpEditStat.label} onChange={e => setHpEditStat(p => ({ ...p, label: e.target.value }))} placeholder="Label"
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white" />
+                          <input type="number" value={hpEditStat.sortOrder} onChange={e => setHpEditStat(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))} placeholder="Sort"
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white" />
+                          <div className="flex gap-2">
+                            <button disabled={hpSaving} onClick={() => saveHpItem('/api/admin/homepage/stats', hpEditStat, () => setHpEditStat(null))}
+                              className="flex-1 px-3 py-1.5 vd-gradient-gold text-white rounded-lg text-xs font-semibold hover:opacity-90 disabled:opacity-60">{hpSaving ? '...' : 'Save'}</button>
+                            <button onClick={() => setHpEditStat(null)} className="flex-1 px-3 py-1.5 border border-gray-600 rounded-lg text-xs hover:bg-gray-700">Cancel</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs text-gray-500">#{s.sortOrder} · {s.icon}</span>
+                            <div className="flex gap-1">
+                              <button onClick={() => setHpEditStat({ ...s })} className="p-1 bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 rounded transition-colors"><Edit2 className="w-3 h-3" /></button>
+                              <button onClick={() => deleteHpItem('/api/admin/homepage/stats', s.id)} className="p-1 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded transition-colors"><Trash2 className="w-3 h-3" /></button>
+                            </div>
+                          </div>
+                          <p className="text-2xl font-bold vd-gradient-text">{s.value}{s.suffix}</p>
+                          <p className="text-sm text-gray-400 mt-0.5">{s.label}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── FEATURES ── */}
+            {hpTab === 'features' && (
+              <div className="space-y-6">
+                <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                  <h3 className="font-bold text-lg mb-4">Add New Feature</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label className="text-xs text-gray-400 mb-1 block">Icon</label>
+                      <select value={newFeature.icon} onChange={e => setNewFeature(p => ({ ...p, icon: e.target.value }))}
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white">
+                        {['Search', 'Shield', 'Globe', 'Heart', 'Star', 'Award'].map(i => <option key={i} value={i}>{i}</option>)}
+                      </select></div>
+                    <div><label className="text-xs text-gray-400 mb-1 block">Sort Order</label>
+                      <input type="number" value={newFeature.sortOrder} onChange={e => setNewFeature(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))}
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div className="sm:col-span-2"><label className="text-xs text-gray-400 mb-1 block">Title</label>
+                      <input value={newFeature.title} onChange={e => setNewFeature(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Smart Matching"
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" /></div>
+                    <div className="sm:col-span-2"><label className="text-xs text-gray-400 mb-1 block">Description</label>
+                      <textarea value={newFeature.desc} onChange={e => setNewFeature(p => ({ ...p, desc: e.target.value }))} rows={2} placeholder="Feature description..."
+                        className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white resize-none" /></div>
+                  </div>
+                  <button disabled={hpSaving} onClick={() => saveHpItem('/api/admin/homepage/features', newFeature, () => setNewFeature(BLANK_FEATURE))}
+                    className="mt-4 px-6 py-2.5 vd-gradient-gold text-white rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                    {hpSaving ? 'Saving…' : 'Add Feature'}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {hpFeatures.length === 0 && <div className="col-span-2 text-center py-10 text-gray-500 bg-gray-800/50 rounded-2xl border border-gray-700">No features yet.</div>}
+                  {hpFeatures.map(f => (
+                    <div key={f.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                      {hpEditFeature?.id === f.id ? (
+                        <div className="space-y-2">
+                          <select value={hpEditFeature.icon} onChange={e => setHpEditFeature(p => ({ ...p, icon: e.target.value }))}
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white">
+                            {['Search', 'Shield', 'Globe', 'Heart', 'Star', 'Award'].map(i => <option key={i} value={i}>{i}</option>)}
+                          </select>
+                          <input type="number" value={hpEditFeature.sortOrder} onChange={e => setHpEditFeature(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))} placeholder="Sort"
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white" />
+                          <input value={hpEditFeature.title} onChange={e => setHpEditFeature(p => ({ ...p, title: e.target.value }))} placeholder="Title"
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white" />
+                          <textarea value={hpEditFeature.desc} onChange={e => setHpEditFeature(p => ({ ...p, desc: e.target.value }))} rows={2} placeholder="Description"
+                            className="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg text-xs focus:outline-none focus:border-pink-500 text-white resize-none" />
+                          <div className="flex gap-2">
+                            <button disabled={hpSaving} onClick={() => saveHpItem('/api/admin/homepage/features', hpEditFeature, () => setHpEditFeature(null))}
+                              className="flex-1 px-3 py-1.5 vd-gradient-gold text-white rounded-lg text-xs font-semibold hover:opacity-90 disabled:opacity-60">{hpSaving ? '...' : 'Save'}</button>
+                            <button onClick={() => setHpEditFeature(null)} className="flex-1 px-3 py-1.5 border border-gray-600 rounded-lg text-xs hover:bg-gray-700">Cancel</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs text-gray-500">#{f.sortOrder} · {f.icon}</span>
+                            <div className="flex gap-1">
+                              <button onClick={() => setHpEditFeature({ ...f })} className="p-1 bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 rounded transition-colors"><Edit2 className="w-3 h-3" /></button>
+                              <button onClick={() => deleteHpItem('/api/admin/homepage/features', f.id)} className="p-1 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded transition-colors"><Trash2 className="w-3 h-3" /></button>
+                            </div>
+                          </div>
+                          <p className="font-semibold text-white mb-1">{f.title}</p>
+                          <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* ── PROFILE OPTIONS ── */}
         {tab === 'options' && (
           <ProfileOptionsTab
@@ -1445,8 +1727,8 @@ export default function AdminPage() {
 
         {/* ── SITE SETTINGS ── */}
         {tab === 'siteconfig' && (
-          <div className="max-w-lg space-y-6">
-            <p className="text-gray-400 text-sm">Configure global site settings. Changes take effect immediately.</p>
+          <div className="max-w-2xl space-y-6">
+            <p className="text-gray-400 text-sm">Configure global site settings. Changes take effect immediately on the homepage.</p>
 
             {/* Maintenance Mode */}
             <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
@@ -1473,7 +1755,6 @@ export default function AdminPage() {
                     {siteConfig.maintenance_mode !== '1' ? 'Users see the maintenance page (DB value = 0)' : 'Site is accessible to all users (DB value = 1)'}
                   </p>
                 </div>
-                {/* Toggle ON = site live (value 1), Toggle OFF = maintenance (value 0) */}
                 <Toggle
                   value={siteConfig.maintenance_mode === '1'}
                   onChange={async (val) => {
@@ -1526,6 +1807,139 @@ export default function AdminPage() {
                 className="gradient-bg text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity"
               >
                 {savingConfig ? 'Saving…' : 'Save Settings'}
+              </button>
+            </div>
+
+            {/* Site Identity */}
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+              <h3 className="font-bold text-lg text-white">Site Identity</h3>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Site Name</label>
+                <input value={siteConfig.site_name || ''} onChange={e => setSiteConfig(p => ({ ...p, site_name: e.target.value }))}
+                  placeholder="e.g. Vivah Dwar"
+                  className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Footer Tagline</label>
+                <input value={siteConfig.footer_tagline || ''} onChange={e => setSiteConfig(p => ({ ...p, footer_tagline: e.target.value }))}
+                  placeholder="e.g. Find your perfect life partner with trust, safety, and love."
+                  className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+              </div>
+              <button disabled={savingConfig} onClick={async () => {
+                setSavingConfig(true);
+                try {
+                  await Promise.all([
+                    fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'site_name', value: siteConfig.site_name || '' }) }),
+                    fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'footer_tagline', value: siteConfig.footer_tagline || '' }) }),
+                  ]);
+                  toast.success('Site identity saved');
+                } finally { setSavingConfig(false); }
+              }} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                {savingConfig ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+
+            {/* CTA Section */}
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+              <h3 className="font-bold text-lg text-white">CTA Section (Bottom Banner)</h3>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Heading</label>
+                <input value={siteConfig.cta_heading || ''} onChange={e => setSiteConfig(p => ({ ...p, cta_heading: e.target.value }))}
+                  placeholder="e.g. Ready to Find Your Soulmate?"
+                  className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Subtext</label>
+                <input value={siteConfig.cta_subtext || ''} onChange={e => setSiteConfig(p => ({ ...p, cta_subtext: e.target.value }))}
+                  placeholder="e.g. Join 20 million members and start your journey today."
+                  className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
+              </div>
+              <button disabled={savingConfig} onClick={async () => {
+                setSavingConfig(true);
+                try {
+                  await Promise.all([
+                    fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'cta_heading', value: siteConfig.cta_heading || '' }) }),
+                    fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'cta_subtext', value: siteConfig.cta_subtext || '' }) }),
+                  ]);
+                  toast.success('CTA section saved');
+                } finally { setSavingConfig(false); }
+              }} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                {savingConfig ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+
+            {/* Hero Slides */}
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+              <div>
+                <h3 className="font-bold text-lg text-white">Hero Slides</h3>
+                <p className="text-xs text-gray-500 mt-0.5">JSON array of slides shown in the hero section. Each slide: tag, headline, highlight, sub.</p>
+              </div>
+              <textarea
+                value={siteConfig.hero_slides || ''}
+                onChange={e => setSiteConfig(p => ({ ...p, hero_slides: e.target.value }))}
+                rows={8}
+                placeholder={`[\n  {\n    "id": 1,\n    "tag": "💑 5M+ Happy Couples",\n    "headline": "Find Your",\n    "highlight": "Perfect Match",\n    "sub": "Join 20M+ members..."\n  }\n]`}
+                className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-xs font-mono focus:outline-none focus:border-pink-500 text-white resize-none"
+              />
+              <button disabled={savingConfig} onClick={async () => {
+                try { JSON.parse(siteConfig.hero_slides); } catch { toast.error('Invalid JSON'); return; }
+                setSavingConfig(true);
+                try {
+                  const res = await fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'hero_slides', value: siteConfig.hero_slides }) });
+                  if (res.ok) toast.success('Hero slides saved'); else toast.error('Failed');
+                } finally { setSavingConfig(false); }
+              }} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                {savingConfig ? 'Saving…' : 'Save Slides'}
+              </button>
+            </div>
+
+            {/* Stats Section */}
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+              <div>
+                <h3 className="font-bold text-lg text-white">Stats Section</h3>
+                <p className="text-xs text-gray-500 mt-0.5">JSON array. Each stat: icon (Users/Heart/Globe/Award/Star/TrendingUp), value (number), suffix, label.</p>
+              </div>
+              <textarea
+                value={siteConfig.stats_section || ''}
+                onChange={e => setSiteConfig(p => ({ ...p, stats_section: e.target.value }))}
+                rows={8}
+                placeholder={`[\n  { "icon": "Users", "value": 20, "suffix": "M+", "label": "Members" },\n  { "icon": "Heart", "value": 5, "suffix": "M+", "label": "Happy Couples" }\n]`}
+                className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-xs font-mono focus:outline-none focus:border-pink-500 text-white resize-none"
+              />
+              <button disabled={savingConfig} onClick={async () => {
+                try { JSON.parse(siteConfig.stats_section); } catch { toast.error('Invalid JSON'); return; }
+                setSavingConfig(true);
+                try {
+                  const res = await fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'stats_section', value: siteConfig.stats_section }) });
+                  if (res.ok) toast.success('Stats saved'); else toast.error('Failed');
+                } finally { setSavingConfig(false); }
+              }} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                {savingConfig ? 'Saving…' : 'Save Stats'}
+              </button>
+            </div>
+
+            {/* Features Section */}
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+              <div>
+                <h3 className="font-bold text-lg text-white">Features Section</h3>
+                <p className="text-xs text-gray-500 mt-0.5">JSON array. Each feature: icon (Search/Shield/Globe/Heart), title, desc.</p>
+              </div>
+              <textarea
+                value={siteConfig.features_section || ''}
+                onChange={e => setSiteConfig(p => ({ ...p, features_section: e.target.value }))}
+                rows={8}
+                placeholder={`[\n  { "icon": "Search", "title": "Smart Matching", "desc": "AI-powered recommendations..." },\n  { "icon": "Shield", "title": "Verified Profiles", "desc": "Every profile is verified..." }\n]`}
+                className="w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-xs font-mono focus:outline-none focus:border-pink-500 text-white resize-none"
+              />
+              <button disabled={savingConfig} onClick={async () => {
+                try { JSON.parse(siteConfig.features_section); } catch { toast.error('Invalid JSON'); return; }
+                setSavingConfig(true);
+                try {
+                  const res = await fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'features_section', value: siteConfig.features_section }) });
+                  if (res.ok) toast.success('Features saved'); else toast.error('Failed');
+                } finally { setSavingConfig(false); }
+              }} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-opacity">
+                {savingConfig ? 'Saving…' : 'Save Features'}
               </button>
             </div>
           </div>

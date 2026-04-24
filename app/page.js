@@ -8,8 +8,8 @@ import {
   Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp
 } from 'lucide-react';
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-const SLIDES = [
+// ── Default Data (fallback) ──────────────────────────────────────────────────
+const DEFAULT_SLIDES = [
   {
     id: 1,
     tag: '💑 5M+ Happy Couples',
@@ -33,20 +33,14 @@ const SLIDES = [
   },
 ];
 
-const PROFILES = [
-  { name: 'Priya S.', age: 26, city: 'Mumbai', match: '98%', img: 'https://randomuser.me/api/portraits/women/44.jpg' },
-  { name: 'Ananya R.', age: 24, city: 'Delhi', match: '95%', img: 'https://randomuser.me/api/portraits/women/68.jpg' },
-  { name: 'Meera K.', age: 27, city: 'Bangalore', match: '92%', img: 'https://randomuser.me/api/portraits/women/65.jpg' },
-];
-
-const features = [
+const DEFAULT_FEATURES = [
   { icon: Search, title: 'Smart Matching', desc: 'AI-powered recommendations based on your preferences and compatibility.' },
   { icon: Shield, title: 'Verified Profiles', desc: 'Every profile is manually verified to ensure authenticity and safety.' },
   { icon: Globe, title: 'Global Reach', desc: 'Find your partner from 150+ countries with location-based search.' },
   { icon: Heart, title: 'Real Connections', desc: 'Meaningful conversations with interest-based chat system.' },
 ];
 
-const STATS = [
+const DEFAULT_STATS = [
   { icon: Users, value: 20, suffix: 'M+', label: 'Members' },
   { icon: Heart, value: 5, suffix: 'M+', label: 'Happy Couples' },
   { icon: Globe, value: 150, suffix: '+', label: 'Countries' },
@@ -110,6 +104,8 @@ function formatINR(amount) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
 }
 
+const ICON_MAP = { Search, Shield, Globe, Heart, Users, Award, TrendingUp, Star };
+
 export default function Home() {
   const [slide, setSlide] = useState(0);
   const [videoError, setVideoError] = useState(false);
@@ -118,13 +114,49 @@ export default function Home() {
   const [pricingPlans, setPricingPlans] = useState([]);
   const [selectedMonths, setSelectedMonths] = useState(3);
   const [couponCode, setCouponCode] = useState('');
-  const [couponStatus, setCouponStatus] = useState(null); // null | { valid, discountPct, code } | { error }
+  const [couponStatus, setCouponStatus] = useState(null);
   const [couponLoading, setCouponLoading] = useState(false);
   const [stories, setStories] = useState([]);
   const [storySlide, setStorySlide] = useState(0);
   const storyTimerRef = useRef(null);
 
+  // DB-backed homepage content
+  const [hpSlides, setHpSlides] = useState([]);
+  const [hpStats, setHpStats] = useState([]);
+  const [hpFeatures, setHpFeatures] = useState([]);
+  const [siteConfig, setSiteConfig] = useState({});
+  const [contentLoaded, setContentLoaded] = useState(false);
+
+  // Derived — fall back to defaults if DB is empty
+  const SLIDES = hpSlides.length > 0 ? hpSlides : DEFAULT_SLIDES;
+  const features = hpFeatures.length > 0
+    ? hpFeatures.map(f => ({ ...f, icon: ICON_MAP[f.icon] || Heart }))
+    : DEFAULT_FEATURES;
+  const STATS = hpStats.length > 0
+    ? hpStats.map(s => ({ ...s, icon: ICON_MAP[s.icon] || Heart }))
+    : DEFAULT_STATS;
+
+  const ctaHeading = siteConfig.cta_heading || 'Ready to Find Your Soulmate?';
+  const ctaSubtext = siteConfig.cta_subtext || "Join 20 million members and start your journey today. It's free!";
+  const footerTagline = siteConfig.footer_tagline || 'Find your perfect life partner with trust, safety, and love.';
+  const siteName = siteConfig.site_name || 'Vivah Dwar';
+
   useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/admin/homepage/slides').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/homepage/stats').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/homepage/features').then(r => r.json()).catch(() => []),
+      fetch('/api/admin/siteconfig').then(r => r.json()).catch(() => ({})),
+    ]).then(([slides, stats, feats, cfg]) => {
+      if (Array.isArray(slides)) setHpSlides(slides);
+      if (Array.isArray(stats)) setHpStats(stats);
+      if (Array.isArray(feats)) setHpFeatures(feats);
+      setSiteConfig(cfg || {});
+      setContentLoaded(true);
+    });
+  }, []);
 
   useEffect(() => {
     fetch('/api/admin/plans').then(r => r.json()).then(data => {
@@ -178,7 +210,28 @@ export default function Home() {
     return () => clearInterval(t);
   }, []);
 
-  const current = SLIDES[slide];
+  const current = SLIDES[slide] || SLIDES[0];
+
+  // Skeleton shimmer while config loads
+  if (!contentLoaded) {
+    return (
+      <div className="min-h-screen bg-vd-bg">
+        <Navbar />
+        <div className="flex items-center justify-center" style={{ height: '100svh' }}>
+          <motion.div
+            animate={{ opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="flex flex-col items-center gap-4"
+          >
+            <div className="w-16 h-16 vd-gradient-gold rounded-full flex items-center justify-center">
+              <Heart className="w-8 h-8 text-white fill-white" />
+            </div>
+            <p className="text-vd-text-sub text-sm">Loading…</p>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -345,7 +398,7 @@ export default function Home() {
       <section className="py-20 bg-vd-bg-alt">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Why Choose <span className="vd-gradient-text">Vivah Dwar?</span></h2>
+            <h2 className="text-4xl font-bold mb-4">Why Choose <span className="vd-gradient-text">{siteName}?</span></h2>
             <p className="text-vd-text-sub max-w-xl mx-auto">Everything you need to find your perfect life partner, all in one place.</p>
           </motion.div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -574,7 +627,7 @@ export default function Home() {
         />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Find Your Soulmate?</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{ctaHeading}</h2>
             <motion.div
               animate={{ scale: [1, 1.15, 1] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -582,7 +635,7 @@ export default function Home() {
             >
               <Heart className="w-12 h-12 fill-red-500 text-red-500 mx-auto" />
             </motion.div>
-            <p className="text-gray-800 mb-8 text-lg">Join 20 million members and start your journey today. It&apos;s free!</p>
+            <p className="text-gray-800 mb-8 text-lg">{ctaSubtext}</p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
               <Link href="/register" className="bg-white text-vd-primary px-10 py-4 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-colors inline-flex items-center gap-2 shadow-xl">
                 Create Free Profile <Heart className="w-5 h-5 fill-vd-primary" />
@@ -598,10 +651,10 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Image src="/logo/logo.png" alt="Vivah Dwar" width={32} height={32} className="rounded-full object-contain" />
-                <span className="text-vd-text-heading font-bold text-xl">Vivah Dwar</span>
+                <Image src="/logo/logo.png" alt={siteName} width={32} height={32} className="rounded-full object-contain" />
+                <span className="text-vd-text-heading font-bold text-xl">{siteName}</span>
               </div>
-              <p className="text-sm leading-relaxed">The world&apos;s most trusted matrimonial platform connecting hearts across 150+ countries.</p>
+              <p className="text-sm leading-relaxed">{footerTagline}</p>
               <div className="flex items-center gap-3 mt-4">
                 {[
                   { href: 'https://facebook.com', label: 'Facebook', svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /> },
@@ -635,7 +688,7 @@ export default function Home() {
             ))}
           </div>
           <div className="border-t border-vd-border pt-8 text-center text-sm">
-            <p>© 2026 Vivah Dwar Matrimony. All rights reserved. Made with <Heart className="w-3 h-3 inline fill-vd-primary text-vd-primary" /> for love.</p>
+            <p>© {new Date().getFullYear()} {siteName} Matrimony. All rights reserved. Made with <Heart className="w-3 h-3 inline fill-vd-primary text-vd-primary" /> for love.</p>
           </div>
         </div>
       </footer>
