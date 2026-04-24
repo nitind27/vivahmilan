@@ -1190,7 +1190,51 @@ export default function AdminPage() {
         {/* ── SITE SETTINGS ── */}
         {tab === 'siteconfig' && (
           <div className="max-w-lg space-y-6">
-            <p className="text-gray-400 text-sm">Configure global site settings. Changes take effect immediately for new users.</p>
+            <p className="text-gray-400 text-sm">Configure global site settings. Changes take effect immediately.</p>
+
+            {/* Maintenance Mode */}
+            <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${siteConfig.maintenance_mode === '1' ? 'bg-red-900/30' : 'bg-green-900/20'}`}>
+                  {siteConfig.maintenance_mode === '1'
+                    ? <Lock className="w-5 h-5 text-red-400" />
+                    : <Unlock className="w-5 h-5 text-green-400" />}
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Maintenance Mode</h3>
+                  <p className="text-xs text-gray-500">When ON, all visitors see the maintenance page. Admin panel stays accessible.</p>
+                </div>
+              </div>
+              <div className={`flex items-center justify-between p-4 rounded-xl border ${siteConfig.maintenance_mode === '1' ? 'bg-red-900/10 border-red-800/40' : 'bg-green-900/10 border-green-800/30'}`}>
+                <div>
+                  <p className="text-sm font-semibold text-white">
+                    Site is currently{' '}
+                    <span className={siteConfig.maintenance_mode === '1' ? 'text-red-400' : 'text-green-400'}>
+                      {siteConfig.maintenance_mode === '1' ? '🔴 Under Maintenance' : '🟢 Live'}
+                    </span>
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {siteConfig.maintenance_mode === '1' ? 'Users see the maintenance page' : 'Site is accessible to all users'}
+                  </p>
+                </div>
+                <Toggle
+                  value={siteConfig.maintenance_mode === '1'}
+                  onChange={async (val) => {
+                    const newVal = val ? '1' : '0';
+                    setSiteConfig(p => ({ ...p, maintenance_mode: newVal }));
+                    const res = await fetch('/api/admin/siteconfig', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ key: 'maintenance_mode', value: newVal }),
+                    });
+                    if (res.ok) toast.success(val ? '🔴 Maintenance mode ON' : '🟢 Site is now Live');
+                    else { toast.error('Failed'); setSiteConfig(p => ({ ...p, maintenance_mode: val ? '0' : '1' })); }
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Free Trial Settings */}
             <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-5">
               <h3 className="font-bold text-lg text-white">Free Trial Settings</h3>
               <div>
