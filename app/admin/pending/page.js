@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { UserCheck, CheckCircle, XCircle, Eye, Search, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { sendAdminVerificationEmail } from '@/lib/email';
 
 function UserRow({ u, onView, onApprove, onReject, showActions, statusBadge }) {
   return (
