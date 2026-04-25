@@ -90,6 +90,7 @@ export const authOptions = {
           );
 
           // Don't create session — redirect to profile completion page
+          user.id = userId; // ✅ set DB id so session has correct id
           const encodedEmail = encodeURIComponent(user.email);
           const encodedName  = encodeURIComponent(user.name || '');
           return `/register/complete?email=${encodedEmail}&name=${encodedName}`;

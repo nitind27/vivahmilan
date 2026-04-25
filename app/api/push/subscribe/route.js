@@ -12,6 +12,10 @@ export async function POST(req) {
   if (!endpoint || !keys?.p256dh || !keys?.auth)
     return NextResponse.json({ error: 'Invalid subscription' }, { status: 400 });
 
+  // Safety check — ensure user exists in DB before inserting
+  const userExists = await queryOne('SELECT id FROM `user` WHERE id = ?', [session.user.id]);
+  if (!userExists) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
   // Upsert — replace existing subscription for this endpoint
   const existing = await queryOne(
     'SELECT id FROM pushsubscription WHERE userId = ? AND endpoint = ?',
