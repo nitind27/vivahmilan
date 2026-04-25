@@ -11,23 +11,27 @@ import next from 'next';
 import { Server } from 'socket.io';
 import mysql from 'mysql2/promise';
 
-// ── DB pool for lastSeen updates ──────────────────────────────
-let dbPool;
+// ── DB pool for lastSeen updates (shared with lib/db.js via globalThis) ──
 function getDbPool() {
-  if (!dbPool) {
-    dbPool = mysql.createPool({
+  if (!globalThis.dbPool) {
+    globalThis.dbPool = mysql.createPool({
       host: process.env.DATABASE_HOST,
       user: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       port: parseInt(process.env.DATABASE_PORT || '3306'),
       family: 4,
-      connectionLimit: 3,
+      connectionLimit: 10,
       waitForConnections: true,
+      queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 10000,
+      connectTimeout: 10000,
       timezone: '+00:00',
     });
+    console.log('✅ DB Pool Created (server.mjs):', process.env.DATABASE_HOST);
   }
-  return dbPool;
+  return globalThis.dbPool;
 }
 
 async function updateLastSeen(userId) {
