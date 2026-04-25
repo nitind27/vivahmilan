@@ -46,29 +46,55 @@ export default function UserKycPage() {
   // Start local camera
   const startCamera = useCallback(async (back = false) => {
     try {
+      // Stop only video tracks — keep audio alive to avoid peer connection audio drop
       if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach(t => t.stop());
+        localStreamRef.current.getVideoTracks().forEach(t => t.stop());
       }
       const constraints = {
-        audio: true,
+        audio: !localStreamRef.current, // only request audio if no stream yet
         video: back
           ? { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
           : { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
       };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      localStreamRef.current = stream;
-      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-      return stream;
+      const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+      if (localStreamRef.current) {
+        // Replace video track in existing stream, keep old audio
+        const oldAudio = localStreamRef.current.getAudioTracks()[0];
+        const newVideo = newStream.getVideoTracks()[0];
+        // Build merged stream
+        const tracks = [newVideo];
+        if (oldAudio) tracks.push(oldAudio);
+        const merged = new MediaStream(tracks);
+        localStreamRef.current = merged;
+        if (localVideoRef.current) localVideoRef.current.srcObject = merged;
+        return merged;
+      } else {
+        localStreamRef.current = newStream;
+        if (localVideoRef.current) localVideoRef.current.srcObject = newStream;
+        return newStream;
+      }
     } catch (err) {
       // Fallback without exact constraint
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
+        const constraints = {
+          audio: !localStreamRef.current,
           video: back ? { facingMode: 'environment' } : { facingMode: 'user' },
-        });
-        localStreamRef.current = stream;
-        if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-        return stream;
+        };
+        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+        if (localStreamRef.current) {
+          const oldAudio = localStreamRef.current.getAudioTracks()[0];
+          const newVideo = newStream.getVideoTracks()[0];
+          const tracks = [newVideo];
+          if (oldAudio) tracks.push(oldAudio);
+          const merged = new MediaStream(tracks);
+          localStreamRef.current = merged;
+          if (localVideoRef.current) localVideoRef.current.srcObject = merged;
+          return merged;
+        }
+        localStreamRef.current = newStream;
+        if (localVideoRef.current) localVideoRef.current.srcObject = newStream;
+        return newStream;
       } catch {
         throw err;
       }
@@ -123,10 +149,11 @@ export default function UserKycPage() {
       setUsingBack(true);
       setDocMode(true);
       const newStream = await startCamera(true);
-      // Replace video track in peer connection
+      // Replace only video track in peer connection — audio stays untouched
       if (pcRef.current) {
+        const newVideoTrack = newStream.getVideoTracks()[0];
         const sender = pcRef.current.getSenders().find(s => s.track?.kind === 'video');
-        if (sender) await sender.replaceTrack(newStream.getVideoTracks()[0]);
+        if (sender && newVideoTrack) await sender.replaceTrack(newVideoTrack);
       }
     });
 

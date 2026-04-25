@@ -77,14 +77,16 @@ export async function PATCH(req, { params }) {
     const receiverProfile = await queryOne('SELECT * FROM profile WHERE userId = ?', [interest.receiverId]);
 
     if (sender?.isPremium) {
-      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(sender, senderProfile, true));
+      // Sender's profile goes to receiver; receiver's profile goes to sender
+      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(sender, senderProfile, true));
     }
     if (receiver?.isPremium) {
-      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(receiver, receiverProfile, true));
+      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(receiver, receiverProfile, true));
     }
     if (!sender?.isPremium && !receiver?.isPremium) {
-      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(sender, senderProfile, false));
-      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(receiver, receiverProfile, false));
+      // Each user sees the OTHER person's profile card
+      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(sender, senderProfile, false));
+      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(receiver, receiverProfile, false));
     }
 
     // Notification to sender

@@ -9,27 +9,31 @@ import {
   UserCheck, AlertTriangle, Settings, Bell, Search,
   CheckCircle, XCircle, Ban, Eye, Edit2, Trash2,
   DollarSign, BarChart2, Heart, LogOut, ChevronDown,
-  RefreshCw, Mail, Phone, Calendar, MapPin, Lock, Unlock, FileText
+  RefreshCw, Mail, Phone, Calendar, MapPin, Lock, Unlock, FileText,
+  Sparkles
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import AdminSupportChat from '@/components/AdminSupportChat';
+import { AllMembersTab, MatchMakerTab } from '@/components/AdminMatchMaker';
 
 const TABS = [
-  { id: 'overview',      label: 'Overview',       icon: BarChart2 },
+  { id: 'overview',      label: 'Overview',        icon: BarChart2 },
   { id: 'pending',       label: 'Pending Approval', icon: UserCheck, badge: 'pendingAdminVerify' },
-  { id: 'users',         label: 'All Users',       icon: Users },
+  { id: 'members',       label: 'All Members',      icon: Users },
+  { id: 'matchmaker',    label: 'Match Maker',      icon: Sparkles },
+  { id: 'users',         label: 'All Users',        icon: Users },
   { id: 'verifications', label: 'ID Verifications', icon: Shield, badge: 'pendingVerifications' },
-  { id: 'reports',       label: 'Reports',         icon: Flag, badge: 'pendingReports' },
-  { id: 'subscriptions', label: 'Subscriptions',   icon: Star },
-  { id: 'plans',         label: 'Plan Config',     icon: Settings },
-  { id: 'coupons',       label: 'Coupon Codes',    icon: Star },
-  { id: 'stories',       label: 'Success Stories', icon: Heart },
+  { id: 'reports',       label: 'Reports',          icon: Flag, badge: 'pendingReports' },
+  { id: 'subscriptions', label: 'Subscriptions',    icon: Star },
+  { id: 'plans',         label: 'Plan Config',      icon: Settings },
+  { id: 'coupons',       label: 'Coupon Codes',     icon: Star },
+  { id: 'stories',       label: 'Success Stories',  icon: Heart },
   { id: 'homepage',      label: 'Homepage Content', icon: FileText },
-  { id: 'options',       label: 'Profile Options', icon: Edit2 },
-  { id: 'siteconfig',    label: 'Site Settings',   icon: Lock },
-  { id: 'support',       label: 'Support Chat',    icon: MessageCircle },
+  { id: 'options',       label: 'Profile Options',  icon: Edit2 },
+  { id: 'siteconfig',    label: 'Site Settings',    icon: Lock },
+  { id: 'support',       label: 'Support Chat',     icon: MessageCircle },
 ];
 
 const DEFAULT_PERMISSIONS = {
@@ -1115,6 +1119,12 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+
+        {/* ── ALL MEMBERS ── */}
+        {tab === 'members' && <AllMembersTab session={session} />}
+
+        {/* ── MATCH MAKER ── */}
+        {tab === 'matchmaker' && <MatchMakerTab session={session} />}
 
         {/* ── ID VERIFICATIONS ── */}
         {tab === 'verifications' && (
