@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import {
   Globe, Monitor, Smartphone, Tablet, Eye, Users,
-  TrendingUp, RefreshCw, MapPin, Chrome, Search,
-  ExternalLink, Calendar, Activity
+  TrendingUp, RefreshCw, MapPin, Search,
+  ExternalLink, Calendar, Activity, Link2
 } from 'lucide-react';
 
 function StatCard({ icon: Icon, label, value, color, bg, sub }) {
@@ -173,7 +173,7 @@ export default function AnalyticsPage() {
 
               {/* Browser */}
               <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
-                <h3 className="font-semibold text-white mb-4 flex items-center gap-2"><Chrome className="w-4 h-4 text-vd-primary" /> Browsers</h3>
+                <h3 className="font-semibold text-white mb-4 flex items-center gap-2"><Link2 className="w-4 h-4 text-vd-primary" /> Browsers</h3>
                 <div className="space-y-1">
                   {(data?.browserBreakdown || []).map(b => (
                     <BarRow key={b.browser} label={b.browser} value={Number(b.cnt)} max={totalBrowsers} sub={`${Math.round((Number(b.cnt)/totalBrowsers)*100)}%`} />
