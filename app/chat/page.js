@@ -440,15 +440,17 @@ function ChatInner() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [, setTick] = useState(0); // forces re-render every minute for last seen
 
-  const messagesEndRef  = useRef(null);
-  const typingTimeout   = useRef(null);
-  const isTyping        = useRef(false);
-  const socketRef       = useRef(null);
-  const fileInputRef    = useRef(null);
-  const docInputRef     = useRef(null);
-  const inputRef        = useRef(null);
-  const activeRoomRef   = useRef(null); // always current activeRoom
-  const msgRefs         = useRef({});   // id → DOM element for scroll-to-quoted
+  const messagesEndRef    = useRef(null);
+  const messagesScrollRef = useRef(null); // scroll container ref
+  const typingTimeout     = useRef(null);
+  const isTyping          = useRef(false);
+  const socketRef         = useRef(null);
+  const fileInputRef      = useRef(null);
+  const docInputRef       = useRef(null);
+  const inputRef          = useRef(null);
+  const activeRoomRef     = useRef(null); // always current activeRoom
+  const msgRefs           = useRef({});   // id → DOM element for scroll-to-quoted
+  const isLoadingMore     = useRef(false); // track if currently loading older msgs
 
   // Keep activeRoomRef in sync
   useEffect(() => { activeRoomRef.current = activeRoom; }, [activeRoom]);
@@ -551,7 +553,11 @@ function ChatInner() {
     loadRooms();
   }, [status, session, targetUserId]);
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, otherTyping]);
+  useEffect(() => {
+    // Don't scroll to bottom when loading older messages — preserve position
+    if (isLoadingMore.current) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, otherTyping]);
 
   const openRoom = useCallback((room) => {
     if (activeRoom) socketRef.current?.emit('room:leave', activeRoom.id);
@@ -575,14 +581,25 @@ function ChatInner() {
   const loadMoreMessages = useCallback(async () => {
     if (!activeRoom || loadingMore || !hasMore) return;
     setLoadingMore(true);
+    isLoadingMore.current = true;
     const oldest = messages[0];
-    if (!oldest) { setLoadingMore(false); return; }
+    if (!oldest) { setLoadingMore(false); isLoadingMore.current = false; return; }
+    // Save scroll height before prepending so we can restore position
+    const container = messagesScrollRef.current;
+    const prevScrollHeight = container?.scrollHeight ?? 0;
     try {
       const res = await fetch(`/api/chat/${activeRoom.id}?before=${encodeURIComponent(oldest.createdAt)}`);
       const older = await res.json();
       if (older.length === 0) { setHasMore(false); return; }
       setMessages(prev => [...older, ...prev]);
       setHasMore(older.length >= 60);
+      // After DOM updates, restore scroll so old messages appear above current view
+      requestAnimationFrame(() => {
+        if (container) {
+          container.scrollTop = container.scrollHeight - prevScrollHeight;
+        }
+        isLoadingMore.current = false;
+      });
     } finally { setLoadingMore(false); }
   }, [activeRoom, messages, loadingMore, hasMore]);
 
@@ -896,7 +913,7 @@ function ChatInner() {
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6 lg:px-8 py-4 space-y-2 bg-gray-50 dark:bg-gray-900"
+                  <div ref={messagesScrollRef} className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6 lg:px-8 py-4 space-y-2 bg-gray-50 dark:bg-gray-900"
                     onClick={() => { setShowEmoji(false); setShowAttach(false); }}>
 
                     {/* Load More button at top */}
