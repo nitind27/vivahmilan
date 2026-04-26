@@ -42,35 +42,32 @@ function formatLastSeen(isoString) {
 }
 
 // ── Message Bubble ────────────────────────────────────────────────────────────
-function MessageBubble({ msg, isMe, onReply }) {
+function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs }) {
   const [zoom, setZoom] = useState(false);
   const [swipeX, setSwipeX] = useState(0);
+  const [swipeActive, setSwipeActive] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
-  const swiping = useRef(false);
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
-    swiping.current = false;
   };
 
   const handleTouchMove = (e) => {
     const dx = e.touches[0].clientX - touchStartX.current;
     const dy = Math.abs(e.touches[0].clientY - touchStartY.current);
-    // Only horizontal swipe, not vertical scroll
-    if (dy > 20) return;
-    // Right swipe to reply (both sent and received)
-    if (dx > 0 && dx < 80) {
-      swiping.current = true;
+    if (dy > 15) return; // vertical scroll — ignore
+    if (dx > 0 && dx < 72) {
+      setSwipeActive(true);
       setSwipeX(dx);
     }
   };
 
   const handleTouchEnd = () => {
-    if (swipeX > 40) onReply?.(msg);
+    if (swipeX > 42) onReply?.(msg);
     setSwipeX(0);
-    swiping.current = false;
+    setSwipeActive(false);
   };
 
   if (msg.type === 'IMAGE') {
@@ -290,33 +287,88 @@ function MessageBubble({ msg, isMe, onReply }) {
     );
   }
 
-  // Regular text — parse replyTo prefix
+  // Regular text — parse replyTo prefix + WhatsApp-style quoted reply
   const replyMatch = msg.content?.match(/^\[replyTo:([^\]]+)\] ([\s\S]*)$/);
+  const replyToId = replyMatch?.[1] || null;
   const displayContent = replyMatch ? replyMatch[2] : msg.content;
-  const replyPreview = msg.replyTo?.content || null;
+  const quotedMsg = replyToId ? allMessages?.find(m => m.id === replyToId) : null;
+  const quotedContent = quotedMsg
+    ? (quotedMsg.content?.replace(/^\[replyTo:[^\]]+\] /, '') ||
+       (quotedMsg.type === 'IMAGE' ? '📷 Photo' : quotedMsg.type === 'DOCUMENT' ? '📄 Document' : quotedMsg.type === 'LOCATION' ? '📍 Location' : ''))
+    : null;
+
+  const scrollToQuoted = () => {
+    if (!replyToId || !msgRefs?.current) return;
+    const el = msgRefs.current[replyToId];
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.style.transition = 'background 0.3s';
+      el.style.background = 'rgba(200,164,92,0.25)';
+      setTimeout(() => { el.style.background = ''; }, 1000);
+    }
+  };
+
+  const hasQuote = quotedContent !== null;
 
   return (
-    <div
-      className={`max-w-xs lg:max-w-sm xl:max-w-md ${isMe ? 'ml-auto' : 'mr-auto'} relative`}
-      style={{ transform: `translateX(${swipeX}px)`, transition: swipeX === 0 ? 'transform 0.2s ease' : 'none' }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {swipeX > 10 && (
-        <div className="absolute -left-8 top-1/2 -translate-y-1/2 text-gray-400 opacity-70">↩</div>
-      )}
-      {(replyPreview || replyMatch) && (
-        <div className={`text-xs px-3 py-1.5 mb-1 rounded-xl border-l-2 border-vd-primary bg-gray-100 dark:bg-gray-800 text-gray-500 truncate`}>
-          ↩ {replyPreview || 'Message'}
-        </div>
-      )}
-      <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-        isMe ? 'vd-gradient-gold text-white rounded-br-sm' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-sm shadow-sm'
-      }`}>
-        {displayContent}
+    <div className="relative">
+      {/* Swipe reply icon */}
+      <div
+        className="absolute top-1/2 -translate-y-1/2 text-vd-primary pointer-events-none"
+        style={{
+          left: isMe ? 'auto' : '-26px',
+          right: isMe ? '-26px' : 'auto',
+          opacity: swipeX > 6 ? Math.min(1, swipeX / 42) : 0,
+          transition: swipeActive ? 'none' : 'opacity 0.2s',
+        }}
+      >
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+        </svg>
       </div>
-      <MsgMeta isMe={isMe} msg={msg} />
+
+      <div
+        className={`max-w-xs lg:max-w-sm xl:max-w-md ${isMe ? 'ml-auto' : 'mr-auto'}`}
+        style={{
+          transform: `translateX(${swipeX}px)`,
+          transition: swipeActive ? 'none' : 'transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94)',
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Quoted reply block — WhatsApp style */}
+        {hasQuote && (
+          <button
+            onClick={scrollToQuoted}
+            className={`w-full text-left rounded-t-2xl overflow-hidden border-l-4 border-vd-primary ${
+              isMe ? 'bg-black/20' : 'bg-gray-200 dark:bg-gray-600'
+            }`}
+          >
+            <div className="px-3 py-2">
+              <p className="text-xs font-bold text-vd-primary mb-0.5">
+                {quotedMsg?.senderId === msg.senderId ? 'You' : 'Them'}
+              </p>
+              <p className={`text-xs line-clamp-2 ${isMe ? 'text-white/75' : 'text-gray-600 dark:text-gray-300'}`}>
+                {quotedContent || '📎 Attachment'}
+              </p>
+            </div>
+          </button>
+        )}
+
+        {/* Message body */}
+        <div className={`px-4 py-2.5 text-sm leading-relaxed break-words ${
+          hasQuote
+            ? `rounded-b-2xl ${isMe ? 'rounded-tr-2xl' : 'rounded-tl-2xl'}`
+            : `rounded-2xl ${isMe ? 'rounded-br-sm' : 'rounded-bl-sm'}`
+        } ${isMe
+          ? 'vd-gradient-gold text-white'
+          : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 shadow-sm'
+        }`}>
+          {displayContent}
+        </div>
+        <MsgMeta isMe={isMe} msg={msg} />
+      </div>
     </div>
   );
 }
@@ -365,6 +417,7 @@ function ChatInner() {
   const docInputRef     = useRef(null);
   const inputRef        = useRef(null);
   const activeRoomRef   = useRef(null); // always current activeRoom
+  const msgRefs         = useRef({});   // id → DOM element for scroll-to-quoted
 
   // Keep activeRoomRef in sync
   useEffect(() => { activeRoomRef.current = activeRoom; }, [activeRoom]);
@@ -417,10 +470,12 @@ function ChatInner() {
         });
       });
     });
-    // When receiver reads our messages — update ticks to blue
-    s.on('message:read', ({ roomId, readerId }) => {
+    // When receiver reads our messages — update ALL messages in that room to blue tick
+    s.on('message:read', ({ roomId }) => {
       setMessages(prev => prev.map(m =>
-        m.chatRoomId === roomId && m.senderId === session.user.id ? { ...m, isRead: true } : m
+        (m.chatRoomId === roomId || activeRoomRef.current?.id === roomId) && m.senderId === session.user.id
+          ? { ...m, isRead: true }
+          : m
       ));
     });
     s.on('typing:start', () => setOtherTyping(true));
@@ -478,7 +533,9 @@ function ChatInner() {
     socketRef.current?.emit('room:join', room.id);
     fetch(`/api/chat/${room.id}`).then(r => r.json()).then(msgs => {
       setMessages(msgs);
-      // Tell sender their messages are read
+      // Mark all received messages as read visually
+      setMessages(prev => prev.map(m => ({ ...m, isRead: m.senderId !== session?.user?.id ? true : m.isRead })));
+      // Tell sender their messages are read — triggers blue tick on their side
       socketRef.current?.emit('message:read', { roomId: room.id, readerId: session?.user?.id });
     });
     // Clear unread for this room
@@ -794,7 +851,7 @@ function ChatInner() {
                       const isMe = msg.senderId === session?.user?.id;
                       const showDate = idx === 0 || new Date(msg.createdAt) - new Date(messages[idx - 1]?.createdAt) > 5 * 60 * 1000;
                       return (
-                        <div key={msg.id}>
+                        <div key={msg.id} ref={el => { if (el) msgRefs.current[msg.id] = el; else delete msgRefs.current[msg.id]; }} className="rounded-xl transition-colors duration-300">
                           {showDate && (
                             <div className="text-center my-3">
                               <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
@@ -804,7 +861,7 @@ function ChatInner() {
                           )}
                           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <MessageBubble msg={msg} isMe={isMe} onReply={setReplyTo} />
+                            <MessageBubble msg={msg} isMe={isMe} onReply={setReplyTo} allMessages={messages} msgRefs={msgRefs} />
                           </motion.div>
                         </div>
                       );
@@ -933,9 +990,15 @@ function ChatInner() {
                   {/* Reply preview */}
                   {replyTo && (
                     <div className="flex items-center gap-2 px-4 py-2 bg-vd-accent-soft dark:bg-vd-accent/10 border-t border-vd-border">
+                      <div className="w-1 self-stretch bg-vd-primary rounded-full flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-vd-primary font-semibold">↩ Replying to</p>
-                        <p className="text-xs text-gray-500 truncate">{replyTo.content?.slice(0, 80) || 'Message'}</p>
+                        <p className="text-xs font-bold text-vd-primary">
+                          {replyTo.senderId === session?.user?.id ? 'You' : 'Them'}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {replyTo.content?.replace(/^\[replyTo:[^\]]+\] /, '') ||
+                           (replyTo.type === 'IMAGE' ? '📷 Photo' : replyTo.type === 'DOCUMENT' ? '📄 Document' : '📍 Location')}
+                        </p>
                       </div>
                       <button onClick={() => setReplyTo(null)} className="p-1 text-gray-400 hover:text-gray-600 flex-shrink-0">
                         <X className="w-4 h-4" />
