@@ -3,6 +3,7 @@ import Providers from '@/components/Providers';
 import SWRegister from '@/components/SWRegister';
 import ChatBot from '@/components/ChatBot';
 import SetPasswordModal from '@/components/SetPasswordModal';
+import PageTracker from '@/components/PageTracker';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
       <body className={`bg-vd-bg dark:bg-vd-bg text-vd-text-heading dark:text-vd-text-heading`} suppressHydrationWarning>
         <Providers>
           <SWRegister />
+          <PageTracker />
           {children}
           <SetPasswordModal />
           <ChatBot />

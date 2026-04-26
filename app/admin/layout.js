@@ -7,7 +7,8 @@ import { signOut } from 'next-auth/react';
 import {
   BarChart2, UserCheck, Users, Sparkles, UserPlus, Crown,
   Bell, Activity, Shield, Flag, Star, Settings, Heart,
-  FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw
+  FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw,
+  TrendingUp
 } from 'lucide-react';
 
 export const ADMIN_TABS = [
@@ -19,6 +20,7 @@ export const ADMIN_TABS = [
   { id: 'premium',       label: 'Premium Manager',   icon: Crown,         badge: null },
   { id: 'broadcast',     label: 'Broadcast',         icon: Bell,          badge: null },
   { id: 'activity',      label: 'Activity Log',      icon: Activity,      badge: null },
+  { id: 'analytics',     label: 'Analytics',         icon: TrendingUp,    badge: null },
   { id: 'users',         label: 'All Users',         icon: Users,         badge: null },
   { id: 'verifications', label: 'ID Verifications',  icon: Shield,        badge: 'pendingVerifications' },
   { id: 'reports',       label: 'Reports',           icon: Flag,          badge: 'pendingReports' },

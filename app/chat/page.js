@@ -43,6 +43,21 @@ function formatLastSeen(isoString) {
 }
 
 // ── Message Bubble ────────────────────────────────────────────────────────────
+async function downloadImage(url, filename) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename || 'image.jpg';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  } catch {
+    // Fallback: open in new tab
+    window.open(url, '_blank');
+  }
+}
+
 function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs }) {
   const [zoom, setZoom] = useState(false);
   const [swipeX, setSwipeX] = useState(0);
@@ -114,6 +129,17 @@ function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs }) {
                 <span className="text-white text-xs font-medium bg-black/40 px-2 py-0.5 rounded-full">Tap to view</span>
               </div>
             )}
+
+            {/* Download button — shown when image is visible (zoom=true or sender) */}
+            {!msg._uploading && (isMe || zoom) && (
+              <button
+                onClick={e => { e.stopPropagation(); downloadImage(msg.fileUrl, msg.fileName || 'image.jpg'); }}
+                className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 transition-colors z-10"
+                title="Download"
+              >
+                <Download className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           <MsgMeta isMe={isMe} msg={msg} />
         </div>
@@ -124,25 +150,26 @@ function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs }) {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/95 z-50 flex flex-col items-center justify-center p-4"
               onClick={() => setZoom(false)}>
-              <button className="absolute top-4 right-4 text-white bg-white/10 rounded-full p-2 hover:bg-white/20 z-10">
+              {/* Close */}
+              <button onClick={() => setZoom(false)}
+                className="absolute top-4 right-4 text-white bg-white/10 rounded-full p-2 hover:bg-white/20 z-10">
                 <X className="w-5 h-5" />
               </button>
-              {/* Download button */}
-              <a
-                href={msg.fileUrl}
-                download={msg.fileName || 'image.jpg'}
-                onClick={e => e.stopPropagation()}
-                className="absolute top-4 left-4 text-white bg-white/10 rounded-full p-2 hover:bg-white/20 z-10"
+              {/* Download */}
+              <button
+                onClick={e => { e.stopPropagation(); downloadImage(msg.fileUrl, msg.fileName || 'image.jpg'); }}
+                className="absolute top-4 left-4 text-white bg-white/10 rounded-full p-2 hover:bg-white/20 z-10 flex items-center gap-2"
               >
                 <Download className="w-5 h-5" />
-              </a>
+                <span className="text-sm hidden sm:inline">Download</span>
+              </button>
               <img
                 src={msg.fileUrl}
                 alt=""
                 className="max-w-full max-h-[85vh] rounded-xl object-contain shadow-2xl"
                 onClick={e => e.stopPropagation()}
               />
-              <p className="text-white/60 text-xs mt-3">{msg.fileName}</p>
+              {msg.fileName && <p className="text-white/60 text-xs mt-3">{msg.fileName}</p>}
             </motion.div>
           )}
         </AnimatePresence>

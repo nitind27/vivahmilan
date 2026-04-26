@@ -82,6 +82,7 @@ app.prepare().then(() => {
       '/api/register',
       '/api/onboarding',
       '/api/kyc/',
+      '/api/track',
       '/register',
       '/verify-email',
       '/onboarding',
