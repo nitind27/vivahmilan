@@ -15,6 +15,7 @@ import { format, isToday, isYesterday } from 'date-fns';
 import toast from 'react-hot-toast';
 import { connectSocket } from '@/lib/socket';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import ImageEditorModal from '@/components/ImageEditorModal';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 
@@ -406,7 +407,8 @@ function ChatInner() {
   const [showAttach, setShowAttach]   = useState(false);
   const [showLocPicker, setShowLocPicker] = useState(false);
   const [unreadPerRoom, setUnreadPerRoom] = useState({});
-  const [replyTo, setReplyTo] = useState(null); // message being replied to
+  const [replyTo, setReplyTo] = useState(null);
+  const [showImageEditor, setShowImageEditor] = useState(false);
   const [, setTick] = useState(0); // forces re-render every minute for last seen
 
   const messagesEndRef  = useRef(null);
@@ -750,17 +752,25 @@ function ChatInner() {
   return (
     <div className="flex flex-col bg-vd-bg" style={{ height: '100dvh' }}>
       <Navbar />
-      {/* Chat container — fills remaining height after navbar */}
-      <div className="flex-1 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-6 pb-2 sm:pb-4 flex flex-col overflow-hidden pt-16">
-        <div className="flex-1 flex gap-0 bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl sm:rounded-3xl border border-vd-border shadow-sm overflow-hidden min-h-0">
+      {/* Full-screen chat — fills all space below navbar */}
+      <div className="flex-1 flex overflow-hidden pt-16">
+        <div className="flex-1 flex bg-vd-bg-section dark:bg-vd-bg-card overflow-hidden">
 
           {/* ── Sidebar ── */}
-          <div className={`${activeRoom ? 'hidden md:flex' : 'flex'} w-full md:w-80 flex-col border-r border-gray-100 dark:border-gray-700 overflow-hidden`}>
-            <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
-              <h2 className="font-bold text-lg">Messages</h2>
-              <p className="text-xs text-gray-400 mt-0.5">{rooms.length} conversations</p>
+          <div className={`${activeRoom ? 'hidden md:flex' : 'flex'} w-full md:w-72 lg:w-80 xl:w-96 flex-col border-r border-gray-100 dark:border-gray-700 overflow-hidden flex-shrink-0`}>
+            {/* Sidebar header */}
+            <div className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="font-bold text-base">Messages</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">{rooms.length} conversations</p>
+                </div>
+                <div className="w-8 h-8 vd-gradient-gold rounded-full flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-white" />
+                </div>
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto min-h-0">
+            <div className="flex-1 overflow-y-auto min-h-0 bg-white dark:bg-gray-800">
               {rooms.length === 0 ? (
                 <div className="p-8 text-center">
                   <MessageCircle className="w-10 h-10 text-gray-200 dark:text-gray-700 mx-auto mb-3" />
@@ -771,40 +781,40 @@ function ChatInner() {
                 const other = getOtherUser(room);
                 const lastMsg = room.messages?.[0];
                 const online = isOnline(other?.id);
+                const hasUnread = unreadPerRoom[room.id] > 0;
                 return (
                   <button key={room.id} onClick={() => openRoom(room)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left border-b border-gray-50 dark:border-gray-700/50 ${activeRoom?.id === room.id ? 'bg-vd-accent-soft dark:bg-vd-accent/10 border-l-2 border-l-vd-primary' : ''}`}>
+                    className={`w-full flex items-center gap-3 px-4 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left border-b border-gray-50 dark:border-gray-700/30 ${activeRoom?.id === room.id ? 'bg-vd-accent-soft dark:bg-vd-accent/10 border-l-[3px] border-l-vd-primary' : ''}`}>
                     <div className="relative flex-shrink-0">
-                      <div className="w-11 h-11 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold">
+                      <div className="w-12 h-12 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold text-lg">
                         {other?.image
-                          ? <SmartImage src={other.image} alt="" width={44} height={44} className="object-cover w-full h-full" />
+                          ? <SmartImage src={other.image} alt="" width={48} height={48} className="object-cover w-full h-full" />
                           : <span>{other?.name?.[0]}</span>
                         }
                       </div>
                       {online && (
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />
+                        <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className={`text-sm truncate ${unreadPerRoom[room.id] > 0 ? 'font-bold text-gray-900 dark:text-white' : 'font-semibold'}`}>{other?.name}</p>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <p className={`text-sm truncate ${hasUnread ? 'font-bold text-gray-900 dark:text-white' : 'font-semibold text-gray-800 dark:text-gray-100'}`}>{other?.name}</p>
                         {lastMsg && (
-                          <span className="text-xs text-gray-400 flex-shrink-0 ml-1">
+                          <span className={`text-xs flex-shrink-0 ml-2 ${hasUnread ? 'text-vd-primary font-semibold' : 'text-gray-400'}`}>
                             {formatMsgTime(lastMsg.createdAt)}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center justify-between mt-0.5">
-                        <p className={`text-xs truncate ${unreadPerRoom[room.id] > 0 ? 'text-gray-700 dark:text-gray-200 font-medium' : 'text-gray-500'}`}>
-                          {lastMsg?.type === 'IMAGE' ? '📷 Photo' : lastMsg?.type === 'DOCUMENT' ? '📄 Document' : lastMsg?.type === 'LOCATION' ? '📍 Location' : lastMsg?.content || 'Start chatting'}
+                      <div className="flex items-center justify-between">
+                        <p className={`text-xs truncate ${hasUnread ? 'text-gray-700 dark:text-gray-200 font-medium' : 'text-gray-400'}`}>
+                          {lastMsg?.type === 'IMAGE' ? '📷 Photo' : lastMsg?.type === 'DOCUMENT' ? '📄 Document' : lastMsg?.type === 'LOCATION' ? '📍 Location' : lastMsg?.content?.replace(/^\[replyTo:[^\]]+\] /, '') || 'Start chatting'}
                         </p>
-                        {unreadPerRoom[room.id] > 0 && (
+                        {hasUnread && (
                           <span className="flex-shrink-0 ml-2 min-w-5 h-5 vd-gradient-gold text-white text-xs rounded-full flex items-center justify-center px-1.5 font-bold">
                             {unreadPerRoom[room.id] > 99 ? '99+' : unreadPerRoom[room.id]}
                           </span>
                         )}
                       </div>
-                      {/* last seen removed from sidebar */}
                     </div>
                   </button>
                 );
@@ -813,24 +823,24 @@ function ChatInner() {
           </div>
 
           {/* ── Chat Area ── */}
-          <div className={`${activeRoom ? 'flex' : 'hidden md:flex'} flex-1 flex-col min-w-0 min-h-0 overflow-hidden relative`}>
+          <div className={`${activeRoom ? 'flex' : 'hidden md:flex'} flex-1 flex-col min-w-0 min-h-0 overflow-hidden relative bg-gray-50 dark:bg-gray-900`}>
             {activeRoom ? (() => {
               const other = getOtherUser(activeRoom);
               const online = isOnline(other?.id);
               return (
                 <>
                   {/* Header */}
-                  <div className="flex items-center gap-3 px-4 py-3 border-b border-vd-border bg-vd-bg-section dark:bg-vd-bg-card z-10 flex-shrink-0">
-                    <button onClick={() => setActiveRoom(null)} className="md:hidden p-1 text-gray-500"><ArrowLeft className="w-5 h-5" /></button>
+                  <div className="flex items-center gap-3 px-4 py-3 border-b border-vd-border bg-white dark:bg-gray-800 z-10 flex-shrink-0 shadow-sm">
+                    <button onClick={() => setActiveRoom(null)} className="md:hidden p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl"><ArrowLeft className="w-5 h-5" /></button>
                     <div className="relative">
                       <div className="w-10 h-10 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold">
                         {other?.image ? <SmartImage src={other.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <span>{other?.name?.[0]}</span>}
                       </div>
                       {online && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <p className="font-semibold">{other?.name}</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">{other?.name}</p>
                         {other?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
                         {other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
                       </div>
@@ -838,13 +848,13 @@ function ChatInner() {
                         {otherTyping ? <span className="text-vd-primary animate-pulse">typing…</span> : online ? 'Online' : formatLastSeen(lastSeenMap[other?.id])}
                       </p>
                     </div>
-                    <Link href={`/profile/${other?.id}`} className="text-xs text-vd-primary border border-vd-border px-3 py-1.5 rounded-xl hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20 transition-colors">
+                    <Link href={`/profile/${other?.id}`} className="text-xs text-vd-primary border border-vd-border px-3 py-1.5 rounded-xl hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20 transition-colors font-medium">
                       Profile
                     </Link>
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 overflow-y-auto min-h-0 p-4 space-y-3 bg-gray-50 dark:bg-gray-900/50"
+                  <div className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6 lg:px-8 py-4 space-y-2 bg-gray-50 dark:bg-gray-900"
                     onClick={() => { setShowEmoji(false); setShowAttach(false); }}>
                     {messages.length === 0 && <div className="text-center py-10 text-gray-400 text-sm">Say hello! 👋</div>}
                     {messages.map((msg, idx) => {
@@ -965,7 +975,7 @@ function ChatInner() {
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                         className="absolute bottom-20 left-16 z-20 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-2 flex gap-2">
                         {[
-                          { icon: ImageIcon, label: 'Photo', color: 'text-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20', action: () => fileInputRef.current?.click() },
+                          { icon: ImageIcon, label: 'Photo', color: 'text-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20', action: () => { setShowAttach(false); setShowImageEditor(true); } },
                           { icon: FileText, label: 'Document', color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20', action: () => docInputRef.current?.click() },
                           { icon: MapPin, label: 'Location', color: 'text-red-500 bg-red-50 dark:bg-red-900/20', action: sendLocation },
                         ].map(item => (
@@ -987,9 +997,17 @@ function ChatInner() {
                   <input ref={docInputRef} type="file" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" className="hidden"
                     onChange={e => { if (e.target.files?.[0]) sendFile(e.target.files[0], 'DOCUMENT'); e.target.value = ''; }} />
 
+                  {/* Image Editor Modal */}
+                  {showImageEditor && (
+                    <ImageEditorModal
+                      onClose={() => setShowImageEditor(false)}
+                      onSend={(file) => { setShowImageEditor(false); sendFile(file, 'IMAGE'); }}
+                    />
+                  )}
+
                   {/* Reply preview */}
                   {replyTo && (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-vd-accent-soft dark:bg-vd-accent/10 border-t border-vd-border">
+                    <div className="flex items-center gap-2 px-4 md:px-6 lg:px-8 py-2 bg-vd-accent-soft dark:bg-vd-accent/10 border-t border-vd-border">
                       <div className="w-1 self-stretch bg-vd-primary rounded-full flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-bold text-vd-primary">
@@ -1007,7 +1025,7 @@ function ChatInner() {
                   )}
 
                   {/* Input bar */}
-                  <div className="flex items-end gap-2 p-3 border-t border-vd-border bg-vd-bg-section dark:bg-vd-bg-card flex-shrink-0">
+                  <div className="flex items-end gap-2 px-4 md:px-6 lg:px-8 py-3 border-t border-vd-border bg-white dark:bg-gray-800 flex-shrink-0">
                     <button onClick={() => { setShowAttach(p => !p); setShowEmoji(false); }}
                       className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${showAttach ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:text-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20'}`}>
                       <Paperclip className="w-5 h-5" />
@@ -1034,13 +1052,13 @@ function ChatInner() {
                 </>
               );
             })() : (
-              <div className="flex-1 flex items-center justify-center text-center p-8">
+              <div className="flex-1 flex items-center justify-center text-center p-8 bg-gray-50 dark:bg-gray-900">
                 <div>
-                  <div className="w-20 h-20 vd-gradient-gold rounded-full flex items-center justify-center mx-auto mb-4 opacity-20">
-                    <MessageCircle className="w-10 h-10 text-white" />
+                  <div className="w-24 h-24 vd-gradient-gold rounded-full flex items-center justify-center mx-auto mb-5 opacity-15">
+                    <MessageCircle className="w-12 h-12 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-500">Select a conversation</h3>
-                  <p className="text-gray-400 text-sm mt-1">Choose from your chats on the left</p>
+                  <h3 className="text-xl font-semibold text-gray-500 dark:text-gray-400">Select a conversation</h3>
+                  <p className="text-gray-400 text-sm mt-2">Choose from your chats on the left to start messaging</p>
                 </div>
               </div>
             )}
