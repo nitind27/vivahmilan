@@ -436,6 +436,8 @@ function ChatInner() {
   const [unreadPerRoom, setUnreadPerRoom] = useState({});
   const [replyTo, setReplyTo] = useState(null);
   const [showImageEditor, setShowImageEditor] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [, setTick] = useState(0); // forces re-render every minute for last seen
 
   const messagesEndRef  = useRef(null);
@@ -555,6 +557,7 @@ function ChatInner() {
     if (activeRoom) socketRef.current?.emit('room:leave', activeRoom.id);
     setActiveRoom(room);
     setMessages([]);
+    setHasMore(false);
     setOtherTyping(false);
     setShowEmoji(false);
     setShowAttach(false);
@@ -562,14 +565,26 @@ function ChatInner() {
     socketRef.current?.emit('room:join', room.id);
     fetch(`/api/chat/${room.id}`).then(r => r.json()).then(msgs => {
       setMessages(msgs);
-      // Mark all received messages as read visually
+      setHasMore(msgs.length >= 60);
       setMessages(prev => prev.map(m => ({ ...m, isRead: m.senderId !== session?.user?.id ? true : m.isRead })));
-      // Tell sender their messages are read — triggers blue tick on their side
       socketRef.current?.emit('message:read', { roomId: room.id, readerId: session?.user?.id });
     });
-    // Clear unread for this room
     setUnreadPerRoom(prev => ({ ...prev, [room.id]: 0 }));
   }, [activeRoom, session]);
+
+  const loadMoreMessages = useCallback(async () => {
+    if (!activeRoom || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    const oldest = messages[0];
+    if (!oldest) { setLoadingMore(false); return; }
+    try {
+      const res = await fetch(`/api/chat/${activeRoom.id}?before=${encodeURIComponent(oldest.createdAt)}`);
+      const older = await res.json();
+      if (older.length === 0) { setHasMore(false); return; }
+      setMessages(prev => [...older, ...prev]);
+      setHasMore(older.length >= 60);
+    } finally { setLoadingMore(false); }
+  }, [activeRoom, messages, loadingMore, hasMore]);
 
   const getOtherUser = (room) => room?.userAId === session?.user?.id ? room?.userB : room?.userA;
   const isOnline = (uid) => onlineUsers.includes(uid);
@@ -883,6 +898,19 @@ function ChatInner() {
                   {/* Messages */}
                   <div className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6 lg:px-8 py-4 space-y-2 bg-gray-50 dark:bg-gray-900"
                     onClick={() => { setShowEmoji(false); setShowAttach(false); }}>
+
+                    {/* Load More button at top */}
+                    {hasMore && (
+                      <div className="flex justify-center pb-2">
+                        <button onClick={loadMoreMessages} disabled={loadingMore}
+                          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50">
+                          {loadingMore
+                            ? <><span className="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin" /> Loading…</>
+                            : '↑ Load older messages'}
+                        </button>
+                      </div>
+                    )}
+
                     {messages.length === 0 && <div className="text-center py-10 text-gray-400 text-sm">Say hello! 👋</div>}
                     {messages.map((msg, idx) => {
                       const isMe = msg.senderId === session?.user?.id;

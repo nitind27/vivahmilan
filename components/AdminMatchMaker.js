@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 
 // ── Admin Direct Chat Modal ───────────────────────────────────────────────────
 export function AdminDirectChatModal({ user, onClose }) {
@@ -85,6 +86,7 @@ export function AllMembersTab() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [chatUser, setChatUser] = useState(null);
+  const [viewUserId, setViewUserId] = useState(null);
 
   const load = async (p = 1) => {
     setLoading(true);
@@ -154,7 +156,9 @@ export function AllMembersTab() {
                     </div>
                   </div>
                   <div className="border-t border-gray-700 px-4 py-2 flex gap-2">
-                    <a href={`/profile/${m.id}`} target="_blank" rel="noreferrer" className="flex-1 text-center text-xs py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">View Profile</a>
+                    <button onClick={() => setViewUserId(m.id)} className="flex-1 text-center text-xs py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center justify-center gap-1">
+                      <Eye className="w-3 h-3" /> View Profile
+                    </button>
                     <button onClick={() => setChatUser(m)} className="flex-1 text-center text-xs py-1.5 bg-vd-primary/20 hover:bg-vd-primary/30 text-vd-primary rounded-lg transition-colors flex items-center justify-center gap-1">
                       <MessageCircle className="w-3 h-3" /> Chat
                     </button>
@@ -173,6 +177,7 @@ export function AllMembersTab() {
         </>
       )}
       {chatUser && <AdminDirectChatModal user={chatUser} onClose={() => setChatUser(null)} />}
+      {viewUserId && <AdminUserProfileModal userId={viewUserId} onClose={() => setViewUserId(null)} />}
     </div>
   );
 }
@@ -185,6 +190,7 @@ export function MatchMakerTab() {
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingMatches, setLoadingMatches] = useState(false);
   const [chatUser, setChatUser] = useState(null);
+  const [viewUserId, setViewUserId] = useState(null);
   const [activeTab, setActiveTab] = useState('profile');
 
   const lookupUser = async () => {
@@ -314,10 +320,10 @@ export function MatchMakerTab() {
                       className="flex items-center gap-2 px-5 py-2.5 bg-vd-primary/20 text-vd-primary border border-vd-primary/30 rounded-xl text-sm font-semibold hover:bg-vd-primary/30">
                       <MessageCircle className="w-4 h-4" /> Personal Chat
                     </button>
-                    <a href={`/profile/${userData.id}`} target="_blank" rel="noreferrer"
+                    <button onClick={() => setViewUserId(userData.id)}
                       className="flex items-center gap-2 px-5 py-2.5 bg-gray-700 text-white rounded-xl text-sm hover:bg-gray-600">
                       <Eye className="w-4 h-4" /> View Profile
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -365,7 +371,9 @@ export function MatchMakerTab() {
                           <div className={`h-1.5 rounded-full ${score >= 70 ? 'bg-green-500' : score >= 40 ? 'bg-yellow-500' : 'bg-gray-500'}`} style={{ width: `${score}%` }} />
                         </div>
                         <div className="flex gap-2 mt-3">
-                          <a href={`/profile/${m.id}`} target="_blank" rel="noreferrer" className="flex-1 text-center text-xs py-1.5 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">View Profile</a>
+                          <button onClick={() => setViewUserId(m.id)} className="flex-1 text-center text-xs py-1.5 bg-gray-600 hover:bg-gray-500 text-white rounded-lg flex items-center justify-center gap-1">
+                            <Eye className="w-3 h-3" /> View Profile
+                          </button>
                           <button onClick={() => setChatUser(m)} className="flex-1 text-center text-xs py-1.5 bg-vd-primary/20 hover:bg-vd-primary/30 text-vd-primary rounded-lg flex items-center justify-center gap-1">
                             <MessageCircle className="w-3 h-3" /> Chat
                           </button>
@@ -380,6 +388,7 @@ export function MatchMakerTab() {
         </div>
       )}
       {chatUser && <AdminDirectChatModal user={chatUser} onClose={() => setChatUser(null)} />}
+      {viewUserId && <AdminUserProfileModal userId={viewUserId} onClose={() => setViewUserId(null)} />}
     </div>
   );
 }

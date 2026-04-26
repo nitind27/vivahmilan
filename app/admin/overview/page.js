@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Users, Star, UserCheck, Flag, MessageCircle, Heart, TrendingUp, Shield, Search, Phone, X, ExternalLink, CheckCircle } from 'lucide-react';
+import { Users, Star, UserCheck, Flag, MessageCircle, Heart, TrendingUp, Shield, Search, Phone, X, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 
 function StatCard({ icon: Icon, label, value, color, bg, sub }) {
   return (
@@ -23,6 +24,7 @@ function UserSearchBar() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null); // found user
   const [notFound, setNotFound] = useState(false);
+  const [viewUserId, setViewUserId] = useState(null);
   const inputRef = useRef(null);
 
   const search = async () => {
@@ -145,10 +147,10 @@ function UserSearchBar() {
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-2">
                   <button
-                    onClick={() => router.push(`/profile/${result.id}`)}
+                    onClick={() => setViewUserId(result.id)}
                     className="flex items-center gap-1.5 px-4 py-2 bg-vd-primary text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-opacity"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> View Profile
+                    <Search className="w-3.5 h-3.5" /> View Profile
                   </button>
                   <button
                     onClick={() => router.push(`/admin/matchmaker?userId=${result.id}`)}
@@ -186,6 +188,9 @@ function UserSearchBar() {
           Enter phone number, name or email to find a user instantly
         </div>
       )}
+
+
+    {viewUserId && <AdminUserProfileModal userId={viewUserId} onClose={() => setViewUserId(null)} />}
     </div>
   );
 }

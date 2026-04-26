@@ -12,16 +12,27 @@ export async function GET(req, { params }) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { roomId } = await params;
+  const { searchParams } = new URL(req.url);
+  const before = searchParams.get('before'); // cursor: load messages before this createdAt
+  const limit = 60;
 
   const room = await queryOne('SELECT * FROM chatroom WHERE id = ?', [roomId]);
   if (!room || (room.userAId !== session.user.id && room.userBId !== session.user.id)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const messages = await query(
-    'SELECT * FROM message WHERE chatRoomId = ? ORDER BY createdAt DESC LIMIT 40',
-    [roomId]
-  );
+  let messages;
+  if (before) {
+    messages = await query(
+      'SELECT * FROM message WHERE chatRoomId = ? AND createdAt < ? ORDER BY createdAt DESC LIMIT ?',
+      [roomId, before, limit]
+    );
+  } else {
+    messages = await query(
+      'SELECT * FROM message WHERE chatRoomId = ? ORDER BY createdAt DESC LIMIT ?',
+      [roomId, limit]
+    );
+  }
 
   // Mark as read
   await execute(
