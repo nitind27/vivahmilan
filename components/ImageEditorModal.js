@@ -143,32 +143,32 @@ export default function ImageEditorModal({ onSend, onClose }) {
     <div className="fixed inset-0 z-50 bg-black flex flex-col" onClick={e => e.stopPropagation()}>
       {/* ── PICK PHASE ── */}
       {phase === 'pick' && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
-          <button onClick={onClose} className="absolute top-4 right-4 p-2 text-white/60 hover:text-white">
+        <div className="flex-1 flex flex-col items-center justify-center gap-5 p-6 bg-gray-950">
+          <button onClick={onClose} className="absolute top-4 right-4 p-2 text-white/60 hover:text-white z-10">
             <X className="w-6 h-6" />
           </button>
-          <div className="text-center mb-4">
+          <div className="text-center mb-2">
             <p className="text-white text-xl font-bold mb-1">Send Image</p>
             <p className="text-white/50 text-sm">Take a photo or choose from gallery</p>
           </div>
           <button onClick={() => setPhase('camera')}
-            className="w-full max-w-xs flex items-center gap-4 px-6 py-4 bg-white/10 hover:bg-white/20 rounded-2xl transition-colors">
-            <div className="w-12 h-12 bg-vd-primary rounded-xl flex items-center justify-center flex-shrink-0">
-              <Camera className="w-6 h-6 text-white" />
+            className="w-full max-w-sm flex items-center gap-4 px-6 py-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-colors active:scale-95">
+            <div className="w-14 h-14 bg-vd-primary rounded-2xl flex items-center justify-center flex-shrink-0">
+              <Camera className="w-7 h-7 text-white" />
             </div>
             <div className="text-left">
-              <p className="text-white font-semibold">Camera</p>
-              <p className="text-white/50 text-xs">Take a new photo</p>
+              <p className="text-white font-semibold text-base">Camera</p>
+              <p className="text-white/50 text-sm">Take a new photo</p>
             </div>
           </button>
           <button onClick={() => fileRef.current?.click()}
-            className="w-full max-w-xs flex items-center gap-4 px-6 py-4 bg-white/10 hover:bg-white/20 rounded-2xl transition-colors">
-            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            className="w-full max-w-sm flex items-center gap-4 px-6 py-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-colors active:scale-95">
+            <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             </div>
             <div className="text-left">
-              <p className="text-white font-semibold">Gallery</p>
-              <p className="text-white/50 text-xs">Choose from your photos</p>
+              <p className="text-white font-semibold text-base">Gallery</p>
+              <p className="text-white/50 text-sm">Choose from your photos</p>
             </div>
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
@@ -177,30 +177,41 @@ export default function ImageEditorModal({ onSend, onClose }) {
 
       {/* ── CAMERA PHASE ── */}
       {phase === 'camera' && (
-        <>
-          <div className="flex items-center justify-between px-4 py-3 bg-black/50 absolute top-0 left-0 right-0 z-10">
-            <button onClick={() => { stopCamera(); setPhase('pick'); }} className="p-2 text-white"><ChevronLeft className="w-6 h-6" /></button>
+        <div className="flex-1 flex flex-col bg-black">
+          {/* Top bar */}
+          <div className="flex items-center justify-between px-4 py-3 bg-black/70 z-10 flex-shrink-0">
+            <button onClick={() => { stopCamera(); setPhase('pick'); }} className="p-2 text-white bg-white/10 rounded-full">
+              <ChevronLeft className="w-6 h-6" />
+            </button>
             <p className="text-white font-semibold">Camera</p>
             <button onClick={async () => {
               const newFacing = cameraFacing === 'user' ? 'environment' : 'user';
               setCameraFacing(newFacing);
               await startCamera(newFacing);
-            }} className="p-2 text-white">
+            }} className="p-2 text-white bg-white/10 rounded-full">
               <RotateCcw className="w-5 h-5" />
             </button>
           </div>
-          <video ref={videoRef} autoPlay playsInline muted
-            className="flex-1 w-full object-cover"
-            style={{ transform: cameraFacing === 'user' ? 'scaleX(-1)' : 'none' }}
-          />
-          <div className="flex items-center justify-center py-8 bg-black">
-            <button onClick={capturePhoto}
-              className="w-18 h-18 rounded-full border-4 border-white flex items-center justify-center"
-              style={{ width: 72, height: 72 }}>
-              <div className="w-14 h-14 bg-white rounded-full" />
+
+          {/* Video preview */}
+          <div className="flex-1 relative overflow-hidden">
+            <video ref={videoRef} autoPlay playsInline muted
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ transform: cameraFacing === 'user' ? 'scaleX(-1)' : 'none' }}
+            />
+          </div>
+
+          {/* Shutter bar — always visible at bottom */}
+          <div className="flex-shrink-0 flex items-center justify-center py-8 bg-black" style={{ minHeight: 120 }}>
+            <button
+              onClick={capturePhoto}
+              className="flex items-center justify-center rounded-full border-4 border-white bg-transparent active:scale-95 transition-transform"
+              style={{ width: 80, height: 80 }}
+            >
+              <div className="rounded-full bg-white" style={{ width: 64, height: 64 }} />
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {/* ── EDIT PHASE ── */}

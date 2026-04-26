@@ -70,24 +70,31 @@ export async function PATCH(req, { params }) {
       room = { id: roomId };
     }
 
+    // Delete any previously inserted profile messages for this room (re-insert fresh)
+    await execute(
+      "DELETE FROM message WHERE chatRoomId = ? AND (content LIKE '🌟 *Premium Profile Details*%' OR content LIKE '✨ *Profile Details*%')",
+      [room.id]
+    );
+
     // Fetch both users with profiles
     const sender = await queryOne('SELECT * FROM `user` WHERE id = ?', [interest.senderId]);
     const receiver = await queryOne('SELECT * FROM `user` WHERE id = ?', [interest.receiverId]);
     const senderProfile = await queryOne('SELECT * FROM profile WHERE userId = ?', [interest.senderId]);
     const receiverProfile = await queryOne('SELECT * FROM profile WHERE userId = ?', [interest.receiverId]);
 
-    if (sender?.isPremium) {
-      // Sender's profile goes to receiver; receiver's profile goes to sender
-      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(sender, senderProfile, true));
-    }
-    if (receiver?.isPremium) {
-      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(receiver, receiverProfile, true));
-    }
-    if (!sender?.isPremium && !receiver?.isPremium) {
-      // Each user sees the OTHER person's profile card
-      await sendMessage(room.id, interest.receiverId, interest.senderId, buildProfileMessage(sender, senderProfile, false));
-      await sendMessage(room.id, interest.senderId, interest.receiverId, buildProfileMessage(receiver, receiverProfile, false));
-    }
+    // RULE: each user sees the OTHER person's profile card
+    // sender sees receiver's profile → message senderId=receiver, receiverId=sender
+    // receiver sees sender's profile → message senderId=sender, receiverId=receiver
+    const senderIsPremium = !!sender?.isPremium;
+    const receiverIsPremium = !!receiver?.isPremium;
+
+    // Sender gets to see receiver's profile card (receiver "sent" it to sender)
+    await sendMessage(room.id, interest.receiverId, interest.senderId,
+      buildProfileMessage(receiver, receiverProfile, receiverIsPremium));
+
+    // Receiver gets to see sender's profile card (sender "sent" it to receiver)
+    await sendMessage(room.id, interest.senderId, interest.receiverId,
+      buildProfileMessage(sender, senderProfile, senderIsPremium));
 
     // Notification to sender
     const notifId = randomUUID();
@@ -106,8 +113,7 @@ export async function PATCH(req, { params }) {
       const io = global.getIO?.();
       if (io) {
         io.emit('notification:new', { userId: interest.senderId });
-        // Also emit profile messages to both users' rooms
-        io.to(room.id).emit('message:receive', { chatRoomId: room.id, type: 'TEXT', createdAt: new Date() });
+        // Don't emit fake message:receive — let users reload their chat to see profile cards
       }
     } catch {}
   }
