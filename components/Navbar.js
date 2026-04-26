@@ -14,6 +14,7 @@ export default function Navbar() {
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [unread, setUnread] = useState(0);
+  const [chatUnread, setChatUnread] = useState(0);
   const [clientReady, setClientReady] = useState(false);
 
   useEffect(() => {
@@ -24,18 +25,52 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    if (session) {
-      const checkNotifs = () => {
-        fetch('/api/notifications').then(r => r.json()).then(d => {
-          // Only update count — Web Push handles actual notifications
-          setUnread(d.unreadCount || 0);
-        });
-      };
+    if (!session) return;
 
-      checkNotifs();
-      const interval = setInterval(checkNotifs, 60000); // 60s instead of 30s
-      return () => clearInterval(interval);
-    }
+    // Initial fetch
+    const checkNotifs = () => {
+      fetch('/api/notifications').then(r => r.json()).then(d => setUnread(d.unreadCount || 0)).catch(() => {});
+    };
+    const checkChat = () => {
+      fetch('/api/chat/unread').then(r => r.json()).then(d => {
+        const total = Object.values(d.perRoom || {}).reduce((s, v) => s + v, 0);
+        setChatUnread(total);
+      }).catch(() => {});
+    };
+
+    checkNotifs();
+    checkChat();
+
+    // Poll every 30s as fallback
+    const ni = setInterval(checkNotifs, 30000);
+    const ci = setInterval(checkChat, 30000);
+
+    // Real-time via socket
+    let socket = null;
+    try {
+      const { getSocket } = require('@/lib/socket');
+      socket = getSocket();
+      // New message received → increment chat badge
+      const onMsg = (msg) => {
+        if (msg.senderId !== session.user.id) {
+          setChatUnread(n => n + 1);
+        }
+      };
+      // New notification → increment notification badge
+      const onNotif = () => setUnread(n => n + 1);
+
+      socket.on('message:receive', onMsg);
+      socket.on('notification:new', onNotif);
+
+      return () => {
+        clearInterval(ni);
+        clearInterval(ci);
+        socket?.off('message:receive', onMsg);
+        socket?.off('notification:new', onNotif);
+      };
+    } catch {}
+
+    return () => { clearInterval(ni); clearInterval(ci); };
   }, [session]);
 
   return (
@@ -66,6 +101,9 @@ export default function Navbar() {
               <>
                 <Link href="/chat" className="relative p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
                   <MessageCircle className="w-5 h-5" />
+                  {chatUnread > 0 && (
+                    <span className="absolute top-1 right-1 w-4 h-4 bg-vd-primary text-white text-xs rounded-full flex items-center justify-center">{chatUnread > 9 ? '9+' : chatUnread}</span>
+                  )}
                 </Link>
                 <Link href="/notifications" className="relative p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
                   <Bell className="w-5 h-5" />

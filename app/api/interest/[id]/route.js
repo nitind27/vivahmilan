@@ -90,15 +90,26 @@ export async function PATCH(req, { params }) {
     }
 
     // Notification to sender
+    const notifId = randomUUID();
     await execute(
       "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'INTEREST_ACCEPTED', '💕 Interest Accepted!', ?, 0, ?, NOW())",
       [
-        randomUUID(),
+        notifId,
         interest.senderId,
         `${session.user.name} accepted your interest. Start chatting!`,
         `/chat?userId=${session.user.id}`,
       ]
     );
+
+    // Real-time: notify sender via socket
+    try {
+      const io = global.getIO?.();
+      if (io) {
+        io.emit('notification:new', { userId: interest.senderId });
+        // Also emit profile messages to both users' rooms
+        io.to(room.id).emit('message:receive', { chatRoomId: room.id, type: 'TEXT', createdAt: new Date() });
+      }
+    } catch {}
   }
 
   const updated = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);

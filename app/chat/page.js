@@ -42,8 +42,36 @@ function formatLastSeen(isoString) {
 }
 
 // ── Message Bubble ────────────────────────────────────────────────────────────
-function MessageBubble({ msg, isMe }) {
+function MessageBubble({ msg, isMe, onReply }) {
   const [zoom, setZoom] = useState(false);
+  const [swipeX, setSwipeX] = useState(0);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const swiping = useRef(false);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    swiping.current = false;
+  };
+
+  const handleTouchMove = (e) => {
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = Math.abs(e.touches[0].clientY - touchStartY.current);
+    // Only horizontal swipe, not vertical scroll
+    if (dy > 20) return;
+    // Right swipe to reply (both sent and received)
+    if (dx > 0 && dx < 80) {
+      swiping.current = true;
+      setSwipeX(dx);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (swipeX > 40) onReply?.(msg);
+    setSwipeX(0);
+    swiping.current = false;
+  };
 
   if (msg.type === 'IMAGE') {
     return (
@@ -262,13 +290,31 @@ function MessageBubble({ msg, isMe }) {
     );
   }
 
-  // Regular text
+  // Regular text — parse replyTo prefix
+  const replyMatch = msg.content?.match(/^\[replyTo:([^\]]+)\] ([\s\S]*)$/);
+  const displayContent = replyMatch ? replyMatch[2] : msg.content;
+  const replyPreview = msg.replyTo?.content || null;
+
   return (
-    <div className={`max-w-xs lg:max-w-sm xl:max-w-md ${isMe ? 'ml-auto' : 'mr-auto'}`}>
+    <div
+      className={`max-w-xs lg:max-w-sm xl:max-w-md ${isMe ? 'ml-auto' : 'mr-auto'} relative`}
+      style={{ transform: `translateX(${swipeX}px)`, transition: swipeX === 0 ? 'transform 0.2s ease' : 'none' }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {swipeX > 10 && (
+        <div className="absolute -left-8 top-1/2 -translate-y-1/2 text-gray-400 opacity-70">↩</div>
+      )}
+      {(replyPreview || replyMatch) && (
+        <div className={`text-xs px-3 py-1.5 mb-1 rounded-xl border-l-2 border-vd-primary bg-gray-100 dark:bg-gray-800 text-gray-500 truncate`}>
+          ↩ {replyPreview || 'Message'}
+        </div>
+      )}
       <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
         isMe ? 'vd-gradient-gold text-white rounded-br-sm' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-sm shadow-sm'
       }`}>
-        {msg.content}
+        {displayContent}
       </div>
       <MsgMeta isMe={isMe} msg={msg} />
     </div>
@@ -308,6 +354,7 @@ function ChatInner() {
   const [showAttach, setShowAttach]   = useState(false);
   const [showLocPicker, setShowLocPicker] = useState(false);
   const [unreadPerRoom, setUnreadPerRoom] = useState({});
+  const [replyTo, setReplyTo] = useState(null); // message being replied to
   const [, setTick] = useState(0); // forces re-render every minute for last seen
 
   const messagesEndRef  = useRef(null);
@@ -351,17 +398,16 @@ function ChatInner() {
     s.on('message:receive', (msg) => {
       // Ignore messages sent by self — already added optimistically via API response
       if (msg.senderId === session.user.id) return;
-      // If this room is currently open — don't increment unread, mark read immediately
       const currentRoom = activeRoomRef.current;
       if (currentRoom?.id === msg.chatRoomId) {
+        // Room is open — add message and mark read
         setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, { ...msg, isRead: true }]);
-        // Tell sender their message was read
         socketRef.current?.emit('message:read', { roomId: msg.chatRoomId, readerId: session.user.id });
       } else {
-        setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
+        // Room not open — increment unread badge only
         setUnreadPerRoom(prev => ({ ...prev, [msg.chatRoomId]: (prev[msg.chatRoomId] || 0) + 1 }));
-        // No client-side notification here — server already sends Web Push
       }
+      // Always update room list preview
       setRooms(prev => {
         const updated = prev.map(r => r.id === msg.chatRoomId ? { ...r, messages: [msg] } : r);
         return updated.sort((a, b) => {
@@ -428,6 +474,7 @@ function ChatInner() {
     setOtherTyping(false);
     setShowEmoji(false);
     setShowAttach(false);
+    setReplyTo(null);
     socketRef.current?.emit('room:join', room.id);
     fetch(`/api/chat/${room.id}`).then(r => r.json()).then(msgs => {
       setMessages(msgs);
@@ -467,19 +514,24 @@ function ChatInner() {
     e?.preventDefault();
     if (!input.trim() || !activeRoom || sending) return;
     const content = input.trim();
+    const currentReply = replyTo;
     setInput('');
+    setReplyTo(null);
     stopTyping();
     setSending(true);
     try {
+      const body = { content, type: 'TEXT' };
+      if (currentReply) body.replyToId = currentReply.id;
       const res = await fetch(`/api/chat/${activeRoom.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, type: 'TEXT' }),
+        body: JSON.stringify(body),
       });
       if (!res.ok) { const d = await res.json(); toast.error(d.error); setInput(content); return; }
       const msg = await res.json();
+      // Attach replyTo preview for immediate display
+      if (currentReply) msg.replyTo = { content: currentReply.content };
       setMessages(prev => [...prev, msg]);
-      // Server emits to receiver via socket
       setRooms(prev => { const u = prev.map(r => r.id === activeRoom.id ? { ...r, messages: [msg] } : r); return u.sort((a,b) => new Date(b.messages?.[0]?.createdAt||b.createdAt) - new Date(a.messages?.[0]?.createdAt||a.createdAt)); });
     } finally { setSending(false); }
   };
@@ -752,7 +804,7 @@ function ChatInner() {
                           )}
                           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <MessageBubble msg={msg} isMe={isMe} />
+                            <MessageBubble msg={msg} isMe={isMe} onReply={setReplyTo} />
                           </motion.div>
                         </div>
                       );
@@ -877,6 +929,19 @@ function ChatInner() {
                     onChange={e => { if (e.target.files?.[0]) sendFile(e.target.files[0], 'IMAGE'); e.target.value = ''; }} />
                   <input ref={docInputRef} type="file" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" className="hidden"
                     onChange={e => { if (e.target.files?.[0]) sendFile(e.target.files[0], 'DOCUMENT'); e.target.value = ''; }} />
+
+                  {/* Reply preview */}
+                  {replyTo && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-vd-accent-soft dark:bg-vd-accent/10 border-t border-vd-border">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-vd-primary font-semibold">↩ Replying to</p>
+                        <p className="text-xs text-gray-500 truncate">{replyTo.content?.slice(0, 80) || 'Message'}</p>
+                      </div>
+                      <button onClick={() => setReplyTo(null)} className="p-1 text-gray-400 hover:text-gray-600 flex-shrink-0">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
 
                   {/* Input bar */}
                   <div className="flex items-end gap-2 p-3 border-t border-vd-border bg-vd-bg-section dark:bg-vd-bg-card flex-shrink-0">

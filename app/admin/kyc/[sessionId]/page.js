@@ -322,7 +322,7 @@ export default function AdminKycCallPage() {
 
           {/* Local PiP */}
           <div className="absolute bottom-4 right-4 w-32 h-24 rounded-xl overflow-hidden border-2 border-gray-600 shadow-xl">
-            <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+            <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" style={{ transform: 'scaleX(-1)' }} />
           </div>
         </div>
 

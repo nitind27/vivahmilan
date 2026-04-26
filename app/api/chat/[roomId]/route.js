@@ -94,6 +94,10 @@ export async function POST(req, { params }) {
       if (!body.content?.trim()) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
       content = body.content.trim();
     }
+    // Store replyToId in content prefix if provided (simple approach without schema change)
+    if (body.replyToId) {
+      content = `[replyTo:${body.replyToId}] ${content}`;
+    }
   }
 
   await execute(
@@ -126,6 +130,8 @@ export async function POST(req, { params }) {
     const io = global.getIO?.();
     if (io) {
       io.to(roomId).emit('message:receive', { ...message, _senderName: session.user.name });
+      // Notify receiver's navbar badge
+      io.emit('notification:new', { userId: receiverId });
     }
   } catch (e) { console.error('Socket emit error:', e.message); }
 

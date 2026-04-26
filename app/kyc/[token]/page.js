@@ -289,6 +289,7 @@ export default function UserKycPage() {
           )}
           <video ref={localVideoRef} autoPlay playsInline muted
             className="w-full h-full object-cover"
+            style={!docMode ? { transform: 'scaleX(-1)' } : {}}
           />
         </div>
 
