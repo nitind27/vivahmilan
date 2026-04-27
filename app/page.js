@@ -646,49 +646,117 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-vd-bg text-vd-text-sub py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Image src="/logo/logo.png" alt={siteName} width={32} height={32} className="rounded-full object-contain" />
-                <span className="text-vd-text-heading font-bold text-xl">{siteName}</span>
+      <footer className="bg-gray-950 text-gray-400 border-t border-gray-800">
+        {/* Main footer content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+
+            {/* Brand column */}
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <Image src="/logo/logo.png" alt={siteName} width={28} height={28} className="rounded-full object-contain" />
+                <span className="text-white font-bold text-lg">{siteName}</span>
               </div>
-              <p className="text-sm leading-relaxed">{footerTagline}</p>
-              <div className="flex items-center gap-3 mt-4">
+              <p className="text-xs leading-relaxed text-gray-500 mb-4">{footerTagline}</p>
+              {/* Social icons */}
+              <div className="flex items-center gap-2">
                 {[
-                  { href: 'https://facebook.com', label: 'Facebook', svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /> },
-                  { href: 'https://instagram.com', label: 'Instagram', svg: <><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></> },
-                  { href: 'https://twitter.com', label: 'X / Twitter', svg: <path d="M4 4l16 16M4 20L20 4" strokeLinecap="round" /> },
-                  { href: 'https://youtube.com', label: 'YouTube', svg: <><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></> },
-                  { href: 'https://wa.me', label: 'WhatsApp', svg: <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /> },
-                ].map(({ href, label, svg }) => (
+                  {
+                    href: 'https://facebook.com/vivahdwar',
+                    label: 'Facebook',
+                    color: 'hover:bg-blue-600 hover:border-blue-600 hover:text-white',
+                    svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />,
+                  },
+                  {
+                    href: 'https://instagram.com/vivahdwar',
+                    label: 'Instagram',
+                    color: 'hover:bg-pink-600 hover:border-pink-600 hover:text-white',
+                    svg: <><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></>,
+                  },
+                  {
+                    href: 'https://twitter.com/vivahdwar',
+                    label: 'X / Twitter',
+                    color: 'hover:bg-gray-700 hover:border-gray-600 hover:text-white',
+                    svg: <><path d="M4 4l16 16M4 20L20 4" strokeLinecap="round" /></>,
+                  },
+                  {
+                    href: 'https://youtube.com/@vivahdwar',
+                    label: 'YouTube',
+                    color: 'hover:bg-red-600 hover:border-red-600 hover:text-white',
+                    svg: <><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></>,
+                  },
+                  {
+                    href: 'https://wa.me/919999999999',
+                    label: 'WhatsApp',
+                    color: 'hover:bg-green-600 hover:border-green-600 hover:text-white',
+                    svg: <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />,
+                  },
+                ].map(({ href, label, svg, color }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                    className="w-8 h-8 rounded-full bg-vd-bg-section border border-vd-border flex items-center justify-center text-vd-text-sub hover:text-vd-primary hover:border-vd-primary transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    className={`w-8 h-8 rounded-lg border border-gray-700 flex items-center justify-center text-gray-500 transition-all duration-200 ${color}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       {svg}
                     </svg>
                   </a>
                 ))}
               </div>
             </div>
+
+            {/* Links columns */}
             {[
-              { title: 'Company', links: [{ label: 'About Us', href: '#' }, { label: 'Careers', href: '#' }, { label: 'Press', href: '#' }, { label: 'Blog', href: '#' }] },
-              { title: 'Support', links: [{ label: 'Help Center', href: '/help' }, { label: 'Safety Tips', href: '/safety' }, { label: 'Report Abuse', href: '/report-abuse' }, { label: 'Contact Us', href: '/contact' }] },
-              { title: 'Legal', links: [{ label: 'Privacy Policy', href: '/privacy' }, { label: 'Terms of Service', href: '/terms' }, { label: 'Cookie Policy', href: '/cookies' }, { label: 'Refund Policy', href: '/refund' }] },
+              {
+                title: 'Company',
+                links: [
+                  { label: 'About Us', href: '/about' },
+                  { label: 'How It Works', href: '/#how-it-works' },
+                  { label: 'Success Stories', href: '/stories' },
+                  { label: 'Blog', href: '/blog' },
+                ],
+              },
+              {
+                title: 'Support',
+                links: [
+                  { label: 'Help Center', href: '/help' },
+                  { label: 'Safety Tips', href: '/safety' },
+                  { label: 'Contact Us', href: '/contact' },
+                  { label: 'Report Abuse', href: '/report-abuse' },
+                ],
+              },
+              {
+                title: 'Legal',
+                links: [
+                  { label: 'Privacy Policy', href: '/privacy' },
+                  { label: 'Terms of Service', href: '/terms' },
+                  { label: 'Refund Policy', href: '/refund' },
+                  { label: 'Cookie Policy', href: '/cookies' },
+                ],
+              },
             ].map(col => (
               <div key={col.title}>
-                <h4 className="text-vd-text-heading font-semibold mb-4">{col.title}</h4>
+                <h4 className="text-white text-sm font-semibold mb-3">{col.title}</h4>
                 <ul className="space-y-2">
                   {col.links.map(l => (
-                    <li key={l.label}><Link href={l.href} className="text-sm hover:text-vd-primary transition-colors">{l.label}</Link></li>
+                    <li key={l.label}>
+                      <Link href={l.href} className="text-xs text-gray-500 hover:text-vd-primary transition-colors">
+                        {l.label}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-          <div className="border-t border-vd-border pt-8 text-center text-sm">
-            <p>© {new Date().getFullYear()} {siteName} Matrimony. All rights reserved. Made with <Heart className="w-3 h-3 inline fill-vd-primary text-vd-primary" /> for love.</p>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-xs text-gray-600">
+              © {new Date().getFullYear()} {siteName} Matrimony. All rights reserved.
+            </p>
+            <p className="text-xs text-gray-600 flex items-center gap-1">
+              Made with <Heart className="w-3 h-3 inline fill-vd-primary text-vd-primary" /> in India
+            </p>
           </div>
         </div>
       </footer>

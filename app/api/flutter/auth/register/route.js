@@ -30,8 +30,8 @@ export async function POST(req) {
     await execute(
       `INSERT INTO \`user\` (id, name, email, phone, password, role, isActive, isVerified,
         adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
-        loginOtpEnabled, needsPassword, createdAt, updatedAt)
-       VALUES (?, ?, ?, ?, ?, 'USER', 1, 0, 0, 0, 0, 0, 0, 0, 0, ?, ?)`,
+        loginOtpEnabled, createdAt, updatedAt)
+       VALUES (?, ?, ?, ?, ?, 'USER', 1, 0, 0, 0, 0, 0, 0, 0, ?, ?)`,
       [userId, name.trim(), email.toLowerCase().trim(), phone || null, hashed, now, now]
     );
 
