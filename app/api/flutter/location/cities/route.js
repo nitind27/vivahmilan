@@ -3,29 +3,54 @@ import { Country, State, City } from 'country-state-city';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const countryParam = searchParams.get('country') || '';
-  const stateParam   = searchParams.get('state')   || '';
-  const q            = (searchParams.get('q') || '').toLowerCase().trim();
+  const countryParam = (searchParams.get('country') || '').trim();
+  const stateParam   = (searchParams.get('state')   || '').trim();
+  const q            = (searchParams.get('q')        || '').toLowerCase().trim();
 
   if (!stateParam) {
-    return NextResponse.json({ error: 'state parameter required. Pass ISO code (e.g. MH) or name (e.g. Maharashtra)' }, { status: 400 });
+    return NextResponse.json({
+      error: 'state parameter required',
+      examples: [
+        '/api/flutter/location/cities?country=India&state=Maharashtra',
+        '/api/flutter/location/cities?country=IN&state=MH',
+        '/api/flutter/location/cities?state=Maharashtra',
+        '/api/flutter/location/cities?state=Maharashtra&q=mum',
+      ]
+    }, { status: 400 });
   }
 
-  // Resolve country: accept ISO code OR name (optional for cities)
-  let countryCode = countryParam.trim();
-  if (countryCode.length > 3) {
-    const found = Country.getAllCountries().find(
-      c => c.name.toLowerCase() === countryCode.toLowerCase()
-    );
-    countryCode = found ? found.isoCode : '';
+  // Step 1: Resolve countryCode from name or ISO
+  let countryCode = '';
+  if (countryParam) {
+    // If it looks like an ISO code (2-3 uppercase letters)
+    if (/^[A-Z]{2,3}$/.test(countryParam)) {
+      countryCode = countryParam;
+    } else {
+      const found = Country.getAllCountries().find(
+        c => c.name.toLowerCase() === countryParam.toLowerCase()
+      );
+      countryCode = found ? found.isoCode : '';
+    }
   }
 
-  // Resolve state: accept ISO code OR state name
-  let stateCode = stateParam.trim();
-  if (stateCode.length > 3 || (stateCode.length <= 3 && !/^[A-Z]{2,3}$/.test(stateCode))) {
-    // Looks like a name — search across all states (or within country if provided)
-    const allStates = countryCode
-      ? State.getStatesOfCountry(countryCode)
+  // Step 2: Resolve stateCode from name or ISO
+  let stateCode = '';
+  let resolvedCountryCode = countryCode;
+
+  // If it looks like an ISO code (2-3 uppercase letters)
+  if (/^[A-Z]{2,3}$/.test(stateParam)) {
+    stateCode = stateParam;
+    // countryCode must be provided when using ISO state code
+    if (!resolvedCountryCode) {
+      return NextResponse.json({
+        error: 'country parameter required when using state ISO code',
+        example: '/api/flutter/location/cities?country=IN&state=MH'
+      }, { status: 400 });
+    }
+  } else {
+    // It's a state name — search by name
+    const allStates = resolvedCountryCode
+      ? State.getStatesOfCountry(resolvedCountryCode)
       : State.getAllStates();
 
     const found = allStates.find(
@@ -33,23 +58,32 @@ export async function GET(req) {
     );
 
     if (!found) {
-      return NextResponse.json({ error: `State "${stateParam}" not found. Use ISO code (e.g. MH) or exact name (e.g. Maharashtra)` }, { status: 404 });
+      // Try partial match as fallback
+      const partial = allStates.find(
+        s => s.name.toLowerCase().includes(stateParam.toLowerCase())
+      );
+      if (!partial) {
+        return NextResponse.json({
+          error: `State "${stateParam}" not found`,
+          hint: 'Use exact state name (e.g. Maharashtra) or ISO code (e.g. MH)',
+        }, { status: 404 });
+      }
+      stateCode = partial.isoCode;
+      resolvedCountryCode = partial.countryCode;
+    } else {
+      stateCode = found.isoCode;
+      resolvedCountryCode = found.countryCode;
     }
-    stateCode   = found.isoCode;
-    countryCode = found.countryCode;
   }
 
-  if (!countryCode) {
-    return NextResponse.json({ error: 'country parameter required when using state ISO code' }, { status: 400 });
-  }
-
-  let cities = City.getCitiesOfState(countryCode, stateCode).map(c => ({
+  // Step 3: Get cities
+  let cities = City.getCitiesOfState(resolvedCountryCode, stateCode).map(c => ({
     name: c.name,
     stateCode,
-    countryCode,
+    countryCode: resolvedCountryCode,
   }));
 
-  // Optional search filter
+  // Step 4: Optional search filter
   if (q) {
     cities = cities.filter(c => c.name.toLowerCase().includes(q));
   }
