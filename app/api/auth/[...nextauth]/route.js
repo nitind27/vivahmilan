@@ -28,6 +28,17 @@ export const authOptions = {
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
+
+          // ── Profile completion check (non-admin only) ──────────────────
+          if (user.role !== 'ADMIN') {
+            const profile = await queryOne('SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?', [user.id]);
+            const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
+            const missing = REQUIRED.filter(f => !profile?.[f]);
+            if (missing.length > 0) {
+              throw new Error(`PROFILE_INCOMPLETE:${credentials.email}`);
+            }
+          }
+
           if (user.role !== 'ADMIN' && !user.adminVerified) throw new Error('PENDING_APPROVAL');
           const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
           return {
@@ -98,6 +109,18 @@ export const authOptions = {
 
         // ── Existing user ───────────────────────────────────────────────
         if (!dbUser.isActive) return '/login?error=AccountSuspended';
+
+        // Profile incomplete — redirect to onboarding
+        if (dbUser.role !== 'ADMIN') {
+          const profile = await queryOne('SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?', [dbUser.id]);
+          const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
+          const missing = REQUIRED.filter(f => !profile?.[f]);
+          if (missing.length > 0) {
+            const encodedEmail = encodeURIComponent(dbUser.email);
+            const encodedName  = encodeURIComponent(dbUser.name || '');
+            return `/onboarding?email=${encodedEmail}&name=${encodedName}`;
+          }
+        }
 
         // Not yet approved — redirect to pending page (don't return false)
         if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) {

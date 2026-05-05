@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { email, _activateTrial, ...data } = body;
+    const { email, _activateTrial, _submitForReview, ...data } = body;
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
@@ -62,6 +62,11 @@ export async function POST(req) {
     // Activate free trial on final submit (if not already used)
     // NOTE: Trial is now activated when admin approves the profile, not here.
     // This ensures the trial starts when the user can actually use it.
+
+    // If final submit — mark profileComplete = 100 to signal ready for admin review
+    if (_submitForReview) {
+      await execute('UPDATE profile SET profileComplete = 100, updatedAt = NOW() WHERE userId = ?', [user.id]);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

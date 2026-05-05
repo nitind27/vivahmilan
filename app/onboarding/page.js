@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, Suspense } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -83,12 +83,16 @@ function Radio({ label, value, onChange, options }) {
   );
 }
 
+// Required fields that must be filled before admin verification
+const REQUIRED_FIELDS = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
+
 function OnboardingInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get('email') || '';
 
   const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -112,6 +116,33 @@ function OnboardingInner() {
   });
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+  // ── Load existing data on mount ──────────────────────────────────────────
+  useEffect(() => {
+    if (!email) { setLoading(false); return; }
+    fetch(`/api/onboarding/status?email=${encodeURIComponent(email)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) return;
+        // Pre-fill form with saved data
+        setForm(prev => ({
+          ...prev,
+          name:  data.name  || prev.name,
+          phone: data.phone || prev.phone,
+          ...(data.profile || {}),
+        }));
+        if (data.photoUrl)  setPhotoPreview(data.photoUrl);
+        if (data.document)  setDocStatus(data.document);
+        if (data.document?.type) setSelectedDocType(data.document.type);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [email]);
+
+  // ── Check if all required fields are filled ──────────────────────────────
+  const missingRequired = REQUIRED_FIELDS.filter(f => !form[f]);
+  const isProfileComplete = missingRequired.length === 0;
+  const canSubmit = isProfileComplete && !!photoPreview && !!docStatus;
 
   // ── Validation ────────────────────────────────────────────────────────────
   const validateStep = (s) => {
@@ -226,12 +257,29 @@ function OnboardingInner() {
     if (!photoPreview) { toast.error('Please upload a profile photo'); return; }
     if (!docStatus) { toast.error('Please upload an ID document'); return; }
     const ok = await saveStep(true);
-    if (ok) setSubmitted(true);
+    if (ok) {
+      // Notify admin that a new profile is ready for review
+      await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, ...form, _submitForReview: true }),
+      }).catch(() => {});
+      setSubmitted(true);
+    }
   };
 
   if (!email) return (
     <div className="min-h-screen flex items-center justify-center">
       <p className="text-gray-500">Invalid link. <Link href="/register" className="text-vd-primary">Register again</Link></p>
+    </div>
+  );
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-vd-bg">
+      <div className="text-center">
+        <Loader2 className="w-10 h-10 text-vd-primary animate-spin mx-auto mb-3" />
+        <p className="text-vd-text-sub text-sm">Loading your profile...</p>
+      </div>
     </div>
   );
 
@@ -483,12 +531,22 @@ function OnboardingInner() {
               Save & Next <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
-            <button onClick={submit} disabled={saving || !photoPreview || !docStatus}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-2xl vd-gradient-gold text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity"
-              style={{ boxShadow: '0 4px 16px rgba(200,164,92,0.35)' }}>
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-              Submit for Review
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              {!canSubmit && (
+                <p className="text-xs text-amber-600 text-right max-w-xs">
+                  {!isProfileComplete
+                    ? `Fill required fields: ${missingRequired.join(', ')}`
+                    : !photoPreview ? 'Upload a profile photo'
+                    : 'Upload an ID document'}
+                </p>
+              )}
+              <button onClick={submit} disabled={saving || !canSubmit}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-2xl vd-gradient-gold text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
+                style={{ boxShadow: canSubmit ? '0 4px 16px rgba(200,164,92,0.35)' : 'none' }}>
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                Submit for Review
+              </button>
+            </div>
           )}
         </div>
         <p className="text-center text-xs text-vd-text-light mt-3">Your data is saved at each step</p>

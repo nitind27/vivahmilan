@@ -67,6 +67,13 @@ function LoginInner() {
     setLoading(false);
     if (res?.error) {
       if (res.error === 'PENDING_APPROVAL') { setPendingEmail(form.email); return; }
+      // Profile incomplete — redirect to onboarding to fill remaining fields
+      if (res.error.startsWith('PROFILE_INCOMPLETE:')) {
+        const email = res.error.split(':')[1] || form.email;
+        toast('Please complete your profile first.', { icon: '📝' });
+        router.push(`/onboarding?email=${encodeURIComponent(email)}`);
+        return;
+      }
       toast.error(res.error === 'CredentialsSignin' ? 'Invalid email or password' : res.error);
     } else {
       toast.success('Welcome back!');

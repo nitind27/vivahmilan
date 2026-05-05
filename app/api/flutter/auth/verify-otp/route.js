@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
 
+const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
+
 export async function POST(req) {
   try {
     const { email, otp, type = 'EMAIL_VERIFY' } = await req.json();
@@ -42,6 +44,18 @@ export async function POST(req) {
       isPremium: !!user.isPremium,
     });
 
+    // Check profile completion for non-admin users
+    let profileIncomplete = false;
+    let missingFields = [];
+    let profileComplete = 0;
+
+    if (user.role !== 'ADMIN' && type === 'EMAIL_VERIFY') {
+      const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [user.id]);
+      missingFields = REQUIRED_FIELDS.filter(f => !profile?.[f]);
+      profileComplete = profile?.profileComplete || 0;
+      profileIncomplete = missingFields.length > 0;
+    }
+
     return NextResponse.json({
       success: true,
       message: 'OTP verified successfully',
@@ -55,6 +69,10 @@ export async function POST(req) {
         premiumPlan: user.premiumPlan || null,
         adminVerified: !!user.adminVerified,
       },
+      profileIncomplete,
+      missingFields,
+      profileComplete,
+      requiredFields: REQUIRED_FIELDS,
     });
 
   } catch (err) {

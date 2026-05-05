@@ -3,6 +3,9 @@ import bcrypt from 'bcryptjs';
 import { queryOne } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
 
+// Required fields for profile to be considered complete
+const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
+
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
@@ -37,11 +40,40 @@ export async function POST(req) {
         email: user.email,
       }, { status: 403 });
 
-    if (user.role !== 'ADMIN' && !user.adminVerified)
-      return NextResponse.json({
-        error: 'Your profile is pending admin approval. You will be notified via email.',
-        code: 'PENDING_APPROVAL',
-      }, { status: 403 });
+    // ── Profile completion check (only for non-admin users) ──────────────
+    if (user.role !== 'ADMIN') {
+      const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [user.id]);
+
+      const missingFields = REQUIRED_FIELDS.filter(f => !profile?.[f]);
+
+      if (missingFields.length > 0) {
+        // Issue a limited token so Flutter can call PUT /api/flutter/profile
+        const token = signToken({
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          isPremium: !!user.isPremium,
+        });
+
+        return NextResponse.json({
+          error: 'Profile incomplete. Please complete your profile to continue.',
+          code: 'PROFILE_INCOMPLETE',
+          token,
+          userId: user.id,
+          missingFields,
+          profileComplete: profile?.profileComplete || 0,
+          requiredFields: REQUIRED_FIELDS,
+        }, { status: 403 });
+      }
+
+      // Profile complete but not yet sent for admin review — mark as pending
+      if (!user.adminVerified) {
+        return NextResponse.json({
+          error: 'Your profile is pending admin approval. You will be notified via email.',
+          code: 'PENDING_APPROVAL',
+        }, { status: 403 });
+      }
+    }
 
     const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
 
