@@ -24,8 +24,8 @@ function getDbPool() {
       waitForConnections: true,
       queueLimit: 0,
       enableKeepAlive: true,
-      keepAliveInitialDelay: 10000,
-      connectTimeout: 10000,
+      keepAliveInitialDelay: 0,
+      connectTimeout: 15000,
       timezone: '+00:00',
     });
     console.log('✅ DB Pool Created (server.mjs):', process.env.DATABASE_HOST);
