@@ -1,0 +1,1085 @@
+{
+  "info": {
+    "name": "Vivah Milan - Flutter API",
+    "_postman_id": "flutter-api-collection-v3",
+    "description": "Complete Flutter API. All protected routes need: Authorization: Bearer {{token}}\n\nFlow: Register → Verify OTP → Login → use token",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://vivahdwar.com", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/register", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","register"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@example.com\",\n  \"phone\": \"9876543210\",\n  \"password\": \"password123\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "201 - Success",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Registration successful. OTP sent to your email.\",\n  \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"email\": \"rahul@example.com\"\n}"
+            },
+            {
+              "name": "409 - Email Already Registered",
+              "status": "Conflict", "code": 409,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Email already registered\"\n}"
+            },
+            {
+              "name": "400 - Validation Error",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Password must be at least 8 characters\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/verify-otp", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","verify-otp"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"otp\": \"123456\",\n  \"type\": \"EMAIL_VERIFY\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - OTP Verified",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Email verified successfully.\"\n}"
+            },
+            {
+              "name": "400 - Invalid OTP",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Invalid or expired OTP\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/login", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"password\": \"password123\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Login Success",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImExYjJjM2Q0IiwiZW1haWwiOiJyYWh1bEBleGFtcGxlLmNvbSIsInJvbGUiOiJVU0VSIiwiaXNQcmVtaXVtIjpmYWxzZX0.signature\",\n  \"user\": {\n    \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"name\": \"Rahul Sharma\",\n    \"email\": \"rahul@example.com\",\n    \"phone\": \"9876543210\",\n    \"role\": \"USER\",\n    \"isPremium\": false,\n    \"premiumPlan\": null,\n    \"adminVerified\": true,\n    \"verificationBadge\": false,\n    \"freeTrialActive\": true,\n    \"freeTrialExpiry\": \"2026-06-04T00:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "401 - Invalid Credentials",
+              "status": "Unauthorized", "code": 401,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Invalid email or password\"\n}"
+            },
+            {
+              "name": "403 - Email Not Verified",
+              "status": "Forbidden", "code": 403,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Email not verified. Please verify your email first.\",\n  \"code\": \"EMAIL_NOT_VERIFIED\",\n  \"email\": \"rahul@example.com\"\n}"
+            },
+            {
+              "name": "403 - Pending Admin Approval",
+              "status": "Forbidden", "code": 403,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Your profile is pending admin approval. You will be notified via email.\",\n  \"code\": \"PENDING_APPROVAL\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/forgot-password", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","forgot-password"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"rahul@example.com\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - OTP Sent",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Password reset OTP sent to your email.\"\n}"
+            },
+            {
+              "name": "404 - Email Not Found",
+              "status": "Not Found", "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Email not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/reset-password", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","reset-password"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"newpassword123\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Password Reset",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Password reset successfully.\"\n}"
+            },
+            {
+              "name": "400 - Invalid OTP",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Invalid or expired OTP\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/auth/resend-otp", "host": ["{{baseUrl}}"], "path": ["api","flutter","auth","resend-otp"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"type\": \"EMAIL_VERIFY\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - OTP Resent",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OTP resent successfully.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "👤 Profile",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/profile", "host": ["{{baseUrl}}"], "path": ["api","flutter","profile"] }
+          },
+          "response": [
+            {
+              "name": "200 - My Profile",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@example.com\",\n  \"phone\": \"9876543210\",\n  \"isPremium\": false,\n  \"premiumPlan\": null,\n  \"verificationBadge\": false,\n  \"adminVerified\": true,\n  \"isActive\": true,\n  \"createdAt\": \"2026-01-15T10:30:00.000Z\",\n  \"profile\": {\n    \"id\": \"p1q2r3s4-t5u6-7890-abcd-ef1234567890\",\n    \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"gender\": \"MALE\",\n    \"dob\": \"1995-06-15T00:00:00.000Z\",\n    \"height\": 175,\n    \"religion\": \"Hindu\",\n    \"caste\": \"Brahmin\",\n    \"gotra\": \"Kashyap\",\n    \"motherTongue\": \"Hindi\",\n    \"education\": \"B.Tech\",\n    \"profession\": \"Software Engineer\",\n    \"income\": \"5-10 LPA\",\n    \"country\": \"India\",\n    \"state\": \"Maharashtra\",\n    \"city\": \"Mumbai\",\n    \"maritalStatus\": \"NEVER_MARRIED\",\n    \"diet\": \"VEG\",\n    \"smoking\": \"NO\",\n    \"drinking\": \"NO\",\n    \"aboutMe\": \"I am a software engineer looking for a life partner.\",\n    \"familyType\": \"NUCLEAR\",\n    \"familyStatus\": \"MIDDLE_CLASS\",\n    \"complexion\": \"FAIR\",\n    \"bodyType\": \"AVERAGE\",\n    \"profileComplete\": 80,\n    \"manglik\": \"NO\",\n    \"horoscopeSign\": \"Gemini\",\n    \"hidePhone\": false,\n    \"hidePhoto\": false,\n    \"partnerAgeMin\": 22,\n    \"partnerAgeMax\": 28,\n    \"partnerHeightMin\": 155,\n    \"partnerHeightMax\": 170,\n    \"partnerReligion\": \"Hindu\",\n    \"createdAt\": \"2026-01-15T10:30:00.000Z\",\n    \"updatedAt\": \"2026-04-20T08:15:00.000Z\"\n  },\n  \"photos\": [\n    {\n      \"id\": \"ph1\",\n      \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"url\": \"https://vivahdwar.com/uploads/photos/photo1.jpg\",\n      \"isMain\": true,\n      \"createdAt\": \"2026-01-16T09:00:00.000Z\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "401 - Unauthorized",
+              "status": "Unauthorized", "code": 401,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Unauthorized\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/profile", "host": ["{{baseUrl}}"], "path": ["api","flutter","profile"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"phone\": \"9876543210\",\n  \"gender\": \"MALE\",\n  \"dob\": \"1995-06-15\",\n  \"height\": 175,\n  \"religion\": \"Hindu\",\n  \"caste\": \"Brahmin\",\n  \"gotra\": \"Kashyap\",\n  \"motherTongue\": \"Hindi\",\n  \"education\": \"B.Tech\",\n  \"profession\": \"Software Engineer\",\n  \"income\": \"5-10 LPA\",\n  \"country\": \"India\",\n  \"state\": \"Maharashtra\",\n  \"city\": \"Mumbai\",\n  \"maritalStatus\": \"NEVER_MARRIED\",\n  \"diet\": \"VEG\",\n  \"smoking\": \"NO\",\n  \"drinking\": \"NO\",\n  \"aboutMe\": \"I am a software engineer looking for a life partner.\",\n  \"familyType\": \"NUCLEAR\",\n  \"familyStatus\": \"MIDDLE_CLASS\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Profile Updated",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@example.com\",\n  \"phone\": \"9876543210\",\n  \"isPremium\": false,\n  \"profile\": {\n    \"gender\": \"MALE\",\n    \"dob\": \"1995-06-15T00:00:00.000Z\",\n    \"height\": 175,\n    \"religion\": \"Hindu\",\n    \"caste\": \"Brahmin\",\n    \"education\": \"B.Tech\",\n    \"profession\": \"Software Engineer\",\n    \"city\": \"Mumbai\",\n    \"state\": \"Maharashtra\",\n    \"country\": \"India\",\n    \"profileComplete\": 80,\n    \"updatedAt\": \"2026-05-04T10:00:00.000Z\"\n  },\n  \"photos\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Profile by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/profile/:id", "host": ["{{baseUrl}}"], "path": ["api","flutter","profile",":id"], "variable": [{ "key": "id", "value": "USER_ID_HERE" }] }
+          },
+          "response": [
+            {
+              "name": "200 - User Profile",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"name\": \"Priya Patel\",\n  \"isPremium\": true,\n  \"verificationBadge\": true,\n  \"profile\": {\n    \"gender\": \"FEMALE\",\n    \"dob\": \"1997-03-22T00:00:00.000Z\",\n    \"height\": 162,\n    \"religion\": \"Hindu\",\n    \"caste\": \"Patel\",\n    \"education\": \"MBA\",\n    \"profession\": \"Business Analyst\",\n    \"city\": \"Ahmedabad\",\n    \"state\": \"Gujarat\",\n    \"country\": \"India\",\n    \"maritalStatus\": \"NEVER_MARRIED\",\n    \"aboutMe\": \"Looking for a caring and ambitious life partner.\",\n    \"profileComplete\": 90\n  },\n  \"photos\": [\n    {\n      \"id\": \"ph2\",\n      \"url\": \"https://vivahdwar.com/uploads/photos/priya1.jpg\",\n      \"isMain\": true\n    }\n  ],\n  \"interestStatus\": \"PENDING\",\n  \"interestDirection\": \"sent\",\n  \"interestId\": \"int-uuid-here\",\n  \"isShortlisted\": false\n}"
+            },
+            {
+              "name": "403 - Blocked",
+              "status": "Forbidden", "code": 403,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Profile unavailable\"\n}"
+            },
+            {
+              "name": "404 - Not Found",
+              "status": "Not Found", "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "🔍 Matches & Search",
+      "item": [
+        {
+          "name": "Get Matches",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/flutter/matches?page=1&limit=12",
+              "host": ["{{baseUrl}}"], "path": ["api","flutter","matches"],
+              "query": [
+                { "key": "page", "value": "1" }, { "key": "limit", "value": "12" },
+                { "key": "ageMin", "value": "22", "disabled": true }, { "key": "ageMax", "value": "30", "disabled": true },
+                { "key": "religion", "value": "Hindu", "disabled": true }, { "key": "country", "value": "India", "disabled": true },
+                { "key": "state", "value": "Maharashtra", "disabled": true }, { "key": "city", "value": "Mumbai", "disabled": true },
+                { "key": "education", "value": "B.Tech", "disabled": true }, { "key": "profession", "value": "Software Engineer", "disabled": true },
+                { "key": "heightMin", "value": "155", "disabled": true }, { "key": "heightMax", "value": "175", "disabled": true },
+                { "key": "maritalStatus", "value": "NEVER_MARRIED", "disabled": true }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Matches List",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"users\": [\n    {\n      \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"name\": \"Priya Patel\",\n      \"isPremium\": true,\n      \"verificationBadge\": true,\n      \"createdAt\": \"2026-02-10T08:00:00.000Z\",\n      \"profile\": {\n        \"gender\": \"FEMALE\",\n        \"dob\": \"1997-03-22T00:00:00.000Z\",\n        \"height\": 162,\n        \"religion\": \"Hindu\",\n        \"caste\": \"Patel\",\n        \"education\": \"MBA\",\n        \"profession\": \"Business Analyst\",\n        \"country\": \"India\",\n        \"state\": \"Gujarat\",\n        \"city\": \"Ahmedabad\",\n        \"maritalStatus\": \"NEVER_MARRIED\",\n        \"profileComplete\": 90,\n        \"complexion\": \"FAIR\",\n        \"bodyType\": \"SLIM\",\n        \"motherTongue\": \"Gujarati\",\n        \"income\": \"5-10 LPA\",\n        \"diet\": \"VEG\",\n        \"smoking\": \"NO\",\n        \"drinking\": \"NO\"\n      },\n      \"photos\": [\n        { \"id\": \"ph2\", \"url\": \"https://vivahdwar.com/uploads/photos/priya1.jpg\", \"isMain\": true }\n      ]\n    }\n  ],\n  \"total\": 48,\n  \"page\": 1,\n  \"totalPages\": 4,\n  \"isPremium\": false,\n  \"freeLimit\": 5,\n  \"isLimited\": true\n}"
+            }
+          ]
+        },
+        {
+          "name": "Search Profiles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/flutter/search?page=1&limit=12",
+              "host": ["{{baseUrl}}"], "path": ["api","flutter","search"],
+              "query": [
+                { "key": "page", "value": "1" }, { "key": "limit", "value": "12" },
+                { "key": "q", "value": "", "disabled": true }, { "key": "religion", "value": "Hindu", "disabled": true },
+                { "key": "country", "value": "India", "disabled": true }, { "key": "state", "value": "Maharashtra", "disabled": true },
+                { "key": "city", "value": "Mumbai", "disabled": true }, { "key": "education", "value": "B.Tech", "disabled": true },
+                { "key": "profession", "value": "Software Engineer", "disabled": true }, { "key": "maritalStatus", "value": "NEVER_MARRIED", "disabled": true },
+                { "key": "ageMin", "value": "22", "disabled": true }, { "key": "ageMax", "value": "30", "disabled": true },
+                { "key": "heightMin", "value": "155", "disabled": true }, { "key": "heightMax", "value": "175", "disabled": true }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Search Results",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"users\": [\n    {\n      \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\",\n      \"name\": \"Sneha Verma\",\n      \"isPremium\": false,\n      \"verificationBadge\": false,\n      \"createdAt\": \"2026-03-05T12:00:00.000Z\",\n      \"profile\": {\n        \"gender\": \"FEMALE\",\n        \"dob\": \"1998-11-10T00:00:00.000Z\",\n        \"height\": 158,\n        \"religion\": \"Hindu\",\n        \"education\": \"B.Com\",\n        \"profession\": \"Accountant\",\n        \"country\": \"India\",\n        \"state\": \"Maharashtra\",\n        \"city\": \"Pune\",\n        \"maritalStatus\": \"NEVER_MARRIED\",\n        \"profileComplete\": 65\n      },\n      \"photos\": []\n    }\n  ],\n  \"total\": 23,\n  \"page\": 1,\n  \"totalPages\": 5,\n  \"isPremium\": false,\n  \"freeLimit\": 5,\n  \"isLimited\": true\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "💌 Interests",
+      "item": [
+        {
+          "name": "Send Interest",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/interest", "host": ["{{baseUrl}}"], "path": ["api","flutter","interest"] },
+            "body": { "mode": "raw", "raw": "{\n  \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"message\": \"Hi, I liked your profile!\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "201 - Interest Sent",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"int-uuid-a1b2c3d4\",\n  \"senderId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"status\": \"PENDING\"\n}"
+            },
+            {
+              "name": "409 - Already Sent",
+              "status": "Conflict", "code": 409,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Interest already sent\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Received Interests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/interest?type=received&limit=20&offset=0", "host": ["{{baseUrl}}"], "path": ["api","flutter","interest"], "query": [{ "key": "type", "value": "received" }, { "key": "limit", "value": "20" }, { "key": "offset", "value": "0" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Received Interests",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"int-uuid-a1b2c3d4\",\n    \"senderId\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\",\n    \"receiverId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"message\": \"Hi, I liked your profile!\",\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2026-05-01T10:00:00.000Z\",\n    \"updatedAt\": \"2026-05-01T10:00:00.000Z\",\n    \"sender\": {\n      \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\",\n      \"name\": \"Sneha Verma\",\n      \"isPremium\": false,\n      \"isVerified\": false,\n      \"profile\": {\n        \"gender\": \"FEMALE\",\n        \"dob\": \"1998-11-10T00:00:00.000Z\",\n        \"religion\": \"Hindu\",\n        \"city\": \"Pune\",\n        \"country\": \"India\",\n        \"education\": \"B.Com\",\n        \"profession\": \"Accountant\",\n        \"profileComplete\": 65\n      },\n      \"photos\": [{ \"url\": \"https://vivahdwar.com/uploads/photos/sneha1.jpg\" }]\n    },\n    \"receiver\": null\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Sent Interests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/interest?type=sent&limit=20&offset=0", "host": ["{{baseUrl}}"], "path": ["api","flutter","interest"], "query": [{ "key": "type", "value": "sent" }, { "key": "limit", "value": "20" }, { "key": "offset", "value": "0" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Sent Interests",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"int-uuid-b2c3d4e5\",\n    \"senderId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n    \"message\": \"Hi, I liked your profile!\",\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2026-05-02T09:00:00.000Z\",\n    \"updatedAt\": \"2026-05-02T09:00:00.000Z\",\n    \"sender\": null,\n    \"receiver\": {\n      \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"name\": \"Priya Patel\",\n      \"isPremium\": true,\n      \"isVerified\": true,\n      \"profile\": {\n        \"gender\": \"FEMALE\",\n        \"dob\": \"1997-03-22T00:00:00.000Z\",\n        \"religion\": \"Hindu\",\n        \"city\": \"Ahmedabad\",\n        \"country\": \"India\",\n        \"education\": \"MBA\",\n        \"profession\": \"Business Analyst\",\n        \"profileComplete\": 90\n      },\n      \"photos\": [{ \"url\": \"https://vivahdwar.com/uploads/photos/priya1.jpg\" }]\n    }\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Accept / Reject Interest",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/interest/:id", "host": ["{{baseUrl}}"], "path": ["api","flutter","interest",":id"], "variable": [{ "key": "id", "value": "INTEREST_ID" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACCEPTED\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Interest Accepted",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"int-uuid-a1b2c3d4\",\n  \"senderId\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\",\n  \"receiverId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"message\": \"Hi, I liked your profile!\",\n  \"status\": \"ACCEPTED\",\n  \"createdAt\": \"2026-05-01T10:00:00.000Z\",\n  \"updatedAt\": \"2026-05-04T11:00:00.000Z\"\n}"
+            },
+            {
+              "name": "200 - Interest Rejected",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"int-uuid-a1b2c3d4\",\n  \"status\": \"REJECTED\",\n  \"updatedAt\": \"2026-05-04T11:00:00.000Z\"\n}"
+            },
+            {
+              "name": "404 - Not Found",
+              "status": "Not Found", "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "💬 Chat",
+      "item": [
+        {
+          "name": "Get All Chat Rooms",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat"] }
+          },
+          "response": [
+            {
+              "name": "200 - Chat Rooms",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"room-uuid-1234\",\n    \"userAId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"userBId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n    \"createdAt\": \"2026-05-01T11:00:00.000Z\",\n    \"userA\": {\n      \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"name\": \"Rahul Sharma\",\n      \"isPremium\": false,\n      \"lastSeen\": \"2026-05-04T09:30:00.000Z\",\n      \"profile\": { \"gender\": \"MALE\", \"city\": \"Mumbai\", \"country\": \"India\" },\n      \"photos\": [{ \"url\": \"https://vivahdwar.com/uploads/photos/rahul1.jpg\" }]\n    },\n    \"userB\": {\n      \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"name\": \"Priya Patel\",\n      \"isPremium\": true,\n      \"lastSeen\": \"2026-05-04T10:00:00.000Z\",\n      \"profile\": { \"gender\": \"FEMALE\", \"city\": \"Ahmedabad\", \"country\": \"India\" },\n      \"photos\": [{ \"url\": \"https://vivahdwar.com/uploads/photos/priya1.jpg\" }]\n    },\n    \"messages\": [\n      {\n        \"id\": \"msg-uuid-last\",\n        \"content\": \"Hello! How are you?\",\n        \"createdAt\": \"2026-05-04T10:05:00.000Z\",\n        \"senderId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n        \"type\": \"TEXT\",\n        \"isRead\": true\n      }\n    ]\n  }\n]"
+            },
+            {
+              "name": "403 - Premium Required",
+              "status": "Forbidden", "code": 403,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Chat requires a Premium subscription\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Send Message (Create Room if needed)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat"] },
+            "body": { "mode": "raw", "raw": "{\n  \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"content\": \"Hello! How are you?\",\n  \"type\": \"TEXT\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "201 - Message Sent",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"msg-uuid-5678\",\n  \"chatRoomId\": \"room-uuid-1234\",\n  \"senderId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"content\": \"Hello! How are you?\",\n  \"type\": \"TEXT\",\n  \"fileUrl\": null,\n  \"isRead\": false,\n  \"createdAt\": \"2026-05-04T10:05:00.000Z\",\n  \"roomId\": \"room-uuid-1234\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Messages in Room",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/:roomId?limit=50", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat",":roomId"], "query": [{ "key": "limit", "value": "50" }, { "key": "before", "value": "", "disabled": true }], "variable": [{ "key": "roomId", "value": "ROOM_ID_HERE" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Messages",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"msg-uuid-0001\",\n    \"chatRoomId\": \"room-uuid-1234\",\n    \"senderId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n    \"receiverId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"content\": \"✨ *Profile Details*\\n━━━━━━━━━━━━━━━━━━━━\\n👤 *Priya Patel*\\n🎂 Age: 29 years\",\n    \"type\": \"TEXT\",\n    \"fileUrl\": null,\n    \"isRead\": true,\n    \"createdAt\": \"2026-05-01T11:01:00.000Z\"\n  },\n  {\n    \"id\": \"msg-uuid-5678\",\n    \"chatRoomId\": \"room-uuid-1234\",\n    \"senderId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n    \"content\": \"Hello! How are you?\",\n    \"type\": \"TEXT\",\n    \"fileUrl\": null,\n    \"isRead\": true,\n    \"createdAt\": \"2026-05-04T10:05:00.000Z\"\n  }\n]"
+            },
+            {
+              "name": "403 - Not Room Member",
+              "status": "Forbidden", "code": 403,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Forbidden\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Send Message in Room",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/:roomId", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat",":roomId"], "variable": [{ "key": "roomId", "value": "ROOM_ID_HERE" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"Hello!\",\n  \"type\": \"TEXT\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "201 - Message Sent",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"msg-uuid-9999\",\n  \"chatRoomId\": \"room-uuid-1234\",\n  \"senderId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"content\": \"Hello!\",\n  \"type\": \"TEXT\",\n  \"isRead\": false,\n  \"createdAt\": \"2026-05-04T10:10:00.000Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/unread", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat","unread"] }
+          },
+          "response": [
+            {
+              "name": "200 - Unread Count",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"total\": 5,\n  \"perRoom\": {\n    \"room-uuid-1234\": 3,\n    \"room-uuid-5678\": 2\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "🔔 Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/notifications?skip=0&limit=20", "host": ["{{baseUrl}}"], "path": ["api","flutter","notifications"], "query": [{ "key": "skip", "value": "0" }, { "key": "limit", "value": "20" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Notifications",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"notifications\": [\n    {\n      \"id\": \"notif-uuid-1\",\n      \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"type\": \"INTEREST_RECEIVED\",\n      \"title\": \"New Interest Received\",\n      \"message\": \"Sneha Verma has sent you an interest request.\",\n      \"isRead\": false,\n      \"link\": \"/profile/c3d4e5f6-a7b8-9012-cdef-123456789012\",\n      \"createdAt\": \"2026-05-01T10:00:00.000Z\"\n    },\n    {\n      \"id\": \"notif-uuid-2\",\n      \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"type\": \"INTEREST_ACCEPTED\",\n      \"title\": \"💕 Interest Accepted!\",\n      \"message\": \"Priya Patel accepted your interest. Start chatting!\",\n      \"isRead\": true,\n      \"link\": \"/chat?userId=b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"createdAt\": \"2026-05-02T14:00:00.000Z\"\n    }\n  ],\n  \"unreadCount\": 1,\n  \"total\": 2,\n  \"hasMore\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/notifications", "host": ["{{baseUrl}}"], "path": ["api","flutter","notifications"] },
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Marked as Read",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "⭐ Shortlist",
+      "item": [
+        {
+          "name": "Get Shortlisted Profiles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/shortlist?limit=50&offset=0", "host": ["{{baseUrl}}"], "path": ["api","flutter","shortlist"], "query": [{ "key": "limit", "value": "50" }, { "key": "offset", "value": "0" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Shortlisted",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"sl-uuid-1\",\n    \"ownerId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"targetId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n    \"createdAt\": \"2026-05-03T08:00:00.000Z\",\n    \"target\": {\n      \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"name\": \"Priya Patel\",\n      \"isPremium\": true,\n      \"profile\": {\n        \"gender\": \"FEMALE\",\n        \"dob\": \"1997-03-22T00:00:00.000Z\",\n        \"religion\": \"Hindu\",\n        \"city\": \"Ahmedabad\",\n        \"country\": \"India\",\n        \"education\": \"MBA\",\n        \"profession\": \"Business Analyst\",\n        \"profileComplete\": 90\n      },\n      \"photos\": [{ \"url\": \"https://vivahdwar.com/uploads/photos/priya1.jpg\" }]\n    }\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Add / Remove Shortlist (Toggle)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/shortlist", "host": ["{{baseUrl}}"], "path": ["api","flutter","shortlist"] },
+            "body": { "mode": "raw", "raw": "{\n  \"targetId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "201 - Added to Shortlist",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"shortlisted\": true\n}"
+            },
+            {
+              "name": "200 - Removed from Shortlist",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"shortlisted\": false\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "⭐ Kundali",
+      "item": [
+        {
+          "name": "Get My Kundali",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/kundali", "host": ["{{baseUrl}}"], "path": ["api","flutter","kundali"] }
+          },
+          "response": [
+            {
+              "name": "200 - Kundali Data",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"kund-uuid-1\",\n  \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"birthTime\": \"1995-06-15T05:00:00.000Z\",\n  \"birthPlace\": \"Mumbai, Maharashtra\",\n  \"lat\": 19.076,\n  \"lng\": 72.8777,\n  \"lagna\": \"Taurus\",\n  \"rashi\": \"Gemini\",\n  \"nakshatra\": \"Mrigashira\",\n  \"manglik\": false,\n  \"planetaryPositions\": {\n    \"Sun\": { \"sign\": \"Gemini\", \"degree\": 0.5 },\n    \"Moon\": { \"sign\": \"Gemini\", \"degree\": 15.2 },\n    \"Mars\": { \"sign\": \"Aries\", \"degree\": 22.1 }\n  },\n  \"dashaSequence\": [\n    { \"planet\": \"Venus\", \"startDate\": \"2020-01-01\", \"endDate\": \"2040-01-01\" }\n  ],\n  \"createdAt\": \"2026-02-01T10:00:00.000Z\",\n  \"updatedAt\": \"2026-02-01T10:00:00.000Z\"\n}"
+            },
+            {
+              "name": "200 - No Kundali (null)",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "null"
+            }
+          ]
+        },
+        {
+          "name": "Save / Update Kundali",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/kundali", "host": ["{{baseUrl}}"], "path": ["api","flutter","kundali"] },
+            "body": { "mode": "raw", "raw": "{\n  \"birthDate\": \"1995-06-15\",\n  \"birthHour\": 10,\n  \"birthMinute\": 30,\n  \"birthPeriod\": \"AM\",\n  \"birthPlace\": \"Mumbai, Maharashtra\",\n  \"lat\": 19.0760,\n  \"lng\": 72.8777\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Kundali Saved",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"kund-uuid-1\",\n  \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"birthTime\": \"1995-06-15T05:00:00.000Z\",\n  \"birthPlace\": \"Mumbai, Maharashtra\",\n  \"lat\": 19.076,\n  \"lng\": 72.8777,\n  \"lagna\": \"Taurus\",\n  \"rashi\": \"Gemini\",\n  \"nakshatra\": \"Mrigashira\",\n  \"manglik\": false,\n  \"planetaryPositions\": { \"Sun\": { \"sign\": \"Gemini\", \"degree\": 0.5 } },\n  \"dashaSequence\": [{ \"planet\": \"Venus\", \"startDate\": \"2020-01-01\", \"endDate\": \"2040-01-01\" }],\n  \"createdAt\": \"2026-05-04T10:00:00.000Z\",\n  \"updatedAt\": \"2026-05-04T10:00:00.000Z\"\n}"
+            },
+            {
+              "name": "400 - Age Under 18",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"User must be at least 18 years old\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User Kundali by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/kundali/:userId", "host": ["{{baseUrl}}"], "path": ["api","flutter","kundali",":userId"], "variable": [{ "key": "userId", "value": "USER_ID_HERE" }] }
+          },
+          "response": [
+            {
+              "name": "200 - User Kundali",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"kund-uuid-2\",\n  \"userId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"lagna\": \"Scorpio\",\n  \"rashi\": \"Libra\",\n  \"nakshatra\": \"Chitra\",\n  \"manglik\": false,\n  \"planetaryPositions\": {},\n  \"dashaSequence\": []\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🚫 Block",
+      "item": [
+        {
+          "name": "Block / Unblock User (Toggle)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/block", "host": ["{{baseUrl}}"], "path": ["api","flutter","block"] },
+            "body": { "mode": "raw", "raw": "{\n  \"blockedId\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - User Blocked",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"blocked\": true\n}"
+            },
+            {
+              "name": "200 - User Unblocked",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"blocked\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Check Block Status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/block?userId=USER_ID_HERE", "host": ["{{baseUrl}}"], "path": ["api","flutter","block"], "query": [{ "key": "userId", "value": "USER_ID_HERE" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Block Status",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"blocked\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Blocked Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/block", "host": ["{{baseUrl}}"], "path": ["api","flutter","block"] }
+          },
+          "response": [
+            {
+              "name": "200 - Blocked Users",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"blockId\": \"blk-uuid-1\",\n    \"blockedAt\": \"2026-04-10T08:00:00.000Z\",\n    \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\",\n    \"name\": \"Sneha Verma\",\n    \"gender\": \"FEMALE\",\n    \"city\": \"Pune\",\n    \"state\": \"Maharashtra\",\n    \"country\": \"India\",\n    \"religion\": \"Hindu\",\n    \"profession\": \"Accountant\",\n    \"dob\": \"1998-11-10T00:00:00.000Z\"\n  }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🚩 Report",
+      "item": [
+        {
+          "name": "Report User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/report", "host": ["{{baseUrl}}"], "path": ["api","flutter","report"] },
+            "body": { "mode": "raw", "raw": "{\n  \"targetId\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\",\n  \"reason\": \"Fake profile\",\n  \"details\": \"This profile seems fake with stolen photos.\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "201 - Report Submitted",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"id\": \"rpt-uuid-1234\"\n}"
+            },
+            {
+              "name": "400 - Missing Fields",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"targetId and reason required\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "📸 Upload",
+      "item": [
+        {
+          "name": "Upload Photo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/upload/photo", "host": ["{{baseUrl}}"], "path": ["api","flutter","upload","photo"] },
+            "body": { "mode": "formdata", "formdata": [{ "key": "photo", "type": "file" }, { "key": "isMain", "value": "false", "type": "text" }] }
+          },
+          "response": [
+            {
+              "name": "201 - Photo Uploaded",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"ph-uuid-9876\",\n  \"userId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"url\": \"https://vivahdwar.com/uploads/photos/a1b2c3d4_1714820000000.jpg\",\n  \"isMain\": false,\n  \"createdAt\": \"2026-05-04T10:00:00.000Z\"\n}"
+            },
+            {
+              "name": "400 - File Too Large",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Max size 10MB\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Photo",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/upload/photo", "host": ["{{baseUrl}}"], "path": ["api","flutter","upload","photo"] },
+            "body": { "mode": "raw", "raw": "{\n  \"photoId\": \"ph-uuid-9876\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Photo Deleted",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true\n}"
+            }
+          ]
+        },
+        {
+          "name": "Upload Document (KYC)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/upload/document", "host": ["{{baseUrl}}"], "path": ["api","flutter","upload","document"] },
+            "body": { "mode": "formdata", "formdata": [{ "key": "document", "type": "file" }, { "key": "type", "value": "Aadhaar Card", "type": "text" }] }
+          },
+          "response": [
+            {
+              "name": "201 - Document Uploaded",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"doc-uuid-1111\",\n  \"type\": \"Aadhaar Card\",\n  \"status\": \"PENDING\"\n}"
+            },
+            {
+              "name": "400 - Invalid Type",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Invalid document type. Allowed: Aadhaar Card, PAN Card, Voter ID Card, Passport, Driving License\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get My Documents",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/upload/document", "host": ["{{baseUrl}}"], "path": ["api","flutter","upload","document"] }
+          },
+          "response": [
+            {
+              "name": "200 - My Documents",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"doc-uuid-1111\",\n    \"type\": \"Aadhaar Card\",\n    \"status\": \"APPROVED\",\n    \"adminNote\": null,\n    \"createdAt\": \"2026-03-10T09:00:00.000Z\"\n  },\n  {\n    \"id\": \"doc-uuid-2222\",\n    \"type\": \"PAN Card\",\n    \"status\": \"PENDING\",\n    \"adminNote\": null,\n    \"createdAt\": \"2026-05-01T11:00:00.000Z\"\n  }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "💳 Payment",
+      "item": [
+        {
+          "name": "Get Subscription Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/plans", "host": ["{{baseUrl}}"], "path": ["api","admin","plans"] }
+          },
+          "response": [
+            {
+              "name": "200 - Plans",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"plan-silver\",\n    \"name\": \"Silver\",\n    \"price\": 749,\n    \"duration\": 30,\n    \"features\": [\"Unlimited matches\", \"Send interests\", \"View contact details\"],\n    \"isActive\": true\n  },\n  {\n    \"id\": \"plan-gold\",\n    \"name\": \"Gold\",\n    \"price\": 1499,\n    \"duration\": 30,\n    \"features\": [\"All Silver features\", \"Chat\", \"Profile boost\", \"Priority listing\"],\n    \"isActive\": true\n  },\n  {\n    \"id\": \"plan-platinum\",\n    \"name\": \"Platinum\",\n    \"price\": 2999,\n    \"duration\": 30,\n    \"features\": [\"All Gold features\", \"Dedicated matchmaker\", \"Verified badge\"],\n    \"isActive\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Payment Order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/payment/create-order", "host": ["{{baseUrl}}"], "path": ["api","flutter","payment","create-order"] },
+            "body": { "mode": "raw", "raw": "{\n  \"plan\": \"GOLD\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Order Created",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"orderId\": \"MILAN_EF123456_1714820000000\",\n  \"paymentSessionId\": \"session_abc123xyz789\",\n  \"orderAmount\": 1499,\n  \"plan\": \"GOLD\"\n}"
+            },
+            {
+              "name": "400 - Invalid Plan",
+              "status": "Bad Request", "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Invalid plan. Allowed: SILVER, GOLD, PLATINUM\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/payment/verify", "host": ["{{baseUrl}}"], "path": ["api","flutter","payment","verify"] },
+            "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"MILAN_EF123456_1714820000000\",\n  \"plan\": \"GOLD\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Payment Verified",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"status\": \"PAID\",\n  \"isPremium\": true,\n  \"premiumExpiry\": \"2026-06-04T10:00:00.000Z\"\n}"
+            },
+            {
+              "name": "200 - Payment Pending",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"status\": \"ACTIVE\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Validate Coupon",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/coupons/validate", "host": ["{{baseUrl}}"], "path": ["api","coupons","validate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"SAVE20\"\n}", "options": { "raw": { "language": "json" } } }
+          },
+          "response": [
+            {
+              "name": "200 - Valid Coupon",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"valid\": true,\n  \"discountPct\": 20,\n  \"code\": \"SAVE20\"\n}"
+            },
+            {
+              "name": "404 - Invalid Coupon",
+              "status": "Not Found", "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Invalid or inactive coupon\"\n}"
+            },
+            {
+              "name": "410 - Coupon Expired",
+              "status": "Gone", "code": 410,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Coupon has expired\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "📍 Location (Public)",
+      "item": [
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location/countries", "host": ["{{baseUrl}}"], "path": ["api","location","countries"] }
+          },
+          "response": [
+            {
+              "name": "200 - Countries",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"isoCode\": \"IN\", \"name\": \"India\", \"flag\": \"🇮🇳\", \"phonecode\": \"91\" },\n  { \"isoCode\": \"US\", \"name\": \"United States\", \"flag\": \"🇺🇸\", \"phonecode\": \"1\" },\n  { \"isoCode\": \"GB\", \"name\": \"United Kingdom\", \"flag\": \"🇬🇧\", \"phonecode\": \"44\" }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get States",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location/states?country=India", "host": ["{{baseUrl}}"], "path": ["api","location","states"], "query": [{ "key": "country", "value": "India" }] }
+          },
+          "response": [
+            {
+              "name": "200 - States",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"isoCode\": \"MH\", \"name\": \"Maharashtra\", \"countryCode\": \"IN\" },\n  { \"isoCode\": \"GJ\", \"name\": \"Gujarat\", \"countryCode\": \"IN\" },\n  { \"isoCode\": \"DL\", \"name\": \"Delhi\", \"countryCode\": \"IN\" }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Cities",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location/cities?state=Maharashtra", "host": ["{{baseUrl}}"], "path": ["api","location","cities"], "query": [{ "key": "state", "value": "Maharashtra" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Cities",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"name\": \"Mumbai\", \"stateCode\": \"MH\", \"countryCode\": \"IN\" },\n  { \"name\": \"Pune\", \"stateCode\": \"MH\", \"countryCode\": \"IN\" },\n  { \"name\": \"Nagpur\", \"stateCode\": \"MH\", \"countryCode\": \"IN\" }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "⚙️ Profile Options (Public)",
+      "item": [
+        {
+          "name": "Get All Profile Options",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/profile-options", "host": ["{{baseUrl}}"], "path": ["api","profile-options"] }
+          },
+          "response": [
+            {
+              "name": "200 - All Options",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"id\": \"opt-1\", \"category\": \"religion\", \"value\": \"Hindu\", \"label\": \"Hindu\", \"group\": null, \"sortOrder\": 1, \"isActive\": true },\n  { \"id\": \"opt-2\", \"category\": \"religion\", \"value\": \"Muslim\", \"label\": \"Muslim\", \"group\": null, \"sortOrder\": 2, \"isActive\": true },\n  { \"id\": \"opt-3\", \"category\": \"education\", \"value\": \"B.Tech\", \"label\": \"B.Tech / B.E.\", \"group\": null, \"sortOrder\": 1, \"isActive\": true },\n  { \"id\": \"opt-4\", \"category\": \"income\", \"value\": \"5-10 LPA\", \"label\": \"5-10 Lakhs per annum\", \"group\": null, \"sortOrder\": 3, \"isActive\": true }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Options by Category",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/profile-options?category=religion", "host": ["{{baseUrl}}"], "path": ["api","profile-options"], "query": [{ "key": "category", "value": "religion" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Religion Options",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"id\": \"opt-1\", \"value\": \"Hindu\", \"label\": \"Hindu\", \"group\": null, \"sortOrder\": 1 },\n  { \"id\": \"opt-2\", \"value\": \"Muslim\", \"label\": \"Muslim\", \"group\": null, \"sortOrder\": 2 },\n  { \"id\": \"opt-3\", \"value\": \"Christian\", \"label\": \"Christian\", \"group\": null, \"sortOrder\": 3 },\n  { \"id\": \"opt-4\", \"value\": \"Sikh\", \"label\": \"Sikh\", \"group\": null, \"sortOrder\": 4 },\n  { \"id\": \"opt-5\", \"value\": \"Jain\", \"label\": \"Jain\", \"group\": null, \"sortOrder\": 5 }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏠 Homepage (Public)",
+      "item": [
+        {
+          "name": "Get Success Stories",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/stories", "host": ["{{baseUrl}}"], "path": ["api","stories"] }
+          },
+          "response": [
+            {
+              "name": "200 - Stories",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"story-1\",\n    \"coupleNames\": \"Rahul & Priya\",\n    \"story\": \"We met on Vivah Milan and got married in 2025. Thank you!\",\n    \"photoUrl\": \"https://vivahdwar.com/uploads/stories/couple1.jpg\",\n    \"marriageYear\": 2025,\n    \"isActive\": true,\n    \"sortOrder\": 1\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Homepage Slides",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/homepage/slides", "host": ["{{baseUrl}}"], "path": ["api","admin","homepage","slides"] }
+          },
+          "response": [
+            {
+              "name": "200 - Slides",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": \"slide-1\",\n    \"title\": \"Find Your Perfect Match\",\n    \"subtitle\": \"Join millions of happy couples\",\n    \"imageUrl\": \"https://vivahdwar.com/uploads/slides/slide1.jpg\",\n    \"ctaText\": \"Get Started\",\n    \"ctaLink\": \"/register\",\n    \"isActive\": true,\n    \"sortOrder\": 1\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Homepage Stats",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/homepage/stats", "host": ["{{baseUrl}}"], "path": ["api","admin","homepage","stats"] }
+          },
+          "response": [
+            {
+              "name": "200 - Stats",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"id\": \"stat-1\", \"label\": \"Happy Couples\", \"value\": \"50,000+\", \"icon\": \"❤️\", \"sortOrder\": 1 },\n  { \"id\": \"stat-2\", \"label\": \"Registered Members\", \"value\": \"2,00,000+\", \"icon\": \"👥\", \"sortOrder\": 2 },\n  { \"id\": \"stat-3\", \"label\": \"Verified Profiles\", \"value\": \"1,50,000+\", \"icon\": \"✅\", \"sortOrder\": 3 }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Homepage Features",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/homepage/features", "host": ["{{baseUrl}}"], "path": ["api","admin","homepage","features"] }
+          },
+          "response": [
+            {
+              "name": "200 - Features",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"id\": \"feat-1\", \"title\": \"Verified Profiles\", \"description\": \"All profiles are manually verified by our team.\", \"icon\": \"✅\", \"sortOrder\": 1 },\n  { \"id\": \"feat-2\", \"title\": \"Smart Matching\", \"description\": \"AI-powered matching based on your preferences.\", \"icon\": \"🤖\", \"sortOrder\": 2 }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Maintenance Status",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/maintenance-status", "host": ["{{baseUrl}}"], "path": ["api","maintenance-status"] }
+          },
+          "response": [
+            {
+              "name": "200 - Site Live",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"maintenance\": false\n}"
+            },
+            {
+              "name": "200 - Maintenance Mode",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"maintenance\": true\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
