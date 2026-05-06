@@ -37,6 +37,12 @@ export async function GET(req, { params }) {
       [targetId]
     );
 
+    // Family photos
+    const familyPhotos = await query(
+      'SELECT id, url, caption, memberCount, createdAt FROM family_photo WHERE userId = ? ORDER BY createdAt DESC',
+      [targetId]
+    ).catch(() => []);
+
     // Hide phone/email for other users (non-premium check)
     const isSelf = decoded.id === targetId;
     const isPremiumViewer = decoded.isPremium;
@@ -88,6 +94,7 @@ export async function GET(req, { params }) {
         },
       },
       photos,
+      familyPhotos,
     });
 
   } catch (err) {

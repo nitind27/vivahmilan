@@ -130,6 +130,27 @@ function ProfileTab({ data }) {
           <Clock size={12} /> Joined {format(new Date(u.createdAt), 'dd MMM yyyy')}
         </p>
       )}
+
+      {/* Family Photos */}
+      {data.familyPhotos?.length > 0 && (
+        <div>
+          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-2">Family Photos ({data.familyPhotos.length})</p>
+          <div className="grid grid-cols-3 gap-2">
+            {data.familyPhotos.map(fp => (
+              <div key={fp.id} className="relative rounded-xl overflow-hidden border border-gray-200">
+                <img src={fp.url} alt={fp.caption || 'Family'} className="w-full h-24 object-cover" />
+                {(fp.caption || fp.memberCount) && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-1">
+                    <p className="text-white text-xs truncate">
+                      {fp.caption}{fp.memberCount ? ` · ${fp.memberCount}` : ''}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

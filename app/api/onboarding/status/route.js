@@ -28,6 +28,12 @@ export async function GET(req) {
     [user.id]
   );
 
+  // Family photos
+  const familyPhotos = await query(
+    'SELECT * FROM family_photo WHERE userId = ? ORDER BY createdAt DESC',
+    [user.id]
+  ).catch(() => []);
+
   // Format dob for date input (YYYY-MM-DD)
   let dob = '';
   if (profile?.dob) {
@@ -42,6 +48,7 @@ export async function GET(req) {
     phone:   user.phone || '',
     photoUrl: photo?.url || user.image || null,
     document: doc ? { type: doc.type, status: doc.status } : null,
+    familyPhotos: familyPhotos || [],
     profile: profile ? {
       gender:          profile.gender          || '',
       dob,

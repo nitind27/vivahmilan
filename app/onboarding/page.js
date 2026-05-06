@@ -100,8 +100,13 @@ function OnboardingInner() {
   const [docUploading, setDocUploading] = useState(false);
   const [docStatus, setDocStatus] = useState(null);
   const [selectedDocType, setSelectedDocType] = useState('Aadhaar Card');
+  const [familyPhotos, setFamilyPhotos] = useState([]);
+  const [familyUploading, setFamilyUploading] = useState(false);
+  const [familyCaption, setFamilyCaption] = useState('');
+  const [familyMemberCount, setFamilyMemberCount] = useState('');
   const photoRef = useRef(null);
   const docRef = useRef(null);
+  const familyPhotoRef = useRef(null);
 
   const [form, setForm] = useState({
     name: '', phone: '', gender: '', dob: '', height: '', weight: '',
@@ -134,6 +139,7 @@ function OnboardingInner() {
         if (data.photoUrl)  setPhotoPreview(data.photoUrl);
         if (data.document)  setDocStatus(data.document);
         if (data.document?.type) setSelectedDocType(data.document.type);
+        if (data.familyPhotos) setFamilyPhotos(data.familyPhotos);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -227,6 +233,40 @@ function OnboardingInner() {
       setDocStatus({ type: data.type, status: data.status });
       toast.success(`${selectedDocType} uploaded!`);
     } finally { setDocUploading(false); }
+  };
+
+  const uploadFamilyPhoto = async (file) => {
+    if (!file.type.startsWith('image/')) { toast.error('Images only'); return; }
+    if (familyPhotos.length >= 10) { toast.error('Maximum 10 family photos allowed'); return; }
+    setFamilyUploading(true);
+    try {
+      const blob = await compressImage(file);
+      const fd = new FormData();
+      fd.append('photo', blob, 'family.jpg');
+      fd.append('email', email);
+      if (familyCaption.trim()) fd.append('caption', familyCaption.trim());
+      if (familyMemberCount) fd.append('memberCount', familyMemberCount);
+      const res = await fetch('/api/onboarding/family-photo', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error); return; }
+      setFamilyPhotos(prev => [data, ...prev]);
+      setFamilyCaption('');
+      setFamilyMemberCount('');
+      toast.success('Family photo uploaded!');
+    } finally { setFamilyUploading(false); }
+  };
+
+  const deleteFamilyPhoto = async (photoId) => {
+    try {
+      const res = await fetch('/api/onboarding/family-photo', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, photoId }),
+      });
+      if (!res.ok) { const d = await res.json(); toast.error(d.error); return; }
+      setFamilyPhotos(prev => prev.filter(p => p.id !== photoId));
+      toast.success('Photo removed');
+    } catch { toast.error('Failed to remove photo'); }
   };
 
   const saveStep = async (isFinal = false) => {
@@ -512,7 +552,84 @@ function OnboardingInner() {
                     </label>
                   )}
                 </div>
+
+              {/* Family Photos */}
+              <div className="border-t border-vd-border pt-5">
+                <p className={labelCls}>Family Group Photos <span className="text-vd-text-light text-xs font-normal">(Optional — max 10)</span></p>
+                <div className="p-3 bg-vd-accent-soft border border-vd-border rounded-2xl mb-4">
+                  <p className="text-xs text-vd-text-sub">Upload group photos with your family members. These help matches get a better sense of your family background.</p>
+                </div>
+
+                {/* Caption & member count inputs */}
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <input
+                    type="text"
+                    value={familyCaption}
+                    onChange={e => setFamilyCaption(e.target.value)}
+                    placeholder="Caption (e.g. Family at Diwali)"
+                    className={inputCls}
+                    maxLength={100}
+                  />
+                  <input
+                    type="number"
+                    value={familyMemberCount}
+                    onChange={e => setFamilyMemberCount(e.target.value)}
+                    placeholder="No. of members in photo"
+                    className={inputCls}
+                    min={1}
+                    max={50}
+                  />
+                </div>
+
+                {/* Upload button */}
+                {familyPhotos.length < 10 && (
+                  <label className="block cursor-pointer mb-4">
+                    <div className="border-2 border-dashed border-vd-border rounded-2xl p-5 text-center hover:border-vd-primary hover:bg-vd-accent-soft transition-all">
+                      {familyUploading
+                        ? <Loader2 className="w-7 h-7 text-vd-primary animate-spin mx-auto mb-1" />
+                        : <Users className="w-7 h-7 text-vd-text-light mx-auto mb-1" />}
+                      <p className="text-sm font-medium text-vd-text-sub">{familyUploading ? 'Uploading…' : 'Upload Family Photo'}</p>
+                      <p className="text-xs text-vd-text-light mt-0.5">JPG, PNG, WebP — Max 10MB · {familyPhotos.length}/10 uploaded</p>
+                    </div>
+                    <input
+                      ref={familyPhotoRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={familyUploading}
+                      onChange={e => e.target.files?.[0] && uploadFamilyPhoto(e.target.files[0])}
+                    />
+                  </label>
+                )}
+
+                {/* Uploaded family photos grid */}
+                {familyPhotos.length > 0 && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {familyPhotos.map(fp => (
+                      <div key={fp.id} className="relative rounded-2xl overflow-hidden border border-vd-border group">
+                        <img src={fp.url} alt={fp.caption || 'Family photo'} className="w-full h-32 object-cover" />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => deleteFamilyPhoto(fp.id)}
+                            className="opacity-0 group-hover:opacity-100 bg-red-500 text-white text-xs px-3 py-1.5 rounded-xl transition-opacity"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        {(fp.caption || fp.memberCount) && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1">
+                            <p className="text-white text-xs truncate">
+                              {fp.caption}{fp.memberCount ? ` · ${fp.memberCount} members` : ''}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+            </div>
             )}
           </motion.div>
         </AnimatePresence>

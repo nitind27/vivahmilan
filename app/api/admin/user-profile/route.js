@@ -18,6 +18,7 @@ export async function GET(req) {
   const profile  = await queryOne('SELECT * FROM profile WHERE userId = ?', [userId]);
   const photos   = await query('SELECT * FROM photo WHERE userId = ? ORDER BY isMain DESC', [userId]);
   const documents = await query('SELECT * FROM document WHERE userId = ? ORDER BY createdAt DESC', [userId]);
+  const familyPhotos = await query('SELECT * FROM family_photo WHERE userId = ? ORDER BY createdAt DESC', [userId]).catch(() => []);
   const interests = await query(
     `SELECT i.*, u.name as otherName, u.email as otherEmail
      FROM interest i
@@ -27,5 +28,5 @@ export async function GET(req) {
     [userId, userId, userId]
   );
 
-  return NextResponse.json({ user, profile, photos, documents, interests });
+  return NextResponse.json({ user, profile, photos, documents, familyPhotos, interests });
 }

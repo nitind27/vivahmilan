@@ -24,8 +24,9 @@ export async function GET(req) {
   const user = await queryOne('SELECT id, name, email, phone, isPremium, premiumPlan, verificationBadge, adminVerified, isActive, createdAt FROM `user` WHERE id = ?', [decoded.id]);
   const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [decoded.id]);
   const photos = await query('SELECT * FROM photo WHERE userId = ?', [decoded.id]);
+  const familyPhotos = await query('SELECT * FROM family_photo WHERE userId = ? ORDER BY createdAt DESC', [decoded.id]).catch(() => []);
 
-  return NextResponse.json({ ...user, profile, photos });
+  return NextResponse.json({ ...user, profile, photos, familyPhotos });
 }
 
 export async function PUT(req) {
