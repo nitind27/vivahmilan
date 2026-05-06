@@ -17,40 +17,32 @@ export async function POST(req) {
     if (password.length < 8)
       return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
 
+    // Check if email already exists in user table
     const existing = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
     if (existing)
       return NextResponse.json({ error: 'This email is already registered. Please login.' }, { status: 409 });
 
+    // Check if phone already exists in user table
     if (phone) {
       const existingPhone = await queryOne('SELECT id FROM `user` WHERE phone = ?', [phone]);
       if (existingPhone)
         return NextResponse.json({ error: 'This phone number is already registered.' }, { status: 409 });
     }
 
+    // Hash password
     const hashed = await bcrypt.hash(password, 12);
     const otp = generateOTP();
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-    const userId = randomUUID();
-    const profileId = randomUUID();
-    const otpId = randomUUID();
-    const now = new Date();
+    const pendingId = randomUUID();
 
-    await execute(
-      `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified, adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified, loginOtpEnabled, createdAt, updatedAt)
-       VALUES (?, ?, ?, ?, ?, 'USER', 1, 0, 0, 0, 0, 0, 0, 0, ?, ?)`,
-      [userId, name, email, hashed, phone || null, now, now]
-    );
+    // Delete any existing pending registration for this email
+    await execute('DELETE FROM pending_registration WHERE email = ?', [email]);
 
+    // Store in pending_registration table (NOT in user table yet)
     await execute(
-      `INSERT INTO profile (id, userId, gender, profileComplete, maritalStatus, smoking, drinking, hidePhone, hidePhoto, createdAt, updatedAt)
-       VALUES (?, ?, ?, 10, 'NEVER_MARRIED', 'NO', 'NO', 0, 0, ?, ?)`,
-      [profileId, userId, gender || null, now, now]
-    );
-
-    await execute(
-      `INSERT INTO otp (id, userId, code, type, expiresAt, used, createdAt)
-       VALUES (?, ?, ?, 'EMAIL_VERIFY', ?, 0, ?)`,
-      [otpId, userId, otp, otpExpiry, now]
+      `INSERT INTO pending_registration (id, name, email, phone, password, gender, otp, otpExpiresAt, createdAt)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+      [pendingId, name, email, phone || null, hashed, gender || null, otp, otpExpiry]
     );
 
     try {
@@ -62,8 +54,8 @@ export async function POST(req) {
     }
 
     return NextResponse.json({
-      user: { id: userId, name, email },
-      message: 'Registration successful. Please verify your email.',
+      message: 'Registration initiated. Please verify your email with the OTP sent.',
+      email,
       requiresOTP: true,
     }, { status: 201 });
 

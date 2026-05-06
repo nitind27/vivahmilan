@@ -14,6 +14,30 @@ export async function POST(req) {
     if (!email)
       return NextResponse.json({ error: 'email is required' }, { status: 400 });
 
+    // ── EMAIL_VERIFY: check pending_registration first ──────────────────────
+    if (type === 'EMAIL_VERIFY') {
+      const pending = await queryOne(
+        'SELECT * FROM pending_registration WHERE email = ?',
+        [email.toLowerCase().trim()]
+      );
+
+      if (pending) {
+        // Generate new OTP for pending registration
+        const otp = generateOTP();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+        await execute(
+          'UPDATE pending_registration SET otp = ?, otpExpiresAt = ? WHERE email = ?',
+          [otp, expiresAt, pending.email]
+        );
+
+        await sendOTPEmail(pending.email, pending.name, otp, type);
+
+        return NextResponse.json({ success: true, message: 'OTP sent to your email' });
+      }
+    }
+
+    // ── Non-registration OTP (PASSWORD_RESET, etc.) ──────────────────────────
     const user = await queryOne('SELECT id, name FROM `user` WHERE email = ?', [email]);
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
