@@ -20,12 +20,13 @@ function getDbPool() {
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       port: parseInt(process.env.DATABASE_PORT || '3306'),
-      connectionLimit:       10,
+      connectionLimit:       15,
       waitForConnections:    true,
       queueLimit:            0,
       enableKeepAlive:       true,
-      keepAliveInitialDelay: 0,
-      connectTimeout:        15000,
+      keepAliveInitialDelay: 10000,
+      connectTimeout:        20000,
+      idleTimeout:           60000,
       timezone:              '+00:00',
     });
     console.log('✅ DB Pool Created (server.mjs):', process.env.DATABASE_HOST);
