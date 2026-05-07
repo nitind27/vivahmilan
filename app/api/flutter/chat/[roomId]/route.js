@@ -3,7 +3,11 @@ import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
-// GET - messages in a room
+// GET - messages in a room (paginated)
+// Query params:
+//   page   (default 1)
+//   limit  (default 20)
+//   before (optional cursor — ISO datetime, for cursor-based older-message loading)
 export async function GET(req, { params }) {
   const token = getTokenFromRequest(req);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -12,33 +16,45 @@ export async function GET(req, { params }) {
 
   const { roomId } = await params;
   const { searchParams } = new URL(req.url);
-  const before = searchParams.get('before');
-  const limit  = parseInt(searchParams.get('limit') || '50');
+  const page   = parseInt(searchParams.get('page')  || '1');
+  const limit  = parseInt(searchParams.get('limit') || '20');
+  const before = searchParams.get('before'); // cursor: load messages older than this datetime
+  const offset = (page - 1) * limit;
 
   const room = await queryOne('SELECT * FROM chatroom WHERE id = ?', [roomId]);
   if (!room || (room.userAId !== decoded.id && room.userBId !== decoded.id)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  let messages;
-  if (before) {
-    messages = await query(
-      'SELECT * FROM message WHERE chatRoomId = ? AND createdAt < ? ORDER BY createdAt DESC LIMIT ?',
-      [roomId, before, limit]
-    );
-  } else {
-    messages = await query(
-      'SELECT * FROM message WHERE chatRoomId = ? ORDER BY createdAt DESC LIMIT ?',
-      [roomId, limit]
-    );
-  }
+  // Total count (with or without cursor)
+  const totalRow = before
+    ? await queryOne('SELECT COUNT(*) AS cnt FROM message WHERE chatRoomId = ? AND createdAt < ?', [roomId, before])
+    : await queryOne('SELECT COUNT(*) AS cnt FROM message WHERE chatRoomId = ?', [roomId]);
+  const total = totalRow?.cnt || 0;
 
+  const messages = before
+    ? await query(
+        'SELECT * FROM message WHERE chatRoomId = ? AND createdAt < ? ORDER BY createdAt DESC LIMIT ? OFFSET ?',
+        [roomId, before, limit, offset]
+      )
+    : await query(
+        'SELECT * FROM message WHERE chatRoomId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?',
+        [roomId, limit, offset]
+      );
+
+  // Mark received messages as read
   await execute(
     'UPDATE message SET isRead = 1 WHERE chatRoomId = ? AND receiverId = ? AND isRead = 0',
     [roomId, decoded.id]
   );
 
-  return NextResponse.json(messages.reverse());
+  return NextResponse.json({
+    data: messages.reverse(), // oldest first for chat UI
+    total,
+    page,
+    limit,
+    hasMore: offset + messages.length < total,
+  });
 }
 
 // POST - send message in existing room

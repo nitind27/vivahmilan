@@ -42,10 +42,19 @@ export async function GET(req) {
 
   const { searchParams } = new URL(req.url);
   const type   = searchParams.get('type') || 'received';
-  const limit  = parseInt(searchParams.get('limit') || '50');
-  const offset = parseInt(searchParams.get('offset') || '0');
+  const page   = parseInt(searchParams.get('page')  || '1');
+  const limit  = parseInt(searchParams.get('limit') || '20');
+  const offset = (page - 1) * limit;
 
-  const col = type === 'received' ? 'i.senderId' : 'i.receiverId';
+  const col         = type === 'received' ? 'i.senderId' : 'i.receiverId';
+  const filterCol   = type === 'received' ? 'i.receiverId' : 'i.senderId';
+
+  const totalRow = await queryOne(
+    `SELECT COUNT(*) AS cnt FROM interest WHERE ${filterCol} = ?`,
+    [decoded.id]
+  );
+  const total = totalRow?.cnt || 0;
+
   const rows = await query(
     `SELECT
        i.id, i.senderId, i.receiverId, i.message, i.status, i.createdAt, i.updatedAt,
@@ -56,17 +65,42 @@ export async function GET(req) {
      JOIN \`user\` u ON u.id = ${col}
      LEFT JOIN profile p ON p.userId = ${col}
      LEFT JOIN photo ph ON ph.userId = ${col} AND ph.isMain = 1
-     WHERE ${type === 'received' ? 'i.receiverId' : 'i.senderId'} = ?
+     WHERE ${filterCol} = ?
      ORDER BY i.createdAt DESC
      LIMIT ? OFFSET ?`,
     [decoded.id, limit, offset]
   );
+
+  // Bulk fetch interaction flags for all users in this list
+  const userIds = rows.map(r => r.u_id);
+  let shortlistSet = new Set();
+  let blockSet = new Set();
+  let interestMap = {};
+
+  if (userIds.length) {
+    const ph = userIds.map(() => '?').join(',');
+    const [shortlists, blocks, interests] = await Promise.all([
+      query(`SELECT targetId FROM shortlist WHERE ownerId = ? AND targetId IN (${ph})`, [decoded.id, ...userIds]),
+      query(`SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${ph})`, [decoded.id, ...userIds]),
+      // For sent list: we already know interest exists; for received list: check if we sent back
+      type === 'received'
+        ? query(`SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${ph})`, [decoded.id, ...userIds])
+        : Promise.resolve([]),
+    ]);
+    shortlistSet = new Set(shortlists.map(s => s.targetId));
+    blockSet     = new Set(blocks.map(b => b.blockedId));
+    interestMap  = Object.fromEntries(interests.map(i => [i.receiverId, { id: i.id, status: i.status }]));
+  }
 
   const enriched = rows.map((r) => {
     const user = {
       id: r.u_id, name: r.u_name, isPremium: !!r.u_isPremium, isVerified: !!r.u_isVerified,
       profile: { gender: r.gender, dob: r.dob, religion: r.religion, city: r.city, country: r.country, education: r.education, profession: r.profession, profileComplete: r.profileComplete },
       photos: r.photo_url ? [{ url: r.photo_url }] : [],
+      // For received list: did I send interest back to this person?
+      interestSent:  type === 'received' ? (interestMap[r.u_id] || null) : { id: r.id, status: r.status },
+      isShortlisted: shortlistSet.has(r.u_id),
+      isBlocked:     blockSet.has(r.u_id),
     };
     return {
       id: r.id, senderId: r.senderId, receiverId: r.receiverId,
@@ -76,5 +110,5 @@ export async function GET(req) {
     };
   });
 
-  return NextResponse.json(enriched);
+  return NextResponse.json({ data: enriched, total, page, limit, hasMore: offset + enriched.length < total });
 }

@@ -1,0 +1,82 @@
+FLUTTER API CHANGES DOCUMENTATION
+==================================
+Date: May 7, 2026
+
+
+1. /api/flutter/profile  (app/api/flutter/profile/route.js)
+------------------------------------------------------------
+
+GET - Changes:
+- Ab SELECT * se profile fetch hoti hai — siblings, caste, gotra, diet, complexion, bodyType,
+  fatherOccupation, motherOccupation, familyType, familyStatus, partnerAgeMin, partnerAgeMax,
+  horoscopeSign, nakshatra, manglik aur baaki saari fields ab response me aayengi.
+
+- premiumPlanDetails: Ab subscription + planconfig table se join karke aata hai.
+  Agar user ka active subscription hai toh null nahi aayega.
+  Fields: id, plan, status, amount, currency, startDate, endDate,
+          displayName, permissions (parsed array), durationDays, description
+
+- profileComplete: Ab 27 fields se calculate hota hai (pehle sirf 9 tha).
+  Fields counted: gender, dob, height, weight, religion, caste, motherTongue, education,
+  profession, income, country, state, city, aboutMe, maritalStatus, diet, complexion,
+  bodyType, fatherOccupation, motherOccupation, siblings, familyType, familyStatus,
+  horoscopeSign, manglik, name, photo (at least 1)
+  GET pe bhi recalculate + DB me sync hota hai.
+
+- ?userId=<id> query param support:
+  Kisi bhi user ki profile dekh sakte ho. Response me ye extra flags milenge:
+    interestSent      — { id, status } ya null  (tumne use interest bheja hai ya nahi)
+    interestReceived  — { id, status } ya null  (usne tumhe interest bheja hai ya nahi)
+    isBlocked         — true/false
+    isReported        — true/false
+    isShortlisted     — true/false
+  Profile view bhi automatically record hoti hai (profileview table).
+
+PUT - Changes:
+- profileComplete ab PUT ke baad bhi DB se recalculate + sync hota hai.
+- Response me premiumPlanDetails bhi include hai.
+
+
+2. /api/flutter/chat  (app/api/flutter/chat/route.js)
+------------------------------------------------------
+
+GET - Changes:
+- Pagination support add kiya: ?page=1&limit=20
+- Response format badla:
+    Pehle: [ ...rooms ]
+    Ab:    { data: [...rooms], total, page, limit, hasMore }
+- messages array ki jagah lastMessage object (single object, cleaner):
+    lastMessage: { id, content, createdAt, senderId, type, isRead } ya null
+
+
+3. /api/flutter/dashboard  (app/api/flutter/dashboard/route.js)  — NEW API
+---------------------------------------------------------------------------
+
+GET /api/flutter/dashboard
+Auth: Bearer token required
+
+Response:
+{
+  counts: {
+    interest_sent,        // total interests tumne bheje
+    interest_received,    // total interests tumhe mile
+    profile_views,        // total baar tumhari profile dekhi gayi
+    messages,             // total messages tumhe mile
+    matches,              // total accepted interests (matches)
+    today_interest_sent,  // aaj bheje interests
+    today_profile_views,  // aaj tumhari profile kitni baar dekhi gayi
+    today_messages        // aaj mile messages
+  },
+  new_matches_today: [    // aaj join kiye users (opposite gender, same religion) — max 10
+    { id, name, isPremium, isVerified, verificationBadge, profile: {...}, photos: [...] }
+  ],
+  recommended_matches: [  // premium first, phir profileComplete ke basis pe — max 10
+    { id, name, isPremium, isVerified, verificationBadge, profile: {...}, photos: [...] }
+  ],
+  pending_interests: [    // tumhe mili interests jo abhi PENDING hain — max 10
+    { id, name, ..., interest: { id, message, createdAt } }
+  ],
+  recent_activity: [      // jinne tumhari profile dekhi — max 10
+    { id, name, ..., viewed_at }
+  ]
+}

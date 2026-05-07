@@ -4,6 +4,33 @@ import { query, queryOne } from '@/lib/db';
 
 const FREE_LIMIT = 5;
 
+async function getInteractionMaps(viewerId, userIds) {
+  if (!userIds.length) return { interestMap: {}, shortlistSet: new Set(), blockSet: new Set() };
+
+  const placeholders = userIds.map(() => '?').join(',');
+
+  const [interests, shortlists, blocks] = await Promise.all([
+    query(
+      `SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${placeholders})`,
+      [viewerId, ...userIds]
+    ),
+    query(
+      `SELECT targetId FROM shortlist WHERE ownerId = ? AND targetId IN (${placeholders})`,
+      [viewerId, ...userIds]
+    ),
+    query(
+      `SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${placeholders})`,
+      [viewerId, ...userIds]
+    ),
+  ]);
+
+  const interestMap  = Object.fromEntries(interests.map(i => [i.receiverId, { id: i.id, status: i.status }]));
+  const shortlistSet = new Set(shortlists.map(s => s.targetId));
+  const blockSet     = new Set(blocks.map(b => b.blockedId));
+
+  return { interestMap, shortlistSet, blockSet };
+}
+
 export async function GET(req) {
   const token = getTokenFromRequest(req);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -34,11 +61,11 @@ export async function GET(req) {
     [decoded.id]
   );
 
-  const myReligion = currentUser?.religion;
-  const myGotra    = currentUser?.gotra;
-  const myGender   = currentUser?.gender;
-  const trialActive = currentUser?.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
-  const isPremium   = decoded.isPremium || !!trialActive;
+  const myReligion     = currentUser?.religion;
+  const myGotra        = currentUser?.gotra;
+  const myGender       = currentUser?.gender;
+  const trialActive    = currentUser?.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
+  const isPremium      = decoded.isPremium || !!trialActive;
   const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
 
   const blocks = await query(
@@ -76,20 +103,20 @@ export async function GET(req) {
     conditions.push('p.gender = ?'); params.push(oppositeGender);
   }
 
-  if (country)      { conditions.push('p.country = ?');          params.push(country); }
-  if (state)        { conditions.push('p.state LIKE ?');         params.push(`%${state}%`); }
-  if (city)         { conditions.push('p.city LIKE ?');          params.push(`%${city}%`); }
-  if (education)    { conditions.push('p.education = ?');        params.push(education); }
-  if (profession)   { conditions.push('p.profession LIKE ?');    params.push(`%${profession}%`); }
-  if (maritalStatus){ conditions.push('p.maritalStatus = ?');    params.push(maritalStatus); }
-  if (heightMin)    { conditions.push('p.height >= ?');          params.push(parseInt(heightMin)); }
-  if (heightMax)    { conditions.push('p.height <= ?');          params.push(parseInt(heightMax)); }
+  if (country)      { conditions.push('p.country = ?');       params.push(country); }
+  if (state)        { conditions.push('p.state LIKE ?');      params.push(`%${state}%`); }
+  if (city)         { conditions.push('p.city LIKE ?');       params.push(`%${city}%`); }
+  if (education)    { conditions.push('p.education = ?');     params.push(education); }
+  if (profession)   { conditions.push('p.profession LIKE ?'); params.push(`%${profession}%`); }
+  if (maritalStatus){ conditions.push('p.maritalStatus = ?'); params.push(maritalStatus); }
+  if (heightMin)    { conditions.push('p.height >= ?');       params.push(parseInt(heightMin)); }
+  if (heightMax)    { conditions.push('p.height <= ?');       params.push(parseInt(heightMax)); }
 
   const now = new Date();
   if (ageMin) { const d = new Date(now.getFullYear()-parseInt(ageMin),now.getMonth(),now.getDate()); conditions.push('p.dob <= ?'); params.push(d); }
   if (ageMax) { const d = new Date(now.getFullYear()-parseInt(ageMax),now.getMonth(),now.getDate()); conditions.push('p.dob >= ?'); params.push(d); }
 
-  const where = 'WHERE ' + conditions.join(' AND ');
+  const where   = 'WHERE ' + conditions.join(' AND ');
   const baseSQL = `FROM \`user\` u LEFT JOIN profile p ON p.userId = u.id ${where}`;
 
   const countRow = await queryOne(`SELECT COUNT(*) as cnt ${baseSQL}`, params);
@@ -110,20 +137,43 @@ export async function GET(req) {
   );
 
   const userIds = users.map(u => u.id);
-  let photos = [];
-  if (userIds.length) {
-    photos = await query(
-      `SELECT * FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`,
-      userIds
-    );
-  }
+
+  const [photos, { interestMap, shortlistSet, blockSet }] = await Promise.all([
+    userIds.length
+      ? query(`SELECT * FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`, userIds)
+      : Promise.resolve([]),
+    getInteractionMaps(decoded.id, userIds),
+  ]);
+
   const photoMap = Object.fromEntries(photos.map(p => [p.userId, p]));
 
   const result = users.map(u => ({
-    ...u,
-    profile: { gender: u.gender, dob: u.dob, height: u.height, religion: u.religion, caste: u.caste, education: u.education, profession: u.profession, country: u.country, state: u.state, city: u.city, aboutMe: u.aboutMe, maritalStatus: u.maritalStatus, profileComplete: u.profileComplete, complexion: u.complexion, bodyType: u.bodyType, motherTongue: u.motherTongue, income: u.income },
+    id: u.id,
+    name: u.name,
+    isPremium: !!u.isPremium,
+    verificationBadge: !!u.verificationBadge,
+    createdAt: u.createdAt,
+    profile: {
+      gender: u.gender, dob: u.dob, height: u.height, religion: u.religion,
+      caste: u.caste, education: u.education, profession: u.profession,
+      country: u.country, state: u.state, city: u.city, aboutMe: u.aboutMe,
+      maritalStatus: u.maritalStatus, profileComplete: u.profileComplete,
+      complexion: u.complexion, bodyType: u.bodyType, motherTongue: u.motherTongue,
+      income: u.income,
+    },
     photos: photoMap[u.id] ? [photoMap[u.id]] : [],
+    interestSent:  interestMap[u.id] || null,  // { id, status } or null
+    isShortlisted: shortlistSet.has(u.id),
+    isBlocked:     blockSet.has(u.id),
   }));
 
-  return NextResponse.json({ users: result, total, page, totalPages: Math.ceil(total / (isPremium ? limit : FREE_LIMIT)), isPremium, freeLimit: FREE_LIMIT, isLimited: !isPremium && total > FREE_LIMIT });
+  return NextResponse.json({
+    users: result,
+    total,
+    page,
+    totalPages: Math.ceil(total / (isPremium ? limit : FREE_LIMIT)),
+    isPremium,
+    freeLimit: FREE_LIMIT,
+    isLimited: !isPremium && total > FREE_LIMIT,
+  });
 }

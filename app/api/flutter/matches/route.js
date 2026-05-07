@@ -4,6 +4,34 @@ import { query, queryOne } from '@/lib/db';
 
 const FREE_LIMIT = 5;
 
+// Fetch interaction flags for a list of userIds in bulk (single queries)
+async function getInteractionMaps(viewerId, userIds) {
+  if (!userIds.length) return { interestMap: {}, shortlistSet: new Set(), blockSet: new Set() };
+
+  const placeholders = userIds.map(() => '?').join(',');
+
+  const [interests, shortlists, blocks] = await Promise.all([
+    query(
+      `SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${placeholders})`,
+      [viewerId, ...userIds]
+    ),
+    query(
+      `SELECT targetId FROM shortlist WHERE ownerId = ? AND targetId IN (${placeholders})`,
+      [viewerId, ...userIds]
+    ),
+    query(
+      `SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${placeholders})`,
+      [viewerId, ...userIds]
+    ),
+  ]);
+
+  const interestMap = Object.fromEntries(interests.map(i => [i.receiverId, { id: i.id, status: i.status }]));
+  const shortlistSet = new Set(shortlists.map(s => s.targetId));
+  const blockSet = new Set(blocks.map(b => b.blockedId));
+
+  return { interestMap, shortlistSet, blockSet };
+}
+
 export async function GET(req) {
   try {
     const token = getTokenFromRequest(req);
@@ -30,7 +58,6 @@ export async function GET(req) {
     const maritalStatus = searchParams.get('maritalStatus');
     const genderFilter  = searchParams.get('gender');
 
-    // Get current user's full profile
     const currentUser = await queryOne(
       `SELECT u.id, u.isPremium, u.freeTrialExpiry,
               p.gender, p.religion, p.gotra
@@ -52,7 +79,6 @@ export async function GET(req) {
     const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
     const targetGender   = oppositeGender || (genderFilter !== myGender ? genderFilter : null);
 
-    // Blocked IDs
     const blocks = await query(
       'SELECT blockerId, blockedId FROM block WHERE blockerId = ? OR blockedId = ?',
       [decoded.id, decoded.id]
@@ -80,15 +106,15 @@ export async function GET(req) {
       params.push(myGotra.trim());
     }
 
-    if (targetGender) { conditions.push('p.gender = ?');       params.push(targetGender); }
-    if (country)      { conditions.push('p.country = ?');      params.push(country); }
-    if (state)        { conditions.push('p.state = ?');        params.push(state); }
-    if (city)         { conditions.push('p.city = ?');         params.push(city); }
-    if (education)    { conditions.push('p.education = ?');    params.push(education); }
-    if (profession)   { conditions.push('p.profession = ?');   params.push(profession); }
-    if (maritalStatus){ conditions.push('p.maritalStatus = ?');params.push(maritalStatus); }
-    if (heightMin)    { conditions.push('p.height >= ?');      params.push(parseInt(heightMin)); }
-    if (heightMax)    { conditions.push('p.height <= ?');      params.push(parseInt(heightMax)); }
+    if (targetGender) { conditions.push('p.gender = ?');        params.push(targetGender); }
+    if (country)      { conditions.push('p.country = ?');       params.push(country); }
+    if (state)        { conditions.push('p.state = ?');         params.push(state); }
+    if (city)         { conditions.push('p.city = ?');          params.push(city); }
+    if (education)    { conditions.push('p.education = ?');     params.push(education); }
+    if (profession)   { conditions.push('p.profession = ?');    params.push(profession); }
+    if (maritalStatus){ conditions.push('p.maritalStatus = ?'); params.push(maritalStatus); }
+    if (heightMin)    { conditions.push('p.height >= ?');       params.push(parseInt(heightMin)); }
+    if (heightMax)    { conditions.push('p.height <= ?');       params.push(parseInt(heightMax)); }
 
     const now = new Date();
     if (ageMin) {
@@ -122,13 +148,14 @@ export async function GET(req) {
     );
 
     const userIds = users.map(u => u.id);
-    let photos = [];
-    if (userIds.length) {
-      photos = await query(
-        `SELECT * FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`,
-        userIds
-      );
-    }
+
+    const [photos, { interestMap, shortlistSet, blockSet }] = await Promise.all([
+      userIds.length
+        ? query(`SELECT * FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`, userIds)
+        : Promise.resolve([]),
+      getInteractionMaps(decoded.id, userIds),
+    ]);
+
     const photoMap = Object.fromEntries(photos.map(p => [p.userId, p]));
 
     const result = users.map(u => ({
@@ -146,6 +173,9 @@ export async function GET(req) {
         income: u.income, diet: u.diet, smoking: u.smoking, drinking: u.drinking,
       },
       photos: photoMap[u.id] ? [photoMap[u.id]] : [],
+      interestSent:  interestMap[u.id] || null,  // { id, status } or null
+      isShortlisted: shortlistSet.has(u.id),
+      isBlocked:     blockSet.has(u.id),
     }));
 
     return NextResponse.json({
