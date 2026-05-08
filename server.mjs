@@ -10,6 +10,7 @@ import { join, extname } from 'path';
 import next from 'next';
 import { Server } from 'socket.io';
 import mysql from 'mysql2/promise';
+import jwt from 'jsonwebtoken';
 
 // ── DB pool — shared with lib/db.js via globalThis ──
 function getDbPool() {
@@ -179,7 +180,7 @@ app.prepare().then(() => {
     path: '/api/socket',
     addTrailingSlash: false,
     cors: {
-      origin: process.env.NEXTAUTH_URL || '*',
+      origin: '*',
       methods: ['GET', 'POST'],
       credentials: true,
     },
@@ -191,12 +192,48 @@ app.prepare().then(() => {
   // Store io globally so API routes can emit events
   global.__io = io;
 
+  // ── JWT Auth Middleware (supports Flutter Bearer token + web cookies) ──
+  const JWT_SECRET = process.env.JWT_SECRET || 'milan-jwt-secret-2026';
+
+  io.use((socket, next) => {
+    // Flutter sends token in handshake auth: { token: 'Bearer xxx' } or just token string
+    const authToken = socket.handshake.auth?.token
+      || socket.handshake.headers?.authorization
+      || socket.handshake.query?.token;
+
+    if (authToken) {
+      const raw = typeof authToken === 'string' && authToken.startsWith('Bearer ')
+        ? authToken.slice(7)
+        : authToken;
+      try {
+        const decoded = jwt.verify(raw, JWT_SECRET);
+        socket.flutterUserId = decoded.id;
+        return next();
+      } catch {
+        // Invalid token — still allow connection (web users use cookie auth)
+      }
+    }
+    // Web users: no token needed here, they identify via user:online event
+    next();
+  });
+
   const onlineUsers = new Map();
 
   io.on('connection', (socket) => {
+    // Auto-register Flutter users who authenticated via JWT
+    if (socket.flutterUserId) {
+      const userId = socket.flutterUserId;
+      onlineUsers.set(userId, socket.id);
+      socket.userId = userId;
+      socket.join(`user:${userId}`); // personal room for direct notifications
+      io.emit('users:online', Array.from(onlineUsers.keys()));
+      console.log(`[Socket] Flutter user connected: ${userId}`);
+    }
+
     socket.on('user:online', (userId) => {
       onlineUsers.set(userId, socket.id);
       socket.userId = userId;
+      socket.join(`user:${userId}`);
       io.emit('users:online', Array.from(onlineUsers.keys()));
     });
 
@@ -263,9 +300,7 @@ app.prepare().then(() => {
         const now = new Date().toISOString();
         onlineUsers.delete(socket.userId);
         io.emit('users:online', Array.from(onlineUsers.keys()));
-        // Broadcast real lastSeen time to all clients
         io.emit('users:lastseen', { [socket.userId]: now });
-        // Persist to DB
         await updateLastSeen(socket.userId);
       }
     });
