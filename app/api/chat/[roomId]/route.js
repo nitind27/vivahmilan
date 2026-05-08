@@ -140,7 +140,13 @@ export async function POST(req, { params }) {
   try {
     const io = global.getIO?.();
     if (io) {
-      io.to(roomId).emit('message:receive', { ...message, _senderName: session.user.name });
+      // Emit to room but exclude sender's socket (sender already has message optimistically)
+      const senderSocketId = [...(io.sockets.sockets.values())]
+        .find(s => s.userId === session.user.id)?.id;
+      const emitter = senderSocketId
+        ? io.to(roomId).except(senderSocketId)
+        : io.to(roomId);
+      emitter.emit('message:receive', { ...message, _senderName: session.user.name });
       // Notify receiver's navbar badge
       io.emit('notification:new', { userId: receiverId });
     }

@@ -477,23 +477,32 @@ function ChatInner() {
     if (status !== 'authenticated') return;
     const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
     if (!hasAccess) return;
+
     const s = connectSocket(session.user.id);
     socketRef.current = s;
+
+    // Re-join active room on reconnect (handles socket drops)
+    s.on('connect', () => {
+      s.emit('user:online', session.user.id);
+      const currentRoom = activeRoomRef.current;
+      if (currentRoom?.id) {
+        s.emit('room:join', currentRoom.id);
+      }
+    });
+
     s.on('users:online', setOnlineUsers);
     s.on('users:lastseen', (update) => setLastSeenMap(prev => ({ ...prev, ...update })));
+
     s.on('message:receive', (msg) => {
-      // Ignore messages sent by self — already added optimistically via API response
+      // Skip messages sent by self — already added optimistically
       if (msg.senderId === session.user.id) return;
       const currentRoom = activeRoomRef.current;
       if (currentRoom?.id === msg.chatRoomId) {
-        // Room is open — add message and mark read
         setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, { ...msg, isRead: true }]);
         socketRef.current?.emit('message:read', { roomId: msg.chatRoomId, readerId: session.user.id });
       } else {
-        // Room not open — increment unread badge only
         setUnreadPerRoom(prev => ({ ...prev, [msg.chatRoomId]: (prev[msg.chatRoomId] || 0) + 1 }));
       }
-      // Always update room list preview
       setRooms(prev => {
         const updated = prev.map(r => r.id === msg.chatRoomId ? { ...r, messages: [msg] } : r);
         return updated.sort((a, b) => {
@@ -503,7 +512,7 @@ function ChatInner() {
         });
       });
     });
-    // When receiver reads our messages — update ALL messages in that room to blue tick
+
     s.on('message:read', ({ roomId }) => {
       setMessages(prev => prev.map(m =>
         (m.chatRoomId === roomId || activeRoomRef.current?.id === roomId) && m.senderId === session.user.id
@@ -511,9 +520,19 @@ function ChatInner() {
           : m
       ));
     });
+
     s.on('typing:start', () => setOtherTyping(true));
     s.on('typing:stop',  () => setOtherTyping(false));
-    return () => { s.off('users:online'); s.off('users:lastseen'); s.off('message:receive'); s.off('message:read'); s.off('typing:start'); s.off('typing:stop'); };
+
+    return () => {
+      s.off('connect');
+      s.off('users:online');
+      s.off('users:lastseen');
+      s.off('message:receive');
+      s.off('message:read');
+      s.off('typing:start');
+      s.off('typing:stop');
+    };
   }, [status, session]);
 
   // Load rooms
@@ -568,7 +587,18 @@ function ChatInner() {
     setShowEmoji(false);
     setShowAttach(false);
     setReplyTo(null);
-    socketRef.current?.emit('room:join', room.id);
+
+    // Ensure socket is connected before joining room
+    const s = socketRef.current;
+    if (s) {
+      if (s.connected) {
+        s.emit('room:join', room.id);
+      } else {
+        s.once('connect', () => s.emit('room:join', room.id));
+        s.connect();
+      }
+    }
+
     fetch(`/api/chat/${room.id}`).then(r => r.json()).then(msgs => {
       setMessages(msgs);
       setHasMore(msgs.length >= 60);
