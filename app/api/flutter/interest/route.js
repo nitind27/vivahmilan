@@ -56,9 +56,11 @@ export async function GET(req) {
     const isReceived  = type !== 'sent';
     const filterCol   = isReceived ? 'i.receiverId' : 'i.senderId';
     const profileCol  = isReceived ? 'i.senderId'   : 'i.receiverId'; // whose profile to show
+    // COUNT query has no alias — use plain column names
+    const countCol    = isReceived ? 'receiverId' : 'senderId';
 
     const totalRow = await queryOne(
-      `SELECT COUNT(*) AS cnt FROM interest WHERE ${filterCol} = ?`,
+      `SELECT COUNT(*) AS cnt FROM interest WHERE ${countCol} = ?`,
       [decoded.id]
     );
     const total = Number(totalRow?.cnt || 0);
