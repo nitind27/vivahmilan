@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import SearchableSelect from '@/components/SearchableSelect';
 import LocationPicker from '@/components/LocationPicker';
-import { PhotoUploadSection, DocumentUploadSection } from '@/components/PhotoUpload';
+import { PhotoUploadSection, DocumentUploadSection, FamilyPhotoUploadSection } from '@/components/PhotoUpload';
 import { Save, ChevronRight, ChevronLeft, Check, User, MapPin, Heart, Briefcase, Users, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -521,6 +521,9 @@ function EditProfilePage() {
               <div className="space-y-8">
                 <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Star className="w-5 h-5 text-vd-primary" /> Photos & ID Verification</h2>
                 <PhotoUploadSection />
+                <div className="border-t border-vd-border pt-6">
+                  <FamilyPhotoUploadSection />
+                </div>
                 <div className="border-t border-vd-border pt-6">
                   <DocumentUploadSection />
                 </div>

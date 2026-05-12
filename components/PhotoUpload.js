@@ -370,3 +370,159 @@ export function DocumentUploadSection() {
     </div>
   );
 }
+
+// ── Family Group Photo Upload ─────────────────────────────────────────────────
+export function FamilyPhotoUploadSection() {
+  const [photos, setPhotos] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [lightbox, setLightbox] = useState(null);
+  const [caption, setCaption] = useState('');
+  const [memberCount, setMemberCount] = useState('');
+
+  useEffect(() => {
+    fetch('/api/upload/family-photo').then(r => r.json()).then(d => setPhotos(Array.isArray(d) ? d : []));
+  }, []);
+
+  const upload = async (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast.error('Only images allowed'); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error('Max 10MB per image'); return; }
+    if (photos.length >= 10) { toast.error('Maximum 10 family photos allowed'); return; }
+
+    const blobUrl = URL.createObjectURL(file);
+    const tempId = `temp_${Date.now()}`;
+    setPhotos(prev => [...prev, { id: tempId, url: blobUrl, _loading: true }]);
+    setUploading(true);
+
+    try {
+      const fd = new FormData();
+      fd.append('photo', file);
+      if (caption.trim()) fd.append('caption', caption.trim());
+      if (memberCount) fd.append('memberCount', memberCount);
+
+      const res = await fetch('/api/upload/family-photo', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Upload failed');
+        setPhotos(prev => prev.filter(p => p.id !== tempId));
+      } else {
+        setPhotos(prev => prev.map(p => p.id === tempId ? data : p));
+        toast.success('Family photo uploaded!');
+        setCaption('');
+        setMemberCount('');
+      }
+    } finally {
+      setUploading(false);
+      URL.revokeObjectURL(blobUrl);
+    }
+  };
+
+  const deletePhoto = async (e, photoId) => {
+    e.stopPropagation();
+    setPhotos(prev => prev.filter(p => p.id !== photoId));
+    const res = await fetch('/api/upload/family-photo', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photoId }),
+    });
+    if (!res.ok) {
+      toast.error('Delete failed');
+      fetch('/api/upload/family-photo').then(r => r.json()).then(d => setPhotos(Array.isArray(d) ? d : []));
+    } else {
+      toast.success('Photo removed');
+    }
+  };
+
+  const allUrls = photos.filter(p => p.url && !p._loading).map(p => p.url);
+
+  return (
+    <div className="space-y-5">
+      <AnimatePresence>
+        {lightbox && <Lightbox images={lightbox.images} startIndex={lightbox.index} onClose={() => setLightbox(null)} />}
+      </AnimatePresence>
+
+      <div className="p-4 bg-amber-50 dark:bg-amber-900/10 rounded-2xl border border-amber-200 dark:border-amber-800">
+        <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">👨‍👩‍👧‍👦 Family Photos</p>
+        <p className="text-xs text-amber-600 dark:text-amber-500">Add photos of your family. Max 10 photos, 10MB each.</p>
+      </div>
+
+      {/* Caption & member count inputs */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">Caption (optional)</label>
+          <input
+            type="text"
+            value={caption}
+            onChange={e => setCaption(e.target.value)}
+            placeholder="e.g. Family at wedding"
+            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary transition-all"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">Members (optional)</label>
+          <input
+            type="number"
+            value={memberCount}
+            onChange={e => setMemberCount(e.target.value)}
+            placeholder="e.g. 5"
+            min="1"
+            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary transition-all"
+          />
+        </div>
+      </div>
+
+      {/* Upload area */}
+      {photos.length < 10 && (
+        <label className="block cursor-pointer">
+          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/10 transition-all">
+            {uploading
+              ? <Loader2 className="w-8 h-8 text-vd-primary animate-spin mx-auto mb-2" />
+              : <Camera className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+            }
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{uploading ? 'Uploading…' : 'Upload Family Photo'}</p>
+            <p className="text-xs text-gray-400 mt-1">JPG, PNG, WebP — Max 10MB ({photos.length}/10)</p>
+          </div>
+          <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+            onChange={e => e.target.files?.[0] && upload(e.target.files[0])} disabled={uploading} />
+        </label>
+      )}
+
+      {/* Photo grid */}
+      {photos.length > 0 && (
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+          {photos.map(photo => {
+            const urlIndex = allUrls.indexOf(photo.url);
+            return (
+              <motion.div key={photo.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                className="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 group cursor-pointer"
+                onClick={() => !photo._loading && urlIndex >= 0 && setLightbox({ images: allUrls, index: urlIndex })}>
+                <img src={imgSrc(photo.url)} alt={photo.caption || ''}
+                  className={`w-full h-full object-cover transition-all ${photo._loading ? 'blur-sm scale-105' : 'group-hover:scale-105'}`} />
+                {photo._loading ? (
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <Loader2 className="w-5 h-5 text-white animate-spin" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                      <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <button onClick={e => deletePhoto(e, photo.id)}
+                      className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md z-10">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                    {photo.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1">
+                        <p className="text-white text-xs truncate">{photo.caption}</p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
