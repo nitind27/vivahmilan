@@ -179,7 +179,8 @@ export const authOptions = {
         const trialActive  = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
         user.freeTrialActive = !!trialActive;
         user.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
-        return true;
+        // Redirect admin to /admin, regular users to /dashboard
+        return dbUser.role === 'ADMIN' ? '/admin' : true;
       } catch (err) {
         console.error('Google signIn error:', err);
         // Return redirect instead of false to avoid AccessDenied error page
@@ -231,8 +232,10 @@ export const authOptions = {
     },
 
     async redirect({ url, baseUrl }) {
+      // Allow relative paths and same-origin URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
       if (url.startsWith(baseUrl)) return url;
-      return baseUrl;
+      return `${baseUrl}/dashboard`;
     },
   },
 
