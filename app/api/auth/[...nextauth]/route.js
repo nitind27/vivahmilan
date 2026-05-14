@@ -111,22 +111,14 @@ export const authOptions = {
       if (account?.provider !== 'google') return true;
 
       try {
-        // Ensure needsPassword column exists (safe check — no ALTER in hot path)
-        try {
-          const col = await queryOne(
-            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-             WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user' AND COLUMN_NAME = 'needsPassword'`
-          );
-          if (!col) {
-            await execute(`ALTER TABLE \`user\` ADD COLUMN needsPassword TINYINT(1) DEFAULT 0`);
-          }
-        } catch (_) { /* column already exists or no permission — safe to ignore */ }
-
         const now = new Date();
-        const dbUser = await queryOne('SELECT * FROM `user` WHERE email = ?', [user.email]);
+        const dbUser = await queryOne(
+          'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, needsPassword, freeTrialExpiry FROM `user` WHERE email = ?',
+          [user.email]
+        );
 
         if (!dbUser) {
-          // ── New Google user: create user + profile, then redirect to complete profile ──
+          // ── Brand new Google user ──────────────────────────────────────
           const userId    = randomUUID();
           const profileId = randomUUID();
 
@@ -134,11 +126,10 @@ export const authOptions = {
             `INSERT INTO \`user\`
                (id, name, email, role, isActive, isVerified, adminVerified,
                 verificationBadge, isPremium, profileBoost, phoneVerified,
-                loginOtpEnabled, needsPassword, createdAt, updatedAt)
-             VALUES (?, ?, ?, 'USER', 1, 0, 0, 0, 0, 0, 0, 0, 1, ?, ?)`,
+                loginOtpEnabled, createdAt, updatedAt)
+             VALUES (?, ?, ?, 'USER', 1, 1, 1, 0, 0, 0, 0, 0, ?, ?)`,
             [userId, user.name || user.email.split('@')[0], user.email, now, now]
           );
-
           await execute(
             `INSERT INTO profile
                (id, userId, profileComplete, maritalStatus, smoking, drinking,
@@ -147,55 +138,54 @@ export const authOptions = {
             [profileId, userId, now, now]
           );
 
-          // Session banao, phir redirect callback /register/complete pe bhejega
           user.id = userId;
           user.role = 'USER';
           user.isPremium = false;
           user.premiumPlan = null;
-          user.isVerified = false;
-          user.adminVerified = false;
-          user.needsPassword = true;
+          user.isVerified = true;
+          user.adminVerified = true;
+          user.needsPassword = false;
           user.isNewUser = true;
           user.freeTrialActive = false;
           user.freeTrialExpiry = null;
           return true;
         }
 
-        // ── Existing user ───────────────────────────────────────────────
+        // ── Existing user ──────────────────────────────────────────────
         if (!dbUser.isActive) return '/login?error=AccountSuspended';
+
+        // Auto-approve via Google (Google already verified the email)
+        if (!dbUser.adminVerified || !dbUser.isVerified) {
+          await execute(
+            'UPDATE `user` SET adminVerified = 1, isVerified = 1, updatedAt = ? WHERE id = ?',
+            [now, dbUser.id]
+          );
+        }
+
+        const trialActive = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
+
+        // Check profile completeness
+        let isNewUser = false;
+        if (dbUser.role !== 'ADMIN') {
+          const profile = await queryOne(
+            'SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?',
+            [dbUser.id]
+          );
+          const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
+          isNewUser = REQUIRED.some(f => !profile?.[f]);
+        }
 
         user.id            = dbUser.id;
         user.role          = dbUser.role;
         user.isPremium     = !!dbUser.isPremium;
         user.premiumPlan   = dbUser.premiumPlan || null;
-        user.isVerified    = !!dbUser.isVerified;
-        user.adminVerified = !!dbUser.adminVerified;
+        user.isVerified    = true;
+        user.adminVerified = true;
         user.needsPassword = !!dbUser.needsPassword;
-        user.isNewUser     = false;
-        const trialActive  = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
+        user.isNewUser     = isNewUser;
         user.freeTrialActive = !!trialActive;
         user.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
 
-        // Auto-approve Google users (email is verified by Google)
-        if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) {
-          await execute(`UPDATE \`user\` SET adminVerified = 1, isVerified = 1, updatedAt = ? WHERE id = ?`, [new Date(), dbUser.id]);
-          user.adminVerified = true;
-          user.isVerified    = true;
-        }
-
-        // Profile incomplete — redirect to onboarding (session will be created first)
-        if (dbUser.role !== 'ADMIN') {
-          const profile = await queryOne('SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?', [dbUser.id]);
-          const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
-          const missing = REQUIRED.filter(f => !profile?.[f]);
-          if (missing.length > 0) {
-            // Return true so session is created, then redirect callback handles /onboarding
-            user.isNewUser = true;
-            return true;
-          }
-        }
-
-        // Redirect admin to /admin, regular users to /dashboard
         return dbUser.role === 'ADMIN' ? '/admin' : true;
       } catch (err) {
         console.error('Google signIn error:', err.message, err.stack);
