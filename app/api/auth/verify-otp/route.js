@@ -28,13 +28,25 @@ export async function POST(req) {
         const profileId = randomUUID();
         const now = new Date();
 
-        await execute(
-          `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
-            adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
-            loginOtpEnabled, emailVerified, createdAt, updatedAt)
-           VALUES (?, ?, ?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?)`,
-          [userId, pending.name, pending.email, pending.password, pending.phone || null, now, now]
-        );
+        if (pending.password) {
+          // Normal email/password registration
+          await execute(
+            `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
+              adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
+              loginOtpEnabled, emailVerified, createdAt, updatedAt)
+             VALUES (?, ?, ?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?)`,
+            [userId, pending.name, pending.email, pending.password, pending.phone || null, now, now]
+          );
+        } else {
+          // Google OAuth registration — no password, email already verified by Google
+          await execute(
+            `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
+              adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
+              loginOtpEnabled, emailVerified, createdAt, updatedAt)
+             VALUES (?, ?, ?, NULL, NULL, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?)`,
+            [userId, pending.name, pending.email, now, now]
+          );
+        }
 
         await execute(
           `INSERT INTO profile (id, userId, gender, profileComplete, maritalStatus, smoking, drinking, hidePhone, hidePhoto, createdAt, updatedAt)
@@ -48,6 +60,7 @@ export async function POST(req) {
         return NextResponse.json({
           success: true,
           message: 'Email verified successfully. Account created.',
+          isGoogleUser: !pending.password,
           user: { id: userId, name: pending.name, email: pending.email },
         });
       }

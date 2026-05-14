@@ -4,7 +4,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { queryOne, execute } from '@/lib/db';
-import { randomUUID } from 'crypto';
 import https from 'https';
 
 // Force IPv6 for Google OAuth — server has IPv6 connectivity but IPv4 is unreachable
@@ -126,39 +125,9 @@ export const authOptions = {
         );
 
         if (!dbUser) {
-          // ── Brand new Google user — create account, NOT approved yet ──
-          const userId    = randomUUID();
-          const profileId = randomUUID();
-
-          // isVerified=1 (email confirmed by Google), adminVerified=0 (needs admin approval after onboarding)
-          await execute(
-            `INSERT INTO \`user\`
-               (id, name, email, role, isActive, isVerified, adminVerified,
-                verificationBadge, isPremium, profileBoost, phoneVerified,
-                loginOtpEnabled, createdAt, updatedAt)
-             VALUES (?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, ?, ?)`,
-            [userId, user.name || user.email.split('@')[0], user.email, now, now]
-          );
-          await execute(
-            `INSERT INTO profile
-               (id, userId, profileComplete, maritalStatus, smoking, drinking,
-                hidePhone, hidePhoto, createdAt, updatedAt)
-             VALUES (?, ?, 10, 'NEVER_MARRIED', 'NO', 'NO', 0, 0, ?, ?)`,
-            [profileId, userId, now, now]
-          );
-
-          user.id = userId;
-          user.role = 'USER';
-          user.isPremium = false;
-          user.premiumPlan = null;
-          user.isVerified = true;
-          user.adminVerified = false;
-          user.needsPassword = false;
-          user.isNewUser = true;
-          user.freeTrialActive = false;
-          user.freeTrialExpiry = null;
-          // Redirect to onboarding — do NOT allow dashboard access yet
-          return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
+          // ── Brand new Google user — send OTP first, don't create account yet ──
+          // Redirect to email OTP verification page; account is created after OTP confirmed
+          return `/google-verify?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 
         // ── Existing user ──────────────────────────────────────────────
