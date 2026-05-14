@@ -5,6 +5,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import https from 'https';
+
+// Force IPv6 for Google OAuth — server has IPv6 connectivity but IPv4 is unreachable
+const ipv6Agent = new https.Agent({ family: 6 });
 
 export const authOptions = {
   providers: [
@@ -12,7 +16,8 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       httpOptions: {
-        timeout: 10000, // 10 seconds
+        timeout: 15000,
+        agent: ipv6Agent, // force IPv6 — server's IPv4 is unreachable but IPv6 works
       },
     }),
     // ── QR Code Login Provider ─────────────────────────────────────────
