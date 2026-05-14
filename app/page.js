@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -210,6 +210,24 @@ export default function Home() {
     return () => clearInterval(t);
   }, []);
 
+  // Swap video src based on screen width (media attribute on <source> is unreliable)
+  useEffect(() => {
+    const setVideoSrc = () => {
+      if (!videoRef.current) return;
+      const isMobile = window.innerWidth <= 768;
+      const desired = isMobile ? '/video/mobile.mp4' : '/video/banner.mp4';
+      if (videoRef.current.getAttribute('data-src') !== desired) {
+        videoRef.current.setAttribute('data-src', desired);
+        videoRef.current.src = desired;
+        videoRef.current.load();
+        videoRef.current.play().catch(() => {});
+      }
+    };
+    setVideoSrc();
+    window.addEventListener('resize', setVideoSrc);
+    return () => window.removeEventListener('resize', setVideoSrc);
+  }, []);
+
   const current = SLIDES[slide] || SLIDES[0];
 
   // Skeleton shimmer while config loads
@@ -252,7 +270,6 @@ export default function Home() {
           {!videoError ? (
             <video
               ref={videoRef}
-              src="/video/banner.mp4"
               autoPlay muted loop playsInline preload="auto"
               onError={() => setVideoError(true)}
               className="w-full h-full object-cover"

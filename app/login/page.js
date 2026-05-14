@@ -136,10 +136,10 @@ function LoginInner() {
       <div className="flex-1 lg:overflow-y-auto flex items-center justify-center px-4 sm:px-6 py-8 bg-vd-bg">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           className="w-full max-w-sm sm:max-w-md">
-
+{/* 
           <div className="flex justify-center mb-6">
             <img src="/logo/logo.png" alt="Vivah Dwar" className="h-12 sm:h-16 w-auto object-contain" />
-          </div>
+          </div> */}
 
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-1.5">

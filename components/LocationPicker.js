@@ -103,10 +103,10 @@ export default function LocationPicker({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-1">
+      {/* <div className="flex items-center gap-2 mb-1">
         <MapPin className="w-4 h-4 text-vd-primary" />
         <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Location</span>
-      </div>
+      </div> */}
 
       {/* Country */}
       <SearchableSelect
