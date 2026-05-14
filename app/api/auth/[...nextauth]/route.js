@@ -147,32 +147,22 @@ export const authOptions = {
             [profileId, userId, now, now]
           );
 
-          // Don't create session — redirect to profile completion page
-          user.id = userId; // ✅ set DB id so session has correct id
-          const encodedEmail = encodeURIComponent(user.email);
-          const encodedName  = encodeURIComponent(user.name || '');
-          return `/register/complete?email=${encodedEmail}&name=${encodedName}`;
+          // Session banao, phir redirect callback /register/complete pe bhejega
+          user.id = userId;
+          user.role = 'USER';
+          user.isPremium = false;
+          user.premiumPlan = null;
+          user.isVerified = false;
+          user.adminVerified = false;
+          user.needsPassword = true;
+          user.isNewUser = true;
+          user.freeTrialActive = false;
+          user.freeTrialExpiry = null;
+          return true;
         }
 
         // ── Existing user ───────────────────────────────────────────────
         if (!dbUser.isActive) return '/login?error=AccountSuspended';
-
-        // Profile incomplete — redirect to onboarding
-        if (dbUser.role !== 'ADMIN') {
-          const profile = await queryOne('SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?', [dbUser.id]);
-          const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
-          const missing = REQUIRED.filter(f => !profile?.[f]);
-          if (missing.length > 0) {
-            const encodedEmail = encodeURIComponent(dbUser.email);
-            const encodedName  = encodeURIComponent(dbUser.name || '');
-            return `/onboarding?email=${encodedEmail}&name=${encodedName}`;
-          }
-        }
-
-        // Not yet approved — redirect to pending page (don't return false)
-        if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) {
-          return '/login?error=PENDING_APPROVAL';
-        }
 
         user.id            = dbUser.id;
         user.role          = dbUser.role;
@@ -185,6 +175,26 @@ export const authOptions = {
         const trialActive  = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
         user.freeTrialActive = !!trialActive;
         user.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
+
+        // Auto-approve Google users (email is verified by Google)
+        if (dbUser.role !== 'ADMIN' && !dbUser.adminVerified) {
+          await execute(`UPDATE \`user\` SET adminVerified = 1, isVerified = 1, updatedAt = ? WHERE id = ?`, [new Date(), dbUser.id]);
+          user.adminVerified = true;
+          user.isVerified    = true;
+        }
+
+        // Profile incomplete — redirect to onboarding (session will be created first)
+        if (dbUser.role !== 'ADMIN') {
+          const profile = await queryOne('SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?', [dbUser.id]);
+          const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
+          const missing = REQUIRED.filter(f => !profile?.[f]);
+          if (missing.length > 0) {
+            // Return true so session is created, then redirect callback handles /onboarding
+            user.isNewUser = true;
+            return true;
+          }
+        }
+
         // Redirect admin to /admin, regular users to /dashboard
         return dbUser.role === 'ADMIN' ? '/admin' : true;
       } catch (err) {

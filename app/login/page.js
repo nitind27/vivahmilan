@@ -245,7 +245,13 @@ function LoginInner() {
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
-      router.replace(session.user.role === 'ADMIN' ? '/admin' : '/dashboard');
+      if (session.user.isNewUser) {
+        const email = encodeURIComponent(session.user.email || '');
+        const name  = encodeURIComponent(session.user.name || '');
+        router.replace(`/onboarding?email=${email}&name=${name}`);
+      } else {
+        router.replace(session.user.role === 'ADMIN' ? '/admin' : '/dashboard');
+      }
     }
   }, [status, session, router]);
 
