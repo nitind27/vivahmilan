@@ -27,8 +27,9 @@ export async function POST(req) {
         const userId = randomUUID();
         const profileId = randomUUID();
         const now = new Date();
+        const isGoogleSignup = pending.password === 'GOOGLE_AUTH';
 
-        if (pending.password) {
+        if (!isGoogleSignup) {
           // Normal email/password registration
           await execute(
             `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
@@ -60,7 +61,7 @@ export async function POST(req) {
         return NextResponse.json({
           success: true,
           message: 'Email verified successfully. Account created.',
-          isGoogleUser: !pending.password,
+          isGoogleUser: isGoogleSignup,
           user: { id: userId, name: pending.name, email: pending.email },
         });
       }

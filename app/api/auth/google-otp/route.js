@@ -21,11 +21,12 @@ export async function POST(req) {
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
     const pendingId = randomUUID();
 
-    // Upsert into pending_registration — password=NULL marks it as a Google signup
+    // Upsert into pending_registration — use 'GOOGLE_AUTH' as password placeholder
+    // (password column is NOT NULL in DB, so we can't insert NULL)
     await execute('DELETE FROM pending_registration WHERE email = ?', [email]);
     await execute(
       `INSERT INTO pending_registration (id, name, email, phone, password, gender, otp, otpExpiresAt, createdAt)
-       VALUES (?, ?, ?, NULL, NULL, NULL, ?, ?, NOW())`,
+       VALUES (?, ?, ?, NULL, 'GOOGLE_AUTH', NULL, ?, ?, NOW())`,
       [pendingId, name || email.split('@')[0], email, otp, otpExpiry]
     );
 
@@ -33,7 +34,7 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('google-otp error:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('google-otp error:', err.message, err.stack);
+    return NextResponse.json({ error: 'Server error: ' + err.message }, { status: 500 });
   }
 }
