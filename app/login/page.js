@@ -238,7 +238,7 @@ function LoginInner() {
 
   useEffect(() => {
     const error = searchParams?.get('error');
-    if (error === 'PENDING_APPROVAL') setPendingEmail('your Google account');
+    if (error === 'PENDING_APPROVAL') setPendingEmail('your account');
     else if (error === 'AccountSuspended') toast.error('Your account has been suspended.');
     else if (error === 'ServerError') toast.error('Something went wrong. Please try again.');
     else if (error === 'AccessDenied') toast.error('Access denied. Please try again or contact support.');
@@ -246,6 +246,7 @@ function LoginInner() {
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
+      // Only redirect to dashboard if profile is complete and admin approved
       if (session.user.isNewUser) {
         const email = encodeURIComponent(session.user.email || '');
         const name  = encodeURIComponent(session.user.name || '');

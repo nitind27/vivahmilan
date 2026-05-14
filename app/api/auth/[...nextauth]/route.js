@@ -126,16 +126,17 @@ export const authOptions = {
         );
 
         if (!dbUser) {
-          // ── Brand new Google user ──────────────────────────────────────
+          // ── Brand new Google user — create account, NOT approved yet ──
           const userId    = randomUUID();
           const profileId = randomUUID();
 
+          // isVerified=1 (email confirmed by Google), adminVerified=0 (needs admin approval after onboarding)
           await execute(
             `INSERT INTO \`user\`
                (id, name, email, role, isActive, isVerified, adminVerified,
                 verificationBadge, isPremium, profileBoost, phoneVerified,
                 loginOtpEnabled, createdAt, updatedAt)
-             VALUES (?, ?, ?, 'USER', 1, 1, 1, 0, 0, 0, 0, 0, ?, ?)`,
+             VALUES (?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, ?, ?)`,
             [userId, user.name || user.email.split('@')[0], user.email, now, now]
           );
           await execute(
@@ -151,24 +152,17 @@ export const authOptions = {
           user.isPremium = false;
           user.premiumPlan = null;
           user.isVerified = true;
-          user.adminVerified = true;
+          user.adminVerified = false;
           user.needsPassword = false;
           user.isNewUser = true;
           user.freeTrialActive = false;
           user.freeTrialExpiry = null;
-          return true;
+          // Redirect to onboarding — do NOT allow dashboard access yet
+          return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 
         // ── Existing user ──────────────────────────────────────────────
         if (!dbUser.isActive) return '/login?error=AccountSuspended';
-
-        // Auto-approve via Google (Google already verified the email)
-        if (!dbUser.adminVerified || !dbUser.isVerified) {
-          await execute(
-            'UPDATE `user` SET adminVerified = 1, isVerified = 1, updatedAt = ? WHERE id = ?',
-            [now, dbUser.id]
-          );
-        }
 
         const trialActive = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
 
@@ -183,14 +177,30 @@ export const authOptions = {
           isNewUser = REQUIRED.some(f => !profile?.[f]);
         }
 
+        // If profile incomplete, send back to onboarding
+        if (isNewUser && dbUser.role !== 'ADMIN') {
+          user.id = dbUser.id;
+          user.role = dbUser.role;
+          user.isVerified = !!dbUser.isVerified;
+          user.adminVerified = !!dbUser.adminVerified;
+          user.isPremium = false;
+          user.isNewUser = true;
+          return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
+        }
+
+        // Profile complete but not yet admin approved — show pending screen
+        if (!dbUser.adminVerified && dbUser.role !== 'ADMIN') {
+          return '/login?error=PENDING_APPROVAL';
+        }
+
         user.id            = dbUser.id;
         user.role          = dbUser.role;
         user.isPremium     = !!dbUser.isPremium;
         user.premiumPlan   = dbUser.premiumPlan || null;
-        user.isVerified    = true;
-        user.adminVerified = true;
+        user.isVerified    = !!dbUser.isVerified;
+        user.adminVerified = !!dbUser.adminVerified;
         user.needsPassword = !!dbUser.needsPassword;
-        user.isNewUser     = isNewUser;
+        user.isNewUser     = false;
         user.freeTrialActive = !!trialActive;
         user.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
 
