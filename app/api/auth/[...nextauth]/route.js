@@ -111,10 +111,16 @@ export const authOptions = {
       if (account?.provider !== 'google') return true;
 
       try {
-        // Ensure needsPassword column exists
+        // Ensure needsPassword column exists (safe check — no ALTER in hot path)
         try {
-          await execute(`ALTER TABLE \`user\` ADD COLUMN IF NOT EXISTS needsPassword TINYINT(1) DEFAULT 0`);
-        } catch {}
+          const col = await queryOne(
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user' AND COLUMN_NAME = 'needsPassword'`
+          );
+          if (!col) {
+            await execute(`ALTER TABLE \`user\` ADD COLUMN needsPassword TINYINT(1) DEFAULT 0`);
+          }
+        } catch (_) { /* column already exists or no permission — safe to ignore */ }
 
         const now = new Date();
         const dbUser = await queryOne('SELECT * FROM `user` WHERE email = ?', [user.email]);
@@ -182,8 +188,7 @@ export const authOptions = {
         // Redirect admin to /admin, regular users to /dashboard
         return dbUser.role === 'ADMIN' ? '/admin' : true;
       } catch (err) {
-        console.error('Google signIn error:', err);
-        // Return redirect instead of false to avoid AccessDenied error page
+        console.error('Google signIn error:', err.message, err.stack);
         return '/login?error=ServerError';
       }
     },
