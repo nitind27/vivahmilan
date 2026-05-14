@@ -2,21 +2,43 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { execute, queryOne } from '@/lib/db';
+import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import jwt from 'jsonwebtoken';
 
-// POST /api/auth/qr-confirm — called from mobile app after scanning QR
-// Body: { sessionId, token } where token is the mobile user's JWT/session token
-// OR if user is already logged in via NextAuth session, we use that
+// Resolve userId from either:
+//   1. Flutter mobile app → Bearer token in Authorization header (flutter-jwt)
+//   2. Web browser → NextAuth session cookie
+async function resolveUserId(req) {
+  // Try Bearer token first (mobile app)
+  const bearerToken = getTokenFromRequest(req);
+  if (bearerToken) {
+    const decoded = verifyToken(bearerToken);
+    if (decoded?.id) return decoded.id;
+    return null; // token present but invalid
+  }
+
+  // Fall back to NextAuth session (web browser)
+  const session = await getServerSession(authOptions);
+  return session?.user?.id || null;
+}
+
+// POST /api/auth/qr-confirm — mobile confirms the QR login
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { sessionId, mobileToken } = body;
+    const { sessionId } = body;
 
     if (!sessionId) {
       return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
     }
 
-    // Check session exists and is pending/scanned
+    // Authenticate the caller
+    const userId = await resolveUserId(req);
+    if (!userId) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    // Check QR session
     const qrSession = await queryOne(
       `SELECT id, status, expiresAt FROM qr_sessions WHERE id = ?`,
       [sessionId]
@@ -33,39 +55,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Already confirmed' }, { status: 409 });
     }
 
-    // Verify the mobile token and get user info
-    let userId, userEmail, userName, userRole, isPremium, isVerified, adminVerified;
-
-    if (mobileToken) {
-      // Mobile app sends its own JWT token
-      try {
-        const decoded = jwt.verify(mobileToken, process.env.NEXTAUTH_SECRET);
-        userId = decoded.id || decoded.sub;
-        userEmail = decoded.email;
-        userName = decoded.name;
-        userRole = decoded.role;
-        isPremium = decoded.isPremium;
-        isVerified = decoded.isVerified;
-        adminVerified = decoded.adminVerified;
-      } catch {
-        return NextResponse.json({ error: 'Invalid mobile token' }, { status: 401 });
-      }
-    } else {
-      // Web session (user is logged in on mobile browser)
-      const session = await getServerSession(authOptions);
-      if (!session?.user) {
-        return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-      }
-      userId = session.user.id;
-      userEmail = session.user.email;
-      userName = session.user.name;
-      userRole = session.user.role;
-      isPremium = session.user.isPremium;
-      isVerified = session.user.isVerified;
-      adminVerified = session.user.adminVerified;
-    }
-
-    // Fetch fresh user data from DB
+    // Fetch fresh user from DB
     const user = await queryOne(
       `SELECT id, email, name, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, freeTrialExpiry 
        FROM \`user\` WHERE id = ?`,
@@ -75,7 +65,7 @@ export async function POST(req) {
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
     if (!user.isActive) return NextResponse.json({ error: 'Account suspended' }, { status: 403 });
 
-    // Generate a short-lived web login token (60 seconds to use it)
+    // Generate short-lived web login token (60s) for the browser to use
     const webToken = jwt.sign(
       {
         id: user.id,
@@ -93,7 +83,6 @@ export async function POST(req) {
       { expiresIn: '60s' }
     );
 
-    // Mark session as confirmed with the token
     await execute(
       `UPDATE qr_sessions SET status='confirmed', userId=?, token=? WHERE id=?`,
       [user.id, webToken, sessionId]
@@ -106,12 +95,18 @@ export async function POST(req) {
   }
 }
 
-// PATCH /api/auth/qr-confirm — mark as scanned (first scan step)
+// PATCH /api/auth/qr-confirm — mark QR as scanned (called right after scan)
 export async function PATCH(req) {
   try {
     const body = await req.json();
     const { sessionId } = body;
     if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
+
+    // Auth check (same dual approach)
+    const userId = await resolveUserId(req);
+    if (!userId) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
 
     const qrSession = await queryOne(
       `SELECT id, status, expiresAt FROM qr_sessions WHERE id = ?`,
