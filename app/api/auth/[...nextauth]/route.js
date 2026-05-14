@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
@@ -10,6 +11,46 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    // ── QR Code Login Provider ─────────────────────────────────────────
+    CredentialsProvider({
+      id: 'qr-login',
+      name: 'QR Login',
+      credentials: {
+        qrToken: { label: 'QR Token', type: 'text' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.qrToken) return null;
+        try {
+          const decoded = jwt.verify(credentials.qrToken, process.env.NEXTAUTH_SECRET);
+          if (!decoded.qrLogin) return null;
+
+          const user = await queryOne(
+            'SELECT id, email, name, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE id = ?',
+            [decoded.id]
+          );
+          if (!user || !user.isActive) return null;
+
+          const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            isPremium: !!user.isPremium,
+            premiumPlan: user.premiumPlan || null,
+            freeTrialActive: !!trialActive,
+            freeTrialExpiry: user.freeTrialExpiry ? user.freeTrialExpiry.toISOString() : null,
+            isVerified: !!user.isVerified,
+            adminVerified: !!user.adminVerified,
+            needsPassword: false,
+            isNewUser: false,
+          };
+        } catch (err) {
+          console.error('QR login auth error:', err.message);
+          return null;
+        }
+      },
     }),
     CredentialsProvider({
       name: 'credentials',
