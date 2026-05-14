@@ -210,23 +210,47 @@ export default function Home() {
     return () => clearInterval(t);
   }, []);
 
-  // Swap video src based on screen width (media attribute on <source> is unreliable)
+  // Swap video src based on screen width — runs after content is loaded so videoRef is mounted
   useEffect(() => {
+    if (!contentLoaded) return;
+
+    const tryPlay = (vid) => {
+      if (!vid) return;
+      // If already playing, skip
+      if (!vid.paused && !vid.ended && vid.readyState > 2) return;
+      vid.play().catch(() => {});
+    };
+
     const setVideoSrc = () => {
-      if (!videoRef.current) return;
+      const vid = videoRef.current;
+      if (!vid) return;
       const isMobile = window.innerWidth <= 768;
       const desired = isMobile ? '/video/mobile.mp4' : '/video/banner.mp4';
-      if (videoRef.current.getAttribute('data-src') !== desired) {
-        videoRef.current.setAttribute('data-src', desired);
-        videoRef.current.src = desired;
-        videoRef.current.load();
-        videoRef.current.play().catch(() => {});
+      if (vid.getAttribute('data-src') !== desired) {
+        vid.setAttribute('data-src', desired);
+        vid.src = desired;
+        vid.load();
+        vid.addEventListener('canplay', () => tryPlay(vid), { once: true });
+      } else {
+        // Same src but video might be stalled/paused (e.g. after refresh)
+        tryPlay(vid);
       }
     };
+
     setVideoSrc();
     window.addEventListener('resize', setVideoSrc);
-    return () => window.removeEventListener('resize', setVideoSrc);
-  }, []);
+
+    // Resume video when tab becomes visible again
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') tryPlay(videoRef.current);
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      window.removeEventListener('resize', setVideoSrc);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [contentLoaded]);
 
   const current = SLIDES[slide] || SLIDES[0];
 
@@ -267,14 +291,15 @@ export default function Home() {
           transition={{ duration: 1.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="absolute inset-0 z-0"
         >
-          {!videoError ? (
-            <video
-              ref={videoRef}
-              autoPlay muted loop playsInline preload="auto"
-              onError={() => setVideoError(true)}
-              className="w-full h-full object-cover"
-            />
-          ) : (
+          {/* Keep video in DOM always so videoRef stays valid; hide on error */}
+          <video
+            ref={videoRef}
+            autoPlay muted loop playsInline preload="auto"
+            onError={() => setVideoError(true)}
+            className="w-full h-full object-cover"
+            style={{ display: videoError ? 'none' : 'block' }}
+          />
+          {videoError && (
             <div className="w-full h-full bg-gradient-to-br from-vd-bg via-vd-bg-alt to-vd-bg-section" />
           )}
         </motion.div>
