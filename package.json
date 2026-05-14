@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node --max-http-header-size=65536 server.mjs",
     "build": "next build",
-    "start": "NODE_ENV=production node --max-http-header-size=65536 server.mjs",
+    "start": "NODE_ENV=production NODE_OPTIONS='--dns-result-order=ipv4first' node --max-http-header-size=65536 server.mjs",
     "lint": "eslint",
     "test": "jest --testEnvironment=jsdom",
     "seed": "node prisma/seed.js",

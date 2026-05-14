@@ -28,7 +28,7 @@ module.exports = {
       cwd: '/home/vivahdwar/htdocs/vivahdwar.com/vivahmilan',
       instances: 1,
       exec_mode: 'fork',
-      node_args: '--max-http-header-size=65536',
+      node_args: '--max-http-header-size=65536 --dns-result-order=ipv4first',
       watch: false,
       max_memory_restart: '512M',
       error_file: '/root/.pm2/logs/vivahmilan-error.log',
