@@ -123,7 +123,17 @@ export type block = Prisma.blockModel
  */
 export type otp = Prisma.otpModel
 /**
+ * Model couponcode
+ * 
+ */
+export type couponcode = Prisma.couponcodeModel
+/**
  * Model kundali
  * 
  */
 export type kundali = Prisma.kundaliModel
+/**
+ * Model successstory
+ * 
+ */
+export type successstory = Prisma.successstoryModel

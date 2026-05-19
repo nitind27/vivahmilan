@@ -91,6 +91,7 @@ model user {
   blockedBy         block[]       @relation("Blocked")
   otps              otp[]
   pushSubscriptions pushsubscription[]
+  agent             agent?
 }
 
 enum Role {
@@ -342,7 +343,7 @@ model pushsubscription {
 model subscription {
   id        String             @id @default(cuid())
   userId    String
-  plan      SubscriptionPlan
+  plan      String
   status    SubscriptionStatus @default(ACTIVE)
   amount    Decimal            @db.Decimal(10, 2)
   currency  String             @default("USD")
@@ -354,11 +355,7 @@ model subscription {
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum SubscriptionPlan {
-  SILVER
-  GOLD
-  PLATINUM
-}
+
 
 enum SubscriptionStatus {
   ACTIVE
@@ -476,4 +473,30 @@ model successstory {
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model agent {
+  id             String      @id @default(cuid())
+  userId         String      @unique
+  referralCode   String      @unique
+  commissionPct  Int         @default(10)
+  totalEarnings  Decimal     @default(0) @db.Decimal(10,2)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  
+  user           user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sales          agentsale[]
+}
+
+model agentsale {
+  id               String   @id @default(cuid())
+  agentId          String
+  buyerId          String
+  subscriptionId   String
+  planName         String
+  amountPaid       Decimal  @db.Decimal(10,2)
+  commissionEarned Decimal  @db.Decimal(10,2)
+  createdAt        DateTime @default(now())
+
+  agent            agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
 }

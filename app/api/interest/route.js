@@ -10,6 +10,39 @@ export async function POST(req) {
 
   const { receiverId, message } = await req.json();
 
+  const user = await queryOne('SELECT isPremium, premiumPlan FROM user WHERE id = ?', [session.user.id]);
+  
+  let interestLimit = 5; // Default free limit
+  if (user && user.isPremium && user.premiumPlan) {
+    const planConfig = await queryOne('SELECT permissions FROM planconfig WHERE plan = ?', [user.premiumPlan]);
+    if (planConfig && planConfig.permissions) {
+      try {
+        const perms = JSON.parse(planConfig.permissions);
+        interestLimit = perms.interestLimit !== undefined ? perms.interestLimit : 5;
+      } catch (e) {}
+    }
+  } else {
+    // If not premium, try to get the 'FREE' plan config if it exists
+    const freePlan = await queryOne('SELECT permissions FROM planconfig WHERE plan = ?', ['FREE']);
+    if (freePlan && freePlan.permissions) {
+      try {
+        const perms = JSON.parse(freePlan.permissions);
+        interestLimit = perms.interestLimit !== undefined ? perms.interestLimit : 5;
+      } catch (e) {}
+    }
+  }
+
+  if (interestLimit !== -1) {
+    // Count interests sent this month
+    const countRow = await queryOne(
+      'SELECT COUNT(id) as c FROM interest WHERE senderId = ? AND MONTH(createdAt) = MONTH(NOW()) AND YEAR(createdAt) = YEAR(NOW())',
+      [session.user.id]
+    );
+    if (countRow && countRow.c >= interestLimit) {
+      return NextResponse.json({ error: `Interest limit reached. You can only send ${interestLimit} interests per month on your current plan.` }, { status: 403 });
+    }
+  }
+
   const existing = await queryOne(
     'SELECT id FROM interest WHERE senderId = ? AND receiverId = ?',
     [session.user.id, receiverId]

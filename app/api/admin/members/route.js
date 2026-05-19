@@ -33,7 +33,7 @@ export async function GET(req) {
 
   const rows = await query(
     `SELECT u.id, u.name, u.email, u.phone, u.isPremium, u.isVerified,
-            u.adminVerified, u.isActive, u.createdAt, u.lastSeen,
+            u.adminVerified, u.isActive, u.createdAt, u.lastLoginAt,
             p.gender, p.dob, p.religion, p.caste, p.city, p.state, p.country,
             p.education, p.profession, p.profileComplete,
             ph.url AS mainPhoto

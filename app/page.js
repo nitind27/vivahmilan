@@ -1,8 +1,9 @@
-﻿'use client';
+'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 import Navbar from '@/components/Navbar';
 import {
   Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp
@@ -111,6 +112,7 @@ export default function Home() {
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
   const [pricingPlans, setPricingPlans] = useState([]);
   const [selectedMonths, setSelectedMonths] = useState(3);
   const [couponCode, setCouponCode] = useState('');
@@ -642,10 +644,35 @@ export default function Home() {
                         </li>
                       ))}
                     </ul>
-                    <Link href={isFree ? '/register' : '/premium'}
-                      className={`block text-center py-3 rounded-xl font-semibold transition-all ${isHighlight ? 'bg-white text-vd-primary hover:bg-gray-50' : 'vd-gradient-gold text-white hover:opacity-90'}`}>
-                      {isFree ? 'Get Started' : `Get ${p.displayName || p.plan}`}
-                    </Link>
+                    {(() => {
+                      const userPlan = session?.user?.premiumPlan;
+                      const hasAnyPlan = session?.user?.isPremium;
+                      const isActive = p.plan === userPlan && hasAnyPlan;
+                      
+                      const userPlanObj = pricingPlans.find(pl => pl.plan === userPlan);
+                      const userBasePrice = userPlanObj ? Number(userPlanObj.price || 0) : 0;
+                      const currentBasePrice = Number(p.price || 0);
+
+                      let btnText = `Get ${p.displayName || p.plan}`;
+                      if (hasAnyPlan) {
+                        if (isActive) {
+                          btnText = `Extend Plan`;
+                        } else if (currentBasePrice > userBasePrice) {
+                          btnText = `Upgrade to ${p.displayName || p.plan}`;
+                        } else {
+                          btnText = `Switch to ${p.displayName || p.plan}`;
+                        }
+                      }
+
+                      return (
+                        <Link href={isFree ? '/register' : '/premium'}
+                          className={`block text-center py-3 rounded-xl font-bold transition-all shadow-md ${
+                            isHighlight ? 'bg-white text-vd-primary hover:bg-gray-50' : 'vd-gradient-gold text-white hover:opacity-90'
+                          }`}>
+                          {isFree ? 'Get Started' : btnText}
+                        </Link>
+                      );
+                    })()}
                   </motion.div>
                 );
               })}

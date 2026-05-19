@@ -31,7 +31,7 @@ export async function GET(req) {
   // Get current user's full profile
   const currentUser = await queryOne(
     `SELECT u.id, u.isPremium, u.freeTrialExpiry,
-            p.gender, p.religion, p.gotra
+            p.gender, p.religion, p.caste, p.gotra
      FROM \`user\` u
      LEFT JOIN profile p ON p.userId = u.id
      WHERE u.id = ?`,
@@ -40,15 +40,12 @@ export async function GET(req) {
 
   const myGender   = currentUser?.gender;
   const myReligion = currentUser?.religion;
+  const myCaste    = currentUser?.caste;
   const myGotra    = currentUser?.gotra;
 
   // Is user premium or on active free trial?
   const trialActive = currentUser?.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
   const isPremium   = session.user.isPremium || trialActive;
-
-  const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
-  // Always use opposite gender — ignore any gender filter that matches own gender
-  const targetGender = oppositeGender || (genderFilter !== myGender ? genderFilter : null);
 
   // Blocked IDs
   const blocks = await query(
@@ -65,11 +62,32 @@ export async function GET(req) {
     params.push(...blockedIds);
   }
 
-  // ── Religion filter: show same religion only ──────────────────────────────
-  // If user has a religion set, only show same religion profiles
-  if (myReligion && !religion) {
-    conditions.push('(p.religion = ? OR p.religion IS NULL)');
-    params.push(myReligion);
+  // ── STRICT GENDER MATCHING ──────────────────────────────────────────────────
+  // Always strictly opposite gender, ignoring any manual filter
+  if (myGender) {
+    const strictOpposite = myGender.toUpperCase() === 'MALE' ? 'FEMALE' : 'MALE';
+    conditions.push('p.gender = ?');
+    params.push(strictOpposite);
+  } else if (genderFilter) {
+    conditions.push('p.gender = ?');
+    params.push(genderFilter);
+  }
+
+  // ── STRICT RELIGION & CASTE MATCHING ─────────────────────────────────────────
+  if (myReligion) {
+    if (myReligion.toLowerCase() === 'hindu') {
+      conditions.push('p.religion = ?');
+      params.push(myReligion);
+      if (myCaste) {
+        // Strict same-caste matching for Hindus
+        conditions.push('p.caste = ?');
+        params.push(myCaste);
+      }
+    } else {
+      // Other religions: strict same-religion matching (no caste matching required)
+      conditions.push('p.religion = ?');
+      params.push(myReligion);
+    }
   } else if (religion) {
     conditions.push('p.religion = ?');
     params.push(religion);
@@ -81,7 +99,6 @@ export async function GET(req) {
     params.push(myGotra.trim());
   }
 
-  if (targetGender) { conditions.push('p.gender = ?'); params.push(targetGender); }
   if (country)      { conditions.push('p.country = ?'); params.push(country); }
   if (state)        { conditions.push('p.state = ?'); params.push(state); }
   if (city)         { conditions.push('p.city = ?'); params.push(city); }

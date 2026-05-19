@@ -3,6 +3,7 @@ import Providers from '@/components/Providers';
 import SWRegister from '@/components/SWRegister';
 import ChatBot from '@/components/ChatBot';
 import SetPasswordModal from '@/components/SetPasswordModal';
+import MarketingPopup from '@/components/MarketingPopup';
 import PageTracker from '@/components/PageTracker';
 import { Toaster } from 'react-hot-toast';
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           <PageTracker />
           {children}
           <SetPasswordModal />
+          <MarketingPopup />
           <ChatBot />
           <Toaster position="top-right" toastOptions={{
             style: { background: '#1f2937', color: '#fff', borderRadius: '12px' },

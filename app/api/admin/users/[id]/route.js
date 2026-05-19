@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
 import { sendAdminVerificationEmail } from '@/lib/email';
 import { getSiteConfig } from '@/lib/siteconfig';
+import { hash } from 'bcryptjs';
 
 export async function PATCH(req, { params }) {
   const session = await getServerSession(authOptions);
@@ -25,6 +26,11 @@ export async function PATCH(req, { params }) {
       updateData.freeTrialUsed = true;
       updateData.freeTrialExpiry = new Date(Date.now() + trialDays * 86400000);
     }
+  }
+
+  // Hash password if admin is changing it
+  if (data.password) {
+    updateData.password = await hash(data.password, 10);
   }
 
   const updated = await prisma.user.update({ where: { id }, data: updateData });

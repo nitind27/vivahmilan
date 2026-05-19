@@ -58,6 +58,29 @@ export async function POST(req) {
         // Remove from pending_registration
         await execute('DELETE FROM pending_registration WHERE email = ?', [pending.email]);
 
+        // Early Bird Auto-Assignment
+        try {
+          const ebConfigRow = await queryOne("SELECT value FROM siteconfig WHERE `key` = 'early_bird_settings'");
+          if (ebConfigRow && ebConfigRow.value) {
+            const ebConfig = JSON.parse(ebConfigRow.value);
+            if (ebConfig.enabled && ebConfig.claimed < ebConfig.limit) {
+              const endDate = new Date(Date.now() + (ebConfig.durationDays || 30) * 86400000);
+              await execute(
+                "INSERT INTO subscription (id, userId, plan, status, amount, currency, paymentId, startDate, endDate, createdAt) VALUES (?, ?, ?, 'ACTIVE', 0, 'INR', 'EARLY_BIRD', NOW(), ?, NOW())",
+                [randomUUID(), userId, ebConfig.planId, endDate]
+              );
+              await execute(
+                "UPDATE `user` SET isPremium = 1, premiumPlan = ?, premiumExpiry = ? WHERE id = ?",
+                [ebConfig.planId, endDate, userId]
+              );
+              ebConfig.claimed += 1;
+              await execute("UPDATE siteconfig SET value = ? WHERE `key` = 'early_bird_settings'", [JSON.stringify(ebConfig)]);
+            }
+          }
+        } catch (e) {
+          console.error('Early bird assign error:', e);
+        }
+
         return NextResponse.json({
           success: true,
           message: 'Email verified successfully. Account created.',

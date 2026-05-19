@@ -28,9 +28,10 @@ function MatchesPage() {
     heightMin: '', heightMax: '', maritalStatus: '',
   });
 
-  // Debounced filters — only fire fetch 500ms after user stops changing
   const [debouncedFilters, setDebouncedFilters] = useState(filters);
   const debounceRef = useRef(null);
+  const loaderRef = useRef(null);
+
   const updateFilter = (key, value) => {
     const next = { ...filters, [key]: value };
     setFilters(next);
@@ -52,7 +53,7 @@ function MatchesPage() {
     try {
       const res = await fetch(`/api/matches?${params}`);
       const data = await res.json();
-      setUsers(data.users || []);
+      setUsers(prev => page === 1 ? (data.users || []) : [...prev, ...(data.users || [])]);
       setTotal(data.total || 0);
       setTotalPages(data.totalPages || 1);
       setIsLimited(data.isLimited || false);
@@ -62,6 +63,20 @@ function MatchesPage() {
   }, [page, debouncedFilters]);
 
   useEffect(() => { if (status === 'authenticated') fetchMatches(); }, [status, fetchMatches]);
+
+  const handleObserver = useCallback((entries) => {
+    const target = entries[0];
+    if (target.isIntersecting && !loading && page < totalPages && isPremium) {
+      setPage(prev => prev + 1);
+    }
+  }, [loading, page, totalPages, isPremium]);
+
+  useEffect(() => {
+    const option = { root: null, rootMargin: "20px", threshold: 0 };
+    const observer = new IntersectionObserver(handleObserver, option);
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   const clearFilters = () => {
     const empty = { ageMin: '', ageMax: '', religion: '', country: '', education: '', heightMin: '', heightMax: '', maritalStatus: '' };
@@ -165,7 +180,7 @@ function MatchesPage() {
         )}
 
         {/* Grid */}
-        {loading ? (
+        {loading && page === 1 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(12)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
@@ -221,18 +236,10 @@ function MatchesPage() {
           </>
         )}
 
-        {/* Pagination — only for premium */}
-        {isPremium && totalPages > 1 && (
-          <div className="flex items-center justify-center gap-3 mt-10">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-              className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:border-vd-primary transition-colors">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Page {page} of {totalPages}</span>
-            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-              className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:border-vd-primary transition-colors">
-              <ChevronRight className="w-5 h-5" />
-            </button>
+        {/* Infinite Scroll Loader */}
+        {isPremium && page < totalPages && (
+          <div ref={loaderRef} className="flex justify-center py-10 mt-4">
+            {loading && <div className="w-8 h-8 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />}
           </div>
         )}
       </div>

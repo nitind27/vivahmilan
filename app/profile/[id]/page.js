@@ -405,12 +405,12 @@ export default function ProfilePage() {
               )}
               {/* Badges */}
               <div className="absolute top-3 left-3 flex flex-col gap-1">
-                {user.isPremium && (
+                {!!user.isPremium && (
                   <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
                     <Star className="w-3 h-3 fill-white" /> Premium
                   </span>
                 )}
-                {user.verificationBadge && <VerifiedBadge size="md" />}
+                {!!user.verificationBadge && <VerifiedBadge size="md" />}
               </div>
             </div>
 
@@ -481,7 +481,7 @@ export default function ProfilePage() {
                 <div>
                   <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
                     {user.name}
-                    {user.verificationBadge && (
+                    {!!user.verificationBadge && (
                       <VerifiedBadge size="lg" variant="badge" />
                     )}
                   </h1>

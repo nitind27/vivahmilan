@@ -380,19 +380,37 @@ export function BroadcastTab() {
 
 // ── Activity Log Tab ──────────────────────────────────────────────────────────
 export function ActivityTab() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [activeSection, setActiveSection] = useState('registrations');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
 
-  const load = async () => {
-    setLoading(true);
-    const res = await fetch('/api/admin/activity?type=all');
+  const load = async (p = 1, append = false) => {
+    if (append) setLoadingMore(true);
+    else setLoading(true);
+
+    const type = activeSection === 'premiumActivity' ? 'premium' : activeSection;
+    const res = await fetch(`/api/admin/activity?type=${type}&page=${p}`);
     const d = await res.json();
-    setData(d);
-    setLoading(false);
+    
+    if (append) {
+      setData(prev => [...prev, ...(d.data || [])]);
+    } else {
+      setData(d.data || []);
+    }
+    
+    setHasMore(d.hasMore);
+    setTotal(d.total || 0);
+    setPage(p);
+    
+    if (append) setLoadingMore(false);
+    else setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(1); }, [activeSection]);
 
   const calcAge = (dob) => dob ? Math.floor((Date.now() - new Date(dob)) / 31557600000) : null;
 
@@ -407,8 +425,8 @@ export function ActivityTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-400">Live activity feed — last 20 events per category</p>
-        <button onClick={load} className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
+        <p className="text-sm text-gray-400">Live activity feed — {total} total events</p>
+        <button onClick={() => load(1)} className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
         </button>
       </div>
@@ -430,7 +448,7 @@ export function ActivityTab() {
           {/* Registrations */}
           {activeSection === 'registrations' && (
             <div className="divide-y divide-gray-700">
-              {(data.registrations || []).map(u => (
+              {data.map(u => (
                 <div key={u.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/30 transition-colors">
                   <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-700 flex-shrink-0">
                     {u.photo ? <img src={u.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg font-bold text-gray-500">{u.name?.[0]}</div>}
@@ -449,14 +467,14 @@ export function ActivityTab() {
                   </div>
                 </div>
               ))}
-              {!data.registrations?.length && <p className="text-center py-10 text-gray-600 text-sm">No recent registrations</p>}
+              {!data.length && <p className="text-center py-10 text-gray-600 text-sm">No recent registrations</p>}
             </div>
           )}
 
           {/* Interests */}
           {activeSection === 'interests' && (
             <div className="divide-y divide-gray-700">
-              {(data.interests || []).map(i => (
+              {data.map(i => (
                 <div key={i.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/30">
                   <Heart className={`w-5 h-5 flex-shrink-0 ${i.status === 'ACCEPTED' ? 'text-green-400' : i.status === 'REJECTED' ? 'text-red-400' : 'text-yellow-400'}`} />
                   <div className="flex-1 min-w-0">
@@ -469,14 +487,14 @@ export function ActivityTab() {
                   </div>
                 </div>
               ))}
-              {!data.interests?.length && <p className="text-center py-10 text-gray-600 text-sm">No recent interests</p>}
+              {!data.length && <p className="text-center py-10 text-gray-600 text-sm">No recent interests</p>}
             </div>
           )}
 
           {/* Messages */}
           {activeSection === 'messages' && (
             <div className="divide-y divide-gray-700">
-              {(data.messages || []).map(m => (
+              {data.map(m => (
                 <div key={m.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/30">
                   <MessageSquare className="w-5 h-5 text-blue-400 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -486,14 +504,14 @@ export function ActivityTab() {
                   <p className="text-xs text-gray-600 flex-shrink-0">{m.createdAt ? format(new Date(m.createdAt), 'dd MMM h:mm a') : ''}</p>
                 </div>
               ))}
-              {!data.messages?.length && <p className="text-center py-10 text-gray-600 text-sm">No recent messages</p>}
+              {!data.length && <p className="text-center py-10 text-gray-600 text-sm">No recent messages</p>}
             </div>
           )}
 
           {/* Logins */}
           {activeSection === 'logins' && (
             <div className="divide-y divide-gray-700">
-              {(data.logins || []).map(u => (
+              {data.map(u => (
                 <div key={u.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/30">
                   <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
                     <span className="text-sm font-bold text-gray-400">{u.name?.[0]}</span>
@@ -508,14 +526,14 @@ export function ActivityTab() {
                   </div>
                 </div>
               ))}
-              {!data.logins?.length && <p className="text-center py-10 text-gray-600 text-sm">No login data</p>}
+              {!data.length && <p className="text-center py-10 text-gray-600 text-sm">No login data</p>}
             </div>
           )}
 
           {/* Premium */}
           {activeSection === 'premiumActivity' && (
             <div className="divide-y divide-gray-700">
-              {(data.premiumActivity || []).map(s => (
+              {data.map(s => (
                 <div key={s.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700/30">
                   <Crown className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -529,7 +547,18 @@ export function ActivityTab() {
                   </div>
                 </div>
               ))}
-              {!data.premiumActivity?.length && <p className="text-center py-10 text-gray-600 text-sm">No premium activity</p>}
+              {!data.length && <p className="text-center py-10 text-gray-600 text-sm">No premium activity</p>}
+            </div>
+          )}
+
+          {/* Load More Button */}
+          {hasMore && (
+            <div className="p-4 border-t border-gray-700 bg-gray-800/50 flex justify-center">
+              <button onClick={() => load(page + 1, true)} disabled={loadingMore}
+                className="px-6 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                {loadingMore && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                Load More
+              </button>
             </div>
           )}
         </div>
@@ -614,15 +643,15 @@ export function PremiumManagerTab() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-semibold text-white">{u.name}</p>
-                    {u.isPremium && <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">⭐ {u.premiumPlan || 'Premium'}</span>}
+                    {!!u.isPremium && <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">⭐ {u.premiumPlan || 'Premium'}</span>}
                     {!u.isPremium && <span className="text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded-full">Free</span>}
                   </div>
                   <p className="text-xs text-gray-400">{u.email}</p>
-                  {u.isPremium && u.premiumExpiry && (
+                  {!!u.isPremium && u.premiumExpiry && (
                     <p className="text-xs text-yellow-600">Expires: {format(new Date(u.premiumExpiry), 'dd MMM yyyy')}</p>
                   )}
                 </div>
-                {u.isPremium && (
+                {!!u.isPremium && (
                   <button onClick={() => revokePremium(u.id)} disabled={saving === u.id}
                     className="px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-xl text-xs transition-colors disabled:opacity-50">
                     Revoke

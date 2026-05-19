@@ -28,3 +28,15 @@ export async function POST(req) {
   });
   return NextResponse.json(created, { status: 201 });
 }
+
+export async function DELETE(req) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  const { searchParams } = new URL(req.url);
+  const plan = searchParams.get('plan');
+  if (!plan) return NextResponse.json({ error: 'Plan is required' }, { status: 400 });
+
+  await prisma.planConfig.delete({ where: { plan } });
+  return NextResponse.json({ success: true });
+}

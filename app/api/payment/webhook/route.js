@@ -35,12 +35,15 @@ export async function POST(req) {
 
       if (!userId || !plan) return NextResponse.json({ ok: true });
 
-      const durationDays = PLAN_DURATIONS[plan] || 30;
-      const premiumExpiry = new Date(Date.now() + durationDays * 86400000);
+      // Fetch the pending subscription to get the correct endDate calculated during create-order
+      const pendingSub = await prisma.subscription.findFirst({
+        where: { userId, paymentId: orderId },
+      });
+      const premiumExpiry = pendingSub?.endDate || new Date(Date.now() + 30 * 86400000);
 
       await prisma.user.update({
         where: { id: userId },
-        data: { isPremium: true, premiumExpiry },
+        data: { isPremium: true, premiumPlan: plan, premiumExpiry },
       });
 
       await prisma.subscription.updateMany({

@@ -72,7 +72,9 @@ export const ModelName = {
   report: 'report',
   block: 'block',
   otp: 'otp',
-  kundali: 'kundali'
+  couponcode: 'couponcode',
+  kundali: 'kundali',
+  successstory: 'successstory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -422,6 +424,21 @@ export const OtpScalarFieldEnum = {
 export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
 
 
+export const CouponcodeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  discountPct: 'discountPct',
+  maxUses: 'maxUses',
+  usedCount: 'usedCount',
+  isActive: 'isActive',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CouponcodeScalarFieldEnum = (typeof CouponcodeScalarFieldEnum)[keyof typeof CouponcodeScalarFieldEnum]
+
+
 export const KundaliScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -440,6 +457,21 @@ export const KundaliScalarFieldEnum = {
 } as const
 
 export type KundaliScalarFieldEnum = (typeof KundaliScalarFieldEnum)[keyof typeof KundaliScalarFieldEnum]
+
+
+export const SuccessstoryScalarFieldEnum = {
+  id: 'id',
+  coupleName: 'coupleName',
+  location: 'location',
+  story: 'story',
+  imageUrl: 'imageUrl',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SuccessstoryScalarFieldEnum = (typeof SuccessstoryScalarFieldEnum)[keyof typeof SuccessstoryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -659,6 +691,7 @@ export type pushsubscriptionOrderByRelevanceFieldEnum = (typeof pushsubscription
 export const subscriptionOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
+  plan: 'plan',
   currency: 'currency',
   paymentId: 'paymentId'
 } as const
@@ -707,6 +740,14 @@ export const otpOrderByRelevanceFieldEnum = {
 export type otpOrderByRelevanceFieldEnum = (typeof otpOrderByRelevanceFieldEnum)[keyof typeof otpOrderByRelevanceFieldEnum]
 
 
+export const couponcodeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code'
+} as const
+
+export type couponcodeOrderByRelevanceFieldEnum = (typeof couponcodeOrderByRelevanceFieldEnum)[keyof typeof couponcodeOrderByRelevanceFieldEnum]
+
+
 export const kundaliOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -719,4 +760,15 @@ export const kundaliOrderByRelevanceFieldEnum = {
 } as const
 
 export type kundaliOrderByRelevanceFieldEnum = (typeof kundaliOrderByRelevanceFieldEnum)[keyof typeof kundaliOrderByRelevanceFieldEnum]
+
+
+export const successstoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  coupleName: 'coupleName',
+  location: 'location',
+  story: 'story',
+  imageUrl: 'imageUrl'
+} as const
+
+export type successstoryOrderByRelevanceFieldEnum = (typeof successstoryOrderByRelevanceFieldEnum)[keyof typeof successstoryOrderByRelevanceFieldEnum]
 

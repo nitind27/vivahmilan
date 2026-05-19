@@ -30,19 +30,17 @@ export async function GET(req) {
 
   // Get current user's profile for religion/gotra/gender filtering
   const currentUser = await queryOne(
-    `SELECT u.isPremium, u.freeTrialExpiry, p.religion, p.gotra, p.gender
+    `SELECT u.isPremium, u.freeTrialExpiry, p.religion, p.caste, p.gotra, p.gender
      FROM \`user\` u LEFT JOIN profile p ON p.userId = u.id WHERE u.id = ?`,
     [session.user.id]
   );
 
   const myReligion = currentUser?.religion;
+  const myCaste    = currentUser?.caste;
   const myGotra    = currentUser?.gotra;
   const myGender   = currentUser?.gender; // MALE or FEMALE
   const trialActive = currentUser?.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
   const isPremium   = session.user.isPremium || trialActive;
-
-  // Opposite gender mapping
-  const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
 
   // Blocked IDs
   const blocks = await query(
@@ -59,14 +57,34 @@ export async function GET(req) {
     params.push(...blockedIds);
   }
 
-  // ── Religion filter ───────────────────────────────────────────────────────
-  // If user explicitly searches a religion, use that; else default to same religion
-  if (religion) {
+  // ── STRICT GENDER MATCHING ──────────────────────────────────────────────────
+  if (myGender) {
+    const strictOpposite = myGender.toUpperCase() === 'MALE' ? 'FEMALE' : 'MALE';
+    conditions.push('p.gender = ?');
+    params.push(strictOpposite);
+  } else if (gender) {
+    conditions.push('p.gender = ?');
+    params.push(gender);
+  }
+
+  // ── STRICT RELIGION & CASTE MATCHING ─────────────────────────────────────────
+  if (myReligion) {
+    if (myReligion.toLowerCase() === 'hindu') {
+      conditions.push('p.religion = ?');
+      params.push(myReligion);
+      if (myCaste) {
+        // Strict same-caste matching for Hindus
+        conditions.push('p.caste = ?');
+        params.push(myCaste);
+      }
+    } else {
+      // Other religions: strict same-religion matching
+      conditions.push('p.religion = ?');
+      params.push(myReligion);
+    }
+  } else if (religion) {
     conditions.push('p.religion = ?');
     params.push(religion);
-  } else if (myReligion) {
-    conditions.push('(p.religion = ? OR p.religion IS NULL)');
-    params.push(myReligion);
   }
 
   // ── Gotra filter ──────────────────────────────────────────────────────────
@@ -79,21 +97,7 @@ export async function GET(req) {
     conditions.push('(u.name LIKE ? OR p.city LIKE ? OR p.profession LIKE ? OR p.country LIKE ?)');
     params.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
   }
-  if (gender) {
-    // User explicitly selected a gender — but only allow opposite gender
-    // If they select same gender as themselves, ignore it and use opposite
-    if (oppositeGender && gender !== myGender) {
-      conditions.push('p.gender = ?');
-      params.push(gender);
-    } else if (oppositeGender) {
-      conditions.push('p.gender = ?');
-      params.push(oppositeGender);
-    }
-  } else if (oppositeGender) {
-    // Default: always show only opposite gender
-    conditions.push('p.gender = ?');
-    params.push(oppositeGender);
-  }
+  
   if (country)      { conditions.push('p.country = ?'); params.push(country); }
   if (state)        { conditions.push('p.state LIKE ?'); params.push(`%${state}%`); }
   if (city)         { conditions.push('p.city LIKE ?'); params.push(`%${city}%`); }

@@ -10,7 +10,7 @@ import SkeletonCard from '@/components/SkeletonCard';
 import {
   Heart, Eye, MessageCircle, Bell, Star, Users, ChevronRight,
   Clock, Zap, Crown, Calendar, Shield, Search, Settings,
-  TrendingUp, Sparkles, ArrowRight, CheckCircle
+  TrendingUp, Sparkles, ArrowRight, CheckCircle, Percent, HandCoins, Share2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -323,6 +323,59 @@ function QuickAction({ icon: Icon, label, href, color, bg, delay = 0 }) {
   );
 }
 
+// ── Affiliate Dashboard Card ──────────────────────────────────────────────────
+function AffiliateCard({ agent }) {
+  if (!agent) return null;
+  const copyCode = () => {
+    navigator.clipboard.writeText(agent.referralCode);
+    toast.success('Referral code copied!');
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl p-6 mb-6 overflow-hidden relative shadow-lg"
+      style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)', border: '1px solid #4f46e540' }}>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
+      
+      <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2 text-indigo-400">
+            <HandCoins className="w-5 h-5" />
+            <h2 className="font-black tracking-wide uppercase text-xs">Affiliate Partner Dashboard</h2>
+          </div>
+          <h3 className="text-2xl font-black text-white mb-2 leading-tight">Earn {agent.commissionPct}% on every premium sale!</h3>
+          <p className="text-sm text-indigo-200/80 mb-5 max-w-md">
+            Share your unique referral code with others. When they buy a premium plan using your code, you earn a direct commission!
+          </p>
+          
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="bg-black/40 border border-indigo-500/30 rounded-xl p-1 pl-4 pr-1 flex items-center gap-3">
+              <span className="font-mono text-lg font-bold text-white tracking-widest">{agent.referralCode}</span>
+              <button onClick={copyCode} className="bg-indigo-600 hover:bg-indigo-500 text-white p-2 rounded-lg transition-colors">
+                <Share2 className="w-4 h-4" />
+              </button>
+            </div>
+            <span className="text-xs text-indigo-300">Share this code!</span>
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 w-full md:w-auto">
+          <div className="bg-black/30 border border-indigo-500/20 rounded-2xl p-5 backdrop-blur-sm min-w-[200px]">
+            <p className="text-indigo-300 text-xs font-bold uppercase tracking-wider mb-1">Total Earnings</p>
+            <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 mb-4">
+              ₹{Number(agent.totalEarnings || 0).toLocaleString()}
+            </p>
+            <div className="flex items-center gap-2 text-xs text-indigo-200">
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              Commission: {agent.commissionPct}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -408,6 +461,9 @@ export default function Dashboard() {
 
         {/* Hero Banner */}
         <HeroBanner name={session?.user?.name} profileComplete={profileComplete} photo={userPhoto} />
+
+        {/* Affiliate Dashboard */}
+        <AffiliateCard agent={profile?.agent} />
 
         {/* Premium / Trial banners */}
         <PremiumValidityCard premiumInfo={reminders.premiumInfo} />

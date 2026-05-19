@@ -405,7 +405,9 @@ export const ModelName = {
   report: 'report',
   block: 'block',
   otp: 'otp',
-  kundali: 'kundali'
+  couponcode: 'couponcode',
+  kundali: 'kundali',
+  successstory: 'successstory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -421,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "pushsubscription" | "subscription" | "document" | "report" | "block" | "otp" | "kundali"
+    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "pushsubscription" | "subscription" | "document" | "report" | "block" | "otp" | "couponcode" | "kundali" | "successstory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1811,6 +1813,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    couponcode: {
+      payload: Prisma.$couponcodePayload<ExtArgs>
+      fields: Prisma.couponcodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.couponcodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.couponcodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>
+        }
+        findFirst: {
+          args: Prisma.couponcodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.couponcodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>
+        }
+        findMany: {
+          args: Prisma.couponcodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>[]
+        }
+        create: {
+          args: Prisma.couponcodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>
+        }
+        createMany: {
+          args: Prisma.couponcodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.couponcodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>
+        }
+        update: {
+          args: Prisma.couponcodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>
+        }
+        deleteMany: {
+          args: Prisma.couponcodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.couponcodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.couponcodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$couponcodePayload>
+        }
+        aggregate: {
+          args: Prisma.CouponcodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCouponcode>
+        }
+        groupBy: {
+          args: Prisma.couponcodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CouponcodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.couponcodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CouponcodeCountAggregateOutputType> | number
+        }
+      }
+    }
     kundali: {
       payload: Prisma.$kundaliPayload<ExtArgs>
       fields: Prisma.kundaliFieldRefs
@@ -1874,6 +1942,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.kundaliCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KundaliCountAggregateOutputType> | number
+        }
+      }
+    }
+    successstory: {
+      payload: Prisma.$successstoryPayload<ExtArgs>
+      fields: Prisma.successstoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.successstoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.successstoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>
+        }
+        findFirst: {
+          args: Prisma.successstoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.successstoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>
+        }
+        findMany: {
+          args: Prisma.successstoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>[]
+        }
+        create: {
+          args: Prisma.successstoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>
+        }
+        createMany: {
+          args: Prisma.successstoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.successstoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>
+        }
+        update: {
+          args: Prisma.successstoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.successstoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.successstoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.successstoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$successstoryPayload>
+        }
+        aggregate: {
+          args: Prisma.SuccessstoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSuccessstory>
+        }
+        groupBy: {
+          args: Prisma.successstoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SuccessstoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.successstoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SuccessstoryCountAggregateOutputType> | number
         }
       }
     }
@@ -2247,6 +2381,21 @@ export const OtpScalarFieldEnum = {
 export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
 
 
+export const CouponcodeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  discountPct: 'discountPct',
+  maxUses: 'maxUses',
+  usedCount: 'usedCount',
+  isActive: 'isActive',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CouponcodeScalarFieldEnum = (typeof CouponcodeScalarFieldEnum)[keyof typeof CouponcodeScalarFieldEnum]
+
+
 export const KundaliScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2265,6 +2414,21 @@ export const KundaliScalarFieldEnum = {
 } as const
 
 export type KundaliScalarFieldEnum = (typeof KundaliScalarFieldEnum)[keyof typeof KundaliScalarFieldEnum]
+
+
+export const SuccessstoryScalarFieldEnum = {
+  id: 'id',
+  coupleName: 'coupleName',
+  location: 'location',
+  story: 'story',
+  imageUrl: 'imageUrl',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SuccessstoryScalarFieldEnum = (typeof SuccessstoryScalarFieldEnum)[keyof typeof SuccessstoryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2484,6 +2648,7 @@ export type pushsubscriptionOrderByRelevanceFieldEnum = (typeof pushsubscription
 export const subscriptionOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
+  plan: 'plan',
   currency: 'currency',
   paymentId: 'paymentId'
 } as const
@@ -2532,6 +2697,14 @@ export const otpOrderByRelevanceFieldEnum = {
 export type otpOrderByRelevanceFieldEnum = (typeof otpOrderByRelevanceFieldEnum)[keyof typeof otpOrderByRelevanceFieldEnum]
 
 
+export const couponcodeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code'
+} as const
+
+export type couponcodeOrderByRelevanceFieldEnum = (typeof couponcodeOrderByRelevanceFieldEnum)[keyof typeof couponcodeOrderByRelevanceFieldEnum]
+
+
 export const kundaliOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2544,6 +2717,17 @@ export const kundaliOrderByRelevanceFieldEnum = {
 } as const
 
 export type kundaliOrderByRelevanceFieldEnum = (typeof kundaliOrderByRelevanceFieldEnum)[keyof typeof kundaliOrderByRelevanceFieldEnum]
+
+
+export const successstoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  coupleName: 'coupleName',
+  location: 'location',
+  story: 'story',
+  imageUrl: 'imageUrl'
+} as const
+
+export type successstoryOrderByRelevanceFieldEnum = (typeof successstoryOrderByRelevanceFieldEnum)[keyof typeof successstoryOrderByRelevanceFieldEnum]
 
 
 
@@ -2640,13 +2824,6 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'SubscriptionPlan'
- */
-export type EnumSubscriptionPlanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionPlan'>
     
 
 
@@ -2793,7 +2970,9 @@ export type GlobalOmitConfig = {
   report?: Prisma.reportOmit
   block?: Prisma.blockOmit
   otp?: Prisma.otpOmit
+  couponcode?: Prisma.couponcodeOmit
   kundali?: Prisma.kundaliOmit
+  successstory?: Prisma.successstoryOmit
 }
 
 /* Types for Logging */

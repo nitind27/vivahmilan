@@ -62,12 +62,12 @@ function ProfileCard({ user, index = 0 }) {
 
             {/* Badges */}
             <div className="absolute top-3 left-3 flex gap-1 flex-wrap">
-              {user.isPremium && (
+              {!!user.isPremium && (
                 <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
                   <Star className="w-3 h-3 fill-white" /> Premium
                 </span>
               )}
-              {user.verificationBadge && <VerifiedBadge size="sm" />}
+              {!!user.verificationBadge && <VerifiedBadge size="sm" />}
             </div>
 
             {/* Shortlist button */}

@@ -92,7 +92,8 @@ function ProfileTab({ data }) {
         </div>
         <div className="ml-auto flex flex-col items-end gap-1">
           {u.isVerified && <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full"><CheckCircle size={12} /> Verified</span>}
-          {u.isPremium && <span className="flex items-center gap-1 text-xs text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded-full"><Star size={12} /> Premium</span>}
+          {!!u.isPremium && <span className="flex items-center gap-1 text-xs text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded-full"><Star size={12} /> Premium</span>}
+          {!!u.adminVerified && <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full"><CheckCircle size={12} /> Verified</span>}
           {u.isBanned && <span className="flex items-center gap-1 text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full"><Ban size={12} /> Banned</span>}
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon } from 'lucide-react';
+import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon, Ban, Unlock, Star, Trash2, CheckCircle, Key } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 
@@ -87,6 +87,8 @@ export function AllMembersTab() {
   const [loading, setLoading] = useState(false);
   const [chatUser, setChatUser] = useState(null);
   const [viewUserId, setViewUserId] = useState(null);
+  const [passwordUser, setPasswordUser] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
 
   const load = async (p = 1) => {
     setLoading(true);
@@ -105,6 +107,28 @@ export function AllMembersTab() {
   useEffect(() => { load(1); }, [gender, status]);
 
   const calcAge = (dob) => dob ? Math.floor((Date.now() - new Date(dob)) / 31557600000) : null;
+
+  const updateUser = async (id, data) => {
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+    });
+    if (res.ok) { toast.success('Updated'); load(page); } else toast.error('Failed');
+  };
+
+  const deleteUser = async (id, name) => {
+    if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+    await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+    toast.success('Deleted'); load(page);
+  };
+
+  const handlePasswordChange = async () => {
+    if (!newPassword || newPassword.length < 6) return toast.error('Password must be at least 6 characters');
+    const res = await fetch(`/api/admin/users/${passwordUser.id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: newPassword }),
+    });
+    if (res.ok) { toast.success(`Password changed for ${passwordUser.name}`); setPasswordUser(null); setNewPassword(''); }
+    else toast.error('Failed to change password');
+  };
 
   return (
     <div className="space-y-4">
@@ -141,8 +165,8 @@ export function AllMembersTab() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="font-semibold text-white text-sm truncate">{m.name}</p>
-                        {m.adminVerified && <span className="text-green-400 text-xs">✅</span>}
-                        {m.isPremium && <span className="text-yellow-400 text-xs">⭐</span>}
+                        {!!m.adminVerified && <span className="text-green-400 text-xs">✅</span>}
+                        {!!m.isPremium && <span className="text-yellow-400 text-xs">⭐</span>}
                         {!m.isActive && <span className="text-red-400 text-xs">🚫</span>}
                       </div>
                       <p className="text-xs text-gray-400 truncate">{m.email}</p>
@@ -155,13 +179,37 @@ export function AllMembersTab() {
                       </div>
                     </div>
                   </div>
-                  <div className="border-t border-gray-700 px-4 py-2 flex gap-2">
-                    <button onClick={() => setViewUserId(m.id)} className="flex-1 text-center text-xs py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center justify-center gap-1">
-                      <Eye className="w-3 h-3" /> View Profile
+                  <div className="border-t border-gray-700 px-4 py-3 flex gap-2">
+                    <button onClick={() => setViewUserId(m.id)} className="flex-1 text-center text-xs py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-xl transition-colors flex items-center justify-center gap-1.5 font-medium">
+                      <Eye className="w-3.5 h-3.5" /> View Profile
                     </button>
-                    <button onClick={() => setChatUser(m)} className="flex-1 text-center text-xs py-1.5 bg-vd-primary/20 hover:bg-vd-primary/30 text-vd-primary rounded-lg transition-colors flex items-center justify-center gap-1">
-                      <MessageCircle className="w-3 h-3" /> Chat
+                    <button onClick={() => setChatUser(m)} className="flex-1 text-center text-xs py-2 bg-vd-primary/20 hover:bg-vd-primary/30 text-vd-primary rounded-xl transition-colors flex items-center justify-center gap-1.5 font-medium">
+                      <MessageCircle className="w-3.5 h-3.5" /> Chat
                     </button>
+                  </div>
+                  
+                  {/* Admin Quick Actions */}
+                  <div className="border-t border-gray-700 px-4 py-3 bg-gray-800/50 flex items-center justify-between">
+                    <span className="text-xs text-gray-500 font-medium">Admin Actions:</span>
+                    <div className="flex gap-2">
+                      {!m.adminVerified && (
+                        <button onClick={() => updateUser(m.id, { adminVerified: true })} className="p-1.5 bg-green-500/20 text-green-500 hover:bg-green-500 hover:text-white rounded-lg transition-colors" title="Approve">
+                          <CheckCircle className="w-4 h-4" />
+                        </button>
+                      )}
+                      <button onClick={() => updateUser(m.id, { isActive: !m.isActive })} className={`p-1.5 rounded-lg transition-colors ${m.isActive ? 'bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white' : 'bg-green-500/20 text-green-500 hover:bg-green-500 hover:text-white'}`} title={m.isActive ? 'Block User' : 'Unblock User'}>
+                        {m.isActive ? <Ban className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                      </button>
+                      <button onClick={() => updateUser(m.id, { isPremium: !m.isPremium })} className="p-1.5 bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500 hover:text-white rounded-lg transition-colors" title="Toggle Premium">
+                        <Star className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => setPasswordUser({ id: m.id, name: m.name })} className="p-1.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Change Password">
+                        <Key className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => deleteUser(m.id, m.name)} className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Delete Account">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -176,6 +224,23 @@ export function AllMembersTab() {
           )}
         </>
       )}
+      
+      {/* Password Change Modal */}
+      {passwordUser && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-3xl w-full max-w-sm p-6 border border-gray-700 shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-2">Change Password</h3>
+            <p className="text-sm text-gray-400 mb-4">Set a new password for <span className="text-white font-semibold">{passwordUser.name}</span>.</p>
+            <input type="text" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New Password (min 6 chars)"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white mb-4 focus:outline-none focus:border-vd-primary" />
+            <div className="flex gap-2">
+              <button onClick={() => { setPasswordUser(null); setNewPassword(''); }} className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+              <button onClick={handlePasswordChange} className="flex-1 py-2.5 bg-vd-primary hover:opacity-90 text-white rounded-xl text-sm font-semibold transition-opacity">Update</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {chatUser && <AdminDirectChatModal user={chatUser} onClose={() => setChatUser(null)} />}
       {viewUserId && <AdminUserProfileModal userId={viewUserId} onClose={() => setViewUserId(null)} />}
     </div>
@@ -271,8 +336,8 @@ export function MatchMakerTab() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-3">
                     <h2 className="text-xl font-bold text-white">{userData.name}</h2>
-                    {userData.adminVerified && <span className="text-xs bg-green-900/30 text-green-400 px-2 py-0.5 rounded-full">✅ Verified</span>}
-                    {userData.isPremium && <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">⭐ Premium</span>}
+                    {!!userData.adminVerified && <span className="text-xs bg-green-900/30 text-green-400 px-2 py-0.5 rounded-full">✅ Verified</span>}
+                    {!!userData.isPremium && <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">⭐ Premium</span>}
                     {!userData.isActive && <span className="text-xs bg-red-900/30 text-red-400 px-2 py-0.5 rounded-full">🚫 Blocked</span>}
                   </div>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-3 mb-4">
@@ -352,8 +417,8 @@ export function MatchMakerTab() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <p className="font-semibold text-white text-sm">{m.name}</p>
-                              {m.adminVerified && <span className="text-green-400 text-xs">✅</span>}
-                              {m.isPremium && <span className="text-yellow-400 text-xs">⭐</span>}
+                              {!!m.adminVerified && <span className="text-green-400 text-xs">✅</span>}
+                              {!!m.isPremium && <span className="text-yellow-400 text-xs">⭐</span>}
                             </div>
                             <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400 mt-0.5">
                               {age && <span>{age}y</span>}

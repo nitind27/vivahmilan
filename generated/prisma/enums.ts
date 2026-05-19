@@ -77,15 +77,6 @@ export const NotificationType = {
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
 
 
-export const SubscriptionPlan = {
-  SILVER: 'SILVER',
-  GOLD: 'GOLD',
-  PLATINUM: 'PLATINUM'
-} as const
-
-export type SubscriptionPlan = (typeof SubscriptionPlan)[keyof typeof SubscriptionPlan]
-
-
 export const SubscriptionStatus = {
   ACTIVE: 'ACTIVE',
   EXPIRED: 'EXPIRED',
