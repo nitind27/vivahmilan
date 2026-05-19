@@ -81,6 +81,14 @@ export async function POST(req, { params }) {
 
     if (file) {
       if (file.size > 15 * 1024 * 1024) return NextResponse.json({ error: 'Max file size: 15MB' }, { status: 400 });
+
+    const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (type === 'IMAGE' && !allowedImageTypes.includes(file.type)) {
+      return NextResponse.json({ error: 'Only JPG, PNG, WEBP, GIF images are allowed' }, { status: 400 });
+    }
+    if (type === 'DOCUMENT' && file.type !== 'application/pdf') {
+      return NextResponse.json({ error: 'Only PDF documents are allowed' }, { status: 400 });
+    }
       const saved = await saveFile(file, 'chat', session.user.id);
       fileUrl = saved.url;
       fileName = file.name;
