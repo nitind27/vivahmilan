@@ -1,25 +1,41 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { queryOne, execute } from '@/lib/db';
 import { sendOTPEmail } from '@/lib/email';
+import { randomUUID } from 'crypto';
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
 export async function POST(req) {
-  const { email } = await req.json();
-  if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
+  try {
+    const { email } = await req.json();
+    if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) return NextResponse.json({ error: 'No account found with this email' }, { status: 404 });
+    const user = await queryOne('SELECT id, name FROM `user` WHERE email = ?', [email]);
+    if (!user) return NextResponse.json({ error: 'No account found with this email' }, { status: 404 });
 
-  const otp = generateOTP();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const otp = generateOTP();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-  await prisma.oTP.updateMany({ where: { userId: user.id, type: 'PASSWORD_RESET', used: false }, data: { used: true } });
-  await prisma.oTP.create({ data: { userId: user.id, code: otp, type: 'PASSWORD_RESET', expiresAt } });
+    // Invalidate any existing unused PASSWORD_RESET OTPs
+    await execute(
+      'UPDATE otp SET used = 1 WHERE userId = ? AND type = ? AND used = 0',
+      [user.id, 'PASSWORD_RESET']
+    );
 
-  await sendOTPEmail(email, user.name, otp, 'PASSWORD_RESET');
+    // Insert new OTP
+    await execute(
+      `INSERT INTO otp (id, userId, code, type, expiresAt, used, createdAt)
+       VALUES (?, ?, ?, 'PASSWORD_RESET', ?, 0, NOW())`,
+      [randomUUID(), user.id, otp, expiresAt]
+    );
 
-  return NextResponse.json({ success: true, message: 'OTP sent to your email' });
+    await sendOTPEmail(email, user.name, otp, 'PASSWORD_RESET');
+
+    return NextResponse.json({ success: true, message: 'OTP sent to your email' });
+  } catch (err) {
+    console.error('forgot-password error:', err);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
 }

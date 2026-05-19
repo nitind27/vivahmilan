@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
+import { saveFile } from '@/lib/upload';
 import { randomUUID } from 'crypto';
 
 // GET - messages in a room (paginated)
@@ -77,14 +78,36 @@ export async function POST(req, { params }) {
   }
 
   const receiverId = room.userAId === decoded.id ? room.userBId : room.userAId;
-  const { content, type = 'TEXT' } = await req.json();
-  if (!content?.trim()) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
+  const contentType = req.headers.get('content-type') || '';
+
+  let content, type = 'TEXT', fileUrl = null, fileName = null, fileSize = null;
+
+  if (contentType.includes('multipart/form-data')) {
+    const formData = await req.formData();
+    const file = formData.get('file');
+    type = formData.get('type') || 'IMAGE';
+
+    if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    if (file.size > 15 * 1024 * 1024) return NextResponse.json({ error: 'Max file size: 15MB' }, { status: 400 });
+
+    const saved = await saveFile(file, 'chat', decoded.id);
+    fileUrl = saved.url;
+    fileName = file.name;
+    fileSize = file.size;
+    content = fileName;
+  } else {
+    const body = await req.json();
+    type = body.type || 'TEXT';
+    content = body.content;
+    if (!content?.trim()) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
+    content = content.trim();
+  }
 
   const msgId = randomUUID();
   const now = new Date();
   await execute(
-    'INSERT INTO message (id, chatRoomId, senderId, receiverId, content, type, isRead, createdAt) VALUES (?, ?, ?, ?, ?, ?, 0, ?)',
-    [msgId, roomId, decoded.id, receiverId, content.trim(), type, now]
+    'INSERT INTO message (id, chatRoomId, senderId, receiverId, content, type, fileUrl, fileName, fileSize, isRead, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)',
+    [msgId, roomId, decoded.id, receiverId, content, type, fileUrl, fileName, fileSize, now]
   );
 
   const sender = await queryOne('SELECT name FROM `user` WHERE id = ?', [decoded.id]);
@@ -94,5 +117,15 @@ export async function POST(req, { params }) {
   );
 
   const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
+
+  // Real-time socket emit
+  try {
+    const io = global.getIO?.();
+    if (io) {
+      io.to(roomId).emit('message:receive', { ...message, _senderName: sender?.name });
+      io.emit('notification:new', { userId: receiverId });
+    }
+  } catch (e) { console.error('Socket emit error:', e.message); }
+
   return NextResponse.json(message, { status: 201 });
 }
