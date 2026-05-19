@@ -1096,7 +1096,7 @@ function ChatInner() {
                   {/* Hidden file inputs */}
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
                     onChange={e => { if (e.target.files?.[0]) sendFile(e.target.files[0], 'IMAGE'); e.target.value = ''; }} />
-                  <input ref={docInputRef} type="file" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" className="hidden"
+                  <input ref={docInputRef} type="file" accept=".pdf,application/pdf" className="hidden"
                     onChange={e => { if (e.target.files?.[0]) sendFile(e.target.files[0], 'DOCUMENT'); e.target.value = ''; }} />
 
                   {/* Image Editor Modal */}
