@@ -38,9 +38,9 @@ function getDbPool() {
 async function updateLastSeen(userId) {
   try {
     const pool = getDbPool();
-    await pool.execute('UPDATE `user` SET lastSeen = NOW() WHERE id = ?', [userId]);
+    await pool.execute('UPDATE `user` SET lastLoginAt = NOW() WHERE id = ?', [userId]);
   } catch (err) {
-    console.error('[Socket] lastSeen update error:', err.message);
+    console.error('[Socket] lastLoginAt update error:', err.message);
   }
 }
 
