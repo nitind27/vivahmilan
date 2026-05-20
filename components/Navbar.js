@@ -153,7 +153,16 @@ export default function Navbar() {
                               <Shield className="w-4 h-4" /> Admin Panel
                             </Link>
                           )}
-                          <button onClick={() => signOut({ callbackUrl: '/' })} className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition-colors">
+                          <button onClick={async () => {
+                            try {
+                              const reg = await navigator.serviceWorker.getRegistration();
+                              if (reg) {
+                                const sub = await reg.pushManager.getSubscription();
+                                if (sub) await sub.unsubscribe();
+                              }
+                            } catch (e) {}
+                            signOut({ callbackUrl: '/' });
+                          }} className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition-colors">
                             <LogOut className="w-4 h-4" /> Sign Out
                           </button>
                         </div>
