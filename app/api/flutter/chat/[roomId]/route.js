@@ -140,29 +140,23 @@ export async function POST(req, { params }) {
     "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'MESSAGE_RECEIVED', ?, ?, 0, ?, NOW())",
     [randomUUID(), receiverId, title, notificationMsg, `/chat?userId=${decoded.id}`]
   );
-  
-  // Send FCM push notification
-  try {
-    const { sendPushToMobile } = await import('@/lib/fcm');
-    await sendPushToMobile(receiverId, {
-      title,
-      body: notificationMsg,
-      data: { type: 'CHAT_MESSAGE', roomId, senderId: decoded.id }
-    });
-  } catch (err) {
-    console.error('FCM Error:', err);
-  }
-
   const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
 
-  // Real-time socket emit
   try {
-    const io = global.getIO?.();
-    if (io) {
-      io.to(roomId).emit('message:receive', { ...message, _senderName: sender?.name });
-      io.emit('notification:new', { userId: receiverId });
-    }
-  } catch (e) { console.error('Socket emit error:', e.message); }
+    const { sendChatNotifications } = await import('@/lib/notificationHelper');
+    await sendChatNotifications({
+      receiverId,
+      senderId: decoded.id,
+      senderName: sender?.name || 'User',
+      roomId,
+      messageObj: message,
+      type,
+      content
+    });
+  } catch (err) {
+    console.error('Unified Notification Error:', err);
+  }
+
 
   return NextResponse.json(message, { status: 201 });
 }

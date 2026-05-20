@@ -131,34 +131,22 @@ export async function POST(req, { params }) {
     [randomUUID(), receiverId, `${session.user.name} sent you a message.`, `/chat?userId=${session.user.id}`]
   );
 
-  // Web Push notification to receiver
-  try {
-    const { sendPushToUser } = await import('@/lib/webpush');
-    const msgBody = type === 'IMAGE' ? '📷 Photo' : type === 'DOCUMENT' ? '📄 Document' : type === 'LOCATION' ? '📍 Location' : content;
-    await sendPushToUser(receiverId, {
-      title: `💬 ${session.user.name}`,
-      body: msgBody,
-      url: `/chat?userId=${session.user.id}`,
-    });
-  } catch (e) { console.error('Push error:', e.message); }
-
   const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
 
-  // Server-side socket emit — reliable real-time delivery
   try {
-    const io = global.getIO?.();
-    if (io) {
-      // Emit to room but exclude sender's socket (sender already has message optimistically)
-      const senderSocketId = [...(io.sockets.sockets.values())]
-        .find(s => s.userId === session.user.id)?.id;
-      const emitter = senderSocketId
-        ? io.to(roomId).except(senderSocketId)
-        : io.to(roomId);
-      emitter.emit('message:receive', { ...message, _senderName: session.user.name });
-      // Notify receiver's navbar badge
-      io.emit('notification:new', { userId: receiverId });
-    }
-  } catch (e) { console.error('Socket emit error:', e.message); }
+    const { sendChatNotifications } = await import('@/lib/notificationHelper');
+    await sendChatNotifications({
+      receiverId,
+      senderId: session.user.id,
+      senderName: session.user.name,
+      roomId,
+      messageObj: message,
+      type,
+      content
+    });
+  } catch (err) {
+    console.error('Unified Notification Error:', err);
+  }
 
   return NextResponse.json({ ...message, _senderName: session.user.name }, { status: 201 });
 }

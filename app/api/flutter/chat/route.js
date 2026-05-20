@@ -123,18 +123,21 @@ export async function POST(req) {
     [randomUUID(), receiverId, title, notificationMsg, `/chat?userId=${decoded.id}`]
   );
   
-  // Send FCM push notification
+  const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
+
   try {
-    const { sendPushToMobile } = await import('@/lib/fcm');
-    await sendPushToMobile(receiverId, {
-      title,
-      body: notificationMsg,
-      data: { type: 'CHAT_MESSAGE', roomId: room.id, senderId: decoded.id }
+    const { sendChatNotifications } = await import('@/lib/notificationHelper');
+    await sendChatNotifications({
+      receiverId,
+      senderId: decoded.id,
+      senderName: sender?.name || 'User',
+      roomId: room.id,
+      messageObj: message,
+      type,
+      content
     });
   } catch (err) {
-    console.error('FCM Error:', err);
+    console.error('Unified Notification Error:', err);
   }
-
-  const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
   return NextResponse.json({ ...message, roomId: room.id }, { status: 201 });
 }
