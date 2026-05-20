@@ -25,10 +25,10 @@ export async function GET(req) {
   const rooms = await query(
     `SELECT
        cr.id, cr.userAId, cr.userBId, cr.createdAt,
-       uA.id AS uA_id, uA.name AS uA_name, uA.isPremium AS uA_isPremium, uA.lastSeen AS uA_lastSeen,
+       uA.id AS uA_id, uA.name AS uA_name, uA.isPremium AS uA_isPremium, uA.lastLoginAt AS uA_lastSeen,
        pA.gender AS pA_gender, pA.city AS pA_city, pA.country AS pA_country,
        phA.url AS phA_url,
-       uB.id AS uB_id, uB.name AS uB_name, uB.isPremium AS uB_isPremium, uB.lastSeen AS uB_lastSeen,
+       uB.id AS uB_id, uB.name AS uB_name, uB.isPremium AS uB_isPremium, uB.lastLoginAt AS uB_lastSeen,
        pB.gender AS pB_gender, pB.city AS pB_city, pB.country AS pB_country,
        phB.url AS phB_url,
        lm.id AS lm_id, lm.content AS lm_content, lm.createdAt AS lm_createdAt,
