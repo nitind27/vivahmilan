@@ -19,7 +19,12 @@ export async function POST(req) {
     try {
       ticket = await client.verifyIdToken({
         idToken,
-        audience: process.env.GOOGLE_CLIENT_ID,
+        audience: [
+          process.env.GOOGLE_CLIENT_ID,
+          process.env.FLUTTER_GOOGLE_CLIENT_ID,
+          process.env.FLUTTER_GOOGLE_CLIENT_ID_IOS,
+          process.env.FLUTTER_GOOGLE_CLIENT_ID_WEB,
+        ].filter(Boolean),
       });
     } catch (err) {
       console.error('Google token verification failed:', err);
