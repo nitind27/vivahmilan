@@ -81,6 +81,7 @@ export async function POST(req, { params }) {
   const contentType = req.headers.get('content-type') || '';
 
   let content, type = 'TEXT', fileUrl = null, fileName = null, fileSize = null;
+  let latitude = null, longitude = null, locationType = null, locationExpiry = null;
 
   if (contentType.includes('multipart/form-data')) {
     const formData = await req.formData();
@@ -109,22 +110,48 @@ export async function POST(req, { params }) {
     const body = await req.json();
     type = body.type || 'TEXT';
     content = body.content;
-    if (!content?.trim()) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
-    content = content.trim();
+    
+    if (type === 'LOCATION') {
+      latitude = body.latitude;
+      longitude = body.longitude;
+      locationType = body.locationType || 'CURRENT';
+      locationExpiry = body.locationExpiry || null;
+      if (latitude === undefined || longitude === undefined) {
+        return NextResponse.json({ error: 'latitude and longitude required for location' }, { status: 400 });
+      }
+      if (!content) content = 'Shared Location';
+    } else {
+      if (!content?.trim()) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
+      content = content.trim();
+    }
   }
 
   const msgId = randomUUID();
   const now = new Date();
   await execute(
-    'INSERT INTO message (id, chatRoomId, senderId, receiverId, content, type, fileUrl, fileName, fileSize, isRead, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)',
-    [msgId, roomId, decoded.id, receiverId, content, type, fileUrl, fileName, fileSize, now]
+    'INSERT INTO message (id, chatRoomId, senderId, receiverId, content, type, fileUrl, fileName, fileSize, latitude, longitude, locationType, locationExpiry, isRead, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)',
+    [msgId, roomId, decoded.id, receiverId, content, type, fileUrl, fileName, fileSize, latitude, longitude, locationType, locationExpiry, now]
   );
 
   const sender = await queryOne('SELECT name FROM `user` WHERE id = ?', [decoded.id]);
+  const title = 'New Message';
+  const notificationMsg = `${sender?.name} sent you a message.`;
   await execute(
-    "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'MESSAGE_RECEIVED', 'New Message', ?, 0, ?, NOW())",
-    [randomUUID(), receiverId, `${sender?.name} sent you a message.`, `/chat?userId=${decoded.id}`]
+    "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'MESSAGE_RECEIVED', ?, ?, 0, ?, NOW())",
+    [randomUUID(), receiverId, title, notificationMsg, `/chat?userId=${decoded.id}`]
   );
+  
+  // Send FCM push notification
+  try {
+    const { sendPushToMobile } = await import('@/lib/fcm');
+    await sendPushToMobile(receiverId, {
+      title,
+      body: notificationMsg,
+      data: { type: 'CHAT_MESSAGE', roomId, senderId: decoded.id }
+    });
+  } catch (err) {
+    console.error('FCM Error:', err);
+  }
 
   const message = await queryOne('SELECT * FROM message WHERE id = ?', [msgId]);
 
