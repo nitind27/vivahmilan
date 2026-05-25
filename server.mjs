@@ -9,30 +9,11 @@ import { createReadStream, statSync, existsSync } from 'fs';
 import { join, extname } from 'path';
 import next from 'next';
 import { Server } from 'socket.io';
-import mysql from 'mysql2/promise';
 import jwt from 'jsonwebtoken';
+import { pool as dbPool } from './lib/db.js';
 
-// ── DB pool — shared with lib/db.js via globalThis ──
 function getDbPool() {
-  if (!globalThis.__matrimonialDbPool) {
-    globalThis.__matrimonialDbPool = mysql.createPool({
-      host: process.env.DATABASE_HOST,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      port: parseInt(process.env.DATABASE_PORT || '3306'),
-      connectionLimit:       15,
-      waitForConnections:    true,
-      queueLimit:            0,
-      enableKeepAlive:       true,
-      keepAliveInitialDelay: 10000,
-      connectTimeout:        20000,
-      idleTimeout:           60000,
-      timezone:              '+00:00',
-    });
-    console.log('✅ DB Pool Created (server.mjs):', process.env.DATABASE_HOST);
-  }
-  return globalThis.__matrimonialDbPool;
+  return dbPool;
 }
 
 async function updateLastSeen(userId) {
