@@ -1,36 +1,9 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne } from '@/lib/db';
+import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 
-// Bulk fetch interaction flags for a list of userIds
-async function getInteractionMaps(viewerId, userIds) {
-  if (!userIds.length) return { interestMap: {}, shortlistSet: new Set(), blockSet: new Set() };
-
-  const ph = userIds.map(() => '?').join(',');
-  const [interests, shortlists, blocks] = await Promise.all([
-    query(
-      `SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${ph})`,
-      [viewerId, ...userIds]
-    ),
-    query(
-      `SELECT targetId FROM shortlist WHERE ownerId = ? AND targetId IN (${ph})`,
-      [viewerId, ...userIds]
-    ),
-    query(
-      `SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${ph})`,
-      [viewerId, ...userIds]
-    ),
-  ]);
-
-  return {
-    interestMap:  Object.fromEntries(interests.map(i => [i.receiverId, { id: i.id, status: i.status }])),
-    shortlistSet: new Set(shortlists.map(s => s.targetId)),
-    blockSet:     new Set(blocks.map(b => b.blockedId)),
-  };
-}
-
-// Build profile card with interaction flags
-function buildProfileCard(r, interestMap, shortlistSet, blockSet) {
+function buildProfileCard(r, maps) {
   return {
     id:               r.u_id,
     name:             r.u_name,
@@ -47,10 +20,8 @@ function buildProfileCard(r, interestMap, shortlistSet, blockSet) {
       profession:      r.profession,
       profileComplete: r.profileComplete,
     },
-    photos:        r.photo_url ? [{ url: r.photo_url }] : [],
-    interestSent:  interestMap[r.u_id]    || null,
-    isShortlisted: shortlistSet.has(r.u_id),
-    isBlocked:     blockSet.has(r.u_id),
+    photos: r.photo_url ? [{ url: r.photo_url }] : [],
+    ...attachInteractionFlags(r.u_id, maps),
   };
 }
 
@@ -176,7 +147,7 @@ export async function GET(req) {
       ...pendingInterests.map(r => r.u_id),
     ];
     const uniqueIds = [...new Set(allProfileIds)];
-    const { interestMap, shortlistSet, blockSet } = await getInteractionMaps(uid, uniqueIds);
+    const maps = await getInteractionMaps(uid, uniqueIds);
 
     return NextResponse.json({
       counts: {
@@ -190,13 +161,13 @@ export async function GET(req) {
         today_messages:      Number(todayMessagesRow?.cnt)      || 0,
       },
       new_matches_today: newMatchesToday.map(r =>
-        buildProfileCard(r, interestMap, shortlistSet, blockSet)
+        buildProfileCard(r, maps)
       ),
       recommended_matches: recommendedMatches.map(r =>
-        buildProfileCard(r, interestMap, shortlistSet, blockSet)
+        buildProfileCard(r, maps)
       ),
       pending_interests: pendingInterests.map(r => ({
-        ...buildProfileCard(r, interestMap, shortlistSet, blockSet),
+        ...buildProfileCard(r, maps),
         interest: {
           id:        r.interest_id,
           message:   r.interest_message,

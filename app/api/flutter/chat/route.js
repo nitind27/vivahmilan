@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
+import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 import { randomUUID } from 'crypto';
 
 // GET - all chat rooms with pagination
@@ -49,10 +50,25 @@ export async function GET(req) {
     [uid, uid, limit, offset]
   );
 
+  const peerIds = [...new Set(rooms.flatMap(r => [r.uA_id, r.uB_id]).filter(id => id && id !== uid))];
+  const maps = peerIds.length
+    ? await getInteractionMaps(uid, peerIds)
+    : { interestSentMap: {}, interestReceivedMap: {}, shortlistSet: new Set(), blockSet: new Set() };
+
   const enriched = rooms.map((r) => ({
     id: r.id, userAId: r.userAId, userBId: r.userBId, createdAt: r.createdAt,
-    userA: { id: r.uA_id, name: r.uA_name, isPremium: !!r.uA_isPremium, lastSeen: r.uA_lastSeen, profile: { gender: r.pA_gender, city: r.pA_city, country: r.pA_country }, photos: r.phA_url ? [{ url: r.phA_url }] : [] },
-    userB: { id: r.uB_id, name: r.uB_name, isPremium: !!r.uB_isPremium, lastSeen: r.uB_lastSeen, profile: { gender: r.pB_gender, city: r.pB_city, country: r.pB_country }, photos: r.phB_url ? [{ url: r.phB_url }] : [] },
+    userA: {
+      id: r.uA_id, name: r.uA_name, isPremium: !!r.uA_isPremium, lastSeen: r.uA_lastSeen,
+      profile: { gender: r.pA_gender, city: r.pA_city, country: r.pA_country },
+      photos: r.phA_url ? [{ url: r.phA_url }] : [],
+      ...attachInteractionFlags(r.uA_id, maps),
+    },
+    userB: {
+      id: r.uB_id, name: r.uB_name, isPremium: !!r.uB_isPremium, lastSeen: r.uB_lastSeen,
+      profile: { gender: r.pB_gender, city: r.pB_city, country: r.pB_country },
+      photos: r.phB_url ? [{ url: r.phB_url }] : [],
+      ...attachInteractionFlags(r.uB_id, maps),
+    },
     lastMessage: r.lm_id ? { id: r.lm_id, content: r.lm_content, createdAt: r.lm_createdAt, senderId: r.lm_senderId, type: r.lm_type, isRead: !!r.lm_isRead } : null,
   }));
 

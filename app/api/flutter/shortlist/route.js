@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
+import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 import { randomUUID } from 'crypto';
 
 export async function GET(req) {
@@ -32,20 +33,13 @@ export async function GET(req) {
     [decoded.id, limit, offset]
   );
 
-  // Bulk fetch interaction flags
   const userIds = rows.map(r => r.u_id);
-  let interestMap = {};
-  let blockSet = new Set();
-
-  if (userIds.length) {
-    const ph = userIds.map(() => '?').join(',');
-    const [interests, blocks] = await Promise.all([
-      query(`SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${ph})`, [decoded.id, ...userIds]),
-      query(`SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${ph})`, [decoded.id, ...userIds]),
-    ]);
-    interestMap = Object.fromEntries(interests.map(i => [i.receiverId, { id: i.id, status: i.status }]));
-    blockSet    = new Set(blocks.map(b => b.blockedId));
-  }
+  const maps = userIds.length ? await getInteractionMaps(decoded.id, userIds) : {
+    interestSentMap: {},
+    interestReceivedMap: {},
+    shortlistSet: new Set(),
+    blockSet: new Set(),
+  };
 
   const enriched = rows.map((r) => ({
     id: r.id, ownerId: r.ownerId, targetId: r.targetId, createdAt: r.createdAt,
@@ -53,9 +47,8 @@ export async function GET(req) {
       id: r.u_id, name: r.u_name, isPremium: !!r.u_isPremium,
       profile: { gender: r.gender, dob: r.dob, religion: r.religion, city: r.city, country: r.country, education: r.education, profession: r.profession, profileComplete: r.profileComplete },
       photos: r.photo_url ? [{ url: r.photo_url }] : [],
-      interestSent:  interestMap[r.u_id] || null,
-      isShortlisted: true, // already in shortlist
-      isBlocked:     blockSet.has(r.u_id),
+      ...attachInteractionFlags(r.u_id, maps),
+      isShortlisted: true,
     },
   }));
 

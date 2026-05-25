@@ -114,3 +114,45 @@ Free user OR free trial user:
 type: CHAT_MESSAGE
   data: { type, roomId, senderId }
   → Open chat room (requires isPremium OR freeTrialActive)
+
+
+6. interestReceived on all profile list APIs
+---------------------------------------------
+
+Ab ye APIs dono flags return karti hain har user profile ke saath:
+
+  interestSent     — { id, status } | null  (tumne unhe interest bheja)
+  interestReceived — { id, status } | null  (unhone tumhe interest bheja)
+
+Updated APIs:
+  GET /api/flutter/matches
+  GET /api/flutter/search
+  GET /api/flutter/dashboard  (new_matches_today, recommended_matches, pending_interests)
+  GET /api/flutter/shortlist  (target object)
+  GET /api/flutter/interest   (sender/receiver object)
+  GET /api/flutter/chat       (userA / userB objects)
+  GET /api/flutter/profile    (already had both)
+  GET /api/flutter/profile/:id (already had both)
+
+
+7. DELETE /api/flutter/block — Unblock User
+--------------------------------------------
+
+DELETE /api/flutter/block
+Auth: Bearer token
+Body: { "blockedId": "uuid" }
+
+Responses:
+  200 — { "success": true, "blocked": false }
+  404 — { "error": "User is not blocked" }
+
+Note: POST /api/flutter/block still toggles block/unblock (backward compatible).
+
+
+8. Socket typing on chat list (FLUTTER_SOCKET_DOCS.txt updated)
+-----------------------------------------------------------------
+
+typing:start / typing:stop ab { userId, roomId } bhejte hain.
+Server receiver ke user:{userId} room mein bhi forward karta hai —
+chat list screen par room:join ki zaroorat nahi, bas socket connect rakho
+aur globally typing:start/stop listen karo.

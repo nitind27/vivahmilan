@@ -61,12 +61,15 @@ EVENTS YOU CAN LISTEN TO
 
 5. typing:start
    Fired when someone starts typing in a room.
-   Data: { userId }
+   Data: { userId, roomId }
+   - Inside chat screen: join room first via room:join, then listen here.
+   - On chat LIST screen: listen globally (no room:join needed) — server forwards
+     typing events to your personal user:{yourId} room automatically.
    socket.on('typing:start', (data) { ... });
 
 6. typing:stop
    Fired when someone stops typing.
-   Data: { userId }
+   Data: { userId, roomId }
    socket.on('typing:stop', (data) { ... });
 
 7. interest:received
@@ -151,6 +154,22 @@ RECOMMENDED FLOW FOR CHAT SCREEN
 
 5. Close chat screen
    → socket.emit('room:leave', roomId)
+
+
+CHAT LIST — TYPING INDICATOR
+------------------------------
+You do NOT need to join every room on the chat list screen.
+Just stay connected with JWT auth (server auto-joins user:{yourId}).
+
+Listen globally:
+  socket.on('typing:start', ({ userId, roomId }) {
+    // Mark roomId as "userId is typing"
+  });
+  socket.on('typing:stop', ({ userId, roomId }) {
+    // Clear typing state for roomId
+  });
+
+When opening a specific chat, still emit room:join for live messages.
 
 
 NOTES

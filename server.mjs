@@ -25,6 +25,23 @@ async function updateLastSeen(userId) {
   }
 }
 
+async function getRoomPeer(roomId, userId) {
+  try {
+    const pool = getDbPool();
+    const [rows] = await pool.execute(
+      'SELECT userAId, userBId FROM chatroom WHERE id = ? LIMIT 1',
+      [roomId]
+    );
+    const room = rows[0];
+    if (!room) return null;
+    if (room.userAId === userId) return room.userBId;
+    if (room.userBId === userId) return room.userAId;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = '0.0.0.0';
 const port = parseInt(process.env.PORT || '3006');
@@ -229,12 +246,20 @@ app.prepare().then(() => {
       socket.to(roomId).emit('message:read', { roomId, readerId });
     });
 
-    socket.on('typing:start', ({ roomId, userId }) => {
-      socket.to(roomId).emit('typing:start', { userId });
+    socket.on('typing:start', async ({ roomId, userId }) => {
+      if (!roomId || !userId) return;
+      const payload = { userId, roomId };
+      socket.to(roomId).emit('typing:start', payload);
+      const peerId = await getRoomPeer(roomId, userId);
+      if (peerId) socket.to(`user:${peerId}`).emit('typing:start', payload);
     });
 
-    socket.on('typing:stop', ({ roomId, userId }) => {
-      socket.to(roomId).emit('typing:stop', { userId });
+    socket.on('typing:stop', async ({ roomId, userId }) => {
+      if (!roomId || !userId) return;
+      const payload = { userId, roomId };
+      socket.to(roomId).emit('typing:stop', payload);
+      const peerId = await getRoomPeer(roomId, userId);
+      if (peerId) socket.to(`user:${peerId}`).emit('typing:stop', payload);
     });
 
     socket.on('interest:notify', ({ toUserId, fromUser }) => {

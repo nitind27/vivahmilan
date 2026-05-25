@@ -29,6 +29,28 @@ export async function POST(req) {
   return NextResponse.json({ blocked: true });
 }
 
+export async function DELETE(req) {
+  const token = getTokenFromRequest(req);
+  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const decoded = verifyToken(token);
+  if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+
+  const { blockedId } = await req.json();
+  if (!blockedId) return NextResponse.json({ error: 'blockedId required' }, { status: 400 });
+
+  const existing = await queryOne(
+    'SELECT id FROM block WHERE blockerId = ? AND blockedId = ?',
+    [decoded.id, blockedId]
+  );
+
+  if (!existing) {
+    return NextResponse.json({ error: 'User is not blocked' }, { status: 404 });
+  }
+
+  await execute('DELETE FROM block WHERE blockerId = ? AND blockedId = ?', [decoded.id, blockedId]);
+  return NextResponse.json({ success: true, blocked: false });
+}
+
 export async function GET(req) {
   const token = getTokenFromRequest(req);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

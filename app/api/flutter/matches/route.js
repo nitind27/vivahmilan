@@ -1,36 +1,9 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne } from '@/lib/db';
+import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 
 const FREE_LIMIT = 5;
-
-// Fetch interaction flags for a list of userIds in bulk (single queries)
-async function getInteractionMaps(viewerId, userIds) {
-  if (!userIds.length) return { interestMap: {}, shortlistSet: new Set(), blockSet: new Set() };
-
-  const placeholders = userIds.map(() => '?').join(',');
-
-  const [interests, shortlists, blocks] = await Promise.all([
-    query(
-      `SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${placeholders})`,
-      [viewerId, ...userIds]
-    ),
-    query(
-      `SELECT targetId FROM shortlist WHERE ownerId = ? AND targetId IN (${placeholders})`,
-      [viewerId, ...userIds]
-    ),
-    query(
-      `SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${placeholders})`,
-      [viewerId, ...userIds]
-    ),
-  ]);
-
-  const interestMap = Object.fromEntries(interests.map(i => [i.receiverId, { id: i.id, status: i.status }]));
-  const shortlistSet = new Set(shortlists.map(s => s.targetId));
-  const blockSet = new Set(blocks.map(b => b.blockedId));
-
-  return { interestMap, shortlistSet, blockSet };
-}
 
 export async function GET(req) {
   try {
@@ -149,7 +122,7 @@ export async function GET(req) {
 
     const userIds = users.map(u => u.id);
 
-    const [photos, { interestMap, shortlistSet, blockSet }] = await Promise.all([
+    const [photos, maps] = await Promise.all([
       userIds.length
         ? query(`SELECT * FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`, userIds)
         : Promise.resolve([]),
@@ -173,9 +146,7 @@ export async function GET(req) {
         income: u.income, diet: u.diet, smoking: u.smoking, drinking: u.drinking,
       },
       photos: photoMap[u.id] ? [photoMap[u.id]] : [],
-      interestSent:  interestMap[u.id] || null,  // { id, status } or null
-      isShortlisted: shortlistSet.has(u.id),
-      isBlocked:     blockSet.has(u.id),
+      ...attachInteractionFlags(u.id, maps),
     }));
 
     return NextResponse.json({

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
+import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 import { randomUUID } from 'crypto';
 
 export async function POST(req) {
@@ -87,26 +88,12 @@ export async function GET(req) {
 
     // Bulk interaction flags
     const userIds = rows.map(r => r.u_id).filter(Boolean);
-    let shortlistSet = new Set();
-    let blockSet     = new Set();
-    let interestMap  = {};
-
-    if (userIds.length) {
-      const ph = userIds.map(() => '?').join(',');
-      const [shortlists, blocks, sentBack] = await Promise.all([
-        query(`SELECT targetId FROM shortlist WHERE ownerId = ? AND targetId IN (${ph})`, [decoded.id, ...userIds]),
-        query(`SELECT blockedId FROM block WHERE blockerId = ? AND blockedId IN (${ph})`, [decoded.id, ...userIds]),
-        // For received list: check if I sent interest back to any of these senders
-        isReceived
-          ? query(`SELECT id, receiverId, status FROM interest WHERE senderId = ? AND receiverId IN (${ph})`, [decoded.id, ...userIds])
-          : Promise.resolve([]),
-      ]);
-      shortlistSet = new Set(shortlists.map(s => s.targetId));
-      blockSet     = new Set(blocks.map(b => b.blockedId));
-      interestMap  = Object.fromEntries((sentBack || []).map(i => [i.receiverId, { id: i.id, status: i.status }]));
-    }
+    const maps = userIds.length
+      ? await getInteractionMaps(decoded.id, userIds)
+      : { interestSentMap: {}, interestReceivedMap: {}, shortlistSet: new Set(), blockSet: new Set() };
 
     const enriched = rows.map((r) => {
+      const flags = attachInteractionFlags(r.u_id, maps);
       const otherUser = {
         id:               r.u_id,
         name:             r.u_name,
@@ -119,11 +106,11 @@ export async function GET(req) {
           education: r.education, profession: r.profession,
           profileComplete: r.profileComplete,
         },
-        photos:        r.photo_url ? [{ url: r.photo_url }] : [],
-        // For received: did I send interest back? For sent: this IS the sent interest
-        interestSent:  isReceived ? (interestMap[r.u_id] || null) : { id: r.id, status: r.status },
-        isShortlisted: shortlistSet.has(r.u_id),
-        isBlocked:     blockSet.has(r.u_id),
+        photos: r.photo_url ? [{ url: r.photo_url }] : [],
+        interestSent:  isReceived ? (flags.interestSent || null) : { id: r.id, status: r.status },
+        interestReceived: isReceived ? { id: r.id, status: r.status } : (flags.interestReceived || null),
+        isShortlisted: flags.isShortlisted,
+        isBlocked:     flags.isBlocked,
       };
 
       return {
