@@ -16,20 +16,20 @@ export async function GET() {
     totalSubscriptions, activeSubscriptions, totalInterests, totalChats,
     maleUsers, femaleUsers,
   ] = await Promise.all([
-    prisma.user.count(),
-    prisma.user.count({ where: { isPremium: true } }),
+    prisma.user.count({ where: { role: 'USER' } }),
+    prisma.user.count({ where: { isPremium: true, role: 'USER' } }),
     prisma.document.count({ where: { status: 'PENDING' } }),
     prisma.report.count({ where: { status: 'PENDING' } }),
     prisma.message.count(),
-    prisma.user.count({ where: { createdAt: { gte: today } } }),
-    prisma.user.count({ where: { createdAt: { gte: thisMonth } } }),
+    prisma.user.count({ where: { createdAt: { gte: today }, role: 'USER' } }),
+    prisma.user.count({ where: { createdAt: { gte: thisMonth }, role: 'USER' } }),
     prisma.user.count({ where: { adminVerified: false, role: 'USER' } }),
     prisma.subscription.count(),
     prisma.subscription.count({ where: { status: 'ACTIVE' } }),
     prisma.interest.count(),
     prisma.chatRoom.count(),
-    prisma.user.count({ where: { profile: { gender: 'MALE' } } }),
-    prisma.user.count({ where: { profile: { gender: 'FEMALE' } } }),
+    prisma.user.count({ where: { profile: { gender: 'MALE' }, role: 'USER' } }),
+    prisma.user.count({ where: { profile: { gender: 'FEMALE' }, role: 'USER' } }),
   ]);
 
   return NextResponse.json({
