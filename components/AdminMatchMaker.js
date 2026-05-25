@@ -1,6 +1,6 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon, Ban, Unlock, Star, Trash2, CheckCircle, Key } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon, Ban, Unlock, Star, Trash2, CheckCircle, Key, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 
@@ -77,34 +77,108 @@ export function AdminDirectChatModal({ user, onClose }) {
 }
 
 // ── All Members Tab ───────────────────────────────────────────────────────────
+const PAGE_SIZE = 30;
+
+function formatCount(n) {
+  if (n == null) return '…';
+  return Number(n).toLocaleString('en-IN');
+}
+
 export function AllMembersTab() {
   const [members, setMembers] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(null);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [gender, setGender] = useState('');
   const [status, setStatus] = useState('');
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState('');
+  const [hasMore, setHasMore] = useState(false);
+  const [nextCursor, setNextCursor] = useState(null);
+  const [pageCursors, setPageCursors] = useState([null]);
+  const [pageIndex, setPageIndex] = useState(0);
   const [chatUser, setChatUser] = useState(null);
   const [viewUserId, setViewUserId] = useState(null);
   const [passwordUser, setPasswordUser] = useState(null);
   const [newPassword, setNewPassword] = useState('');
+  const abortRef = useRef(null);
 
-  const load = async (p = 1) => {
-    setLoading(true);
-    const params = new URLSearchParams({ page: p, limit: 30 });
-    if (search) params.set('search', search);
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search.trim()), 400);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  const load = useCallback(async ({ cursor = null, direction = 'reset', skipTotal = false } = {}) => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    if (direction === 'reset') setLoading(true);
+    else setLoadingMore(true);
+    setError('');
+
+    const params = new URLSearchParams({ limit: PAGE_SIZE });
+    if (debouncedSearch) params.set('search', debouncedSearch);
     if (gender) params.set('gender', gender);
     if (status) params.set('status', status);
-    const res = await fetch(`/api/admin/members?${params}`);
-    const data = await res.json();
-    setMembers(data.members || []);
-    setTotal(data.total || 0);
-    setPage(p);
-    setLoading(false);
+    if (skipTotal) params.set('skipTotal', '1');
+    if (cursor?.cursorAt && cursor?.cursorId) {
+      params.set('cursorAt', cursor.cursorAt);
+      params.set('cursorId', cursor.cursorId);
+    }
+
+    try {
+      const res = await fetch(`/api/admin/members?${params}`, { signal: controller.signal });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load members');
+
+      setMembers(data.members || []);
+      if (data.total != null) setTotal(data.total);
+      setHasMore(!!data.hasMore);
+      setNextCursor(data.nextCursor || null);
+
+      if (direction === 'reset') {
+        setPageCursors([null]);
+        setPageIndex(0);
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      setError(err.message || 'Failed to load members');
+    } finally {
+      if (!controller.signal.aborted) {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    }
+  }, [debouncedSearch, gender, status]);
+
+  useEffect(() => {
+    load({ direction: 'reset' });
+    return () => abortRef.current?.abort();
+  }, [load]);
+
+  const goNext = () => {
+    if (!hasMore || !nextCursor || loadingMore) return;
+    const nextPage = pageIndex + 1;
+    setPageCursors(prev => {
+      const next = [...prev];
+      next[nextPage] = nextCursor;
+      return next;
+    });
+    setPageIndex(nextPage);
+    load({ cursor: nextCursor, direction: 'forward', skipTotal: true });
   };
 
-  useEffect(() => { load(1); }, [gender, status]);
+  const goPrev = () => {
+    if (pageIndex <= 0 || loadingMore) return;
+    const prevPage = pageIndex - 1;
+    const cursor = pageCursors[prevPage] || null;
+    setPageIndex(prevPage);
+    load({ cursor, direction: 'back', skipTotal: true });
+  };
+
+  const reload = () => load({ direction: 'reset' });
 
   const calcAge = (dob) => dob ? Math.floor((Date.now() - new Date(dob)) / 31557600000) : null;
 
@@ -112,13 +186,13 @@ export function AllMembersTab() {
     const res = await fetch(`/api/admin/users/${id}`, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
     });
-    if (res.ok) { toast.success('Updated'); load(page); } else toast.error('Failed');
+    if (res.ok) { toast.success('Updated'); reload(); } else toast.error('Failed');
   };
 
   const deleteUser = async (id, name) => {
     if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
     await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
-    toast.success('Deleted'); load(page);
+    toast.success('Deleted'); reload();
   };
 
   const handlePasswordChange = async () => {
@@ -135,7 +209,7 @@ export function AllMembersTab() {
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && load(1)}
+          <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && setDebouncedSearch(search.trim())}
             placeholder="Search name, email, phone…" className="w-full pl-9 pr-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-sm focus:outline-none focus:border-vd-primary" />
         </div>
         <select value={gender} onChange={e => setGender(e.target.value)} className="px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-sm focus:outline-none">
@@ -145,11 +219,39 @@ export function AllMembersTab() {
           <option value="">All Status</option><option value="verified">✅ Verified</option><option value="premium">⭐ Premium</option>
           <option value="pending">⏳ Pending</option><option value="blocked">🚫 Blocked</option>
         </select>
-        <button onClick={() => load(1)} className="px-4 py-2.5 bg-vd-primary rounded-xl text-sm text-white hover:opacity-90">Search</button>
+        <button onClick={reload} disabled={loading} className="px-4 py-2.5 bg-gray-700 rounded-xl text-sm text-white hover:bg-gray-600 disabled:opacity-50 flex items-center gap-1.5">
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
+        </button>
       </div>
-      <p className="text-xs text-gray-500">{total} members found</p>
+      <div className="flex items-center justify-between text-xs text-gray-500">
+        <p>{formatCount(total)} members{total != null ? ' total' : ''} · showing {members.length} on page {pageIndex + 1}</p>
+        {loadingMore && <span className="text-vd-primary">Loading…</span>}
+      </div>
+      {error && (
+        <div className="bg-red-900/30 border border-red-700 rounded-xl px-4 py-3 flex items-center justify-between">
+          <p className="text-sm text-red-300">{error}</p>
+          <button onClick={reload} className="text-xs px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white rounded-lg">Retry</button>
+        </div>
+      )}
       {loading ? (
-        <div className="flex justify-center py-16"><div className="w-8 h-8 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" /></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bg-gray-800 rounded-2xl border border-gray-700 p-4 animate-pulse">
+              <div className="flex gap-3">
+                <div className="w-14 h-14 rounded-2xl bg-gray-700" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-gray-700 rounded w-3/4" />
+                  <div className="h-3 bg-gray-700 rounded w-1/2" />
+                  <div className="h-3 bg-gray-700 rounded w-2/3" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : members.length === 0 && !error ? (
+        <div className="text-center py-16 text-gray-500">
+          <p className="text-sm">No members found. Try adjusting filters or search.</p>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -215,13 +317,13 @@ export function AllMembersTab() {
               );
             })}
           </div>
-          {total > 30 && (
+          {(total == null || total > PAGE_SIZE || pageIndex > 0 || hasMore) ? (
             <div className="flex items-center justify-center gap-2 pt-2">
-              <button onClick={() => load(page - 1)} disabled={page === 1} className="px-3 py-1.5 bg-gray-800 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-700">← Prev</button>
-              <span className="text-sm text-gray-400">Page {page} of {Math.ceil(total / 30)}</span>
-              <button onClick={() => load(page + 1)} disabled={page >= Math.ceil(total / 30)} className="px-3 py-1.5 bg-gray-800 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-700">Next →</button>
+              <button onClick={goPrev} disabled={pageIndex === 0 || loadingMore} className="px-3 py-1.5 bg-gray-800 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-700">← Prev</button>
+              <span className="text-sm text-gray-400">Page {pageIndex + 1}{total != null ? ` · ${formatCount(total)} total` : ''}</span>
+              <button onClick={goNext} disabled={!hasMore || loadingMore} className="px-3 py-1.5 bg-gray-800 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-700">Next →</button>
             </div>
-          )}
+          ) : null}
         </>
       )}
       

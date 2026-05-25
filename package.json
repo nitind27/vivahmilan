@@ -11,7 +11,8 @@
     "test": "jest --testEnvironment=jsdom",
     "seed": "node prisma/seed.js",
     "seed-options": "node prisma/seed-options.js",
-    "create-admin": "node prisma/create-admin.js"
+    "create-admin": "node prisma/create-admin.js",
+    "bulk-seed": "node scripts/bulk-seed-users.mjs"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
