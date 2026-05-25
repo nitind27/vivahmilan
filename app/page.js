@@ -42,10 +42,10 @@ const DEFAULT_FEATURES = [
 ];
 
 const DEFAULT_STATS = [
-  { icon: Users, value: 20, suffix: 'M+', label: 'Members' },
-  { icon: Heart, value: 5, suffix: 'M+', label: 'Happy Couples' },
-  { icon: Globe, value: 150, suffix: '+', label: 'Countries' },
-  { icon: Award, value: 98, suffix: '%', label: 'Success Rate' },
+  { icon: Users, value: 0, suffix: '', label: 'Members' },
+  { icon: Heart, value: 0, suffix: '', label: 'Happy Couples' },
+  { icon: Globe, value: 0, suffix: '', label: 'Countries' },
+  { icon: Award, value: 0, suffix: '%', label: 'Verified Profiles' },
 ];
 
 // Animated counter hook
@@ -124,7 +124,7 @@ export default function Home() {
 
   // DB-backed homepage content
   const [hpSlides, setHpSlides] = useState([]);
-  const [hpStats, setHpStats] = useState([]);
+  const [liveStats, setLiveStats] = useState(null);
   const [hpFeatures, setHpFeatures] = useState([]);
   const [siteConfig, setSiteConfig] = useState({});
   const [contentLoaded, setContentLoaded] = useState(false);
@@ -134,12 +134,16 @@ export default function Home() {
   const features = hpFeatures.length > 0
     ? hpFeatures.map(f => ({ ...f, icon: ICON_MAP[f.icon] || Heart }))
     : DEFAULT_FEATURES;
-  const STATS = hpStats.length > 0
-    ? hpStats.map(s => ({ ...s, icon: ICON_MAP[s.icon] || Heart }))
+  const STATS = liveStats?.stats
+    ? liveStats.stats.map(s => ({ ...s, icon: ICON_MAP[s.icon] || Heart }))
     : DEFAULT_STATS;
 
+  const membersLabel = liveStats?.members
+    ? `${liveStats.members >= 100000 ? `${Math.floor(liveStats.members / 100000)} Lakh+` : liveStats.members.toLocaleString('en-IN')} members`
+    : 'members';
+
   const ctaHeading = siteConfig.cta_heading || 'Ready to Find Your Soulmate?';
-  const ctaSubtext = siteConfig.cta_subtext || "Join 20 million members and start your journey today. It's free!";
+  const ctaSubtext = siteConfig.cta_subtext || `Join ${membersLabel} and start your journey today. It's free!`;
   const footerTagline = siteConfig.footer_tagline || 'Find your perfect life partner with trust, safety, and love.';
   const siteName = siteConfig.site_name || 'Vivah Dwar';
 
@@ -148,12 +152,12 @@ export default function Home() {
   useEffect(() => {
     Promise.all([
       fetch('/api/admin/homepage/slides').then(r => r.json()).catch(() => []),
-      fetch('/api/admin/homepage/stats').then(r => r.json()).catch(() => []),
+      fetch('/api/public/stats').then(r => r.json()).catch(() => null),
       fetch('/api/admin/homepage/features').then(r => r.json()).catch(() => []),
       fetch('/api/admin/siteconfig').then(r => r.json()).catch(() => ({})),
-    ]).then(([slides, stats, feats, cfg]) => {
+    ]).then(([slides, statsData, feats, cfg]) => {
       if (Array.isArray(slides)) setHpSlides(slides);
-      if (Array.isArray(stats)) setHpStats(stats);
+      if (statsData?.stats) setLiveStats(statsData);
       if (Array.isArray(feats)) setHpFeatures(feats);
       setSiteConfig(cfg || {});
       setContentLoaded(true);
