@@ -363,6 +363,7 @@ enum SubscriptionStatus {
   ACTIVE
   EXPIRED
   CANCELLED
+  PENDING
 }
 
 model document {
