@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { queryOne, execute } from '@/lib/db';
+import { randomUUID } from 'crypto';
 import https from 'https';
 
 // Force IPv6 for Google OAuth — server has IPv6 connectivity but IPv4 is unreachable
@@ -125,9 +126,53 @@ export const authOptions = {
         );
 
         if (!dbUser) {
-          // ── Brand new Google user — send OTP first, don't create account yet ──
-          // Redirect to email OTP verification page; account is created after OTP confirmed
-          return `/google-verify?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
+          // ── Brand new Google user ──
+          const userId = randomUUID();
+          const profileId = randomUUID();
+          const now = new Date();
+
+          await execute(
+            `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified, adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified, loginOtpEnabled, emailVerified, createdAt, updatedAt, needsPassword)
+             VALUES (?, ?, ?, NULL, NULL, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?, 0)`,
+            [userId, user.name || '', user.email, now, now]
+          );
+
+          await execute(
+            `INSERT INTO profile (id, userId, gender, profileComplete, maritalStatus, smoking, drinking, hidePhone, hidePhoto, createdAt, updatedAt)
+             VALUES (?, ?, NULL, 10, 'NEVER_MARRIED', 'NO', 'NO', 0, 0, ?, ?)`,
+            [profileId, userId, now, now]
+          );
+
+          // Early Bird Auto-Assignment
+          try {
+            const ebConfigRow = await queryOne("SELECT value FROM siteconfig WHERE `key` = 'early_bird_settings'");
+            if (ebConfigRow && ebConfigRow.value) {
+              const ebConfig = JSON.parse(ebConfigRow.value);
+              if (ebConfig.enabled && ebConfig.claimed < ebConfig.limit) {
+                const endDate = new Date(Date.now() + (ebConfig.durationDays || 30) * 86400000);
+                await execute(
+                  "INSERT INTO subscription (id, userId, plan, status, amount, currency, paymentId, startDate, endDate, createdAt) VALUES (?, ?, ?, 'ACTIVE', 0, 'INR', 'EARLY_BIRD', NOW(), ?, NOW())",
+                  [randomUUID(), userId, ebConfig.planId, endDate]
+                );
+                await execute(
+                  "UPDATE \`user\` SET isPremium = 1, premiumPlan = ?, premiumExpiry = ? WHERE id = ?",
+                  [ebConfig.planId, endDate, userId]
+                );
+                ebConfig.claimed += 1;
+                await execute("UPDATE siteconfig SET value = ? WHERE `key` = 'early_bird_settings'", [JSON.stringify(ebConfig)]);
+              }
+            }
+          } catch (e) {
+            console.error('Early bird assign error:', e);
+          }
+
+          user.id = userId;
+          user.role = 'USER';
+          user.isVerified = true;
+          user.adminVerified = false;
+          user.isPremium = false;
+          user.isNewUser = true;
+          return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 
         // ── Existing user ──────────────────────────────────────────────
