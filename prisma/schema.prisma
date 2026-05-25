@@ -290,6 +290,7 @@ enum NotificationType {
   SUBSCRIPTION_EXPIRY
   VERIFICATION_APPROVED
   SYSTEM
+  NEW_MATCH
 }
 
 model profileoption {

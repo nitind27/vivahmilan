@@ -526,6 +526,37 @@
               "body": "{\n  \"success\": true\n}"
             }
           ]
+        },
+        {
+          "name": "Register FCM Push Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/flutter/push/token", "host": ["{{baseUrl}}"], "path": ["api","flutter","push","token"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"FCM_DEVICE_TOKEN_FROM_FIREBASE_MESSAGING\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Call after login and on FCM token refresh. Required for mobile push notifications (chat, new match, etc.)."
+          },
+          "response": [
+            {
+              "name": "201 - Token Registered",
+              "status": "Created", "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"FCM token registered successfully\"\n}"
+            },
+            {
+              "name": "200 - Already Registered",
+              "status": "OK", "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Token already registered\"\n}"
+            }
+          ]
         }
       ]
     },

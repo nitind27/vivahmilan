@@ -80,3 +80,37 @@ Response:
     { id, name, ..., viewed_at }
   ]
 }
+
+
+4. /api/flutter/push/token  (app/api/flutter/push/token/route.js)  — NEW
+--------------------------------------------------------------------------
+
+POST /api/flutter/push/token
+Auth: Bearer token required
+Body: { "token": "<FCM device token from FirebaseMessaging>" }
+
+Call after login and on token refresh. Without this, push notifications will not work.
+
+Responses:
+  201 — { "success": true, "message": "FCM token registered successfully" }
+  200 — { "success": true, "message": "Token already registered" }
+  401 — Unauthorized / invalid JWT
+  400 — { "error": "FCM token is required" }
+
+
+5. Push notification payloads (FCM data)
+-----------------------------------------
+
+type: NEW_PROFILE — sent when admin approves a matching profile
+
+Paid premium user (isPremium=true only, NOT free trial):
+  data: { type, accessLevel: "full", profileId, profileName, profileCity, screen: "profile" }
+  → Open profile screen
+
+Free user OR free trial user:
+  data: { type, accessLevel: "locked", screen: "premium", reason: "subscription_required" }
+  → Open premium/plans screen — do NOT show profileId
+
+type: CHAT_MESSAGE
+  data: { type, roomId, senderId }
+  → Open chat room (requires isPremium OR freeTrialActive)

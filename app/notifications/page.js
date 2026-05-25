@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-import { Bell, Heart, MessageCircle, Eye, Star, CheckCheck, ChevronDown, Loader2 } from 'lucide-react';
+import { Bell, Heart, MessageCircle, Eye, Star, CheckCheck, ChevronDown, Loader2, Sparkles, Lock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 const iconMap = {
@@ -14,6 +14,7 @@ const iconMap = {
   PROFILE_VIEWED: Eye,
   SUBSCRIPTION_EXPIRY: Star,
   VERIFICATION_APPROVED: CheckCheck,
+  NEW_MATCH: Sparkles,
   SYSTEM: Bell,
 };
 
@@ -23,19 +24,26 @@ const colorMap = {
   PROFILE_VIEWED: 'bg-vd-primary',
   SUBSCRIPTION_EXPIRY: 'bg-yellow-500',
   VERIFICATION_APPROVED: 'bg-blue-500',
+  NEW_MATCH: 'bg-vd-primary',
   SYSTEM: 'bg-gray-500',
 };
 
 const LIMIT = 10;
 
+function isProfileLink(link) {
+  return link && /^\/profile\/[^/]+/.test(link);
+}
+
 export default function NotificationsPage() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [skip, setSkip] = useState(0);
+
+  const isPaidPremium = !!session?.user?.isPremium;
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -79,6 +87,28 @@ export default function NotificationsPage() {
     setTimeout(() => setNotifications(prev => prev.filter(n => n.id !== id)), 300);
   };
 
+  const getNotificationHref = (n) => {
+    if (n.type === 'NEW_MATCH' || (n.type === 'SYSTEM' && isProfileLink(n.link))) {
+      if (!isPaidPremium) return '/premium?source=new_match';
+    }
+    return n.link || '#';
+  };
+
+  const handleNotificationClick = (e, n) => {
+    const href = getNotificationHref(n);
+    if (href === '#') {
+      e.preventDefault();
+      return;
+    }
+    if (href !== n.link) {
+      e.preventDefault();
+      if (!n.isRead) markOneRead(n.id);
+      router.push(href);
+    } else if (!n.isRead) {
+      markOneRead(n.id);
+    }
+  };
+
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
@@ -118,6 +148,10 @@ export default function NotificationsPage() {
                 {notifications.map((n, i) => {
                   const Icon = iconMap[n.type] || Bell;
                   const iconBg = colorMap[n.type] || 'bg-gray-500';
+                  const isLockedMatch =
+                    (n.type === 'NEW_MATCH' || (n.type === 'SYSTEM' && isProfileLink(n.link))) && !isPaidPremium;
+                  const href = getNotificationHref(n);
+
                   return (
                     <motion.div
                       key={n.id}
@@ -127,18 +161,27 @@ export default function NotificationsPage() {
                       transition={{ delay: i < 10 ? i * 0.03 : 0 }}
                     >
                       <Link
-                        href={n.link || '#'}
-                        onClick={() => !n.isRead && markOneRead(n.id)}
+                        href={href}
+                        onClick={(e) => handleNotificationClick(e, n)}
                         className={`flex items-start gap-4 p-4 rounded-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 ${
                           !n.isRead ? 'bg-vd-accent-soft dark:bg-vd-accent/10 border border-vd-border' : 'bg-vd-bg-section dark:bg-vd-bg-card'
                         }`}
                       >
                         <div className={`w-10 h-10 ${iconBg} rounded-full flex items-center justify-center flex-shrink-0`}>
-                          <Icon className="w-5 h-5 text-white" />
+                          {isLockedMatch ? <Lock className="w-5 h-5 text-white" /> : <Icon className="w-5 h-5 text-white" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className={`text-sm ${!n.isRead ? 'font-semibold' : 'font-medium'}`}>{n.title}</p>
-                          <p className="text-gray-500 text-sm mt-0.5 line-clamp-2">{n.message}</p>
+                          <p className={`text-sm ${!n.isRead ? 'font-semibold' : 'font-medium'}`}>
+                            {isLockedMatch ? '✨ New Match Available' : n.title}
+                          </p>
+                          <p className="text-gray-500 text-sm mt-0.5 line-clamp-2">
+                            {isLockedMatch
+                              ? 'Subscribe to Premium to view matching profile details.'
+                              : n.message}
+                          </p>
+                          {isLockedMatch && (
+                            <p className="text-vd-primary text-xs font-medium mt-1">Upgrade to Premium →</p>
+                          )}
                           <p className="text-gray-400 text-xs mt-1">
                             {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
                           </p>
@@ -153,7 +196,6 @@ export default function NotificationsPage() {
               </AnimatePresence>
             </div>
 
-            {/* Load More */}
             {hasMore && (
               <div className="mt-4 text-center">
                 <button
