@@ -56,6 +56,61 @@ export async function PATCH(req, { params }) {
         url: '/login',
       });
     } catch (e) { console.error('Push error:', e.message); }
+
+    // Notify matching users (same religion, caste, opposite gender)
+    try {
+      const profile = await prisma.profile.findUnique({ where: { userId: id } });
+      if (profile && profile.religion && profile.caste) {
+        const matchingProfiles = await prisma.profile.findMany({
+          where: {
+            religion: profile.religion,
+            caste: profile.caste,
+            gender: profile.gender === 'MALE' ? 'FEMALE' : 'MALE',
+            userId: { not: id }
+          },
+          select: { userId: true }
+        });
+
+        if (matchingProfiles.length > 0) {
+          const title = 'New Profile Match!';
+          const body = `A new profile matching your religion and caste has joined. Check it out!`;
+          const url = `/profile/${id}`;
+          const { sendPushToMobile } = await import('@/lib/fcm');
+          const { sendPushToUser } = await import('@/lib/webpush');
+
+          // Process in small batches or asynchronously so we don't block the API response
+          setTimeout(async () => {
+            for (const match of matchingProfiles) {
+              try {
+                await prisma.notification.create({
+                  data: {
+                    userId: match.userId,
+                    type: 'NEW_MATCH',
+                    title,
+                    message: body,
+                    link: url,
+                  }
+                });
+                await sendPushToMobile(match.userId, {
+                  title,
+                  body,
+                  data: { type: 'NEW_PROFILE', profileId: id, url, isPremiumRequired: 'true' }
+                });
+                await sendPushToUser(match.userId, {
+                  title,
+                  body,
+                  url,
+                });
+              } catch (err) {
+                console.error('Error sending match notification:', err.message);
+              }
+            }
+          }, 0);
+        }
+      }
+    } catch (e) {
+      console.error('Match notification logic error:', e.message);
+    }
   }
 
   return NextResponse.json(updated);
