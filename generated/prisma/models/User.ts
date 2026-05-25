@@ -47,6 +47,7 @@ export type UserMinAggregateOutputType = {
   lastLoginAt: Date | null
   freeTrialUsed: boolean | null
   freeTrialExpiry: Date | null
+  needsPassword: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +75,7 @@ export type UserMaxAggregateOutputType = {
   lastLoginAt: Date | null
   freeTrialUsed: boolean | null
   freeTrialExpiry: Date | null
+  needsPassword: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -101,6 +103,7 @@ export type UserCountAggregateOutputType = {
   lastLoginAt: number
   freeTrialUsed: number
   freeTrialExpiry: number
+  needsPassword: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -130,6 +133,7 @@ export type UserMinAggregateInputType = {
   lastLoginAt?: true
   freeTrialUsed?: true
   freeTrialExpiry?: true
+  needsPassword?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -157,6 +161,7 @@ export type UserMaxAggregateInputType = {
   lastLoginAt?: true
   freeTrialUsed?: true
   freeTrialExpiry?: true
+  needsPassword?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -184,6 +189,7 @@ export type UserCountAggregateInputType = {
   lastLoginAt?: true
   freeTrialUsed?: true
   freeTrialExpiry?: true
+  needsPassword?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -284,6 +290,7 @@ export type UserGroupByOutputType = {
   lastLoginAt: Date | null
   freeTrialUsed: boolean
   freeTrialExpiry: Date | null
+  needsPassword: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -332,6 +339,7 @@ export type userWhereInput = {
   lastLoginAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   freeTrialUsed?: Prisma.BoolFilter<"user"> | boolean
   freeTrialExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  needsPassword?: Prisma.BoolFilter<"user"> | boolean
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -358,6 +366,7 @@ export type userWhereInput = {
   blockedBy?: Prisma.BlockListRelationFilter
   otps?: Prisma.OtpListRelationFilter
   pushSubscriptions?: Prisma.PushsubscriptionListRelationFilter
+  agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.agentWhereInput> | null
 }
 
 export type userOrderByWithRelationInput = {
@@ -383,6 +392,7 @@ export type userOrderByWithRelationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  needsPassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.accountOrderByRelationAggregateInput
@@ -409,6 +419,7 @@ export type userOrderByWithRelationInput = {
   blockedBy?: Prisma.blockOrderByRelationAggregateInput
   otps?: Prisma.otpOrderByRelationAggregateInput
   pushSubscriptions?: Prisma.pushsubscriptionOrderByRelationAggregateInput
+  agent?: Prisma.agentOrderByWithRelationInput
   _relevance?: Prisma.userOrderByRelevanceInput
 }
 
@@ -438,6 +449,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   lastLoginAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   freeTrialUsed?: Prisma.BoolFilter<"user"> | boolean
   freeTrialExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
+  needsPassword?: Prisma.BoolFilter<"user"> | boolean
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -464,6 +476,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   blockedBy?: Prisma.BlockListRelationFilter
   otps?: Prisma.OtpListRelationFilter
   pushSubscriptions?: Prisma.PushsubscriptionListRelationFilter
+  agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.agentWhereInput> | null
 }, "id" | "email" | "phone">
 
 export type userOrderByWithAggregationInput = {
@@ -489,6 +502,7 @@ export type userOrderByWithAggregationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  needsPassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.userCountOrderByAggregateInput
@@ -522,6 +536,7 @@ export type userScalarWhereWithAggregatesInput = {
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
   freeTrialUsed?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
   freeTrialExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
+  needsPassword?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
 }
@@ -549,6 +564,7 @@ export type userCreateInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -575,6 +591,7 @@ export type userCreateInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateInput = {
@@ -600,6 +617,7 @@ export type userUncheckedCreateInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -626,6 +644,7 @@ export type userUncheckedCreateInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userUpdateInput = {
@@ -651,6 +670,7 @@ export type userUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -677,6 +697,7 @@ export type userUpdateInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateInput = {
@@ -702,6 +723,7 @@ export type userUncheckedUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -728,6 +750,7 @@ export type userUncheckedUpdateInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateManyInput = {
@@ -753,6 +776,7 @@ export type userCreateManyInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -780,6 +804,7 @@ export type userUpdateManyMutationInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -807,6 +832,7 @@ export type userUncheckedUpdateManyInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -845,6 +871,7 @@ export type userCountOrderByAggregateInput = {
   lastLoginAt?: Prisma.SortOrder
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrder
+  needsPassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -872,6 +899,7 @@ export type userMaxOrderByAggregateInput = {
   lastLoginAt?: Prisma.SortOrder
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrder
+  needsPassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -899,6 +927,7 @@ export type userMinOrderByAggregateInput = {
   lastLoginAt?: Prisma.SortOrder
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrder
+  needsPassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1251,6 +1280,20 @@ export type userUpdateOneRequiredWithoutKundaliNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutKundaliInput, Prisma.userUpdateWithoutKundaliInput>, Prisma.userUncheckedUpdateWithoutKundaliInput>
 }
 
+export type userCreateNestedOneWithoutAgentInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutAgentInput, Prisma.userUncheckedCreateWithoutAgentInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutAgentInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutAgentNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutAgentInput, Prisma.userUncheckedCreateWithoutAgentInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutAgentInput
+  upsert?: Prisma.userUpsertWithoutAgentInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutAgentInput, Prisma.userUpdateWithoutAgentInput>, Prisma.userUncheckedUpdateWithoutAgentInput>
+}
+
 export type userCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -1274,6 +1317,7 @@ export type userCreateWithoutAccountsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
@@ -1299,6 +1343,7 @@ export type userCreateWithoutAccountsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutAccountsInput = {
@@ -1324,6 +1369,7 @@ export type userUncheckedCreateWithoutAccountsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
@@ -1349,6 +1395,7 @@ export type userUncheckedCreateWithoutAccountsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutAccountsInput = {
@@ -1390,6 +1437,7 @@ export type userUpdateWithoutAccountsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
@@ -1415,6 +1463,7 @@ export type userUpdateWithoutAccountsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutAccountsInput = {
@@ -1440,6 +1489,7 @@ export type userUncheckedUpdateWithoutAccountsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1465,6 +1515,7 @@ export type userUncheckedUpdateWithoutAccountsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutSessionsInput = {
@@ -1490,6 +1541,7 @@ export type userCreateWithoutSessionsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1515,6 +1567,7 @@ export type userCreateWithoutSessionsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSessionsInput = {
@@ -1540,6 +1593,7 @@ export type userUncheckedCreateWithoutSessionsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1565,6 +1619,7 @@ export type userUncheckedCreateWithoutSessionsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSessionsInput = {
@@ -1606,6 +1661,7 @@ export type userUpdateWithoutSessionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1631,6 +1687,7 @@ export type userUpdateWithoutSessionsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSessionsInput = {
@@ -1656,6 +1713,7 @@ export type userUncheckedUpdateWithoutSessionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1681,6 +1739,7 @@ export type userUncheckedUpdateWithoutSessionsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutProfileInput = {
@@ -1706,6 +1765,7 @@ export type userCreateWithoutProfileInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1731,6 +1791,7 @@ export type userCreateWithoutProfileInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutProfileInput = {
@@ -1756,6 +1817,7 @@ export type userUncheckedCreateWithoutProfileInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1781,6 +1843,7 @@ export type userUncheckedCreateWithoutProfileInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutProfileInput = {
@@ -1822,6 +1885,7 @@ export type userUpdateWithoutProfileInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1847,6 +1911,7 @@ export type userUpdateWithoutProfileInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutProfileInput = {
@@ -1872,6 +1937,7 @@ export type userUncheckedUpdateWithoutProfileInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1897,6 +1963,7 @@ export type userUncheckedUpdateWithoutProfileInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutPhotosInput = {
@@ -1922,6 +1989,7 @@ export type userCreateWithoutPhotosInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1947,6 +2015,7 @@ export type userCreateWithoutPhotosInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutPhotosInput = {
@@ -1972,6 +2041,7 @@ export type userUncheckedCreateWithoutPhotosInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1997,6 +2067,7 @@ export type userUncheckedCreateWithoutPhotosInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutPhotosInput = {
@@ -2038,6 +2109,7 @@ export type userUpdateWithoutPhotosInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2063,6 +2135,7 @@ export type userUpdateWithoutPhotosInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutPhotosInput = {
@@ -2088,6 +2161,7 @@ export type userUncheckedUpdateWithoutPhotosInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2113,6 +2187,7 @@ export type userUncheckedUpdateWithoutPhotosInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutSentInterestsInput = {
@@ -2138,6 +2213,7 @@ export type userCreateWithoutSentInterestsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2163,6 +2239,7 @@ export type userCreateWithoutSentInterestsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSentInterestsInput = {
@@ -2188,6 +2265,7 @@ export type userUncheckedCreateWithoutSentInterestsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2213,6 +2291,7 @@ export type userUncheckedCreateWithoutSentInterestsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSentInterestsInput = {
@@ -2243,6 +2322,7 @@ export type userCreateWithoutReceivedInterestsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2268,6 +2348,7 @@ export type userCreateWithoutReceivedInterestsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReceivedInterestsInput = {
@@ -2293,6 +2374,7 @@ export type userUncheckedCreateWithoutReceivedInterestsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2318,6 +2400,7 @@ export type userUncheckedCreateWithoutReceivedInterestsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReceivedInterestsInput = {
@@ -2359,6 +2442,7 @@ export type userUpdateWithoutSentInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2384,6 +2468,7 @@ export type userUpdateWithoutSentInterestsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSentInterestsInput = {
@@ -2409,6 +2494,7 @@ export type userUncheckedUpdateWithoutSentInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2434,6 +2520,7 @@ export type userUncheckedUpdateWithoutSentInterestsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutReceivedInterestsInput = {
@@ -2470,6 +2557,7 @@ export type userUpdateWithoutReceivedInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2495,6 +2583,7 @@ export type userUpdateWithoutReceivedInterestsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReceivedInterestsInput = {
@@ -2520,6 +2609,7 @@ export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2545,6 +2635,7 @@ export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutChatRoomsAInput = {
@@ -2570,6 +2661,7 @@ export type userCreateWithoutChatRoomsAInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2595,6 +2687,7 @@ export type userCreateWithoutChatRoomsAInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutChatRoomsAInput = {
@@ -2620,6 +2713,7 @@ export type userUncheckedCreateWithoutChatRoomsAInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2645,6 +2739,7 @@ export type userUncheckedCreateWithoutChatRoomsAInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutChatRoomsAInput = {
@@ -2675,6 +2770,7 @@ export type userCreateWithoutChatRoomsBInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2700,6 +2796,7 @@ export type userCreateWithoutChatRoomsBInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutChatRoomsBInput = {
@@ -2725,6 +2822,7 @@ export type userUncheckedCreateWithoutChatRoomsBInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2750,6 +2848,7 @@ export type userUncheckedCreateWithoutChatRoomsBInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutChatRoomsBInput = {
@@ -2791,6 +2890,7 @@ export type userUpdateWithoutChatRoomsAInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2816,6 +2916,7 @@ export type userUpdateWithoutChatRoomsAInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutChatRoomsAInput = {
@@ -2841,6 +2942,7 @@ export type userUncheckedUpdateWithoutChatRoomsAInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2866,6 +2968,7 @@ export type userUncheckedUpdateWithoutChatRoomsAInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutChatRoomsBInput = {
@@ -2902,6 +3005,7 @@ export type userUpdateWithoutChatRoomsBInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2927,6 +3031,7 @@ export type userUpdateWithoutChatRoomsBInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutChatRoomsBInput = {
@@ -2952,6 +3057,7 @@ export type userUncheckedUpdateWithoutChatRoomsBInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2977,6 +3083,7 @@ export type userUncheckedUpdateWithoutChatRoomsBInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutSentMessagesInput = {
@@ -3002,6 +3109,7 @@ export type userCreateWithoutSentMessagesInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3027,6 +3135,7 @@ export type userCreateWithoutSentMessagesInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSentMessagesInput = {
@@ -3052,6 +3161,7 @@ export type userUncheckedCreateWithoutSentMessagesInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3077,6 +3187,7 @@ export type userUncheckedCreateWithoutSentMessagesInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSentMessagesInput = {
@@ -3107,6 +3218,7 @@ export type userCreateWithoutReceivedMessagesInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3132,6 +3244,7 @@ export type userCreateWithoutReceivedMessagesInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReceivedMessagesInput = {
@@ -3157,6 +3270,7 @@ export type userUncheckedCreateWithoutReceivedMessagesInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3182,6 +3296,7 @@ export type userUncheckedCreateWithoutReceivedMessagesInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReceivedMessagesInput = {
@@ -3223,6 +3338,7 @@ export type userUpdateWithoutSentMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3248,6 +3364,7 @@ export type userUpdateWithoutSentMessagesInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSentMessagesInput = {
@@ -3273,6 +3390,7 @@ export type userUncheckedUpdateWithoutSentMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3298,6 +3416,7 @@ export type userUncheckedUpdateWithoutSentMessagesInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutReceivedMessagesInput = {
@@ -3334,6 +3453,7 @@ export type userUpdateWithoutReceivedMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3359,6 +3479,7 @@ export type userUpdateWithoutReceivedMessagesInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -3384,6 +3505,7 @@ export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3409,6 +3531,7 @@ export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutShortlistedInput = {
@@ -3434,6 +3557,7 @@ export type userCreateWithoutShortlistedInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3459,6 +3583,7 @@ export type userCreateWithoutShortlistedInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutShortlistedInput = {
@@ -3484,6 +3609,7 @@ export type userUncheckedCreateWithoutShortlistedInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3509,6 +3635,7 @@ export type userUncheckedCreateWithoutShortlistedInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutShortlistedInput = {
@@ -3539,6 +3666,7 @@ export type userCreateWithoutShortlistedByInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3564,6 +3692,7 @@ export type userCreateWithoutShortlistedByInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutShortlistedByInput = {
@@ -3589,6 +3718,7 @@ export type userUncheckedCreateWithoutShortlistedByInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3614,6 +3744,7 @@ export type userUncheckedCreateWithoutShortlistedByInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutShortlistedByInput = {
@@ -3655,6 +3786,7 @@ export type userUpdateWithoutShortlistedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3680,6 +3812,7 @@ export type userUpdateWithoutShortlistedInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutShortlistedInput = {
@@ -3705,6 +3838,7 @@ export type userUncheckedUpdateWithoutShortlistedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3730,6 +3864,7 @@ export type userUncheckedUpdateWithoutShortlistedInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutShortlistedByInput = {
@@ -3766,6 +3901,7 @@ export type userUpdateWithoutShortlistedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3791,6 +3927,7 @@ export type userUpdateWithoutShortlistedByInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutShortlistedByInput = {
@@ -3816,6 +3953,7 @@ export type userUncheckedUpdateWithoutShortlistedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3841,6 +3979,7 @@ export type userUncheckedUpdateWithoutShortlistedByInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutViewedProfilesInput = {
@@ -3866,6 +4005,7 @@ export type userCreateWithoutViewedProfilesInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3891,6 +4031,7 @@ export type userCreateWithoutViewedProfilesInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutViewedProfilesInput = {
@@ -3916,6 +4057,7 @@ export type userUncheckedCreateWithoutViewedProfilesInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3941,6 +4083,7 @@ export type userUncheckedCreateWithoutViewedProfilesInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutViewedProfilesInput = {
@@ -3971,6 +4114,7 @@ export type userCreateWithoutProfileViewsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3996,6 +4140,7 @@ export type userCreateWithoutProfileViewsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutProfileViewsInput = {
@@ -4021,6 +4166,7 @@ export type userUncheckedCreateWithoutProfileViewsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4046,6 +4192,7 @@ export type userUncheckedCreateWithoutProfileViewsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutProfileViewsInput = {
@@ -4087,6 +4234,7 @@ export type userUpdateWithoutViewedProfilesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4112,6 +4260,7 @@ export type userUpdateWithoutViewedProfilesInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutViewedProfilesInput = {
@@ -4137,6 +4286,7 @@ export type userUncheckedUpdateWithoutViewedProfilesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4162,6 +4312,7 @@ export type userUncheckedUpdateWithoutViewedProfilesInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutProfileViewsInput = {
@@ -4198,6 +4349,7 @@ export type userUpdateWithoutProfileViewsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4223,6 +4375,7 @@ export type userUpdateWithoutProfileViewsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutProfileViewsInput = {
@@ -4248,6 +4401,7 @@ export type userUncheckedUpdateWithoutProfileViewsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4273,6 +4427,7 @@ export type userUncheckedUpdateWithoutProfileViewsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutNotificationsInput = {
@@ -4298,6 +4453,7 @@ export type userCreateWithoutNotificationsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4323,6 +4479,7 @@ export type userCreateWithoutNotificationsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutNotificationsInput = {
@@ -4348,6 +4505,7 @@ export type userUncheckedCreateWithoutNotificationsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4373,6 +4531,7 @@ export type userUncheckedCreateWithoutNotificationsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutNotificationsInput = {
@@ -4414,6 +4573,7 @@ export type userUpdateWithoutNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4439,6 +4599,7 @@ export type userUpdateWithoutNotificationsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutNotificationsInput = {
@@ -4464,6 +4625,7 @@ export type userUncheckedUpdateWithoutNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4489,6 +4651,7 @@ export type userUncheckedUpdateWithoutNotificationsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutPushSubscriptionsInput = {
@@ -4514,6 +4677,7 @@ export type userCreateWithoutPushSubscriptionsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4539,6 +4703,7 @@ export type userCreateWithoutPushSubscriptionsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -4564,6 +4729,7 @@ export type userUncheckedCreateWithoutPushSubscriptionsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4589,6 +4755,7 @@ export type userUncheckedCreateWithoutPushSubscriptionsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -4630,6 +4797,7 @@ export type userUpdateWithoutPushSubscriptionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4655,6 +4823,7 @@ export type userUpdateWithoutPushSubscriptionsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -4680,6 +4849,7 @@ export type userUncheckedUpdateWithoutPushSubscriptionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4705,6 +4875,7 @@ export type userUncheckedUpdateWithoutPushSubscriptionsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutSubscriptionsInput = {
@@ -4730,6 +4901,7 @@ export type userCreateWithoutSubscriptionsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4755,6 +4927,7 @@ export type userCreateWithoutSubscriptionsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSubscriptionsInput = {
@@ -4780,6 +4953,7 @@ export type userUncheckedCreateWithoutSubscriptionsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4805,6 +4979,7 @@ export type userUncheckedCreateWithoutSubscriptionsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSubscriptionsInput = {
@@ -4846,6 +5021,7 @@ export type userUpdateWithoutSubscriptionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4871,6 +5047,7 @@ export type userUpdateWithoutSubscriptionsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSubscriptionsInput = {
@@ -4896,6 +5073,7 @@ export type userUncheckedUpdateWithoutSubscriptionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4921,6 +5099,7 @@ export type userUncheckedUpdateWithoutSubscriptionsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutDocumentsInput = {
@@ -4946,6 +5125,7 @@ export type userCreateWithoutDocumentsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4971,6 +5151,7 @@ export type userCreateWithoutDocumentsInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutDocumentsInput = {
@@ -4996,6 +5177,7 @@ export type userUncheckedCreateWithoutDocumentsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5021,6 +5203,7 @@ export type userUncheckedCreateWithoutDocumentsInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutDocumentsInput = {
@@ -5062,6 +5245,7 @@ export type userUpdateWithoutDocumentsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5087,6 +5271,7 @@ export type userUpdateWithoutDocumentsInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutDocumentsInput = {
@@ -5112,6 +5297,7 @@ export type userUncheckedUpdateWithoutDocumentsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5137,6 +5323,7 @@ export type userUncheckedUpdateWithoutDocumentsInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutReportsMadeInput = {
@@ -5162,6 +5349,7 @@ export type userCreateWithoutReportsMadeInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5187,6 +5375,7 @@ export type userCreateWithoutReportsMadeInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReportsMadeInput = {
@@ -5212,6 +5401,7 @@ export type userUncheckedCreateWithoutReportsMadeInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5237,6 +5427,7 @@ export type userUncheckedCreateWithoutReportsMadeInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReportsMadeInput = {
@@ -5267,6 +5458,7 @@ export type userCreateWithoutReportsReceivedInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5292,6 +5484,7 @@ export type userCreateWithoutReportsReceivedInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutReportsReceivedInput = {
@@ -5317,6 +5510,7 @@ export type userUncheckedCreateWithoutReportsReceivedInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5342,6 +5536,7 @@ export type userUncheckedCreateWithoutReportsReceivedInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutReportsReceivedInput = {
@@ -5383,6 +5578,7 @@ export type userUpdateWithoutReportsMadeInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5408,6 +5604,7 @@ export type userUpdateWithoutReportsMadeInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReportsMadeInput = {
@@ -5433,6 +5630,7 @@ export type userUncheckedUpdateWithoutReportsMadeInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5458,6 +5656,7 @@ export type userUncheckedUpdateWithoutReportsMadeInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutReportsReceivedInput = {
@@ -5494,6 +5693,7 @@ export type userUpdateWithoutReportsReceivedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5519,6 +5719,7 @@ export type userUpdateWithoutReportsReceivedInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutReportsReceivedInput = {
@@ -5544,6 +5745,7 @@ export type userUncheckedUpdateWithoutReportsReceivedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5569,6 +5771,7 @@ export type userUncheckedUpdateWithoutReportsReceivedInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutBlockedUsersInput = {
@@ -5594,6 +5797,7 @@ export type userCreateWithoutBlockedUsersInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5619,6 +5823,7 @@ export type userCreateWithoutBlockedUsersInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutBlockedUsersInput = {
@@ -5644,6 +5849,7 @@ export type userUncheckedCreateWithoutBlockedUsersInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5669,6 +5875,7 @@ export type userUncheckedCreateWithoutBlockedUsersInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutBlockedUsersInput = {
@@ -5699,6 +5906,7 @@ export type userCreateWithoutBlockedByInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5724,6 +5932,7 @@ export type userCreateWithoutBlockedByInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutBlockedByInput = {
@@ -5749,6 +5958,7 @@ export type userUncheckedCreateWithoutBlockedByInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5774,6 +5984,7 @@ export type userUncheckedCreateWithoutBlockedByInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutBlockedByInput = {
@@ -5815,6 +6026,7 @@ export type userUpdateWithoutBlockedUsersInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5840,6 +6052,7 @@ export type userUpdateWithoutBlockedUsersInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutBlockedUsersInput = {
@@ -5865,6 +6078,7 @@ export type userUncheckedUpdateWithoutBlockedUsersInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5890,6 +6104,7 @@ export type userUncheckedUpdateWithoutBlockedUsersInput = {
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userUpsertWithoutBlockedByInput = {
@@ -5926,6 +6141,7 @@ export type userUpdateWithoutBlockedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5951,6 +6167,7 @@ export type userUpdateWithoutBlockedByInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutBlockedByInput = {
@@ -5976,6 +6193,7 @@ export type userUncheckedUpdateWithoutBlockedByInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -6001,6 +6219,7 @@ export type userUncheckedUpdateWithoutBlockedByInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutOtpsInput = {
@@ -6026,6 +6245,7 @@ export type userCreateWithoutOtpsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -6051,6 +6271,7 @@ export type userCreateWithoutOtpsInput = {
   blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutOtpsInput = {
@@ -6076,6 +6297,7 @@ export type userUncheckedCreateWithoutOtpsInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -6101,6 +6323,7 @@ export type userUncheckedCreateWithoutOtpsInput = {
   blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutOtpsInput = {
@@ -6142,6 +6365,7 @@ export type userUpdateWithoutOtpsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6167,6 +6391,7 @@ export type userUpdateWithoutOtpsInput = {
   blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutOtpsInput = {
@@ -6192,6 +6417,7 @@ export type userUncheckedUpdateWithoutOtpsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -6217,6 +6443,7 @@ export type userUncheckedUpdateWithoutOtpsInput = {
   blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
   blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type userCreateWithoutKundaliInput = {
@@ -6242,6 +6469,7 @@ export type userCreateWithoutKundaliInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -6267,6 +6495,7 @@ export type userCreateWithoutKundaliInput = {
   blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentCreateNestedOneWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutKundaliInput = {
@@ -6292,6 +6521,7 @@ export type userUncheckedCreateWithoutKundaliInput = {
   lastLoginAt?: Date | string | null
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -6317,6 +6547,7 @@ export type userUncheckedCreateWithoutKundaliInput = {
   blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agent?: Prisma.agentUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutKundaliInput = {
@@ -6358,6 +6589,7 @@ export type userUpdateWithoutKundaliInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6383,6 +6615,7 @@ export type userUpdateWithoutKundaliInput = {
   blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUpdateOneWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutKundaliInput = {
@@ -6408,11 +6641,237 @@ export type userUncheckedUpdateWithoutKundaliInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUncheckedUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUncheckedUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUncheckedUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUncheckedUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUncheckedUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUncheckedUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUncheckedUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUncheckedUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUncheckedUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUncheckedUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUncheckedUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agent?: Prisma.agentUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type userCreateWithoutAgentInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  role?: $Enums.Role
+  isActive?: boolean
+  isVerified?: boolean
+  adminVerified?: boolean
+  verificationBadge?: boolean
+  isPremium?: boolean
+  premiumExpiry?: Date | string | null
+  premiumPlan?: string | null
+  profileBoost?: boolean
+  boostExpiry?: Date | string | null
+  loginOtpEnabled?: boolean
+  lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.accountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutAgentInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  role?: $Enums.Role
+  isActive?: boolean
+  isVerified?: boolean
+  adminVerified?: boolean
+  verificationBadge?: boolean
+  isPremium?: boolean
+  premiumExpiry?: Date | string | null
+  premiumPlan?: string | null
+  profileBoost?: boolean
+  boostExpiry?: Date | string | null
+  loginOtpEnabled?: boolean
+  lastLoginAt?: Date | string | null
+  freeTrialUsed?: boolean
+  freeTrialExpiry?: Date | string | null
+  needsPassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.profileUncheckedCreateNestedOneWithoutUserInput
+  kundali?: Prisma.kundaliUncheckedCreateNestedOneWithoutUserInput
+  photos?: Prisma.photoUncheckedCreateNestedManyWithoutUserInput
+  sentInterests?: Prisma.interestUncheckedCreateNestedManyWithoutSenderInput
+  receivedInterests?: Prisma.interestUncheckedCreateNestedManyWithoutReceiverInput
+  sentMessages?: Prisma.messageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.messageUncheckedCreateNestedManyWithoutReceiverInput
+  chatRoomsA?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserAInput
+  chatRoomsB?: Prisma.chatroomUncheckedCreateNestedManyWithoutUserBInput
+  shortlisted?: Prisma.shortlistUncheckedCreateNestedManyWithoutOwnerInput
+  shortlistedBy?: Prisma.shortlistUncheckedCreateNestedManyWithoutTargetInput
+  viewedProfiles?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewerInput
+  profileViews?: Prisma.profileviewUncheckedCreateNestedManyWithoutViewedInput
+  notifications?: Prisma.notificationUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.subscriptionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.documentUncheckedCreateNestedManyWithoutUserInput
+  reportsMade?: Prisma.reportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.reportUncheckedCreateNestedManyWithoutTargetInput
+  blockedUsers?: Prisma.blockUncheckedCreateNestedManyWithoutBlockerInput
+  blockedBy?: Prisma.blockUncheckedCreateNestedManyWithoutBlockedInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.pushsubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutAgentInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutAgentInput, Prisma.userUncheckedCreateWithoutAgentInput>
+}
+
+export type userUpsertWithoutAgentInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutAgentInput, Prisma.userUncheckedUpdateWithoutAgentInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutAgentInput, Prisma.userUncheckedCreateWithoutAgentInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutAgentInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutAgentInput, Prisma.userUncheckedUpdateWithoutAgentInput>
+}
+
+export type userUpdateWithoutAgentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationBadge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUpdateOneWithoutUserNestedInput
+  photos?: Prisma.photoUpdateManyWithoutUserNestedInput
+  sentInterests?: Prisma.interestUpdateManyWithoutSenderNestedInput
+  receivedInterests?: Prisma.interestUpdateManyWithoutReceiverNestedInput
+  sentMessages?: Prisma.messageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.messageUpdateManyWithoutReceiverNestedInput
+  chatRoomsA?: Prisma.chatroomUpdateManyWithoutUserANestedInput
+  chatRoomsB?: Prisma.chatroomUpdateManyWithoutUserBNestedInput
+  shortlisted?: Prisma.shortlistUpdateManyWithoutOwnerNestedInput
+  shortlistedBy?: Prisma.shortlistUpdateManyWithoutTargetNestedInput
+  viewedProfiles?: Prisma.profileviewUpdateManyWithoutViewerNestedInput
+  profileViews?: Prisma.profileviewUpdateManyWithoutViewedNestedInput
+  notifications?: Prisma.notificationUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.subscriptionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.documentUpdateManyWithoutUserNestedInput
+  reportsMade?: Prisma.reportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.reportUpdateManyWithoutTargetNestedInput
+  blockedUsers?: Prisma.blockUpdateManyWithoutBlockerNestedInput
+  blockedBy?: Prisma.blockUpdateManyWithoutBlockedNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.pushsubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutAgentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationBadge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileBoost?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boostExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginOtpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.profileUncheckedUpdateOneWithoutUserNestedInput
+  kundali?: Prisma.kundaliUncheckedUpdateOneWithoutUserNestedInput
   photos?: Prisma.photoUncheckedUpdateManyWithoutUserNestedInput
   sentInterests?: Prisma.interestUncheckedUpdateManyWithoutSenderNestedInput
   receivedInterests?: Prisma.interestUncheckedUpdateManyWithoutReceiverNestedInput
@@ -6678,6 +7137,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastLoginAt?: boolean
   freeTrialUsed?: boolean
   freeTrialExpiry?: boolean
+  needsPassword?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
@@ -6704,6 +7164,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   blockedBy?: boolean | Prisma.user$blockedByArgs<ExtArgs>
   otps?: boolean | Prisma.user$otpsArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.user$pushSubscriptionsArgs<ExtArgs>
+  agent?: boolean | Prisma.user$agentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -6732,11 +7193,12 @@ export type userSelectScalar = {
   lastLoginAt?: boolean
   freeTrialUsed?: boolean
   freeTrialExpiry?: boolean
+  needsPassword?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "freeTrialUsed" | "freeTrialExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "freeTrialUsed" | "freeTrialExpiry" | "needsPassword" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
@@ -6762,6 +7224,7 @@ export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   blockedBy?: boolean | Prisma.user$blockedByArgs<ExtArgs>
   otps?: boolean | Prisma.user$otpsArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.user$pushSubscriptionsArgs<ExtArgs>
+  agent?: boolean | Prisma.user$agentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -6792,6 +7255,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     blockedBy: Prisma.$blockPayload<ExtArgs>[]
     otps: Prisma.$otpPayload<ExtArgs>[]
     pushSubscriptions: Prisma.$pushsubscriptionPayload<ExtArgs>[]
+    agent: Prisma.$agentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6816,6 +7280,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lastLoginAt: Date | null
     freeTrialUsed: boolean
     freeTrialExpiry: Date | null
+    needsPassword: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -7182,6 +7647,7 @@ export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Typ
   blockedBy<T extends Prisma.user$blockedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$blockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   otps<T extends Prisma.user$otpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$otpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pushSubscriptions<T extends Prisma.user$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$pushsubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  agent<T extends Prisma.user$agentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$agentArgs<ExtArgs>>): Prisma.Prisma__agentClient<runtime.Types.Result.GetResult<Prisma.$agentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7233,6 +7699,7 @@ export interface userFieldRefs {
   readonly lastLoginAt: Prisma.FieldRef<"user", 'DateTime'>
   readonly freeTrialUsed: Prisma.FieldRef<"user", 'Boolean'>
   readonly freeTrialExpiry: Prisma.FieldRef<"user", 'DateTime'>
+  readonly needsPassword: Prisma.FieldRef<"user", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"user", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"user", 'DateTime'>
 }
@@ -8146,6 +8613,25 @@ export type user$pushSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.PushsubscriptionScalarFieldEnum | Prisma.PushsubscriptionScalarFieldEnum[]
+}
+
+/**
+ * user.agent
+ */
+export type user$agentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the agent
+   */
+  select?: Prisma.agentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the agent
+   */
+  omit?: Prisma.agentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.agentInclude<ExtArgs> | null
+  where?: Prisma.agentWhereInput
 }
 
 /**

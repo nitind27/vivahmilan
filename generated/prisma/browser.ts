@@ -137,3 +137,13 @@ export type kundali = Prisma.kundaliModel
  * 
  */
 export type successstory = Prisma.successstoryModel
+/**
+ * Model agent
+ * 
+ */
+export type agent = Prisma.agentModel
+/**
+ * Model agentsale
+ * 
+ */
+export type agentsale = Prisma.agentsaleModel

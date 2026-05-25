@@ -407,7 +407,9 @@ export const ModelName = {
   otp: 'otp',
   couponcode: 'couponcode',
   kundali: 'kundali',
-  successstory: 'successstory'
+  successstory: 'successstory',
+  agent: 'agent',
+  agentsale: 'agentsale'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -423,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "pushsubscription" | "subscription" | "document" | "report" | "block" | "otp" | "couponcode" | "kundali" | "successstory"
+    modelProps: "account" | "session" | "verificationtoken" | "user" | "profile" | "photo" | "interest" | "chatroom" | "message" | "shortlist" | "profileview" | "notification" | "profileoption" | "planconfig" | "siteconfig" | "pushsubscription" | "subscription" | "document" | "report" | "block" | "otp" | "couponcode" | "kundali" | "successstory" | "agent" | "agentsale"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2011,6 +2013,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    agent: {
+      payload: Prisma.$agentPayload<ExtArgs>
+      fields: Prisma.agentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.agentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.agentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>
+        }
+        findFirst: {
+          args: Prisma.agentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.agentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>
+        }
+        findMany: {
+          args: Prisma.agentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>[]
+        }
+        create: {
+          args: Prisma.agentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>
+        }
+        createMany: {
+          args: Prisma.agentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.agentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>
+        }
+        update: {
+          args: Prisma.agentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>
+        }
+        deleteMany: {
+          args: Prisma.agentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.agentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.agentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentPayload>
+        }
+        aggregate: {
+          args: Prisma.AgentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAgent>
+        }
+        groupBy: {
+          args: Prisma.agentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.agentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentCountAggregateOutputType> | number
+        }
+      }
+    }
+    agentsale: {
+      payload: Prisma.$agentsalePayload<ExtArgs>
+      fields: Prisma.agentsaleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.agentsaleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.agentsaleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>
+        }
+        findFirst: {
+          args: Prisma.agentsaleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.agentsaleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>
+        }
+        findMany: {
+          args: Prisma.agentsaleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>[]
+        }
+        create: {
+          args: Prisma.agentsaleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>
+        }
+        createMany: {
+          args: Prisma.agentsaleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.agentsaleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>
+        }
+        update: {
+          args: Prisma.agentsaleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>
+        }
+        deleteMany: {
+          args: Prisma.agentsaleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.agentsaleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.agentsaleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$agentsalePayload>
+        }
+        aggregate: {
+          args: Prisma.AgentsaleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAgentsale>
+        }
+        groupBy: {
+          args: Prisma.agentsaleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentsaleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.agentsaleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentsaleCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2110,6 +2244,7 @@ export const UserScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt',
   freeTrialUsed: 'freeTrialUsed',
   freeTrialExpiry: 'freeTrialExpiry',
+  needsPassword: 'needsPassword',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2431,6 +2566,33 @@ export const SuccessstoryScalarFieldEnum = {
 export type SuccessstoryScalarFieldEnum = (typeof SuccessstoryScalarFieldEnum)[keyof typeof SuccessstoryScalarFieldEnum]
 
 
+export const AgentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  referralCode: 'referralCode',
+  commissionPct: 'commissionPct',
+  totalEarnings: 'totalEarnings',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof AgentScalarFieldEnum]
+
+
+export const AgentsaleScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  buyerId: 'buyerId',
+  subscriptionId: 'subscriptionId',
+  planName: 'planName',
+  amountPaid: 'amountPaid',
+  commissionEarned: 'commissionEarned',
+  createdAt: 'createdAt'
+} as const
+
+export type AgentsaleScalarFieldEnum = (typeof AgentsaleScalarFieldEnum)[keyof typeof AgentsaleScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2730,6 +2892,26 @@ export const successstoryOrderByRelevanceFieldEnum = {
 export type successstoryOrderByRelevanceFieldEnum = (typeof successstoryOrderByRelevanceFieldEnum)[keyof typeof successstoryOrderByRelevanceFieldEnum]
 
 
+export const agentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  referralCode: 'referralCode'
+} as const
+
+export type agentOrderByRelevanceFieldEnum = (typeof agentOrderByRelevanceFieldEnum)[keyof typeof agentOrderByRelevanceFieldEnum]
+
+
+export const agentsaleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  buyerId: 'buyerId',
+  subscriptionId: 'subscriptionId',
+  planName: 'planName'
+} as const
+
+export type agentsaleOrderByRelevanceFieldEnum = (typeof agentsaleOrderByRelevanceFieldEnum)[keyof typeof agentsaleOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2973,6 +3155,8 @@ export type GlobalOmitConfig = {
   couponcode?: Prisma.couponcodeOmit
   kundali?: Prisma.kundaliOmit
   successstory?: Prisma.successstoryOmit
+  agent?: Prisma.agentOmit
+  agentsale?: Prisma.agentsaleOmit
 }
 
 /* Types for Logging */

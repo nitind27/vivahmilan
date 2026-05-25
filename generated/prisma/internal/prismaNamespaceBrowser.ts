@@ -74,7 +74,9 @@ export const ModelName = {
   otp: 'otp',
   couponcode: 'couponcode',
   kundali: 'kundali',
-  successstory: 'successstory'
+  successstory: 'successstory',
+  agent: 'agent',
+  agentsale: 'agentsale'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -153,6 +155,7 @@ export const UserScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt',
   freeTrialUsed: 'freeTrialUsed',
   freeTrialExpiry: 'freeTrialExpiry',
+  needsPassword: 'needsPassword',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -474,6 +477,33 @@ export const SuccessstoryScalarFieldEnum = {
 export type SuccessstoryScalarFieldEnum = (typeof SuccessstoryScalarFieldEnum)[keyof typeof SuccessstoryScalarFieldEnum]
 
 
+export const AgentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  referralCode: 'referralCode',
+  commissionPct: 'commissionPct',
+  totalEarnings: 'totalEarnings',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof AgentScalarFieldEnum]
+
+
+export const AgentsaleScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  buyerId: 'buyerId',
+  subscriptionId: 'subscriptionId',
+  planName: 'planName',
+  amountPaid: 'amountPaid',
+  commissionEarned: 'commissionEarned',
+  createdAt: 'createdAt'
+} as const
+
+export type AgentsaleScalarFieldEnum = (typeof AgentsaleScalarFieldEnum)[keyof typeof AgentsaleScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -771,4 +801,24 @@ export const successstoryOrderByRelevanceFieldEnum = {
 } as const
 
 export type successstoryOrderByRelevanceFieldEnum = (typeof successstoryOrderByRelevanceFieldEnum)[keyof typeof successstoryOrderByRelevanceFieldEnum]
+
+
+export const agentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  referralCode: 'referralCode'
+} as const
+
+export type agentOrderByRelevanceFieldEnum = (typeof agentOrderByRelevanceFieldEnum)[keyof typeof agentOrderByRelevanceFieldEnum]
+
+
+export const agentsaleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  buyerId: 'buyerId',
+  subscriptionId: 'subscriptionId',
+  planName: 'planName'
+} as const
+
+export type agentsaleOrderByRelevanceFieldEnum = (typeof agentsaleOrderByRelevanceFieldEnum)[keyof typeof agentsaleOrderByRelevanceFieldEnum]
 
