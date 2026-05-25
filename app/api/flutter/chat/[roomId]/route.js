@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { saveFile } from '@/lib/upload';
+import { parseLocationBody } from '@/lib/chatLocation';
 import { randomUUID } from 'crypto';
 
 // GET - messages in a room (paginated)
@@ -112,14 +113,15 @@ export async function POST(req, { params }) {
     content = body.content;
     
     if (type === 'LOCATION') {
-      latitude = body.latitude;
-      longitude = body.longitude;
-      locationType = body.locationType || 'CURRENT';
-      locationExpiry = body.locationExpiry || null;
-      if (latitude === undefined || longitude === undefined) {
+      const loc = parseLocationBody(body);
+      latitude = loc.latitude;
+      longitude = loc.longitude;
+      locationType = loc.locationType;
+      locationExpiry = loc.locationExpiry;
+      content = loc.content;
+      if (latitude === undefined || longitude === undefined || Number.isNaN(latitude) || Number.isNaN(longitude)) {
         return NextResponse.json({ error: 'latitude and longitude required for location' }, { status: 400 });
       }
-      if (!content) content = 'Shared Location';
     } else {
       if (!content?.trim()) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
       content = content.trim();

@@ -487,6 +487,50 @@
               "body": "{\n  \"total\": 5,\n  \"perRoom\": {\n    \"room-uuid-1234\": 3,\n    \"room-uuid-5678\": 2\n  }\n}"
             }
           ]
+        },
+        {
+          "name": "Send Static Location",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/:roomId", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat",":roomId"], "variable": [{ "key": "roomId", "value": "ROOM_ID_HERE" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"LOCATION\",\n  \"latitude\": 28.6139,\n  \"longitude\": 77.2090,\n  \"locationType\": \"current\"\n}", "options": { "raw": { "language": "json" } } }
+          }
+        },
+        {
+          "name": "Send Live Location",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/:roomId", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat",":roomId"], "variable": [{ "key": "roomId", "value": "ROOM_ID_HERE" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"LOCATION\",\n  \"latitude\": 28.6139,\n  \"longitude\": 77.2090,\n  \"locationType\": \"live\",\n  \"locationExpiry\": \"2026-05-25T18:00:00.000Z\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "locationExpiry = now + duration (e.g. 1h, 8h). Then PATCH coordinates while sharing."
+          }
+        },
+        {
+          "name": "Get Live Location (poll)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/location/:msgId", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat","location",":msgId"], "variable": [{ "key": "msgId", "value": "MESSAGE_ID_HERE" }] }
+          },
+          "response": [
+            {
+              "name": "200 - Location",
+              "status": "OK", "code": 200,
+              "body": "{\n  \"id\": \"msg-uuid\",\n  \"chatRoomId\": \"room-uuid\",\n  \"latitude\": 28.6139,\n  \"longitude\": 77.2090,\n  \"locationType\": \"live\",\n  \"locationExpiry\": \"2026-05-25T18:00:00.000Z\",\n  \"isLive\": true,\n  \"isExpired\": false,\n  \"isActive\": true\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Live Location Coordinates",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/flutter/chat/location/:msgId", "host": ["{{baseUrl}}"], "path": ["api","flutter","chat","location",":msgId"], "variable": [{ "key": "msgId", "value": "MESSAGE_ID_HERE" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"latitude\": 28.6142,\n  \"longitude\": 77.2095\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Sender only. Call every 15-30s while sharing live location. Server broadcasts location:update via Socket.io."
+          }
         }
       ]
     },

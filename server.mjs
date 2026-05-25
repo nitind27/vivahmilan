@@ -267,8 +267,14 @@ app.prepare().then(() => {
       if (targetSocket) io.to(targetSocket).emit('interest:received', { fromUser });
     });
 
-    socket.on('location:update', ({ roomId, msgId, latitude, longitude }) => {
-      socket.to(roomId).emit('location:update', { msgId, latitude, longitude });
+    socket.on('location:update', async ({ roomId, msgId, latitude, longitude }) => {
+      if (!roomId || !msgId) return;
+      const payload = { msgId, roomId, latitude, longitude };
+      socket.to(roomId).emit('location:update', payload);
+      if (socket.userId) {
+        const peerId = await getRoomPeer(roomId, socket.userId);
+        if (peerId) socket.to(`user:${peerId}`).emit('location:update', payload);
+      }
     });
 
     // ── Video KYC WebRTC Signaling ─────────────────────────────

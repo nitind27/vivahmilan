@@ -156,3 +156,96 @@ typing:start / typing:stop ab { userId, roomId } bhejte hain.
 Server receiver ke user:{userId} room mein bhi forward karta hai —
 chat list screen par room:join ki zaroorat nahi, bas socket connect rakho
 aur globally typing:start/stop listen karo.
+
+
+9. Chat Live Location — Flutter API + Implementation Prompt
+------------------------------------------------------------
+
+=== REST APIs ===
+
+A) Send static (one-time) location:
+POST /api/flutter/chat/{roomId}
+Body:
+{
+  "type": "LOCATION",
+  "latitude": 28.6139,
+  "longitude": 77.2090,
+  "locationType": "current"
+}
+
+B) Send live location (WhatsApp style):
+POST /api/flutter/chat/{roomId}
+Body:
+{
+  "type": "LOCATION",
+  "latitude": 28.6139,
+  "longitude": 77.2090,
+  "locationType": "live",
+  "locationExpiry": "2026-05-25T18:00:00.000Z"   // now + 1h / 8h etc.
+}
+
+Response message object fields:
+  type: "LOCATION"
+  latitude, longitude
+  locationType: "current" | "live"
+  locationExpiry: null | ISO datetime
+
+C) Update live coords (sender only, every 15-30 sec):
+PATCH /api/flutter/chat/location/{msgId}
+Body: { "latitude": 28.6140, "longitude": 77.2091 }
+Responses:
+  200 — { id, chatRoomId, latitude, longitude, locationType, locationExpiry, isLive, isExpired, isActive }
+  410 — Live location expired
+  403 — Only sender can update
+
+D) Poll fallback (receiver OR sender):
+GET /api/flutter/chat/location/{msgId}
+Same response as PATCH 200.
+
+=== Socket ===
+
+Listen globally (chat screen + chat list):
+  socket.on('location:update', (data) {
+    // data: { msgId, roomId, latitude, longitude }
+    updateMapMarker(data.msgId, data.latitude, data.longitude);
+  });
+
+PATCH API already broadcasts location:update — client emit optional.
+
+=== Flutter UI Rules ===
+
+1. Message type LOCATION render karo:
+   if (msg.type == 'LOCATION') show LocationBubble
+
+2. Static location (locationType == 'current'):
+   - Map thumbnail + pin
+   - Tap → open Google Maps: https://www.google.com/maps?q=lat,lng
+
+3. Live location (locationType == 'live'):
+   - Check isActive = locationExpiry > now
+   - Show green "LIVE" badge + pulsing dot if active
+   - Show "ENDED" / grey if expired
+   - Show time left: locationExpiry - now
+
+4. Sender flow (sharing live):
+   - Get GPS → POST live location message → save msgId
+   - Start Geolocator.getPositionStream or Timer every 20s:
+       PATCH /api/flutter/chat/location/{msgId}
+   - Stop when locationExpiry reached or user taps Stop
+
+5. Receiver flow:
+   - Show map at msg.latitude / msg.longitude
+   - socket.on('location:update') → if data.msgId matches, move pin
+   - Optional: GET poll every 30s if socket disconnected
+
+6. Chat list preview:
+   lastMessage.type == 'LOCATION' → show "📍 Location" or "📡 Live Location"
+
+=== Packages suggested ===
+  geolocator: ^latest
+  google_maps_flutter: ^latest   (or flutter_map + openstreetmap)
+  socket_io_client: ^2.0.3+1
+
+=== Example duration helper ===
+DateTime expiry = DateTime.now().add(Duration(hours: 1));
+locationExpiry: expiry.toUtc().toIso8601String()

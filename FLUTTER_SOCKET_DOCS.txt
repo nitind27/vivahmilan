@@ -78,8 +78,9 @@ EVENTS YOU CAN LISTEN TO
    socket.on('interest:received', (data) { ... });
 
 8. location:update
-   Fired when a live location message is updated.
-   Data: { msgId, latitude, longitude }
+   Fired when live location coordinates change.
+   Data: { msgId, roomId, latitude, longitude }
+   - Listen globally on chat screen AND chat list (forwarded to user:{yourId} room).
    socket.on('location:update', (data) { ... });
 
 
@@ -125,7 +126,16 @@ EVENTS YOU EMIT
      'userId': myUserId,
    });
 
-7. Notify interest sent (optional — server also handles via REST)
+7. Update live location (after PATCH or optional client emit)
+   socket.emit('location:update', {
+     'roomId': roomId,
+     'msgId': messageId,
+     'latitude': 28.6140,
+     'longitude': 77.2091,
+   });
+   Note: PATCH /api/flutter/chat/location/{msgId} already broadcasts via server.
+
+8. Notify interest sent (optional — server also handles via REST)
    socket.emit('interest:notify', {
      'toUserId': receiverUserId,
      'fromUser': { 'id': myId, 'name': myName },
