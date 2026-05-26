@@ -16,6 +16,7 @@ import {
   getSects, getGotra, RELIGION_DATA
 } from '@/lib/religionData';
 import { getCastesByReligion } from '@/lib/casteData';
+import SiteLoader from '@/components/SiteLoader';
 
 const inputCls = "w-full px-4 py-3 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all";
 const labelCls = "block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide";
@@ -314,14 +315,7 @@ function OnboardingInner() {
     </div>
   );
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-vd-bg">
-      <div className="text-center">
-        <Loader2 className="w-10 h-10 text-vd-primary animate-spin mx-auto mb-3" />
-        <p className="text-vd-text-sub text-sm">Loading your profile...</p>
-      </div>
-    </div>
-  );
+  if (loading) return <SiteLoader message="Loading your profile…" size="lg" />;
 
   if (submitted) return (
     <div className="min-h-screen flex items-center justify-center bg-vd-bg px-4">
@@ -674,7 +668,7 @@ function OnboardingInner() {
 
 export default function OnboardingPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 text-vd-primary animate-spin" /></div>}>
+    <Suspense fallback={<SiteLoader message="Loading…" size="lg" />}>
       <OnboardingInner />
     </Suspense>
   );

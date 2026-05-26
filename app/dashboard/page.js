@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import SiteLoader from '@/components/SiteLoader';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
 import {
@@ -421,15 +422,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-vd-bg">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 pt-24 pb-12 space-y-4">
-          <div className="h-48 skeleton rounded-3xl" />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => <div key={i} className="h-28 skeleton rounded-2xl" />)}
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
-          </div>
-        </div>
+        <SiteLoader message="Loading dashboard…" fullScreen={false} size="lg" className="pt-20 min-h-[70vh]" />
       </div>
     );
   }

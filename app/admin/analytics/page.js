@@ -6,6 +6,7 @@ import {
   TrendingUp, RefreshCw, MapPin, Search,
   ExternalLink, Calendar, Activity, Link2
 } from 'lucide-react';
+import CookieConsentAdmin from '@/components/CookieConsentAdmin';
 
 function StatCard({ icon: Icon, label, value, color, bg, sub }) {
   return (
@@ -97,6 +98,8 @@ export default function AnalyticsPage() {
             <StatCard icon={Activity}  label="Today's Views"      value={Number(data?.summary?.todayViews || 0).toLocaleString()}     color="text-yellow-400" bg="bg-yellow-900/20" />
             <StatCard icon={TrendingUp} label="Avg/Day"           value={trend.length ? Math.round(data.summary.totalViews / trend.length).toLocaleString() : '—'} color="text-vd-primary" bg="bg-vd-accent-soft dark:bg-vd-accent/20" />
           </div>
+
+          <CookieConsentAdmin days={days} />
 
           {/* Daily trend sparkline */}
           {trend.length > 0 && (

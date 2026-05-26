@@ -1,4 +1,5 @@
 'use client';
+import { SiteLoaderInline } from '@/components/SiteLoader';
 import { useEffect, useState } from 'react';
 import { X, CheckCircle, Star, Ban, User, Mail, Phone, Clock, FileText, MapPin, Globe, Monitor } from 'lucide-react';
 import { format } from 'date-fns';
@@ -52,9 +53,7 @@ export default function AdminUserProfileModal({ userId, onClose }) {
         {/* Body */}
         <div className="p-5">
           {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
-            </div>
+            <SiteLoaderInline message="Loading…" className="py-12" />
           ) : !data ? (
             <p className="text-center text-gray-400 py-12">No data found.</p>
           ) : tab === 'profile' ? (

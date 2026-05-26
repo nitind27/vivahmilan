@@ -11,6 +11,10 @@ import https from 'https';
 // Force IPv6 for Google OAuth — server has IPv6 connectivity but IPv4 is unreachable
 const ipv6Agent = new https.Agent({ family: 6 });
 
+/** Session length when "Remember me" is checked vs not */
+const SESSION_REMEMBER_SEC = 60 * 60 * 24 * 30; // 30 days
+const SESSION_DEFAULT_SEC = 60 * 60 * 24; // 1 day
+
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -66,9 +70,11 @@ export const authOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        remember: { label: 'Remember Me', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+        const rememberMe = credentials.remember === 'true' || credentials.remember === true;
         try {
           const user = await queryOne(
             'SELECT id, email, name, password, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE email = ?',
@@ -104,6 +110,7 @@ export const authOptions = {
             adminVerified: !!user.adminVerified,
             needsPassword: false,
             isNewUser: false,
+            rememberMe,
           };
         } catch (err) {
           console.error('Auth error:', err.message);
@@ -113,7 +120,11 @@ export const authOptions = {
     }),
   ],
 
-  session: { strategy: 'jwt' },
+  session: {
+    strategy: 'jwt',
+    maxAge: SESSION_REMEMBER_SEC,
+    updateAge: SESSION_DEFAULT_SEC,
+  },
 
   callbacks: {
     async signIn({ user, account }) {
@@ -249,6 +260,9 @@ export const authOptions = {
         token.adminVerified = user.adminVerified;
         token.needsPassword = user.needsPassword || false;
         token.isNewUser     = user.isNewUser || false;
+        token.rememberMe    = !!user.rememberMe;
+        const maxAgeSec = token.rememberMe ? SESSION_REMEMBER_SEC : SESSION_DEFAULT_SEC;
+        token.exp = Math.floor(Date.now() / 1000) + maxAgeSec;
       }
       if (trigger === 'update' && session) {
         if (session.isPremium     !== undefined) token.isPremium     = session.isPremium;

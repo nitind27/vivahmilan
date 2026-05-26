@@ -15,6 +15,7 @@ import { differenceInYears, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import WithdrawInterestModal from '@/components/WithdrawInterestModal';
+import { SiteLoaderInline } from '@/components/SiteLoader';
 
 export default function InterestsPage() {
   const { data: session, status } = useSession();
@@ -148,11 +149,7 @@ export default function InterestsPage() {
 
         {/* Content */}
         {loading ? (
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-40 skeleton rounded-3xl" />
-            ))}
-          </div>
+          <SiteLoaderInline message="Loading interests…" className="py-24" />
         ) : interests.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="text-center py-20">

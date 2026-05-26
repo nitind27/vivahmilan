@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Mail, RefreshCw, CheckCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SiteLoader from '@/components/SiteLoader';
 
 function GoogleVerifyInner() {
   const searchParams = useSearchParams();
@@ -204,11 +205,7 @@ function GoogleVerifyInner() {
 
 export default function GoogleVerifyPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-vd-bg">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense fallback={<SiteLoader message="Loading…" size="lg" />}>
       <GoogleVerifyInner />
     </Suspense>
   );

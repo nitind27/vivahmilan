@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/components/Navbar';
+import SiteLoader from '@/components/SiteLoader';
+import CookieManageButton from '@/components/CookieManageButton';
 import {
   Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp
 } from 'lucide-react';
@@ -297,17 +299,8 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-vd-bg">
         <Navbar />
-        <div className="flex items-center justify-center" style={{ height: '100svh' }}>
-          <motion.div
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="flex flex-col items-center gap-4"
-          >
-            <div className="w-16 h-16 vd-gradient-gold rounded-full flex items-center justify-center">
-              <Heart className="w-8 h-8 text-white fill-white" />
-            </div>
-            <p className="text-vd-text-sub text-sm">Loading…</p>
-          </motion.div>
+        <div className="flex items-center justify-center flex-1" style={{ minHeight: 'calc(100svh - 4rem)' }}>
+          <SiteLoader message="Loading Vivah Dwar…" fullScreen={false} size="lg" />
         </div>
       </div>
     );
@@ -807,10 +800,10 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold !text-gray-900 bg-white hover:bg-gray-50 transition-colors shadow-lg text-base"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold !text-gray-900 dark:!text-white bg-white hover:bg-gray-50 dark:bg-white/10 dark:border dark:border-white/35 dark:hover:bg-white/15 transition-colors shadow-lg dark:shadow-none text-base"
                 >
                   Create Free Profile
-                  <Heart className="w-5 h-5 fill-vd-primary text-vd-primary" />
+                  <Heart className="w-5 h-5 fill-vd-primary text-vd-primary dark:fill-white dark:text-white" />
                 </Link>
                 <Link
                   href="/search"
@@ -918,17 +911,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-10 border-b border-vd-border">
             {/* Brand */}
-            <div className="lg:col-span-4">
-              <Link href="/" className="inline-flex items-center gap-3 mb-4 group">
+            <div className="lg:col-span-4 flex flex-col items-center text-center">
+              <Link href="/" className="inline-block mb-4 group" aria-label={siteName}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo/logo.png"
                   alt={siteName}
-                  className="h-14 w-auto object-contain"
+                  className="h-16 sm:h-[4.5rem] w-auto object-contain mx-auto transition-opacity group-hover:opacity-90"
                 />
-                <span className="text-xl font-bold text-vd-text-heading group-hover:text-vd-primary-dark transition-colors hidden sm:block">
-                  {siteName}
-                </span>
               </Link>
               <p className="text-sm leading-relaxed text-vd-text-sub max-w-xs mb-5">
                 {footerTagline}
@@ -970,6 +960,7 @@ export default function Home() {
                     { label: 'Refund Policy', href: '/refund' },
                     { label: 'Cookie Policy', href: '/cookies' },
                   ],
+                  manageCookies: true,
                 },
               ].map(col => (
                 <div key={col.title}>
@@ -985,6 +976,11 @@ export default function Home() {
                         </Link>
                       </li>
                     ))}
+                    {col.manageCookies && (
+                      <li>
+                        <CookieManageButton />
+                      </li>
+                    )}
                   </ul>
                 </div>
               ))}
@@ -998,11 +994,10 @@ export default function Home() {
             </p>
             <div className="flex items-center gap-2">
               {[
-                { href: 'https://facebook.com/vivahdwar', label: 'Facebook', svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /> },
-                { href: 'https://instagram.com/vivahdwar', label: 'Instagram', svg: <><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></> },
-                { href: 'https://twitter.com/vivahdwar', label: 'X', svg: <><path d="M4 4l16 16M4 20L20 4" strokeLinecap="round" /></> },
+                { href: 'https://facebook.com/', label: 'Facebook', svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /> },
+                { href: 'https://www.instagram.com/vivah_dwar?igsh=empvN3VqZzN2OHZk', label: 'Instagram', svg: <><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></> },
                 { href: 'https://youtube.com/@vivahdwar', label: 'YouTube', svg: <><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></> },
-                { href: 'https://wa.me/919999999999', label: 'WhatsApp', svg: <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /> },
+                { href: 'https://wa.me/918735995467', label: 'WhatsApp', svg: <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /> },
               ].map(({ href, label, svg }) => (
                 <a
                   key={label}

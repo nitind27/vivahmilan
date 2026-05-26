@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, User, Mail, Lock, Phone, ChevronRight, ChevronLeft, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import SiteLoader from '@/components/SiteLoader';
 import { getClientGeo } from '@/lib/clientGeo';
 
 const steps = ['Account', 'Personal', 'Done'];
@@ -37,11 +38,7 @@ export default function RegisterPage() {
   }, [status, router]);
 
   if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-vd-bg">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <SiteLoader message="Loading…" size="lg" />;
   }
 
   const update = (k, v) => {

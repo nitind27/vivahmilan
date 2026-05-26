@@ -1,4 +1,5 @@
 'use client';
+import SiteLoader from '@/components/SiteLoader';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -52,11 +53,7 @@ export default function AdminLayout({ children }) {
     }
   }, [status, session]);
 
-  if (status === 'loading') return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-    </div>
-  );
+  if (status === 'loading') return <SiteLoader message="Loading admin…" size="lg" className="bg-gray-950" />;
   if (status !== 'authenticated' || session?.user?.role !== 'ADMIN') return null;
 
   const activeId = pathname.split('/admin/')[1]?.split('/')[0] || 'overview';

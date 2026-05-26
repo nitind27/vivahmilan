@@ -6,6 +6,7 @@ import SmartImage from '@/components/SmartImage';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import SiteLoader from '@/components/SiteLoader';
 import {
   Heart, MapPin, GraduationCap, Briefcase, Star,
   MessageCircle, Flag, Ban, ChevronLeft, Check, X, Lock,
@@ -611,23 +612,10 @@ export default function ProfilePage() {
     } finally { setBlockLoading(false); }
   };
 
-  // ── Loading skeleton ───────────────────────────────────────────────────────
   if (loading) return (
     <div className="min-h-screen bg-vd-bg">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 pt-24 pb-12 space-y-6">
-        <div className="h-10 w-32 skeleton rounded-xl" />
-        <div className="h-[480px] skeleton rounded-3xl" />
-        <div className="grid lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-4 space-y-4">
-            <div className="h-48 skeleton rounded-3xl" />
-            <div className="h-40 skeleton rounded-3xl" />
-          </div>
-          <div className="lg:col-span-8 space-y-4">
-            {[...Array(5)].map((_, i) => <div key={i} className="h-36 skeleton rounded-3xl" />)}
-          </div>
-        </div>
-      </div>
+      <SiteLoader message="Loading profile…" fullScreen={false} size="lg" className="pt-24 min-h-[70vh]" />
     </div>
   );
 

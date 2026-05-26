@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import SiteLoader from '@/components/SiteLoader';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
 import { SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -239,7 +240,7 @@ function MatchesPage() {
         {/* Infinite Scroll Loader */}
         {isPremium && page < totalPages && (
           <div ref={loaderRef} className="flex justify-center py-10 mt-4">
-            {loading && <div className="w-8 h-8 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />}
+            {loading && <SiteLoader message="Loading more…" fullScreen={false} size="sm" className="py-4" />}
           </div>
         )}
       </div>
@@ -249,11 +250,7 @@ function MatchesPage() {
 
 export default function MatchesPageWrapper() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-vd-bg flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense fallback={<SiteLoader message="Loading matches…" size="lg" />}>
       <MatchesPage />
     </Suspense>
   );

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
-import SkeletonCard from '@/components/SkeletonCard';
+import { SiteLoaderInline } from '@/components/SiteLoader';
 import { Heart, Search, ChevronRight, Bookmark } from 'lucide-react';
 
 export default function ShortlistPage() {
@@ -88,9 +88,7 @@ export default function ShortlistPage() {
         </motion.div>
 
         {loading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
-          </div>
+          <SiteLoaderInline message="Loading shortlist…" className="py-24" />
         ) : list.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }}

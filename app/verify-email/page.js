@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Heart, Mail, RefreshCw, CheckCircle, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getClientGeo } from '@/lib/clientGeo';
+import SiteLoader from '@/components/SiteLoader';
 
 function VerifyInner() {
   const searchParams = useSearchParams();
@@ -146,7 +147,7 @@ function VerifyInner() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vd-bg"><div className="w-8 h-8 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<SiteLoader message="Loading…" size="lg" />}>
       <VerifyInner />
     </Suspense>
   );

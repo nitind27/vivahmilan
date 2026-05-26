@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, Bot, User, Headphones, ChevronDown, Loader2, PhoneOff } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { acceptsFunctional, hasConsentChoice } from '@/lib/cookieConsent';
 
 // ── Pricing normalizer ────────────────────────────────────────────────────────
 export function normalizePricing(text) {
@@ -73,8 +74,16 @@ export default function ChatBot() {
   const [status, setStatus] = useState('bot'); // bot | live | ended
   const [initialized, setInitialized] = useState(false);
   const [unread, setUnread] = useState(0);
+  const [chatAllowed, setChatAllowed] = useState(false);
   const bottomRef = useRef(null);
   const pollRef = useRef(null);
+
+  useEffect(() => {
+    const sync = () => setChatAllowed(hasConsentChoice() && acceptsFunctional());
+    sync();
+    window.addEventListener('vd-cookie-consent', sync);
+    return () => window.removeEventListener('vd-cookie-consent', sync);
+  }, []);
 
   // Init DB tables once
   useEffect(() => {
@@ -194,7 +203,7 @@ export default function ChatBot() {
   // Hide chatbot on chat page (overlaps with message input on mobile)
   const isHidden = pathname === '/chat' || pathname?.startsWith('/chat');
 
-  if (isHidden) return null;
+  if (isHidden || !chatAllowed) return null;
 
   return (
     <>

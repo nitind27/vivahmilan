@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { logWebLogin } from '@/lib/clientGeo';
+import SiteLoader from '@/components/SiteLoader';
+import { getRememberedEmail, getRememberPreference, saveRememberLogin } from '@/lib/rememberLogin';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const QR_POLL_INTERVAL = 2000;
@@ -237,6 +239,13 @@ function LoginInner() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [pendingEmail, setPendingEmail] = useState(null);
   const [showQR, setShowQR] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    setRememberMe(getRememberPreference());
+    const savedEmail = getRememberedEmail();
+    if (savedEmail) setForm(prev => ({ ...prev, email: savedEmail }));
+  }, []);
 
   useEffect(() => {
     const error = searchParams?.get('error');
@@ -286,7 +295,12 @@ function LoginInner() {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setLoading(true);
-    const res = await signIn('credentials', { ...form, redirect: false });
+    const res = await signIn('credentials', {
+      email: form.email.trim(),
+      password: form.password,
+      remember: rememberMe ? 'true' : 'false',
+      redirect: false,
+    });
     setLoading(false);
     if (res?.error) {
       if (res.error === 'PENDING_APPROVAL') { setPendingEmail(form.email); return; }
@@ -298,7 +312,8 @@ function LoginInner() {
       }
       toast.error(res.error === 'CredentialsSignin' ? 'Invalid email or password' : res.error);
     } else {
-      toast.success('Welcome back!');
+      saveRememberLogin(form.email, rememberMe);
+      toast.success(rememberMe ? 'Welcome back! You will stay signed in for 30 days.' : 'Welcome back!');
       logWebLogin();
       const s = await getSession();
       router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
@@ -380,9 +395,11 @@ function LoginInner() {
 
                 {/* Google */}
                 <button
+                  type="button"
                   onClick={() => { setGoogleLoading(true); signIn('google', { callbackUrl: '/dashboard' }); }}
                   disabled={googleLoading}
-                  className="w-full flex items-center justify-center gap-3 bg-vd-bg-section border border-vd-border rounded-2xl py-3 sm:py-3.5 font-medium text-sm text-vd-text-heading hover:bg-vd-accent-soft transition-all shadow-sm hover:shadow-md mb-4 disabled:opacity-70 disabled:cursor-not-allowed">
+                  className="w-full flex items-center justify-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 bg-vd-bg-section border border-vd-border rounded-2xl font-medium text-sm text-vd-text-heading hover:bg-vd-accent-soft hover:border-vd-primary/25 transition-all shadow-sm hover:shadow-md mb-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
                   {googleLoading ? (
                     <>
                       <span className="w-5 h-5 border-2 border-vd-primary/40 border-t-vd-primary rounded-full animate-spin flex-shrink-0" />
@@ -401,14 +418,15 @@ function LoginInner() {
                   )}
                 </button>
 
-                {/* QR Login Button */}
-                <button onClick={() => setShowQR(true)}
-                  className="w-full flex items-center justify-center gap-3 bg-vd-bg-section border border-vd-border rounded-2xl py-3 sm:py-3.5 font-medium text-sm text-vd-text-heading hover:bg-vd-accent-soft transition-all shadow-sm hover:shadow-md mb-5 group">
-                  <div className="w-5 h-5 flex-shrink-0 relative">
-                    <QrCode className="w-5 h-5 text-vd-primary group-hover:scale-110 transition-transform" />
-                  </div>
-                  <span>Login with QR Code</span>
-                  <span className="ml-auto text-[10px] font-semibold text-vd-primary bg-vd-accent-soft px-2 py-0.5 rounded-full">
+                {/* QR Login */}
+                <button
+                  type="button"
+                  onClick={() => setShowQR(true)}
+                  className="w-full flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 mb-5 rounded-2xl border border-vd-border bg-vd-bg-section text-sm font-medium text-vd-text-heading hover:bg-vd-accent-soft hover:border-vd-primary/25 transition-all shadow-sm hover:shadow-md group"
+                >
+                  <QrCode className="w-5 h-5 flex-shrink-0 text-vd-primary group-hover:scale-105 transition-transform" />
+                  <span className="flex-1 min-w-0 text-left leading-snug">Login with QR Code</span>
+                  <span className="flex-shrink-0 text-[10px] font-bold uppercase tracking-wide text-vd-primary bg-vd-accent-soft px-2.5 py-1 rounded-full leading-none">
                     Mobile
                   </span>
                 </button>
@@ -463,6 +481,25 @@ function LoginInner() {
                     )}
                   </div>
 
+                  <div className="rounded-2xl border border-vd-border bg-vd-bg-alt/60 px-4 py-3.5">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="mt-0.5 w-4 h-4 rounded border-vd-border text-vd-primary focus:ring-vd-primary/30 focus:ring-offset-0 cursor-pointer accent-[#C8A45C]"
+                      />
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-semibold text-vd-text-heading group-hover:text-vd-primary transition-colors">
+                          Remember me
+                        </span>
+                        <span className="block text-xs text-vd-text-light mt-0.5 leading-relaxed">
+                          Stay signed in for 30 days on this device. We only save your email — never your password.
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+
                   <button type="submit" disabled={loading}
                     className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                     style={{ boxShadow: '0 4px 20px rgba(200,164,92,0.35)' }}>
@@ -490,11 +527,7 @@ function LoginInner() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-vd-bg">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense fallback={<SiteLoader message="Loading…" size="lg" />}>
       <LoginInner />
     </Suspense>
   );

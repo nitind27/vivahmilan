@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { acceptsFunctional, hasConsentChoice } from '@/lib/cookieConsent';
 
 export default function MarketingPopup() {
   const { data: session } = useSession();
@@ -10,11 +11,9 @@ export default function MarketingPopup() {
   const [popup, setPopup] = useState(null);
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    // Only check if user is logged in and hasn't closed this popup recently
+  const tryLoadPopup = () => {
+    if (!hasConsentChoice() || !acceptsFunctional()) return;
     if (!session?.user) return;
-    
-    // Check session storage so it doesn't annoy them on every single page load
     if (sessionStorage.getItem('milan_popup_closed')) return;
 
     fetch('/api/marketing-popup')
@@ -31,6 +30,13 @@ export default function MarketingPopup() {
         }
       })
       .catch(() => {});
+  };
+
+  useEffect(() => {
+    tryLoadPopup();
+    const onConsent = () => tryLoadPopup();
+    window.addEventListener('vd-cookie-consent', onConsent);
+    return () => window.removeEventListener('vd-cookie-consent', onConsent);
   }, [session]);
 
   if (!show || !popup) return null;

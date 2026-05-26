@@ -1,7 +1,8 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { acceptsAnalytics, hasConsentChoice } from '@/lib/cookieConsent';
 
 // Generate or retrieve a session ID for this browser session
 function getSessionId() {
@@ -17,8 +18,17 @@ function getSessionId() {
 export default function PageTracker() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [canTrack, setCanTrack] = useState(false);
 
   useEffect(() => {
+    const sync = () => setCanTrack(hasConsentChoice() && acceptsAnalytics());
+    sync();
+    window.addEventListener('vd-cookie-consent', sync);
+    return () => window.removeEventListener('vd-cookie-consent', sync);
+  }, []);
+
+  useEffect(() => {
+    if (!canTrack) return;
     // Don't track admin pages
     if (pathname?.startsWith('/admin')) return;
 
@@ -37,7 +47,7 @@ export default function PageTracker() {
       // Fire and forget — don't block anything
       keepalive: true,
     }).catch(() => {});
-  }, [pathname, session?.user?.id]);
+  }, [pathname, session?.user?.id, canTrack]);
 
   return null;
 }

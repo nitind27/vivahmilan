@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, AlertCircle, CheckCircle, Loader2, QrCode, LogIn } from 'lucide-react';
 import Link from 'next/link';
+import SiteLoader from '@/components/SiteLoader';
 
 function QRScanInner() {
   const searchParams = useSearchParams();
@@ -208,11 +209,7 @@ function QRScanInner() {
 
 export default function QRScanPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-vd-bg">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense fallback={<SiteLoader message="Loading…" size="lg" />}>
       <QRScanInner />
     </Suspense>
   );

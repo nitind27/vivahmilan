@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Heart, CheckCircle, Clock, ChevronRight, ChevronLeft, User, MapPin, BookOpen, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SiteLoader from '@/components/SiteLoader';
 
 const RELIGIONS = ['Hindu','Muslim','Christian','Sikh','Buddhist','Jain','Jewish','Parsi','Other'];
 const GENDERS   = ['MALE','FEMALE','OTHER'];
@@ -255,11 +256,7 @@ function CompleteInner() {
 
 export default function CompleteProfilePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense fallback={<SiteLoader message="Loading…" size="lg" />}>
       <CompleteInner />
     </Suspense>
   );

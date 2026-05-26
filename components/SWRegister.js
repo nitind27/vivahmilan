@@ -1,6 +1,7 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { acceptsFunctional, hasConsentChoice } from '@/lib/cookieConsent';
 
 // Hardcoded at build time by Next.js
 const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '';
@@ -44,8 +45,17 @@ async function subscribePush(reg) {
 
 export default function SWRegister() {
   const { data: session, status } = useSession();
+  const [canUseFunctional, setCanUseFunctional] = useState(false);
 
   useEffect(() => {
+    const sync = () => setCanUseFunctional(hasConsentChoice() && acceptsFunctional());
+    sync();
+    window.addEventListener('vd-cookie-consent', sync);
+    return () => window.removeEventListener('vd-cookie-consent', sync);
+  }, []);
+
+  useEffect(() => {
+    if (!canUseFunctional) return;
     if (status !== 'authenticated') return;
     if (typeof window === 'undefined') return;
     if (!('serviceWorker' in navigator)) { console.warn('[Push] SW not supported'); return; }
@@ -81,7 +91,7 @@ export default function SWRegister() {
     }
 
     init();
-  }, [status]);
+  }, [status, canUseFunctional]);
 
   return null;
 }

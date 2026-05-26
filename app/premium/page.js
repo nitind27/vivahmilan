@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import SiteLoader, { SiteLoaderInline } from '@/components/SiteLoader';
 import {
   CheckCircle, Star, Zap, Shield, MessageCircle,
   Eye, TrendingUp, Lock, Crown, Sparkles, ChevronDown,
@@ -255,9 +256,7 @@ export default function PremiumPage() {
           )}
 
           {loadingPlans ? (
-            <div className="flex justify-center py-20">
-              <div className="w-10 h-10 border-4 border-vd-primary border-t-transparent rounded-full animate-spin" />
-            </div>
+            <SiteLoaderInline message="Loading plans…" className="py-20" />
           ) : (
             <div className={`grid gap-6 max-w-5xl mx-auto ${plans.length <= 2 ? 'md:grid-cols-2' : plans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
               {plans.map((p, i) => {

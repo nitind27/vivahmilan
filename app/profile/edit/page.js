@@ -16,6 +16,7 @@ import {
 import { getCastesByReligion } from '@/lib/casteData';
 import BirthDetailsForm from '@/components/BirthDetailsForm';
 import KundaliChart from '@/components/KundaliChart';
+import SiteLoader from '@/components/SiteLoader';
 
 // ── Reusable field components ─────────────────────────────────────────────────
 const inputCls = "w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/20 transition-all";
@@ -253,11 +254,9 @@ function EditProfilePage() {
   })();
 
   if (loading) return (
-    <div className="min-h-screen bg-vd-bg dark:bg-vd-bg">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
-      <div className="max-w-3xl mx-auto px-4 pt-24 space-y-4">
-        {[...Array(5)].map((_, i) => <div key={i} className="h-14 skeleton rounded-2xl" />)}
-      </div>
+      <SiteLoader message="Loading profile…" fullScreen={false} size="lg" className="pt-24 min-h-[60vh]" />
     </div>
   );
 
@@ -576,11 +575,7 @@ function EditProfilePage() {
 // ── Suspense wrapper (required for useSearchParams at build time) ─────────────
 export default function EditProfilePageWrapper() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-vd-bg flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-vd-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense fallback={<SiteLoader message="Loading profile…" size="lg" />}>
       <EditProfilePage />
     </Suspense>
   );
