@@ -3,13 +3,29 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { saveFile } from '@/lib/upload';
+import { resolveChatAccess } from '@/lib/chatAccess';
 import { randomUUID } from 'crypto';
 
 export const maxDuration = 30;
 
+async function requireChatAccess(userId) {
+  const dbUser = await queryOne(
+    'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',
+    [userId]
+  );
+  const access = resolveChatAccess(dbUser);
+  if (!access.hasAccess) return { ok: false, access };
+  return { ok: true, access };
+}
+
 export async function GET(req, { params }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const gate = await requireChatAccess(session.user.id);
+  if (!gate.ok) {
+    return NextResponse.json({ error: 'Chat access required', ...gate.access }, { status: 403 });
+  }
 
   const { roomId } = await params;
   const { searchParams } = new URL(req.url);
@@ -47,15 +63,11 @@ export async function POST(req, { params }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  if (!session.user.isPremium) {
-    // Also check free trial in DB directly (in case session is stale)
-    const { queryOne } = await import('@/lib/db');
-    const dbUser = await queryOne('SELECT freeTrialExpiry FROM `user` WHERE id = ?', [session.user.id]);
-    const trialActive = dbUser?.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
-    if (!trialActive) {
-      return NextResponse.json({ error: 'Chat requires a Premium subscription' }, { status: 403 });
-    }
+  const gate = await requireChatAccess(session.user.id);
+  if (!gate.ok) {
+    return NextResponse.json({ error: 'Chat access required', ...gate.access }, { status: 403 });
   }
+
   const { roomId } = await params;
 
   const room = await queryOne('SELECT * FROM chatroom WHERE id = ?', [roomId]);

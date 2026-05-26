@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { connectSocket } from '@/lib/socket';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import ImageEditorModal from '@/components/ImageEditorModal';
+import ChatPlanExpired from '@/components/ChatPlanExpired';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 
@@ -426,6 +427,7 @@ function ChatInner() {
   const [messages, setMessages]       = useState([]);
   const [input, setInput]             = useState('');
   const [loading, setLoading]         = useState(true);
+  const [chatAccess, setChatAccess]   = useState(null);
   const [sending, setSending]         = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [lastSeenMap, setLastSeenMap] = useState({});
@@ -457,14 +459,21 @@ function ChatInner() {
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
-    if (status === 'authenticated') {
-      const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
-      if (!hasAccess) {
-        toast.error('Chat requires Premium. Upgrade to access.');
-        router.push('/premium');
-      }
-    }
-  }, [status, session, router]);
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    fetch('/api/chat/access')
+      .then(r => r.json())
+      .then(data => {
+        setChatAccess(data);
+        if (!data.hasAccess) setLoading(false);
+      })
+      .catch(() => {
+        setChatAccess({ hasAccess: false, reason: 'no_access' });
+        setLoading(false);
+      });
+  }, [status]);
 
   // Tick every 30s to keep last seen text fresh
   useEffect(() => {
@@ -474,9 +483,7 @@ function ChatInner() {
 
   // Socket setup
   useEffect(() => {
-    if (status !== 'authenticated') return;
-    const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
-    if (!hasAccess) return;
+    if (status !== 'authenticated' || !chatAccess?.hasAccess) return;
 
     const s = connectSocket(session.user.id);
     socketRef.current = s;
@@ -533,13 +540,11 @@ function ChatInner() {
       s.off('typing:start');
       s.off('typing:stop');
     };
-  }, [status, session]);
+  }, [status, session, chatAccess]);
 
   // Load rooms
   useEffect(() => {
-    if (status !== 'authenticated') return;
-    const hasAccess = session?.user?.isPremium || session?.user?.freeTrialActive;
-    if (!hasAccess) return;
+    if (status !== 'authenticated' || !chatAccess?.hasAccess) return;
     const loadRooms = () => {
       Promise.all([
         fetch('/api/chat').then(r => r.json()),
@@ -570,7 +575,7 @@ function ChatInner() {
       });
     };
     loadRooms();
-  }, [status, session, targetUserId]);
+  }, [status, session, targetUserId, chatAccess]);
 
   useEffect(() => {
     // Don't scroll to bottom when loading older messages — preserve position
@@ -831,12 +836,23 @@ function ChatInner() {
     inputRef.current?.focus();
   };
 
-  if (loading) return (
+  if (loading || (status === 'authenticated' && chatAccess === null)) return (
     <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 pt-20"><div className="h-[600px] skeleton rounded-3xl" /></div>
     </div>
   );
+
+  if (chatAccess && !chatAccess.hasAccess) {
+    return (
+      <div className="flex flex-col bg-vd-bg" style={{ height: '100dvh' }}>
+        <Navbar />
+        <div className="flex-1 flex flex-col overflow-hidden pt-16">
+          <ChatPlanExpired access={chatAccess} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col bg-vd-bg" style={{ height: '100dvh' }}>

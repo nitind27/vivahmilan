@@ -2,10 +2,19 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne } from '@/lib/db';
+import { resolveChatAccess } from '@/lib/chatAccess';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ total: 0, perRoom: {} });
+
+  const dbUser = await queryOne(
+    'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',
+    [session.user.id]
+  );
+  if (!resolveChatAccess(dbUser).hasAccess) {
+    return NextResponse.json({ total: 0, perRoom: {} });
+  }
 
   const row = await queryOne(
     'SELECT COUNT(*) as cnt FROM message WHERE receiverId = ? AND isRead = 0',

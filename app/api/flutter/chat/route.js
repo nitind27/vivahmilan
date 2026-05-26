@@ -3,6 +3,7 @@ import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 import { parseLocationBody } from '@/lib/chatLocation';
+import { resolveChatAccess } from '@/lib/chatAccess';
 import { randomUUID } from 'crypto';
 
 // GET - all chat rooms with pagination
@@ -11,6 +12,15 @@ export async function GET(req) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+
+  const dbUser = await queryOne(
+    'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',
+    [decoded.id]
+  );
+  const access = resolveChatAccess(dbUser);
+  if (!access.hasAccess) {
+    return NextResponse.json({ error: 'Chat access required', ...access }, { status: 403 });
+  }
 
   const uid = decoded.id;
   const { searchParams } = new URL(req.url);
@@ -89,11 +99,13 @@ export async function POST(req) {
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
 
-  // Premium check
-  const dbUser = await queryOne('SELECT isPremium, freeTrialExpiry FROM `user` WHERE id = ?', [decoded.id]);
-  const trialActive = dbUser?.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
-  if (!dbUser?.isPremium && !trialActive) {
-    return NextResponse.json({ error: 'Chat requires a Premium subscription' }, { status: 403 });
+  const dbUser = await queryOne(
+    'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',
+    [decoded.id]
+  );
+  const access = resolveChatAccess(dbUser);
+  if (!access.hasAccess) {
+    return NextResponse.json({ error: 'Chat access required', ...access }, { status: 403 });
   }
 
   const body = await req.json();

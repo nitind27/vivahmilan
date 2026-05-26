@@ -3,7 +3,18 @@ import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { saveFile } from '@/lib/upload';
 import { parseLocationBody } from '@/lib/chatLocation';
+import { resolveChatAccess } from '@/lib/chatAccess';
 import { randomUUID } from 'crypto';
+
+async function requireChatAccess(userId) {
+  const dbUser = await queryOne(
+    'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',
+    [userId]
+  );
+  const access = resolveChatAccess(dbUser);
+  if (!access.hasAccess) return { ok: false, access };
+  return { ok: true };
+}
 
 // GET - messages in a room (paginated)
 // Query params:
@@ -15,6 +26,11 @@ export async function GET(req, { params }) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+
+  const gate = await requireChatAccess(decoded.id);
+  if (!gate.ok) {
+    return NextResponse.json({ error: 'Chat access required', ...gate.access }, { status: 403 });
+  }
 
   const { roomId } = await params;
   const { searchParams } = new URL(req.url);
@@ -66,10 +82,9 @@ export async function POST(req, { params }) {
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
 
-  const dbUser = await queryOne('SELECT isPremium, freeTrialExpiry FROM `user` WHERE id = ?', [decoded.id]);
-  const trialActive = dbUser?.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
-  if (!dbUser?.isPremium && !trialActive) {
-    return NextResponse.json({ error: 'Chat requires a Premium subscription' }, { status: 403 });
+  const gate = await requireChatAccess(decoded.id);
+  if (!gate.ok) {
+    return NextResponse.json({ error: 'Chat access required', ...gate.access }, { status: 403 });
   }
 
   const { roomId } = await params;
