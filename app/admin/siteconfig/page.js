@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Lock, Unlock } from 'lucide-react';
+import { Lock, Unlock, DoorOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function Toggle({ value, onChange }) {
@@ -40,6 +40,53 @@ export default function SiteConfigPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <p className="text-gray-400 text-sm">Configure global site settings. Changes take effect immediately.</p>
+
+      {/* Welcome page gate */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.welcome_gate_enabled === '1' ? 'bg-amber-900/30' : 'bg-gray-700'}`}>
+            <DoorOpen className={`w-5 h-5 ${config.welcome_gate_enabled === '1' ? 'text-amber-400' : 'text-gray-400'}`} />
+          </div>
+          <div>
+            <h3 className="font-bold text-white">Welcome Page Gate</h3>
+            <p className="text-xs text-gray-500">
+              ON = visitors must log in on <code className="text-amber-300/90">/welcome.html</code> before using the site. OFF = website opens directly.
+            </p>
+          </div>
+        </div>
+        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.welcome_gate_enabled === '1' ? 'bg-amber-900/10 border-amber-800/40' : 'bg-green-900/10 border-green-800/30'}`}>
+          <div>
+            <p className="text-sm font-semibold text-white">
+              Welcome gate is{' '}
+              <span className={config.welcome_gate_enabled === '1' ? 'text-amber-400' : 'text-green-400'}>
+                {config.welcome_gate_enabled === '1' ? '🔒 ON' : '🟢 OFF'}
+              </span>
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {config.welcome_gate_enabled === '1'
+                ? 'New visitors see welcome page + preview login first'
+                : 'Users go straight to homepage and all pages'}
+            </p>
+          </div>
+          <Toggle
+            value={config.welcome_gate_enabled === '1'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig(p => ({ ...p, welcome_gate_enabled: newVal }));
+              const res = await fetch('/api/admin/siteconfig', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'welcome_gate_enabled', value: newVal }),
+              });
+              if (res.ok) toast.success(val ? 'Welcome gate enabled' : 'Welcome gate disabled — site is open');
+              else {
+                toast.error('Failed');
+                setConfig(p => ({ ...p, welcome_gate_enabled: val ? '0' : '1' }));
+              }
+            }}
+          />
+        </div>
+      </div>
 
       {/* Maintenance Mode */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">

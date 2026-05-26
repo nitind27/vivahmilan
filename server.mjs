@@ -64,11 +64,10 @@ app.prepare().then(() => {
     const parsedUrl = parse(req.url, true);
     const pathname = parsedUrl.pathname || '/';
 
-    // ── START PREVIEW GATE ──────────────────────────────────
-    // TO REMOVE: delete from here to END PREVIEW GATE comment
+    // ── Welcome gate (admin: siteconfig welcome_gate_enabled = 1) ──
     const PREVIEW_COOKIE_NAME  = 'vd_preview_auth';
     const PREVIEW_COOKIE_VALUE = 'granted_2710';
-    const BYPASS_PATHS = [
+    const WELCOME_GATE_BYPASS = [
       '/welcome.html',
       '/_next/',
       '/favicon.ico',
@@ -87,9 +86,9 @@ app.prepare().then(() => {
       '/api/profile-options',
       '/api/stories',
       '/api/maintenance-status',
+      '/api/welcome-gate-status',
       '/api/coupons/validate',
-      '/api/admin/plans',
-      '/api/admin/homepage/',
+      '/api/admin/',
       '/register',
       '/verify-email',
       '/onboarding',
@@ -97,10 +96,21 @@ app.prepare().then(() => {
       '/forgot-password',
       '/kyc/',
     ];
-    const isBypassed = BYPASS_PATHS.some(p => pathname.startsWith(p))
+    const isWelcomeBypassed = WELCOME_GATE_BYPASS.some(p => pathname.startsWith(p))
       || (pathname.includes('.') && !pathname.endsWith('.html'));
 
-    if (!isBypassed) {
+    let welcomeGateEnabled = false;
+    try {
+      const pool = getDbPool();
+      const [rows] = await pool.execute(
+        "SELECT value FROM siteconfig WHERE `key` = 'welcome_gate_enabled' LIMIT 1"
+      );
+      welcomeGateEnabled = rows[0]?.value === '1';
+    } catch {
+      welcomeGateEnabled = false;
+    }
+
+    if (welcomeGateEnabled && !isWelcomeBypassed) {
       const cookieHeader = req.headers.cookie || '';
       const cookies = Object.fromEntries(
         cookieHeader.split(';')
@@ -108,13 +118,12 @@ app.prepare().then(() => {
           .filter(([k]) => k)
       );
       if (cookies[PREVIEW_COOKIE_NAME] !== PREVIEW_COOKIE_VALUE) {
-        const redirectTo = encodeURIComponent(pathname);
+        const redirectTo = encodeURIComponent(pathname + (parsedUrl.search || ''));
         res.writeHead(302, { Location: `/welcome.html?login&redirect=${redirectTo}` });
         res.end();
         return;
       }
     }
-    // ── END PREVIEW GATE ────────────────────────────────────
 
     // ── Serve /uploads/* directly ──────────────────────────
     if (pathname.startsWith('/uploads/')) {
