@@ -1,4 +1,21 @@
-// Milan Matrimony — Service Worker v2
+// Milan Matrimony — Service Worker v3
+const PUSH_ICON = '/logo/icon.png';
+
+function showAppNotification({ title, body, icon, url, tag }) {
+  const iconUrl = icon || PUSH_ICON;
+  const absoluteIcon =
+    iconUrl.startsWith('http') ? iconUrl : new URL(iconUrl, self.location.origin).href;
+
+  return self.registration.showNotification(title, {
+    body,
+    icon: absoluteIcon,
+    badge: absoluteIcon,
+    tag: tag || 'milan-push',
+    renotify: true,
+    requireInteraction: false,
+    data: { url: url || '/' },
+  });
+}
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
@@ -8,12 +25,26 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(self.clients.claim());
 });
 
+// In-page notification (optional client postMessage)
+self.addEventListener('message', (event) => {
+  if (event.data?.type !== 'SHOW_NOTIFICATION') return;
+  event.waitUntil(
+    showAppNotification({
+      title: event.data.title || 'Vivah Dwar',
+      body: event.data.body || '',
+      icon: event.data.icon,
+      url: event.data.url,
+      tag: 'milan-local',
+    })
+  );
+});
+
 // ── Web Push from server ──────────────────────────────────────────────────────
 self.addEventListener('push', (event) => {
   let data = {
-    title: 'Milan Matrimony',
+    title: 'Vivah Dwar',
     body: 'You have a new notification',
-    icon: '/favicon.ico',
+    icon: PUSH_ICON,
     url: '/',
     tag: 'milan-push',
   };
@@ -23,15 +54,12 @@ self.addEventListener('push', (event) => {
   } catch (e) {}
 
   event.waitUntil(
-    self.registration.showNotification(data.title, {
+    showAppNotification({
+      title: data.title,
       body: data.body,
-      icon: data.icon || '/favicon.ico',
-      badge: '/favicon.ico',
-      // Same tag = replaces previous notification of same type (no duplicates)
-      tag: data.tag || 'milan-push',
-      renotify: true,
-      requireInteraction: false,
-      data: { url: data.url || '/' },
+      icon: data.icon,
+      url: data.url,
+      tag: data.tag,
     })
   );
 });

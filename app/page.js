@@ -106,6 +106,30 @@ function formatINR(amount) {
 
 const ICON_MAP = { Search, Shield, Globe, Heart, Users, Award, TrendingUp, Star };
 
+/** CTA background slider — matrimony-themed (Unsplash) */
+const CTA_BG_SLIDES = [
+  {
+    id: 1,
+    image: '/slide/sl1.png',
+    caption: 'Where two hearts become one',
+  },
+  {
+    id: 2,
+    image: '/slide/sl5.png',
+    caption: 'Tradition, trust & true connection',
+  },
+  {
+    id: 3,
+    image: '/slide/sl4.png',
+    caption: 'Your forever begins here',
+  },
+  {
+    id: 4,
+    image: '/slide/sl2.png',
+    caption: 'Celebrate love with confidence',
+  },
+];
+
 export default function Home() {
   const [slide, setSlide] = useState(0);
   const [videoError, setVideoError] = useState(false);
@@ -120,6 +144,8 @@ export default function Home() {
   const [stories, setStories] = useState([]);
   const [storySlide, setStorySlide] = useState(0);
   const storyTimerRef = useRef(null);
+  const [ctaBgSlide, setCtaBgSlide] = useState(0);
+  const ctaTimerRef = useRef(null);
 
   // DB-backed homepage content
   const [hpSlides, setHpSlides] = useState([]);
@@ -213,6 +239,13 @@ export default function Home() {
   useEffect(() => {
     const t = setInterval(() => setSlide(s => (s + 1) % SLIDES.length), 5000);
     return () => clearInterval(t);
+  }, [SLIDES.length]);
+
+  useEffect(() => {
+    ctaTimerRef.current = setInterval(() => {
+      setCtaBgSlide(s => (s + 1) % CTA_BG_SLIDES.length);
+    }, 5500);
+    return () => clearInterval(ctaTimerRef.current);
   }, []);
 
   // Swap video src based on screen width — runs after content is loaded so videoRef is mounted
@@ -684,36 +717,164 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 vd-gradient-gold relative overflow-hidden">
-        {/* Animated background circles */}
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-white/20 pointer-events-none"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-white/15 pointer-events-none"
-        />
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">{ctaHeading}</h2>
+      {/* CTA — image slider + glass panel */}
+      <section className="relative min-h-[32rem] sm:min-h-[36rem] overflow-hidden">
+        {/* Background slides */}
+        <div className="absolute inset-0">
+          <AnimatePresence mode="wait">
             <motion.div
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="inline-block mb-4"
+              key={CTA_BG_SLIDES[ctaBgSlide].id}
+              initial={{ opacity: 0, scale: 1.06 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.1, ease: 'easeInOut' }}
+              className="absolute inset-0"
             >
-              <Heart className="w-12 h-12 fill-red-500 text-red-500 mx-auto" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={CTA_BG_SLIDES[ctaBgSlide].image}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             </motion.div>
-            <p className="text-gray-800 mb-8 text-lg">{ctaSubtext}</p>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-              <Link href="/register" className="bg-white text-vd-primary px-10 py-4 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-colors inline-flex items-center gap-2 shadow-xl">
-                Create Free Profile <Heart className="w-5 h-5 fill-vd-primary" />
-              </Link>
+          </AnimatePresence>
+        </div>
+
+        {/* Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/40 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 z-[1]" />
+        <div className="absolute inset-0 bg-vd-primary/10 mix-blend-overlay z-[1] pointer-events-none" />
+
+        {/* Prev / Next */}
+        <button
+          type="button"
+          aria-label="Previous slide"
+          onClick={() => {
+            clearInterval(ctaTimerRef.current);
+            setCtaBgSlide(s => (s - 1 + CTA_BG_SLIDES.length) % CTA_BG_SLIDES.length);
+          }}
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 transition-colors flex items-center justify-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Next slide"
+          onClick={() => {
+            clearInterval(ctaTimerRef.current);
+            setCtaBgSlide(s => (s + 1) % CTA_BG_SLIDES.length);
+          }}
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 transition-colors flex items-center justify-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            {/* Content pane */}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65 }}
+              viewport={{ once: true }}
+              className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-8 sm:p-10 shadow-2xl"
+            >
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={ctaBgSlide}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-amber-300/95 mb-4"
+                >
+                  <Heart className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                  {CTA_BG_SLIDES[ctaBgSlide].caption}
+                </motion.p>
+              </AnimatePresence>
+              <h2 className="text-3xl sm:text-4xl lg:text-[2.65rem] font-bold text-white leading-tight mb-4">
+                {ctaHeading}
+              </h2>
+              <p className="text-white/85 text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
+                {ctaSubtext}
+              </p>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-gray-900 bg-white hover:bg-gray-50 transition-colors shadow-lg text-base"
+                >
+                  Create Free Profile
+                  <Heart className="w-5 h-5 fill-vd-primary text-vd-primary" />
+                </Link>
+                <Link
+                  href="/search"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-semibold text-white border border-white/35 hover:bg-white/10 transition-colors text-base"
+                >
+                  <Search className="w-5 h-5" />
+                  Browse Matches
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-white/15 text-xs text-white/70">
+                <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-amber-300" /> Verified profiles</span>
+                <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-amber-300" /> {membersLabel}</span>
+              </div>
             </motion.div>
-          </motion.div>
+
+            {/* Image preview pane (desktop) */}
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="hidden lg:block relative"
+            >
+              <div className="absolute -inset-3 rounded-[1.75rem] bg-gradient-to-br from-amber-400/40 to-rose-400/20 blur-2xl opacity-60" />
+              <div className="relative rounded-2xl overflow-hidden border-2 border-white/25 shadow-2xl aspect-[5/4]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`pane-${CTA_BG_SLIDES[ctaBgSlide].id}`}
+                    initial={{ opacity: 0, scale: 1.03 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.9 }}
+                    className="absolute inset-0"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={CTA_BG_SLIDES[ctaBgSlide].image}
+                      alt={CTA_BG_SLIDES[ctaBgSlide].caption}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p className="text-white font-semibold text-lg">{CTA_BG_SLIDES[ctaBgSlide].caption}</p>
+                  <p className="text-white/70 text-sm mt-1">{siteName} — trusted matrimony</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Slide dots */}
+          <div className="flex justify-center gap-2 mt-10">
+            {CTA_BG_SLIDES.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => {
+                  clearInterval(ctaTimerRef.current);
+                  setCtaBgSlide(i);
+                }}
+                className="transition-all duration-300 rounded-full"
+                style={{
+                  width: i === ctaBgSlide ? 28 : 8,
+                  height: 8,
+                  background: i === ctaBgSlide ? 'rgba(229, 200, 139, 1)' : 'rgba(255,255,255,0.35)',
+                }}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
