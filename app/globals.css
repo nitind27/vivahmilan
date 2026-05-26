@@ -85,6 +85,29 @@ label { color: var(--vd-text-sub); }
   color: var(--vd-text-sub);
 }
 
+/* Homepage hero + CTA — always cinematic text (light site theme does not override) */
+.hero-section {
+  color: rgba(255, 255, 255, 0.9);
+}
+.hero-section h1,
+.hero-section h2,
+.hero-section h3 {
+  color: #ffffff !important;
+}
+.hero-section p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.hero-section .hero-muted {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+.hero-section .hero-accent {
+  color: rgba(252, 211, 77, 0.95) !important;
+}
+.hero-section a.vd-gradient-gold,
+.hero-section a[class*='bg-white'] {
+  color: inherit;
+}
+
 /* Ensure all text inside dark cards is readable */
 .dark * {
   --tw-text-opacity: 1;

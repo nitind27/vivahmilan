@@ -320,7 +320,11 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           HERO — full-screen video background
       ══════════════════════════════════════════ */}
-      <section className="relative flex items-end overflow-hidden" style={{ height: '100svh', minHeight: '560px', maxHeight: '1080px' }}>
+      <section
+        className="relative flex items-end overflow-hidden isolate"
+        style={{ height: '100svh', minHeight: '560px', maxHeight: '1080px' }}
+        data-hero-cinematic
+      >
 
         {/* ── VIDEO ── */}
         <motion.div
@@ -342,15 +346,11 @@ export default function Home() {
           )}
         </motion.div>
 
-        {/* ── CINEMATIC OVERLAYS ── */}
-        {/* Top navbar fade */}
-        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/75 to-transparent z-10 pointer-events-none" />
-        {/* Bottom content vignette */}
-        <div className="absolute inset-x-0 bottom-0 h-4/5 bg-gradient-to-t from-black/92 via-black/55 to-transparent z-10 pointer-events-none" />
-        {/* Left text readability */}
-        <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/45 to-transparent z-10 pointer-events-none" />
-        {/* Warm tint */}
-        <div className="absolute inset-0 bg-gradient-to-br from-vd-bg/25 via-transparent to-vd-bg-section/15 z-10 pointer-events-none" />
+        {/* ── CINEMATIC OVERLAYS (same rich look in light & dark — no white wash) ── */}
+        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/70 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-4/5 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/55 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-vd-primary-dark/15 z-10 pointer-events-none" />
 
         {/* ── PARTICLES ── */}
         {[...Array(14)].map((_, i) => (
@@ -384,8 +384,8 @@ export default function Home() {
           </motion.div>
         ))}
 
-        {/* ── MAIN CONTENT ── */}
-        <div className="relative z-40 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        {/* ── MAIN CONTENT (always dark-mode hero typography) ── */}
+        <div className="hero-section relative z-40 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
           <AnimatePresence mode="wait">
             <motion.div
               key={current.id}
@@ -393,13 +393,13 @@ export default function Home() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.97 }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-2xl"
+              className="max-w-2xl text-white"
             >
               <motion.span
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
-                className="inline-block bg-white/15 backdrop-blur-sm text-white text-sm font-medium px-4 py-1.5 rounded-full mb-4 border border-white/20"
+                className="inline-block !text-white bg-white/15 backdrop-blur-sm text-sm font-medium px-4 py-1.5 rounded-full mb-4 border border-white/25 shadow-lg shadow-black/20"
               >
                 {current.tag}
               </motion.span>
@@ -407,16 +407,16 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight mb-4"
+                className="!text-white text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
               >
                 {current.headline}{' '}
-                <span className="vd-gradient-text">{current.highlight}</span>
+                <span className="vd-gradient-text drop-shadow-none">{current.highlight}</span>
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-white/90 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl"
+                className="!text-white/90 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl drop-shadow-[0_1px_8px_rgba(0,0,0,0.35)]"
               >
                 {current.sub}
               </motion.p>
@@ -435,9 +435,9 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-4 rounded-2xl font-semibold text-white text-base border border-white/30 hover:bg-white/10 transition-all backdrop-blur-sm"
+                  className="inline-flex items-center gap-2 px-6 py-4 rounded-2xl font-semibold !text-white text-base border border-white/35 hover:bg-white/15 transition-all backdrop-blur-sm"
                 >
-                  <Heart className="w-4 h-4" />
+                  <Heart className="w-4 h-4 !text-white" />
                   Join Free
                 </Link>
               </motion.div>
@@ -447,9 +447,16 @@ export default function Home() {
           {/* Slide indicators */}
           <div className="flex gap-2 mt-10">
             {SLIDES.map((_, i) => (
-              <button key={i} onClick={() => setSlide(i)}
-                className="transition-all duration-300 rounded-full"
-                style={{ width: i === slide ? 28 : 8, height: 8, background: i === slide ? 'rgba(200,164,92,1)' : 'rgba(255,255,255,0.4)' }}
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSlide(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === slide
+                    ? 'w-7 bg-vd-primary shadow-[0_0_8px_rgba(200,164,92,0.6)]'
+                    : 'w-2 bg-white/40 hover:bg-white/70'
+                }`}
               />
             ))}
           </div>
@@ -717,8 +724,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA — image slider + glass panel */}
-      <section className="relative min-h-[32rem] sm:min-h-[36rem] overflow-hidden">
+      {/* CTA — image slider + glass panel (cinematic text in all themes) */}
+      <section className="relative min-h-[32rem] sm:min-h-[36rem] overflow-hidden isolate" data-cta-cinematic>
         {/* Background slides */}
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
@@ -769,7 +776,7 @@ export default function Home() {
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
         </button>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <div className="hero-section relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
             {/* Content pane */}
             <motion.div
@@ -777,7 +784,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.65 }}
               viewport={{ once: true }}
-              className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-8 sm:p-10 shadow-2xl"
+              className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-8 sm:p-10 shadow-2xl text-white"
             >
               <AnimatePresence mode="wait">
                 <motion.p
@@ -785,35 +792,35 @@ export default function Home() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-amber-300/95 mb-4"
+                  className="hero-accent inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-4"
                 >
                   <Heart className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
                   {CTA_BG_SLIDES[ctaBgSlide].caption}
                 </motion.p>
               </AnimatePresence>
-              <h2 className="text-3xl sm:text-4xl lg:text-[2.65rem] font-bold text-white leading-tight mb-4">
+              <h2 className="!text-white text-3xl sm:text-4xl lg:text-[2.65rem] font-bold leading-tight mb-4">
                 {ctaHeading}
               </h2>
-              <p className="text-white/85 text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
+              <p className="!text-white/85 text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
                 {ctaSubtext}
               </p>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-gray-900 bg-white hover:bg-gray-50 transition-colors shadow-lg text-base"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold !text-gray-900 bg-white hover:bg-gray-50 transition-colors shadow-lg text-base"
                 >
                   Create Free Profile
                   <Heart className="w-5 h-5 fill-vd-primary text-vd-primary" />
                 </Link>
                 <Link
                   href="/search"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-semibold text-white border border-white/35 hover:bg-white/10 transition-colors text-base"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-semibold !text-white border border-white/35 hover:bg-white/10 transition-colors text-base"
                 >
-                  <Search className="w-5 h-5" />
+                  <Search className="w-5 h-5 !text-white" />
                   Browse Matches
                 </Link>
               </div>
-              <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-white/15 text-xs text-white/70">
+              <div className="hero-muted flex flex-wrap gap-4 mt-8 pt-6 border-t border-white/15 text-xs">
                 <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-amber-300" /> Verified profiles</span>
                 <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-amber-300" /> {membersLabel}</span>
               </div>
@@ -825,7 +832,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.65, delay: 0.1 }}
               viewport={{ once: true }}
-              className="hidden lg:block relative"
+              className="hidden lg:block relative text-white"
             >
               <div className="absolute -inset-3 rounded-[1.75rem] bg-gradient-to-br from-amber-400/40 to-rose-400/20 blur-2xl opacity-60" />
               <div className="relative rounded-2xl overflow-hidden border-2 border-white/25 shadow-2xl aspect-[5/4]">
@@ -848,8 +855,8 @@ export default function Home() {
                 </AnimatePresence>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="text-white font-semibold text-lg">{CTA_BG_SLIDES[ctaBgSlide].caption}</p>
-                  <p className="text-white/70 text-sm mt-1">{siteName} — trusted matrimony</p>
+                  <p className="!text-white font-semibold text-lg">{CTA_BG_SLIDES[ctaBgSlide].caption}</p>
+                  <p className="hero-muted text-sm mt-1">{siteName} — trusted matrimony</p>
                 </div>
               </div>
             </motion.div>
@@ -866,12 +873,11 @@ export default function Home() {
                   clearInterval(ctaTimerRef.current);
                   setCtaBgSlide(i);
                 }}
-                className="transition-all duration-300 rounded-full"
-                style={{
-                  width: i === ctaBgSlide ? 28 : 8,
-                  height: 8,
-                  background: i === ctaBgSlide ? 'rgba(229, 200, 139, 1)' : 'rgba(255,255,255,0.35)',
-                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === ctaBgSlide
+                    ? 'w-7 bg-[#E5C88B] shadow-[0_0_8px_rgba(229,200,139,0.6)]'
+                    : 'w-2 bg-white/35 hover:bg-white/60'
+                }`}
               />
             ))}
           </div>
