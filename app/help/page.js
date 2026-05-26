@@ -20,7 +20,7 @@ const CATEGORIES = [
     faqs: [
       { q: 'How does matching work?', a: 'Our algorithm matches profiles based on religion, location, age range, education, and partner preferences you set in your profile.' },
       { q: 'How do I send an interest?', a: 'Visit any profile and click the "Send Interest" button. The other person will be notified and can accept or decline.' },
-      { q: 'Can I shortlist profiles?', a: 'Yes! Click the heart icon on any profile card to add them to your shortlist. Access your shortlist from the dashboard.' },
+      { q: 'Can I shortlist profiles?', a: 'Yes! Click the heart icon on any profile card or use "Add to Shortlist" on a profile page. View all saved profiles on My Shortlist (/shortlist) — navbar bookmark icon, dashboard, or the link in the success toast.' },
     ],
   },
   {

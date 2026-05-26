@@ -9,7 +9,7 @@ import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 
-function ProfileCard({ user, index = 0 }) {
+function ProfileCard({ user, index = 0, onShortlistChange }) {
   const [shortlisted, setShortlisted] = useState(user.isShortlisted || false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -29,7 +29,26 @@ function ProfileCard({ user, index = 0 }) {
       });
       const data = await res.json();
       setShortlisted(data.shortlisted);
-      toast.success(data.shortlisted ? 'Added to shortlist' : 'Removed from shortlist');
+      onShortlistChange?.(user.id, data.shortlisted);
+      if (data.shortlisted) {
+        toast.success(
+          (t) => (
+            <span className="flex flex-col gap-1">
+              <span>Added to shortlist</span>
+              <button
+                type="button"
+                className="text-vd-primary font-semibold text-sm underline text-left"
+                onClick={() => { toast.dismiss(t.id); router.push('/shortlist'); }}
+              >
+                View My Shortlist →
+              </button>
+            </span>
+          ),
+          { duration: 5000 }
+        );
+      } else {
+        toast.success('Removed from shortlist');
+      }
     } catch {
       toast.error('Something went wrong');
     } finally {

@@ -10,7 +10,7 @@ import SkeletonCard from '@/components/SkeletonCard';
 import {
   Heart, Eye, MessageCircle, Bell, Star, Users, ChevronRight,
   Clock, Zap, Crown, Calendar, Shield, Search, Settings,
-  TrendingUp, Sparkles, ArrowRight, CheckCircle, Percent, HandCoins, Share2
+  TrendingUp, Sparkles, ArrowRight, CheckCircle, Percent, HandCoins, Share2, Bookmark
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -385,6 +385,7 @@ export default function Dashboard() {
   const [notifications, setNotifications] = useState([]);
   const [profile, setProfile]           = useState(null);
   const [unreadChat, setUnreadChat]     = useState(0);
+  const [shortlistCount, setShortlistCount] = useState(0);
   const [loading, setLoading]           = useState(true);
   const [reminders, setReminders]       = useState({ premiumInfo: null, birthdayInfo: null });
 
@@ -403,12 +404,14 @@ export default function Dashboard() {
       safeFetch('/api/profile'),
       safeFetch('/api/chat/unread'),
       safeFetch('/api/reminders', { method: 'POST' }),
-    ]).then(([m, i, n, p, u, rem]) => {
+      safeFetch('/api/shortlist'),
+    ]).then(([m, i, n, p, u, rem, sl]) => {
       setMatches(m?.users || []);
       setInterests(i || []);
       setNotifications(n?.notifications || []);
       setProfile(p);
       setUnreadChat(u?.total || 0);
+      setShortlistCount(Array.isArray(sl) ? sl.length : 0);
       setReminders(rem || { premiumInfo: null, birthdayInfo: null });
       setLoading(false);
     });
@@ -437,13 +440,14 @@ export default function Dashboard() {
 
   const stats = [
     { icon: Heart,         label: 'Interests',      value: interests.length > 0 ? interests.length : '—',  color: 'text-vd-primary',   bg: 'bg-vd-accent-soft dark:bg-vd-accent/20',   href: '/interests',  badge: pendingInterests > 0 },
-    { icon: Eye,           label: 'Profile Views',  value: '—',                                             color: 'text-vd-primary', bg: 'bg-vd-accent-soft dark:bg-vd-accent/20', href: '/dashboard' },
+    { icon: Bookmark,      label: 'Shortlist',      value: shortlistCount > 0 ? shortlistCount : '—',       color: 'text-rose-500',     bg: 'bg-rose-50 dark:bg-rose-900/20',         href: '/shortlist',  badge: shortlistCount > 0 },
     { icon: MessageCircle, label: 'Unread Msgs',    value: unreadChat > 0 ? unreadChat : '—',               color: 'text-indigo-500', bg: 'bg-indigo-50 dark:bg-indigo-900/20', href: '/chat',       badge: unreadChat > 0 },
     { icon: Users,         label: 'Matches',        value: matches.length > 0 ? matches.length : '—',       color: 'text-blue-500',   bg: 'bg-blue-50 dark:bg-blue-900/20',    href: '/matches' },
   ];
 
   const quickActions = [
     { icon: Heart,    label: 'Find Matches',  href: '/matches',      color: 'text-vd-primary',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: Bookmark, label: 'My Shortlist', href: '/shortlist',   color: 'text-rose-500',     bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Search,   label: 'Search',        href: '/search',       color: 'text-vd-primary', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Star,     label: 'Premium',       href: '/premium',      color: 'text-yellow-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Settings, label: 'Edit Profile',  href: '/profile/edit', color: 'text-blue-500',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },

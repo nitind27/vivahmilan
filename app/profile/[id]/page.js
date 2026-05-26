@@ -10,9 +10,11 @@ import {
   Heart, MapPin, GraduationCap, Briefcase, Star,
   MessageCircle, Flag, Ban, ChevronLeft, Check, X, Lock,
   Eye, Users, Cigarette, Wine, Utensils, Ruler, Weight,
-  Send, Clock, CheckCircle2, AlertTriangle, ShieldOff, Undo2
+  Send, Clock, CheckCircle2, AlertTriangle, ShieldOff, Undo2,
+  ChevronRight, Calendar, Phone, Globe, Home, Sparkles, User,
+  BookOpen, Target, ImageIcon, ZoomIn
 } from 'lucide-react';
-import { differenceInYears } from 'date-fns';
+import { differenceInYears, format } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import KundaliChart from '@/components/KundaliChart';
@@ -26,6 +28,227 @@ const REPORT_REASONS = [
   'Underage user',
   'Other',
 ];
+
+const MARITAL_LABELS = {
+  NEVER_MARRIED: 'Never Married',
+  DIVORCED: 'Divorced',
+  WIDOWED: 'Widowed',
+  SEPARATED: 'Separated',
+};
+
+function formatValue(val) {
+  if (val == null || val === '') return null;
+  const s = String(val);
+  if (/\d\s*(cm|kg|yrs|–)/i.test(s)) return s;
+  if (MARITAL_LABELS[s]) return MARITAL_LABELS[s];
+  if (s === 'NO') return 'No';
+  if (s === 'YES') return 'Yes';
+  if (s === 'OCCASIONALLY') return 'Occasionally';
+  return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function buildPhotoList(user) {
+  const seen = new Set();
+  const list = [];
+  const add = (url) => {
+    if (!url || seen.has(url)) return;
+    seen.add(url);
+    list.push({ url });
+  };
+  add(user?.image);
+  (user?.photos || []).forEach(p => add(p.url));
+  return list;
+}
+
+function ProfileSection({ title, icon: Icon, children, delay = 0 }) {
+  if (!children) return null;
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl border border-vd-border shadow-sm overflow-hidden"
+    >
+      <div className="px-6 py-4 border-b border-vd-border bg-gradient-to-r from-vd-accent-soft/80 to-transparent dark:from-vd-accent/10">
+        <h2 className="font-bold text-lg text-vd-text-heading flex items-center gap-2.5">
+          {Icon && (
+            <span className="w-9 h-9 rounded-xl vd-gradient-gold flex items-center justify-center shadow-sm">
+              <Icon className="w-[18px] h-[18px] text-white" />
+            </span>
+          )}
+          {title}
+        </h2>
+      </div>
+      <div className="p-6">{children}</div>
+    </motion.section>
+  );
+}
+
+function DetailItem({ label, value, icon: Icon }) {
+  const display = formatValue(value);
+  if (!display) return null;
+  return (
+    <div className="group flex gap-3 p-4 rounded-2xl bg-vd-bg dark:bg-vd-bg/50 border border-vd-border/80 hover:border-vd-primary/30 transition-colors">
+      {Icon && (
+        <div className="w-10 h-10 rounded-xl bg-vd-accent-soft dark:bg-vd-accent/20 flex items-center justify-center flex-shrink-0">
+          <Icon className="w-4 h-4 text-vd-primary" />
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-vd-text-light mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-vd-text-heading break-words">{display}</p>
+      </div>
+    </div>
+  );
+}
+
+function DetailGrid({ items }) {
+  const visible = items.filter(i => formatValue(i.value));
+  if (!visible.length) return null;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {visible.map(item => (
+        <DetailItem key={item.label} label={item.label} value={item.value} icon={item.icon} />
+      ))}
+    </div>
+  );
+}
+
+function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
+  const [lightbox, setLightbox] = useState(false);
+
+  const go = (dir) => {
+    setActivePhoto(i => {
+      const n = photos.length;
+      if (!n) return 0;
+      return dir > 0 ? (i + 1) % n : (i - 1 + n) % n;
+    });
+  };
+
+  if (!photos.length) {
+    return (
+      <div className="relative aspect-[4/5] max-h-[520px] bg-gradient-to-br from-vd-accent-soft to-vd-bg flex items-center justify-center">
+        <div className="w-28 h-28 vd-gradient-gold rounded-full flex items-center justify-center shadow-xl">
+          <span className="text-white text-5xl font-bold">{name?.[0]?.toUpperCase()}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="relative bg-black/5 dark:bg-black/30">
+        <div className="relative aspect-[4/5] max-h-[520px] w-full overflow-hidden">
+          <SmartImage
+            src={photos[activePhoto]?.url}
+            alt={name}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
+
+          {photos.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+                aria-label="Previous photo"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+                aria-label="Next photo"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setLightbox(true)}
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+                aria-label="View fullscreen"
+              >
+                <ZoomIn className="w-4 h-4" />
+              </button>
+            </>
+          )}
+
+          <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-1.5">
+            {photos.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setActivePhoto(i)}
+                className={`h-1.5 rounded-full transition-all ${activePhoto === i ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`}
+                aria-label={`Photo ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {photos.length > 1 && (
+          <div className="p-4 border-t border-vd-border bg-vd-bg-section/80 dark:bg-vd-bg-card/80">
+            <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-3 flex items-center gap-1.5">
+              <ImageIcon className="w-3.5 h-3.5" /> All Photos ({photos.length})
+            </p>
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
+              {photos.map((p, i) => (
+                <button
+                  key={p.url}
+                  type="button"
+                  onClick={() => setActivePhoto(i)}
+                  className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${activePhoto === i ? 'border-vd-primary ring-2 ring-vd-primary/30 scale-[1.02]' : 'border-transparent opacity-80 hover:opacity-100'}`}
+                >
+                  <SmartImage src={p.url} alt="" fill className="object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-4"
+            onClick={() => setLightbox(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setLightbox(false)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            {photos.length > 1 && (
+              <>
+                <button type="button" onClick={e => { e.stopPropagation(); go(-1); }}
+                  className="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center">
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button type="button" onClick={e => { e.stopPropagation(); go(1); }}
+                  className="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center">
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+            <div className="relative w-full max-w-3xl aspect-[3/4] max-h-[85vh]" onClick={e => e.stopPropagation()}>
+              <SmartImage src={photos[activePhoto]?.url} alt={name} fill className="object-contain" />
+            </div>
+            <p className="absolute bottom-6 text-white/70 text-sm">{activePhoto + 1} / {photos.length}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
 
 // ── Block Confirmation Modal ──────────────────────────────────────────────────
 function BlockModal({ name, onConfirm, onCancel, loading }) {
@@ -338,7 +561,25 @@ export default function ProfilePage() {
     });
     const data = await res.json();
     setShortlisted(data.shortlisted);
-    toast.success(data.shortlisted ? 'Added to shortlist ❤️' : 'Removed from shortlist');
+    if (data.shortlisted) {
+      toast.success(
+        (t) => (
+          <span className="flex flex-col gap-1">
+            <span>Added to shortlist</span>
+            <button
+              type="button"
+              className="text-vd-primary font-semibold text-sm underline text-left"
+              onClick={() => { toast.dismiss(t.id); router.push('/shortlist'); }}
+            >
+              View My Shortlist →
+            </button>
+          </span>
+        ),
+        { duration: 5000 }
+      );
+    } else {
+      toast.success('Removed from shortlist');
+    }
   };
 
   const reportUser = async (reason, details) => {
@@ -374,14 +615,16 @@ export default function ProfilePage() {
   if (loading) return (
     <div className="min-h-screen bg-vd-bg">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 pt-24 pb-12">
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="space-y-4">
-            <div className="h-80 skeleton rounded-3xl" />
-            <div className="h-32 skeleton rounded-2xl" />
+      <div className="max-w-6xl mx-auto px-4 pt-24 pb-12 space-y-6">
+        <div className="h-10 w-32 skeleton rounded-xl" />
+        <div className="h-[480px] skeleton rounded-3xl" />
+        <div className="grid lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-4 space-y-4">
+            <div className="h-48 skeleton rounded-3xl" />
+            <div className="h-40 skeleton rounded-3xl" />
           </div>
-          <div className="md:col-span-2 space-y-4">
-            {[...Array(4)].map((_, i) => <div key={i} className="h-28 skeleton rounded-2xl" />)}
+          <div className="lg:col-span-8 space-y-4">
+            {[...Array(5)].map((_, i) => <div key={i} className="h-36 skeleton rounded-3xl" />)}
           </div>
         </div>
       </div>
@@ -390,286 +633,348 @@ export default function ProfilePage() {
 
   // ── Not found ──────────────────────────────────────────────────────────────
   if (!user || user.error) return (
-    <div className="min-h-screen bg-vd-bg flex items-center justify-center">
+    <div className="min-h-screen bg-vd-bg">
       <Navbar />
-      <div className="text-center">
-        <div className="text-6xl mb-4">😔</div>
-        <h2 className="text-2xl font-bold mb-2">Profile not available</h2>
-        <Link href="/matches" className="text-vd-primary hover:underline">Browse other profiles</Link>
+      <div className="flex items-center justify-center min-h-[70vh] px-4">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-vd-accent-soft flex items-center justify-center text-4xl">😔</div>
+          <h2 className="text-2xl font-bold text-vd-text-heading mb-2">Profile not available</h2>
+          <p className="text-vd-text-sub text-sm mb-6">This profile may be private, blocked, or no longer exists.</p>
+          <Link href="/matches" className="inline-flex items-center gap-2 vd-gradient-gold text-white px-6 py-3 rounded-2xl font-semibold hover:opacity-90">
+            Browse Profiles <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </div>
   );
 
-  const profile      = user.profile || {};
-  const allPhotos    = user.image ? [{ url: user.image }, ...(user.photos || [])] : (user.photos || []);
-  const age          = profile.dob ? differenceInYears(new Date(), new Date(profile.dob)) : null;
+  const profile = user.profile || {};
+  const allPhotos = buildPhotoList(user);
+  const age = profile.dob ? differenceInYears(new Date(), new Date(profile.dob)) : null;
+  const dobFormatted = profile.dob ? format(new Date(profile.dob), 'dd MMM yyyy') : null;
   const isOwnProfile = session?.user?.id === id;
-  const isPremium    = session?.user?.isPremium;
+  const isPremium = session?.user?.isPremium;
+  const locationLine = [profile.city, profile.state, profile.country].filter(Boolean).join(', ');
+  const profileComplete = profile.profileComplete ?? 0;
+
+  const personalItems = [
+    { label: 'Gender', value: profile.gender, icon: User },
+    { label: 'Date of Birth', value: dobFormatted, icon: Calendar },
+    { label: 'Age', value: age != null ? `${age} years` : null, icon: Calendar },
+    { label: 'Height', value: profile.height ? `${profile.height} cm` : null, icon: Ruler },
+    { label: 'Weight', value: profile.weight ? `${profile.weight} kg` : null, icon: Weight },
+    { label: 'Marital Status', value: profile.maritalStatus, icon: Heart },
+    { label: 'Body Type', value: profile.bodyType, icon: User },
+    { label: 'Complexion', value: profile.complexion, icon: Sparkles },
+  ];
+
+  const religionItems = [
+    { label: 'Religion', value: profile.religion, icon: BookOpen },
+    { label: 'Caste', value: profile.caste, icon: null },
+    { label: 'Sub Caste', value: profile.subCaste, icon: null },
+    { label: 'Sect', value: profile.sect, icon: null },
+    { label: 'Gotra', value: profile.gotra, icon: null },
+    { label: 'Mother Tongue', value: profile.motherTongue, icon: null },
+    { label: 'Horoscope (Rashi)', value: profile.horoscopeSign, icon: Sparkles },
+    { label: 'Nakshatra', value: profile.nakshatra, icon: Sparkles },
+    { label: 'Manglik', value: profile.manglik, icon: null },
+    { label: 'Kundli Match', value: profile.kundliMatch, icon: null },
+    { label: 'Amritdhari', value: profile.amritdhari, icon: null },
+  ];
+
+  const locationItems = [
+    { label: 'Country', value: profile.country, icon: Globe },
+    { label: 'State', value: profile.state, icon: MapPin },
+    { label: 'City', value: profile.city, icon: Home },
+  ];
+
+  const careerItems = [
+    { label: 'Education', value: profile.education, icon: GraduationCap },
+    { label: 'Profession', value: profile.profession, icon: Briefcase },
+    { label: 'Annual Income', value: profile.income, icon: Briefcase },
+  ];
+
+  const lifestyleItems = [
+    { label: 'Diet', value: profile.diet, icon: Utensils },
+    { label: 'Smoking', value: profile.smoking, icon: Cigarette },
+    { label: 'Drinking', value: profile.drinking, icon: Wine },
+  ];
+
+  const familyItems = [
+    { label: 'Family Type', value: profile.familyType, icon: Users },
+    { label: 'Family Status', value: profile.familyStatus, icon: Users },
+    { label: "Father's Occupation", value: profile.fatherOccupation, icon: Briefcase },
+    { label: "Mother's Occupation", value: profile.motherOccupation, icon: Briefcase },
+    { label: 'Siblings', value: profile.siblings != null ? String(profile.siblings) : null, icon: Users },
+  ];
+
+  const partnerItems = [
+    {
+      label: 'Preferred Age',
+      value: profile.partnerAgeMin && profile.partnerAgeMax
+        ? `${profile.partnerAgeMin} – ${profile.partnerAgeMax} yrs`
+        : null,
+      icon: Target,
+    },
+    {
+      label: 'Preferred Height',
+      value: profile.partnerHeightMin && profile.partnerHeightMax
+        ? `${profile.partnerHeightMin} – ${profile.partnerHeightMax} cm`
+        : null,
+      icon: Ruler,
+    },
+    { label: 'Religion', value: profile.partnerReligion, icon: BookOpen },
+    { label: 'Caste', value: profile.partnerCaste, icon: null },
+    { label: 'Education', value: profile.partnerEducation, icon: GraduationCap },
+    { label: 'Profession', value: profile.partnerProfession, icon: Briefcase },
+    { label: 'Location', value: profile.partnerLocation, icon: MapPin },
+    { label: 'Marital Status', value: profile.partnerMaritalStatus, icon: Heart },
+    { label: 'Manglik Preference', value: profile.partnerManglik, icon: Sparkles },
+  ];
+
+  const hasSection = (items) => items.some(i => formatValue(i.value));
 
   return (
     <div className="min-h-screen bg-vd-bg">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
 
-        {/* Back */}
-        <button onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-gray-500 hover:text-vd-primary mb-6 transition-colors text-sm">
-          <ChevronLeft className="w-4 h-4" /> Back
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-1.5 text-vd-text-sub hover:text-vd-primary mb-5 transition-colors text-sm font-medium"
+        >
+          <ChevronLeft className="w-4 h-4" /> Back to browsing
         </button>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* Photo + identity hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-3xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card shadow-lg overflow-hidden mb-8"
+        >
+          <PhotoGallery
+            photos={allPhotos}
+            name={user.name}
+            activePhoto={activePhoto}
+            setActivePhoto={setActivePhoto}
+          />
 
-          {/* ── LEFT COLUMN ─────────────────────────────────────────────── */}
-          <div className="space-y-4">
+          <div className="p-6 sm:p-8 border-t border-vd-border">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  {!!user.isPremium && (
+                    <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 font-semibold shadow-sm">
+                      <Star className="w-3 h-3 fill-white" /> Premium Member
+                    </span>
+                  )}
+                  {!!user.verificationBadge && <VerifiedBadge size="md" variant="badge" />}
+                  {profile.religion && (
+                    <span className="bg-vd-accent-soft text-vd-primary text-xs px-3 py-1 rounded-full font-semibold">
+                      {profile.religion}
+                    </span>
+                  )}
+                  {profile.gender && (
+                    <span className="bg-vd-bg text-vd-text-sub text-xs px-3 py-1 rounded-full font-medium border border-vd-border capitalize">
+                      {formatValue(profile.gender)}
+                    </span>
+                  )}
+                </div>
 
-            {/* Main photo */}
-            <div className="relative h-80 rounded-3xl overflow-hidden bg-vd-accent-soft dark:bg-vd-accent/20 shadow-md">
-              {allPhotos.length > 0 ? (
-                <SmartImage src={allPhotos[activePhoto]?.url} alt={user.name} fill className="object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-24 h-24 vd-gradient-gold rounded-full flex items-center justify-center">
-                    <span className="text-white text-4xl font-bold">{user.name?.[0]}</span>
+                <h1 className="text-3xl sm:text-4xl font-black text-vd-text-heading flex items-center gap-2 flex-wrap leading-tight">
+                  {user.name}
+                  {!!user.verificationBadge && <VerifiedBadge size="lg" variant="icon" />}
+                </h1>
+
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-vd-text-sub">
+                  {age != null && <span>{age} years</span>}
+                  {profile.height && <span>{profile.height} cm</span>}
+                  {profile.maritalStatus && <span>{formatValue(profile.maritalStatus)}</span>}
+                  {locationLine && (
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-vd-primary" /> {locationLine}
+                    </span>
+                  )}
+                </div>
+
+                {(profile.education || profile.profession) && (
+                  <div className="flex flex-wrap gap-4 mt-4">
+                    {profile.education && (
+                      <div className="flex items-center gap-2 text-sm text-vd-text-sub">
+                        <GraduationCap className="w-4 h-4 text-vd-primary" />
+                        <span>{profile.education}</span>
+                      </div>
+                    )}
+                    {profile.profession && (
+                      <div className="flex items-center gap-2 text-sm text-vd-text-sub">
+                        <Briefcase className="w-4 h-4 text-vd-primary" />
+                        <span>{profile.profession}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {profileComplete > 0 && (
+                <div className="lg:w-44 flex-shrink-0 rounded-2xl border border-vd-border p-4 bg-vd-bg">
+                  <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-2">Profile strength</p>
+                  <div className="flex items-end gap-2 mb-2">
+                    <span className="text-2xl font-black text-vd-primary">{profileComplete}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-vd-accent-soft overflow-hidden">
+                    <div
+                      className="h-full vd-gradient-gold rounded-full transition-all"
+                      style={{ width: `${Math.min(100, profileComplete)}%` }}
+                    />
                   </div>
                 </div>
               )}
-              {/* Badges */}
-              <div className="absolute top-3 left-3 flex flex-col gap-1">
-                {!!user.isPremium && (
-                  <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
-                    <Star className="w-3 h-3 fill-white" /> Premium
-                  </span>
-                )}
-                {!!user.verificationBadge && <VerifiedBadge size="md" />}
-              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Sidebar — actions */}
+          <aside className="lg:col-span-4 space-y-4 lg:sticky lg:top-24">
+            <div className="rounded-3xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card p-5 shadow-sm space-y-3">
+              <h2 className="text-sm font-bold text-vd-text-heading uppercase tracking-wide">Connect</h2>
+              {!isOwnProfile ? (
+                <>
+                  <InterestPanel
+                    interestStatus={interestStatus}
+                    interestId={interestStatus?.id}
+                    isOwnProfile={isOwnProfile}
+                    isPremium={isPremium}
+                    userId={id}
+                    profileName={user?.name}
+                    session={session}
+                    onStatusChange={setInterestStatus}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShortlist}
+                    className={`w-full py-3 rounded-2xl font-semibold border-2 flex items-center justify-center gap-2 transition-all text-sm ${
+                      shortlisted
+                        ? 'border-vd-primary bg-vd-accent-soft text-vd-primary'
+                        : 'border-vd-border hover:border-vd-primary text-vd-text-sub'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${shortlisted ? 'fill-vd-primary text-vd-primary' : ''}`} />
+                    {shortlisted ? 'Shortlisted' : 'Add to Shortlist'}
+                  </button>
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowReportModal(true)}
+                      className="flex-1 py-2.5 rounded-xl border border-vd-border text-vd-text-light text-xs flex items-center justify-center gap-1 hover:border-orange-300 hover:text-orange-600 transition-colors"
+                    >
+                      <Flag className="w-3.5 h-3.5" /> Report
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowBlockModal(true)}
+                      className="flex-1 py-2.5 rounded-xl border border-vd-border text-vd-text-light text-xs flex items-center justify-center gap-1 hover:border-red-300 hover:text-red-500 transition-colors"
+                    >
+                      <Ban className="w-3.5 h-3.5" /> Block
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  href="/profile/edit"
+                  className="block w-full text-center vd-gradient-gold text-white py-3.5 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm"
+                >
+                  Edit My Profile
+                </Link>
+              )}
             </div>
 
-            {/* Thumbnails */}
-            {allPhotos.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {allPhotos.map((p, i) => (
-                  <button key={i} onClick={() => setActivePhoto(i)}
-                    className={`relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border-2 transition-all ${activePhoto === i ? 'border-vd-primary scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}>
-                    <SmartImage src={p.url} alt="" fill className="object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* ── ACTION PANEL ── */}
-            {!isOwnProfile ? (
-              <div className="space-y-3">
-                {/* Interest / Accept-Reject / Chat */}
-                <InterestPanel
-                  interestStatus={interestStatus}
-                  interestId={interestStatus?.id}
-                  isOwnProfile={isOwnProfile}
-                  isPremium={isPremium}
-                  userId={id}
-                  profileName={user?.name}
-                  session={session}
-                  onStatusChange={setInterestStatus}
-                />
-
-                {/* Shortlist */}
-                <button onClick={toggleShortlist}
-                  className={`w-full py-2.5 rounded-2xl font-medium border-2 flex items-center justify-center gap-2 transition-all text-sm ${
-                    shortlisted
-                      ? 'border-vd-primary bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-vd-primary text-gray-600 dark:text-gray-400'
-                  }`}>
-                  <Heart className={`w-4 h-4 ${shortlisted ? 'fill-vd-primary text-vd-primary' : ''}`} />
-                  {shortlisted ? 'Shortlisted' : 'Add to Shortlist'}
-                </button>
-
-                {/* Report / Block */}
-                <div className="flex gap-2">
-                  <button onClick={() => setShowReportModal(true)}
-                    className="flex-1 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-400 text-xs flex items-center justify-center gap-1 hover:border-red-300 hover:text-red-500 transition-colors">
-                    <Flag className="w-3.5 h-3.5" /> Report
-                  </button>
-                  <button onClick={() => setShowBlockModal(true)}
-                    className="flex-1 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-400 text-xs flex items-center justify-center gap-1 hover:border-red-300 hover:text-red-500 transition-colors">
-                    <Ban className="w-3.5 h-3.5" /> Block
-                  </button>
+            {user.phone && (
+              <div className="rounded-2xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                  <Phone className="w-4 h-4 text-green-600" />
                 </div>
-              </div>
-            ) : (
-              <Link href="/profile/edit"
-                className="block w-full text-center vd-gradient-gold text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm">
-                Edit My Profile
-              </Link>
-            )}
-          </div>
-
-          {/* ── RIGHT COLUMN ────────────────────────────────────────────── */}
-          <div className="md:col-span-2 space-y-4">
-
-            {/* Name + quick stats */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
-              <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
-                    {user.name}
-                    {!!user.verificationBadge && (
-                      <VerifiedBadge size="lg" variant="badge" />
-                    )}
-                  </h1>
-                  <div className="flex flex-wrap items-center gap-2 mt-1">
-                    {age && <span className="text-gray-500 text-sm">{age} years</span>}
-                    {profile.height && <span className="text-gray-400 text-sm">• {profile.height} cm</span>}
-                    {profile.maritalStatus && (
-                      <span className="text-gray-400 text-sm capitalize">
-                        • {profile.maritalStatus.replace(/_/g, ' ').toLowerCase()}
-                      </span>
-                    )}
-                  </div>
+                  <p className="text-[11px] uppercase tracking-wide text-vd-text-light font-semibold">Contact</p>
+                  <p className="text-sm font-semibold text-vd-text-heading">{user.phone}</p>
                 </div>
-                {profile.religion && (
-                  <span className="bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary dark:text-vd-primary text-xs px-3 py-1 rounded-full font-medium">
-                    {profile.religion}
-                  </span>
-                )}
               </div>
+            )}
+          </aside>
 
-              <div className="grid grid-cols-2 gap-3 mt-4">
-                {profile.city && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <MapPin className="w-4 h-4 text-vd-primary flex-shrink-0" />
-                    <span className="truncate">{[profile.city, profile.state, profile.country].filter(Boolean).join(', ')}</span>
-                  </div>
-                )}
-                {profile.education && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <GraduationCap className="w-4 h-4 text-vd-primary flex-shrink-0" />
-                    <span className="truncate">{profile.education}</span>
-                  </div>
-                )}
-                {profile.profession && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <Briefcase className="w-4 h-4 text-vd-primary flex-shrink-0" />
-                    <span className="truncate">{profile.profession}</span>
-                  </div>
-                )}
-                {profile.income && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <span className="text-green-500 font-bold text-xs">₹/$</span>
-                    <span className="truncate">{profile.income}</span>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-
-            {/* About */}
+          {/* Main details */}
+          <main className="lg:col-span-8 space-y-6">
             {profile.aboutMe && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
-                <h3 className="font-semibold mb-3 flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-vd-primary" /> About Me
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{profile.aboutMe}</p>
-              </motion.div>
+              <ProfileSection title="About Me" icon={Eye} delay={0.05}>
+                <p className="text-vd-text-sub text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
+                  {profile.aboutMe}
+                </p>
+              </ProfileSection>
             )}
 
-            {/* Profile details */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
-              <h3 className="font-semibold mb-4">Profile Details</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {[
-                  { label: 'Height', value: profile.height ? `${profile.height} cm` : null, icon: Ruler },
-                  { label: 'Weight', value: profile.weight ? `${profile.weight} kg` : null, icon: Weight },
-                  { label: 'Mother Tongue', value: profile.motherTongue, icon: null },
-                  { label: 'Caste', value: profile.caste, icon: null },
-                  { label: 'Diet', value: profile.diet, icon: Utensils },
-                  { label: 'Smoking', value: profile.smoking, icon: Cigarette },
-                  { label: 'Drinking', value: profile.drinking, icon: Wine },
-                  { label: 'Body Type', value: profile.bodyType, icon: null },
-                  { label: 'Complexion', value: profile.complexion, icon: null },
-                  { label: 'Horoscope', value: profile.horoscopeSign, icon: null },
-                ].filter(i => i.value).map(item => (
-                  <div key={item.label} className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-                    <p className="text-xs text-gray-400 mb-0.5">{item.label}</p>
-                    <p className="text-sm font-medium capitalize">{String(item.value).toLowerCase()}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Family */}
-            {(profile.familyType || profile.fatherOccupation || profile.siblings != null) && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-vd-primary" /> Family Details
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { label: 'Family Type', value: profile.familyType },
-                    { label: 'Family Status', value: profile.familyStatus },
-                    { label: "Father's Occupation", value: profile.fatherOccupation },
-                    { label: "Mother's Occupation", value: profile.motherOccupation },
-                    { label: 'Siblings', value: profile.siblings != null ? String(profile.siblings) : null },
-                  ].filter(i => i.value).map(item => (
-                    <div key={item.label} className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">{item.label}</p>
-                      <p className="text-sm font-medium">{item.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+            {hasSection(personalItems) && (
+              <ProfileSection title="Personal Information" icon={User} delay={0.08}>
+                <DetailGrid items={personalItems} />
+              </ProfileSection>
             )}
 
-            {/* Partner preferences */}
-            {(profile.partnerAgeMin || profile.partnerReligion || profile.partnerLocation) && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-vd-primary" /> Partner Preferences
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {profile.partnerAgeMin && profile.partnerAgeMax && (
-                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">Age Range</p>
-                      <p className="text-sm font-medium">{profile.partnerAgeMin} – {profile.partnerAgeMax} yrs</p>
-                    </div>
-                  )}
-                  {[
-                    { label: 'Religion', value: profile.partnerReligion },
-                    { label: 'Education', value: profile.partnerEducation },
-                    { label: 'Location', value: profile.partnerLocation },
-                  ].filter(i => i.value).map(item => (
-                    <div key={item.label} className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">{item.label}</p>
-                      <p className="text-sm font-medium">{item.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+            {hasSection(religionItems) && (
+              <ProfileSection title="Religion & Horoscope" icon={Sparkles} delay={0.1}>
+                <DetailGrid items={religionItems} />
+              </ProfileSection>
             )}
 
-            {/* Kundali Chart */}
+            {hasSection(locationItems) && (
+              <ProfileSection title="Location" icon={MapPin} delay={0.12}>
+                <DetailGrid items={locationItems} />
+              </ProfileSection>
+            )}
+
+            {hasSection(careerItems) && (
+              <ProfileSection title="Education & Career" icon={GraduationCap} delay={0.14}>
+                <DetailGrid items={careerItems} />
+              </ProfileSection>
+            )}
+
+            {hasSection(lifestyleItems) && (
+              <ProfileSection title="Lifestyle" icon={Utensils} delay={0.16}>
+                <DetailGrid items={lifestyleItems} />
+              </ProfileSection>
+            )}
+
+            {hasSection(familyItems) && (
+              <ProfileSection title="Family Details" icon={Users} delay={0.18}>
+                <DetailGrid items={familyItems} />
+              </ProfileSection>
+            )}
+
+            {hasSection(partnerItems) && (
+              <ProfileSection title="Partner Preferences" icon={Target} delay={0.2}>
+                <DetailGrid items={partnerItems} />
+              </ProfileSection>
+            )}
+
             {kundali !== undefined && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}>
                 {kundali ? (
                   <KundaliChart kundali={kundali} />
                 ) : isOwnProfile ? (
-                  <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 border border-vd-border shadow-sm text-center">
+                  <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl p-8 border border-vd-border shadow-sm text-center">
                     <div className="text-4xl mb-2">🪐</div>
                     <p className="text-sm font-semibold text-vd-text-heading mb-1">No Kundali Generated</p>
                     <p className="text-xs text-vd-text-light mb-4">Generate your Vedic birth chart to enhance your profile.</p>
-                    <a
-                      href="/onboarding?email=&step=1"
+                    <Link
+                      href="/profile/edit"
                       className="inline-block vd-gradient-gold text-white px-5 py-2.5 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity"
                     >
                       Generate Kundali
-                    </a>
+                    </Link>
                   </div>
                 ) : null}
               </motion.div>
             )}
-          </div>
+          </main>
         </div>
       </div>
 

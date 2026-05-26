@@ -21,7 +21,10 @@ export async function GET(req, { params }) {
   if (blocked) return NextResponse.json({ error: 'Profile unavailable' }, { status: 403 });
 
   const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [id]);
-  const photos = await query('SELECT * FROM photo WHERE userId = ? AND isMain = 0', [id]);
+  const photos = await query(
+    'SELECT * FROM photo WHERE userId = ? ORDER BY isMain DESC, createdAt ASC',
+    [id]
+  );
 
   // Record profile view
   if (session.user.id !== id) {
