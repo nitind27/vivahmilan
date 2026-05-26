@@ -16,6 +16,7 @@ import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import KundaliChart from '@/components/KundaliChart';
+import WithdrawInterestModal from '@/components/WithdrawInterestModal';
 
 const REPORT_REASONS = [
   'Fake profile / Impersonation',
@@ -111,9 +112,10 @@ function ReportModal({ name, onSubmit, onCancel, loading }) {
 }
 
 // ── Interest Action Panel ─────────────────────────────────────────────────────
-function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, userId, session, onStatusChange }) {
+function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, userId, profileName, session, onStatusChange }) {
   const [loading, setLoading] = useState(false);
   const [showMsgBox, setShowMsgBox] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [msg, setMsg] = useState('');
 
   // Who sent the interest to whom
@@ -152,14 +154,14 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
     } finally { setLoading(false); }
   };
 
-  const withdrawInterest = async () => {
-    if (!confirm('Withdraw your interest? They will no longer see this request in their notifications.')) return;
+  const confirmWithdraw = async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/interest/${interestId}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) { toast.error(data.error || 'Could not withdraw interest'); return; }
       toast.success('Interest withdrawn.');
+      setShowWithdrawModal(false);
       onStatusChange(null);
     } finally { setLoading(false); }
   };
@@ -207,18 +209,27 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
   // ── PENDING — I SENT ──────────────────────────────────────────────────────
   if (status === 'PENDING' && iSent) {
     return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4 space-y-3 text-center">
-        <Clock className="w-5 h-5 text-yellow-500 mx-auto" />
-        <div>
-          <p className="text-sm font-medium text-yellow-700 dark:text-yellow-400">Interest Sent</p>
-          <p className="text-xs text-gray-500 mt-1">Waiting for their response…</p>
+      <>
+        <WithdrawInterestModal
+          open={showWithdrawModal}
+          name={profileName}
+          loading={loading}
+          onCancel={() => !loading && setShowWithdrawModal(false)}
+          onConfirm={confirmWithdraw}
+        />
+        <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4 space-y-3 text-center">
+          <Clock className="w-5 h-5 text-yellow-500 mx-auto" />
+          <div>
+            <p className="text-sm font-medium text-yellow-700 dark:text-yellow-400">Interest Sent</p>
+            <p className="text-xs text-gray-500 mt-1">Waiting for their response…</p>
+          </div>
+          <button onClick={() => setShowWithdrawModal(true)} disabled={loading}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 text-sm font-medium transition-colors disabled:opacity-60">
+            <Undo2 className="w-4 h-4" />
+            Withdraw Interest
+          </button>
         </div>
-        <button onClick={withdrawInterest} disabled={loading}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 text-sm font-medium transition-colors disabled:opacity-60">
-          <Undo2 className="w-4 h-4" />
-          {loading ? 'Withdrawing…' : 'Withdraw Interest'}
-        </button>
-      </div>
+      </>
     );
   }
 
@@ -455,6 +466,7 @@ export default function ProfilePage() {
                   isOwnProfile={isOwnProfile}
                   isPremium={isPremium}
                   userId={id}
+                  profileName={user?.name}
                   session={session}
                   onStatusChange={setInterestStatus}
                 />

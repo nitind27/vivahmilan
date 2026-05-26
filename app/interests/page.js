@@ -14,6 +14,7 @@ import {
 import { differenceInYears, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import WithdrawInterestModal from '@/components/WithdrawInterestModal';
 
 export default function InterestsPage() {
   const { data: session, status } = useSession();
@@ -23,6 +24,7 @@ export default function InterestsPage() {
   const [loading, setLoading] = useState(true);
   const [responding, setResponding] = useState(null); // id of interest being responded to
   const [withdrawing, setWithdrawing] = useState(null);
+  const [withdrawModal, setWithdrawModal] = useState(null); // { id, name }
   const [blocking, setBlocking] = useState(null); // id of user being blocked
   const [blocked, setBlocked] = useState(new Set()); // set of blocked userIds
 
@@ -60,14 +62,16 @@ export default function InterestsPage() {
     }
   };
 
-  const withdrawInterest = async (id) => {
-    if (!confirm('Withdraw your interest? It will be removed from their notifications.')) return;
+  const confirmWithdraw = async () => {
+    if (!withdrawModal?.id) return;
+    const { id } = withdrawModal;
     setWithdrawing(id);
     try {
       const res = await fetch(`/api/interest/${id}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setInterests(prev => prev.filter(i => i.id !== id));
+        setWithdrawModal(null);
         toast.success('Interest withdrawn.');
       } else {
         toast.error(data.error || 'Could not withdraw interest');
@@ -107,6 +111,13 @@ export default function InterestsPage() {
 
   return (
     <div className="min-h-screen bg-vd-bg">
+      <WithdrawInterestModal
+        open={!!withdrawModal}
+        name={withdrawModal?.name}
+        loading={!!withdrawing}
+        onCancel={() => !withdrawing && setWithdrawModal(null)}
+        onConfirm={confirmWithdraw}
+      />
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-12">
 
@@ -301,7 +312,7 @@ export default function InterestsPage() {
                           {/* Withdraw — sent tab, pending only */}
                           {tab === 'sent' && isPending && (
                             <button
-                              onClick={() => withdrawInterest(interest.id)}
+                              onClick={() => setWithdrawModal({ id: interest.id, name: person?.name })}
                               disabled={withdrawing === interest.id}
                               className="flex items-center gap-1.5 text-xs px-4 py-1.5 rounded-xl border border-yellow-300 dark:border-yellow-700 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 disabled:opacity-60 transition-colors font-medium">
                               <Undo2 className="w-3.5 h-3.5" />
