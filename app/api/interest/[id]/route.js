@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { queryOne, execute } from '@/lib/db';
+import { clearInterestReceivedNotifications, emitNotificationRefresh } from '@/lib/interestNotifications';
 import { randomUUID } from 'crypto';
 import { differenceInYears } from 'date-fns';
 
@@ -120,4 +121,25 @@ export async function PATCH(req, { params }) {
 
   const updated = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);
   return NextResponse.json(updated);
+}
+
+/** Sender withdraws a pending interest; removes receiver's matching notification. */
+export async function DELETE(req, { params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const { id } = await params;
+  const interest = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);
+  if (!interest || interest.senderId !== session.user.id) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+  if (interest.status !== 'PENDING') {
+    return NextResponse.json({ error: 'Only pending interests can be withdrawn' }, { status: 400 });
+  }
+
+  await execute('DELETE FROM interest WHERE id = ?', [id]);
+  await clearInterestReceivedNotifications(interest.receiverId, interest.senderId);
+  emitNotificationRefresh(interest.receiverId);
+
+  return NextResponse.json({ success: true });
 }

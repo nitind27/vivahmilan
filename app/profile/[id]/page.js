@@ -10,7 +10,7 @@ import {
   Heart, MapPin, GraduationCap, Briefcase, Star,
   MessageCircle, Flag, Ban, ChevronLeft, Check, X, Lock,
   Eye, Users, Cigarette, Wine, Utensils, Ruler, Weight,
-  Send, Clock, CheckCircle2, AlertTriangle, ShieldOff
+  Send, Clock, CheckCircle2, AlertTriangle, ShieldOff, Undo2
 } from 'lucide-react';
 import { differenceInYears } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -152,6 +152,18 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
     } finally { setLoading(false); }
   };
 
+  const withdrawInterest = async () => {
+    if (!confirm('Withdraw your interest? They will no longer see this request in their notifications.')) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/interest/${interestId}`, { method: 'DELETE' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { toast.error(data.error || 'Could not withdraw interest'); return; }
+      toast.success('Interest withdrawn.');
+      onStatusChange(null);
+    } finally { setLoading(false); }
+  };
+
   if (isOwnProfile) return null;
 
   // ── ACCEPTED ──────────────────────────────────────────────────────────────
@@ -195,10 +207,17 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
   // ── PENDING — I SENT ──────────────────────────────────────────────────────
   if (status === 'PENDING' && iSent) {
     return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4 text-center">
-        <Clock className="w-5 h-5 text-yellow-500 mx-auto mb-1" />
-        <p className="text-sm font-medium text-yellow-700 dark:text-yellow-400">Interest Sent</p>
-        <p className="text-xs text-gray-500 mt-1">Waiting for their response…</p>
+      <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4 space-y-3 text-center">
+        <Clock className="w-5 h-5 text-yellow-500 mx-auto" />
+        <div>
+          <p className="text-sm font-medium text-yellow-700 dark:text-yellow-400">Interest Sent</p>
+          <p className="text-xs text-gray-500 mt-1">Waiting for their response…</p>
+        </div>
+        <button onClick={withdrawInterest} disabled={loading}
+          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 text-sm font-medium transition-colors disabled:opacity-60">
+          <Undo2 className="w-4 h-4" />
+          {loading ? 'Withdrawing…' : 'Withdraw Interest'}
+        </button>
       </div>
     );
   }

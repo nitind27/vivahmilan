@@ -57,18 +57,23 @@ export async function POST(req) {
   );
 
   await execute(
-    "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'INTEREST_RECEIVED', 'New Interest Received', ?, 0, ?, NOW())",
-    [randomUUID(), receiverId, `${session.user.name} has sent you an interest request.`, `/profile/${session.user.id}`]
+    "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'INTEREST_RECEIVED', 'New Profile Interest', ?, 0, ?, NOW())",
+    [randomUUID(), receiverId, `${session.user.name} expressed interest in your profile.`, `/profile/${session.user.id}`]
   );
 
   try {
     const { sendPushToUser } = await import('@/lib/webpush');
     await sendPushToUser(receiverId, {
-      title: '💕 New Interest!',
-      body: `${session.user.name} has sent you an interest request.`,
+      title: '💕 New Profile Interest',
+      body: `${session.user.name} expressed interest in your profile.`,
       url: `/profile/${session.user.id}`,
     });
   } catch (e) { console.error('Push error:', e.message); }
+
+  try {
+    const { emitNotificationRefresh } = await import('@/lib/interestNotifications');
+    emitNotificationRefresh(receiverId);
+  } catch {}
 
   return NextResponse.json({ id, senderId: session.user.id, receiverId, status: 'PENDING' }, { status: 201 });
 }

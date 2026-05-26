@@ -29,8 +29,8 @@ export async function POST(req) {
 
     const sender = await queryOne('SELECT name FROM `user` WHERE id = ?', [decoded.id]);
     await execute(
-      "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'INTEREST_RECEIVED', 'New Interest Received', ?, 0, ?, NOW())",
-      [randomUUID(), receiverId, `${sender?.name} has sent you an interest request.`, `/profile/${decoded.id}`]
+      "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) VALUES (?, ?, 'INTEREST_RECEIVED', 'New Profile Interest', ?, 0, ?, NOW())",
+      [randomUUID(), receiverId, `${sender?.name} expressed interest in your profile.`, `/profile/${decoded.id}`]
     );
 
     return NextResponse.json({ id, senderId: decoded.id, receiverId, status: 'PENDING' }, { status: 201 });

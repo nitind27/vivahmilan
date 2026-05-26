@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { queryOne, execute } from '@/lib/db';
+import { clearInterestReceivedNotifications, emitNotificationRefresh } from '@/lib/interestNotifications';
 import { randomUUID } from 'crypto';
 import { differenceInYears } from 'date-fns';
 
@@ -77,4 +78,26 @@ export async function PATCH(req, { params }) {
 
   const updated = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);
   return NextResponse.json(updated);
+}
+
+export async function DELETE(req, { params }) {
+  const token = getTokenFromRequest(req);
+  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const decoded = verifyToken(token);
+  if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+
+  const { id } = await params;
+  const interest = await queryOne('SELECT * FROM interest WHERE id = ?', [id]);
+  if (!interest || interest.senderId !== decoded.id) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+  if (interest.status !== 'PENDING') {
+    return NextResponse.json({ error: 'Only pending interests can be withdrawn' }, { status: 400 });
+  }
+
+  await execute('DELETE FROM interest WHERE id = ?', [id]);
+  await clearInterestReceivedNotifications(interest.receiverId, interest.senderId);
+  emitNotificationRefresh(interest.receiverId);
+
+  return NextResponse.json({ success: true });
 }

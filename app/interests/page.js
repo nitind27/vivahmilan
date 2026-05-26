@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import {
   Heart, Check, X, MapPin, GraduationCap, Briefcase,
-  BadgeCheck, Star, MessageCircle, Eye, ChevronRight, Clock, Ban
+  BadgeCheck, Star, MessageCircle, Eye, ChevronRight, Clock, Ban, Undo2
 } from 'lucide-react';
 import { differenceInYears, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -22,6 +22,7 @@ export default function InterestsPage() {
   const [interests, setInterests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [responding, setResponding] = useState(null); // id of interest being responded to
+  const [withdrawing, setWithdrawing] = useState(null);
   const [blocking, setBlocking] = useState(null); // id of user being blocked
   const [blocked, setBlocked] = useState(new Set()); // set of blocked userIds
 
@@ -56,6 +57,23 @@ export default function InterestsPage() {
       }
     } finally {
       setResponding(null);
+    }
+  };
+
+  const withdrawInterest = async (id) => {
+    if (!confirm('Withdraw your interest? It will be removed from their notifications.')) return;
+    setWithdrawing(id);
+    try {
+      const res = await fetch(`/api/interest/${id}`, { method: 'DELETE' });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setInterests(prev => prev.filter(i => i.id !== id));
+        toast.success('Interest withdrawn.');
+      } else {
+        toast.error(data.error || 'Could not withdraw interest');
+      }
+    } finally {
+      setWithdrawing(null);
     }
   };
 
@@ -278,6 +296,17 @@ export default function InterestsPage() {
                                 <X className="w-3.5 h-3.5" /> Decline
                               </button>
                             </>
+                          )}
+
+                          {/* Withdraw — sent tab, pending only */}
+                          {tab === 'sent' && isPending && (
+                            <button
+                              onClick={() => withdrawInterest(interest.id)}
+                              disabled={withdrawing === interest.id}
+                              className="flex items-center gap-1.5 text-xs px-4 py-1.5 rounded-xl border border-yellow-300 dark:border-yellow-700 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 disabled:opacity-60 transition-colors font-medium">
+                              <Undo2 className="w-3.5 h-3.5" />
+                              {withdrawing === interest.id ? 'Withdrawing…' : 'Withdraw Interest'}
+                            </button>
                           )}
 
                           {/* Chat button — only after accepted */}
