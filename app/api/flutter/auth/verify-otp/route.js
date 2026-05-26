@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
+import { recordRegistrationGeo } from '@/lib/geoTracking';
 import { randomUUID } from 'crypto';
 
 const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
 
 export async function POST(req) {
   try {
-    const { email, otp, type = 'EMAIL_VERIFY' } = await req.json();
+    const body = await req.json();
+    const { email, otp, type = 'EMAIL_VERIFY' } = body;
 
     if (!email || !otp)
       return NextResponse.json({ error: 'email and otp are required' }, { status: 400 });
@@ -48,6 +50,20 @@ export async function POST(req) {
 
         // Remove from pending_registration
         await execute('DELETE FROM pending_registration WHERE email = ?', [pending.email]);
+
+        const storedGeo = pending.registrationIp ? {
+          ip: pending.registrationIp,
+          country: pending.registrationCountry,
+          city: pending.registrationCity,
+          region: null,
+          latitude: pending.registrationLat != null ? Number(pending.registrationLat) : null,
+          longitude: pending.registrationLon != null ? Number(pending.registrationLon) : null,
+          geoSource: pending.registrationLat != null ? 'GPS' : 'IP',
+          device: null, browser: null, os: null, platform: body.platform || 'flutter', userAgent: null,
+        } : null;
+        recordRegistrationGeo(userId, req, body, { storedGeo }).catch(e =>
+          console.error('[flutter verify-otp] geo log error:', e.message)
+        );
 
         let isPremiumUser = false;
         let assignedPlan = null;

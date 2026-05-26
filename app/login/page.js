@@ -9,6 +9,7 @@ import {
   QrCode, RefreshCw, Smartphone, ArrowLeft, ShieldCheck
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { logWebLogin } from '@/lib/clientGeo';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const QR_POLL_INTERVAL = 2000;
@@ -59,6 +60,7 @@ function QRLoginPanel({ onBack }) {
           const result = await signIn('qr-login', { qrToken: data.token, redirect: false });
           if (result?.ok) {
             toast.success('Logged in via QR code!');
+            logWebLogin();
             const s = await getSession();
             router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
           } else {
@@ -297,6 +299,7 @@ function LoginInner() {
       toast.error(res.error === 'CredentialsSignin' ? 'Invalid email or password' : res.error);
     } else {
       toast.success('Welcome back!');
+      logWebLogin();
       const s = await getSession();
       router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
     }

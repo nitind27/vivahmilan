@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { queryOne, execute } from '@/lib/db';
 import { sendOTPEmail, sendWelcomeEmail } from '@/lib/email';
+import { capturePendingRegistrationGeo } from '@/lib/geoTracking';
 import { randomUUID } from 'crypto';
 
 function generateOTP() {
@@ -10,7 +11,9 @@ function generateOTP() {
 
 export async function POST(req) {
   try {
-    const { name, email, phone, password } = await req.json();
+    const body = await req.json();
+    const { name, email, phone, password } = body;
+    const geo = await capturePendingRegistrationGeo(req, body);
 
     if (!name || !email || !password)
       return NextResponse.json({ error: 'name, email and password are required' }, { status: 400 });
@@ -40,9 +43,14 @@ export async function POST(req) {
 
     // Store in pending_registration table (NOT in user table yet)
     await execute(
-      `INSERT INTO pending_registration (id, name, email, phone, password, otp, otpExpiresAt, createdAt)
-       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
-      [pendingId, name.trim(), email.toLowerCase().trim(), phone || null, hashed, otp, expiresAt]
+      `INSERT INTO pending_registration
+        (id, name, email, phone, password, otp, otpExpiresAt,
+         registrationIp, registrationCountry, registrationCity, registrationLat, registrationLon, createdAt)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+      [
+        pendingId, name.trim(), email.toLowerCase().trim(), phone || null, hashed, otp, expiresAt,
+        geo.ip, geo.country, geo.city, geo.latitude, geo.longitude,
+      ]
     );
 
     await sendOTPEmail(email, name, otp, 'EMAIL_VERIFY');

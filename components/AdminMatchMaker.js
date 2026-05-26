@@ -273,6 +273,16 @@ export function AllMembersTab() {
                       </div>
                       <p className="text-xs text-gray-400 truncate">{m.email}</p>
                       {m.phone && <p className="text-xs text-gray-500">{m.phone}</p>}
+                      {(m.registrationIp || m.lastLoginIp) && (
+                        <p className="text-xs text-gray-500 mt-0.5 truncate" title="Registration / Last login IP">
+                          🌐 {m.registrationIp || '—'} → {m.lastLoginIp || '—'}
+                        </p>
+                      )}
+                      {(m.lastLoginCity || m.registrationCity) && (
+                        <p className="text-xs text-gray-600 truncate">
+                          📍 {[m.lastLoginCity || m.registrationCity, m.lastLoginCountry || m.registrationCountry].filter(Boolean).join(', ')}
+                        </p>
+                      )}
                       <div className="flex flex-wrap gap-1 mt-1">
                         {m.gender && <span className="text-xs bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded-full">{m.gender === 'MALE' ? '👨' : '👩'} {m.gender}</span>}
                         {age && <span className="text-xs bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded-full">{age}y</span>}

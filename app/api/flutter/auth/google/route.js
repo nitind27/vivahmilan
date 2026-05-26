@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { OAuth2Client } from 'google-auth-library';
 import { queryOne, execute } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
+import { recordRegistrationGeo, recordLoginGeo } from '@/lib/geoTracking';
 import { randomUUID } from 'crypto';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -9,7 +10,8 @@ const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'pr
 
 export async function POST(req) {
   try {
-    const { idToken } = await req.json();
+    const body = await req.json();
+    const { idToken } = body;
 
     if (!idToken) {
       return NextResponse.json({ error: 'idToken is required' }, { status: 400 });
@@ -47,7 +49,10 @@ export async function POST(req) {
       [email]
     );
 
+    let isNewSignup = false;
+
     if (!user) {
+      isNewSignup = true;
       // Create new user
       const newUserId = randomUUID();
       await execute(
@@ -74,6 +79,10 @@ export async function POST(req) {
                 adminVerified, emailVerified, freeTrialExpiry, verificationBadge
          FROM \`user\` WHERE id = ?`,
         [newUserId]
+      );
+
+      recordRegistrationGeo(newUserId, req, body).catch(e =>
+        console.error('[flutter google signup] geo log error:', e.message)
       );
     } else {
       if (!user.isActive) {
@@ -120,6 +129,12 @@ export async function POST(req) {
     }
 
     const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+
+    if (!isNewSignup) {
+      recordLoginGeo(user.id, req, body).catch(e =>
+        console.error('[flutter google login] geo log error:', e.message)
+      );
+    }
 
     const token = signToken({
       id: user.id,

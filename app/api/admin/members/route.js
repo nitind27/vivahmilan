@@ -96,6 +96,10 @@ export async function GET(req) {
   const rowsSql = `
     SELECT u.id, u.name, u.email, u.phone, u.image, u.isPremium, u.isVerified,
            u.adminVerified, u.isActive, u.createdAt, u.lastLoginAt,
+           u.registrationIp, u.registrationCountry, u.registrationCity,
+           u.registrationLat, u.registrationLon,
+           u.lastLoginIp, u.lastLoginCountry, u.lastLoginCity,
+           u.lastLoginLat, u.lastLoginLon,
            p.gender, p.dob, p.religion, p.caste, p.city, p.state, p.country,
            p.education, p.profession, p.profileComplete
     FROM \`user\` u

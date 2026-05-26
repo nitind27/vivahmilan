@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne } from '@/lib/db';
+import { getUserGeoLogs } from '@/lib/geoTracking';
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
@@ -28,5 +29,7 @@ export async function GET(req) {
     [userId, userId, userId]
   );
 
-  return NextResponse.json({ user, profile, photos, documents, familyPhotos, interests });
+  const geoLogs = await getUserGeoLogs(userId, 50);
+
+  return NextResponse.json({ user, profile, photos, documents, familyPhotos, interests, geoLogs });
 }

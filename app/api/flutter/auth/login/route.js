@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { queryOne } from '@/lib/db';
+import { queryOne, execute } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
+import { recordLoginGeo } from '@/lib/geoTracking';
 
 // Required fields for profile to be considered complete
 const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
 
 export async function POST(req) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const { email, password } = body;
 
     if (!email || !password)
       return NextResponse.json({ error: 'email and password are required' }, { status: 400 });
@@ -76,6 +78,10 @@ export async function POST(req) {
     }
 
     const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+
+    recordLoginGeo(user.id, req, body).catch(e =>
+      console.error('[flutter login] geo log error:', e.message)
+    );
 
     const token = signToken({
       id: user.id,

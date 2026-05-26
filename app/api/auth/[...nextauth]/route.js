@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { queryOne, execute } from '@/lib/db';
+import { recordRegistrationGeo, recordLoginGeo, getClientIPFromHeaders } from '@/lib/geoTracking';
 import { randomUUID } from 'crypto';
 import https from 'https';
 
@@ -172,6 +173,12 @@ export const authOptions = {
           user.adminVerified = false;
           user.isPremium = false;
           user.isNewUser = true;
+
+          const ip = await getClientIPFromHeaders();
+          recordRegistrationGeo(userId, null, { platform: 'web-google' }, { ipOverride: ip }).catch(e =>
+            console.error('[google signup] geo log error:', e.message)
+          );
+
           return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 
@@ -217,6 +224,11 @@ export const authOptions = {
         user.isNewUser     = false;
         user.freeTrialActive = !!trialActive;
         user.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
+
+        const ip = await getClientIPFromHeaders();
+        recordLoginGeo(dbUser.id, null, { platform: 'web-google' }, { ipOverride: ip }).catch(e =>
+          console.error('[google login] geo log error:', e.message)
+        );
 
         return dbUser.role === 'ADMIN' ? '/admin' : true;
       } catch (err) {

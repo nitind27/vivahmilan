@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Heart, Mail, RefreshCw, CheckCircle, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getClientGeo } from '@/lib/clientGeo';
 
 function VerifyInner() {
   const searchParams = useSearchParams();
@@ -48,10 +49,11 @@ function VerifyInner() {
     if (code.length !== 6) { toast.error('Enter 6-digit OTP'); return; }
     setLoading(true);
     try {
+      const geo = await getClientGeo();
       const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp: code, type: 'EMAIL_VERIFY' }),
+        body: JSON.stringify({ email, otp: code, type: 'EMAIL_VERIFY', platform: 'web', ...geo }),
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); return; }
