@@ -135,7 +135,40 @@ Updated APIs:
   GET /api/flutter/profile/:id (already had both)
 
 
-7. DELETE /api/flutter/block — Unblock User
+7. DELETE /api/flutter/interest/:id — Withdraw Interest (Sender)
+------------------------------------------------------------------
+
+Jab tumne kisi ko interest bheja ho aur status PENDING ho, sender interest wapas le sakta hai (web jaisa).
+
+DELETE /api/flutter/interest/:id
+Auth: Bearer token
+Params: id = interest UUID (interestId)
+
+interestId kahan se mile:
+  - GET /api/flutter/profile/:userId  →  interestSent.id  (jab interestDirection = "sent", status = PENDING)
+  - GET /api/flutter/interest?type=sent  →  item.id
+
+Responses:
+  200 — {
+    "success": true,
+    "message": "Interest withdrawn successfully",
+    "receiverId": "uuid"
+  }
+  400 — { "error": "Only pending interests can be withdrawn" }   (ACCEPTED/REJECTED par nahi)
+  404 — { "error": "Not found" }   (galat id ya tum sender nahi ho)
+
+Side effects:
+  - interest row delete
+  - receiver ke "New Profile Interest" notification hat jati hai
+  - dubara POST /api/flutter/interest se interest bhej sakte ho
+
+Flutter UI flow:
+  1. Profile par interestSent.status == "PENDING" → "Withdraw Interest" button
+  2. DELETE with interestSent.id
+  3. Local state: interestSent = null, interestStatus = null
+
+
+8. DELETE /api/flutter/block — Unblock User
 --------------------------------------------
 
 DELETE /api/flutter/block
@@ -149,7 +182,7 @@ Responses:
 Note: POST /api/flutter/block still toggles block/unblock (backward compatible).
 
 
-8. Socket typing on chat list (FLUTTER_SOCKET_DOCS.txt updated)
+9. Socket typing on chat list (FLUTTER_SOCKET_DOCS.txt updated)
 -----------------------------------------------------------------
 
 typing:start / typing:stop ab { userId, roomId } bhejte hain.

@@ -99,5 +99,9 @@ export async function DELETE(req, { params }) {
   await clearInterestReceivedNotifications(interest.receiverId, interest.senderId);
   emitNotificationRefresh(interest.receiverId);
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({
+    success: true,
+    message: 'Interest withdrawn successfully',
+    receiverId: interest.receiverId,
+  });
 }

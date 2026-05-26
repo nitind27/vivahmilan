@@ -387,6 +387,43 @@
               "body": "{\n  \"error\": \"Not found\"\n}"
             }
           ]
+        },
+        {
+          "name": "Withdraw Interest (Sender)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/flutter/interest/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "flutter", "interest", ":id"],
+              "variable": [{ "key": "id", "value": "INTEREST_ID", "description": "interestId from profile (interestSent) or sent interests list" }]
+            },
+            "description": "Sender withdraws a PENDING interest. Removes receiver's INTEREST_RECEIVED notification. Use interestId from GET profile/:id (interestSent.id) or GET interest?type=sent."
+          },
+          "response": [
+            {
+              "name": "200 - Withdrawn",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Interest withdrawn successfully\",\n  \"receiverId\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\"\n}"
+            },
+            {
+              "name": "400 - Not Pending",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Only pending interests can be withdrawn\"\n}"
+            },
+            {
+              "name": "404 - Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Not found\"\n}"
+            }
+          ]
         }
       ]
     },
