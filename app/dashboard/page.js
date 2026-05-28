@@ -40,84 +40,209 @@ function useCountdown(expiryISO) {
   return time;
 }
 
-// ── Hero Banner ───────────────────────────────────────────────────────────────
-function HeroBanner({ name, profileComplete, photo }) {
+// ── Unified Welcome + Membership Card ───────────────────────────────────────────
+function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeTrialExpiry, isPremium, freeTrialActive }) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
   const greetEmoji = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
+  const countdown = useCountdown(freeTrialExpiry);
+  const pad = n => String(n).padStart(2, '0');
+
+  const showPremium = premiumInfo?.isPremium || isPremium;
+  const showTrial = !showPremium && freeTrialExpiry && freeTrialActive && countdown && !countdown.expired;
+
+  const plan = premiumInfo?.plan || 'GOLD';
+  const daysLeft = premiumInfo?.daysLeft ?? 0;
+  const expiry = premiumInfo?.expiry;
+  const isUrgent = showPremium && daysLeft <= 2;
+  const premiumPct = showPremium ? Math.max(0, Math.min(100, Math.round((daysLeft / 30) * 100))) : 0;
+  const trialPct = showTrial && countdown ? Math.min(100, Math.round((countdown.totalMs / (24 * 3600000)) * 100)) : 0;
+
+  const expiryLabel = expiry
+    ? new Date(expiry).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : null;
+
+  const profileMsg = profileComplete >= 100
+    ? 'Your profile is fully complete — great job!'
+    : profileComplete >= 70
+      ? 'Almost done! Complete remaining details for better matches.'
+      : 'Add more details to your profile to get better match suggestions.';
+
+  const premiumMsg = isUrgent
+    ? `Your ${plan} plan expires in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew now to keep access.`
+    : expiryLabel
+      ? `Your ${plan} plan is active until ${expiryLabel}.`
+      : `Your ${plan} premium plan is active.`;
+
+  const trialMsg = countdown
+    ? `Trial ends in ${pad(countdown.h)}h ${pad(countdown.m)}m — upgrade to keep premium features.`
+    : 'Your free trial is active. Upgrade to unlock all features.';
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="relative rounded-3xl overflow-hidden mb-6"
-      style={{ background: 'linear-gradient(135deg, #A67C3D 0%, #C8A45C 40%, #D4AF37 70%, #A67C3D 100%)' }}
+      transition={{ duration: 0.4 }}
+      className="relative rounded-2xl overflow-hidden mb-6 shadow-lg"
+      style={{ background: 'linear-gradient(135deg, #8B6914 0%, #C8A45C 45%, #A67C3D 100%)' }}
     >
-      {/* Decorative blobs */}
-      <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full"
-        style={{ background: 'rgba(255,255,255,0.08)' }} />
-      <div className="absolute -bottom-16 -left-8 w-56 h-56 rounded-full"
-        style={{ background: 'rgba(0,0,0,0.08)' }} />
+      <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'rgba(255,255,255,0.1)' }} />
+      <div className="absolute -bottom-12 -left-8 w-44 h-44 rounded-full pointer-events-none" style={{ background: 'rgba(0,0,0,0.06)' }} />
 
-      <div className="relative p-6 sm:p-8 flex items-center justify-between gap-4">
-        <div className="flex-1">
-          <p className="text-sm font-semibold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>
-            {greetEmoji} {greeting}
-          </p>
-          <h1 className="text-2xl sm:text-3xl font-black mb-2 leading-tight" style={{ color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.25)' }}>
-            {name?.split(' ')[0]} 👋
-          </h1>
-          <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.9)' }}>
-            Your perfect match is waiting. Let's find them today!
-          </p>
+      <div className="relative p-4 sm:p-5">
+        {/* Row 1 — avatar + greeting + premium days */}
+        <div className="flex items-center gap-3">
+          <div className="relative shrink-0">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-white/50 shadow-md bg-white/20">
+              <img src={photo || '/images/default-avatar.png'} alt={name} className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-emerald-400 rounded-full border-2 border-white flex items-center justify-center">
+              <span className="text-[9px] text-white font-bold">✓</span>
+            </div>
+            {showPremium && (
+              <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-violet-600 border-2 border-white flex items-center justify-center">
+                <Crown className="w-3 h-3 text-white fill-white" />
+              </div>
+            )}
+          </div>
 
-          {/* Profile completion bar */}
-          {profileComplete < 100 && (
-            <div className="rounded-2xl p-3 max-w-xs mb-4"
-              style={{ background: 'rgba(0,0,0,0.18)', border: '1px solid rgba(255,255,255,0.2)' }}>
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-semibold" style={{ color: '#fff' }}>Profile {profileComplete}% complete</span>
-                <Link href="/profile/edit" className="text-xs underline font-medium" style={{ color: 'rgba(255,255,255,0.9)' }}>Complete →</Link>
-              </div>
-              <div className="rounded-full h-1.5" style={{ background: 'rgba(255,255,255,0.25)' }}>
-                <motion.div initial={{ width: 0 }} animate={{ width: `${profileComplete}%` }}
-                  transition={{ duration: 1.2, delay: 0.8, ease: 'easeOut' }}
-                  className="h-1.5 rounded-full" style={{ background: '#fff' }} />
-              </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-white/80 leading-none mb-0.5">{greetEmoji} {greeting}</p>
+            <h1 className="text-xl sm:text-2xl font-black text-white leading-tight truncate">
+              {name?.split(' ')[0]} 👋
+            </h1>
+            {!showPremium && !showTrial && (
+              <p className="text-xs text-white/75 mt-0.5 truncate">Your perfect match is waiting!</p>
+            )}
+          </div>
+
+          {showPremium && (
+            <div className="shrink-0 text-right">
+              <p className="text-[10px] text-white/65 leading-none mb-0.5">Plan expires in</p>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-violet-600/50 border border-white/20">
+                <Crown className="w-3 h-3" /> {plan}
+              </span>
+              <p className="text-2xl font-black text-white leading-none mt-1">
+                {daysLeft}<span className="text-xs font-semibold text-white/70 ml-0.5">days left</span>
+              </p>
             </div>
           )}
 
-          <div className="flex gap-2 flex-wrap">
-            <Link href="/matches"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-bold transition-all shadow-lg"
-              style={{ background: '#fff', color: '#A67C3D' }}>
-              <Heart className="w-4 h-4" style={{ fill: '#A67C3D' }} /> Find Matches
-            </Link>
-            <Link href="/search"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-semibold transition-all"
-              style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)' }}>
-              <Search className="w-4 h-4" /> Search
-            </Link>
-          </div>
+          {showTrial && (
+            <div className="shrink-0 text-right">
+              <p className="text-[10px] text-white/65 leading-none mb-0.5">Trial ends in</p>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-yellow-500/40 border border-white/20">
+                <Zap className="w-3 h-3 fill-yellow-200 text-yellow-200" /> Free Trial
+              </span>
+              <p className="text-sm font-bold text-white tabular-nums mt-1">
+                {pad(countdown.h)}:{pad(countdown.m)}:{pad(countdown.s)}
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Avatar */}
-        <div className="flex-shrink-0 hidden sm:block">
-          <div className="relative">
-            <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-2xl"
-              style={{ border: '3px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.2)' }}>
-              {photo ? (
-                <img src={photo} alt={name} className="w-full h-full object-cover" />
-              ) : (
-                <img src="/images/default-avatar.png" alt={name} className="w-full h-full object-cover" />
-              )}
+        {/* Premium validity progress */}
+        {showPremium && (
+          <div className="mt-3 rounded-xl bg-black/15 border border-white/15 px-3 py-2.5">
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-violet-600/40 border border-white/15 flex items-center justify-center shrink-0 mt-0.5">
+                <Crown className="w-4 h-4 text-white fill-white/80" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <p className="text-xs font-bold text-white">Premium Plan Validity</p>
+                  <span className="text-xs font-bold text-white tabular-nums shrink-0">{premiumPct}% left</span>
+                </div>
+                <p className="text-[10px] text-white/70 leading-snug mb-2">{premiumMsg}</p>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 rounded-full h-2 bg-white/20 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${premiumPct}%` }}
+                      transition={{ duration: 0.8, ease: 'easeOut' }}
+                      className={`h-2 rounded-full ${isUrgent ? 'bg-red-300' : 'bg-violet-200'}`}
+                    />
+                  </div>
+                  {expiryLabel && (
+                    <span className="text-[10px] text-white/60 shrink-0 flex items-center gap-0.5">
+                      <Calendar className="w-3 h-3" /> {expiryLabel}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <Link href="/premium"
+                className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/20 text-white border border-white/25 hover:bg-white/30 transition-colors whitespace-nowrap self-center">
+                {isUrgent ? 'Renew Plan' : 'Manage Plan'}
+              </Link>
             </div>
-            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}
-              className="absolute -bottom-1 -right-1 w-7 h-7 bg-green-400 rounded-full border-2 border-white flex items-center justify-center shadow-md">
-              <span className="text-xs text-white font-bold">✓</span>
-            </motion.div>
           </div>
+        )}
+
+        {/* Free trial progress */}
+        {showTrial && (
+          <div className="mt-3 rounded-xl bg-black/15 border border-white/15 px-3 py-2.5">
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-yellow-500/30 border border-white/15 flex items-center justify-center shrink-0 mt-0.5">
+                <Zap className="w-4 h-4 text-yellow-200 fill-yellow-200" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <p className="text-xs font-bold text-white">Free Trial Remaining</p>
+                  <span className="text-xs font-bold text-white tabular-nums shrink-0">{trialPct}% left</span>
+                </div>
+                <p className="text-[10px] text-white/70 leading-snug mb-2">{trialMsg}</p>
+                <div className="rounded-full h-2 bg-white/20 overflow-hidden">
+                  <div className="h-2 rounded-full bg-yellow-300 transition-all duration-1000" style={{ width: `${trialPct}%` }} />
+                </div>
+              </div>
+              <Link href="/premium"
+                className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#8B6914] hover:bg-white/90 transition-colors whitespace-nowrap self-center">
+                Upgrade Now
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Profile completion progress */}
+        {profileComplete < 100 && (
+          <div className="mt-3 rounded-xl bg-black/15 border border-white/15 px-3 py-2.5">
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/15 border border-white/15 flex items-center justify-center shrink-0 mt-0.5">
+                <User className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <p className="text-xs font-bold text-white">Profile Completion</p>
+                  <span className="text-xs font-bold text-white tabular-nums shrink-0">{profileComplete}% done</span>
+                </div>
+                <p className="text-[10px] text-white/70 leading-snug mb-2">{profileMsg}</p>
+                <div className="rounded-full h-2 bg-white/20 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${profileComplete}%` }}
+                    transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+                    className="h-2 rounded-full bg-emerald-300"
+                  />
+                </div>
+              </div>
+              <Link href="/profile/edit"
+                className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/20 text-white border border-white/25 hover:bg-white/30 transition-colors whitespace-nowrap self-center">
+                Complete Profile
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div className="mt-3 flex gap-2">
+          <Link href="/matches"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold bg-white text-[#8B6914] shadow hover:shadow-md transition-shadow">
+            <Heart className="w-3.5 h-3.5 fill-[#8B6914]" /> Find Matches
+          </Link>
+          <Link href="/search"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-white/15 text-white border border-white/30 hover:bg-white/25 transition-colors">
+            <Search className="w-3.5 h-3.5" /> Search
+          </Link>
         </div>
       </div>
     </motion.div>
@@ -148,57 +273,7 @@ function StatCard({ icon: Icon, label, value, color, bg, href, badge, delay = 0 
   );
 }
 
-// ── Premium Validity Card ─────────────────────────────────────────────────────
-function PremiumValidityCard({ premiumInfo }) {
-  if (!premiumInfo?.isPremium) return null;
-  const { plan, expiry, daysLeft } = premiumInfo;
-  const isUrgent = daysLeft <= 2;
-  const planGrad = {
-    SILVER: 'linear-gradient(135deg,#4b5563,#6b7280)',
-    GOLD:   'linear-gradient(135deg,#92400e,#b45309)',
-    PLATINUM: 'linear-gradient(135deg,#5b21b6,#7c3aed)',
-  };
-  const pct = Math.max(0, Math.min(100, Math.round((daysLeft / 30) * 100)));
-  return (
-    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-5 mb-6 overflow-hidden relative"
-      style={{ background: isUrgent ? 'linear-gradient(135deg,#b91c1c,#dc2626)' : planGrad[plan] || planGrad.GOLD }}>
-      <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
-      <div className="relative flex items-center justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Crown className="w-5 h-5" style={{ fill: 'rgba(255,255,255,0.9)', color: 'rgba(255,255,255,0.9)' }} />
-            <span className="font-bold" style={{ color: '#fff' }}>{plan} Premium</span>
-            {isUrgent && <span className="text-xs px-2 py-0.5 rounded-full animate-pulse" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff' }}>Expiring Soon!</span>}
-          </div>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="rounded-xl px-3 py-1.5 text-center" style={{ background: 'rgba(255,255,255,0.2)' }}>
-              <p className="text-xl font-black" style={{ color: '#fff' }}>{daysLeft}</p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>days left</p>
-            </div>
-            <div className="flex-1">
-              <div className="rounded-full h-2 mb-1.5" style={{ background: 'rgba(255,255,255,0.25)' }}>
-                <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }}
-                  transition={{ duration: 1, ease: 'easeOut' }}
-                  className="h-2 rounded-full" style={{ background: 'rgba(255,255,255,0.9)' }} />
-              </div>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                Valid until {new Date(expiry).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </p>
-            </div>
-          </div>
-        </div>
-        <Link href="/premium"
-          className="px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex-shrink-0"
-          style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.35)' }}>
-          {isUrgent ? '🔄 Renew' : 'Manage'}
-        </Link>
-      </div>
-    </motion.div>
-  );
-}
-
-// ── Birthday Card ─────────────────────────────────────────────────────────────
+// ── Animated Stat Card ────────────────────────────────────────────────────────
 const CONFETTI_COLORS = ['#C8A45C','#E5C88B','#E8B4B8','#D4AF37','#A67C3D','#E6C97A'];
 function BirthdayCard({ name }) {
   const [show, setShow] = useState(true);
@@ -248,64 +323,6 @@ function BirthdayCard({ name }) {
         </button>
       </motion.div>
     </AnimatePresence>
-  );
-}
-
-// ── Free Trial Banner ─────────────────────────────────────────────────────────
-function FreeTrialBanner({ expiry }) {
-  const countdown = useCountdown(expiry);
-  if (!countdown) return null;
-  const pad = n => String(n).padStart(2, '0');
-  if (countdown.expired) {
-    return (
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl p-4 mb-6 text-white flex items-center justify-between gap-4"
-        style={{ background: 'linear-gradient(135deg,#ef4444,#ec4899)' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Crown className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="font-bold text-sm">Free Trial Ended</p>
-            <p className="text-white/80 text-xs mt-0.5">Upgrade to Premium to keep all features</p>
-          </div>
-        </div>
-        <Link href="/premium" className="bg-white text-red-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0">
-          Upgrade Now
-        </Link>
-      </motion.div>
-    );
-  }
-  const pct = Math.min(100, Math.round((countdown.totalMs / (24 * 3600000)) * 100));
-  return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-5 mb-6 text-white overflow-hidden relative"
-      style={{ background: 'linear-gradient(135deg, #C8A45C, #E5C88B)' }}>
-      <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
-      <div className="relative flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <Zap className="w-4 h-4 text-yellow-300 fill-yellow-300" />
-            <p className="font-bold">Free Trial Active</p>
-          </div>
-          <div className="flex items-center gap-1 mb-3">
-            {[{ val: pad(countdown.h), label: 'hr' }, { val: pad(countdown.m), label: 'min' }, { val: pad(countdown.s), label: 'sec' }].map((t, i) => (
-              <span key={t.label} className="flex items-center gap-0.5">
-                {i > 0 && <span className="text-white/50 font-bold">:</span>}
-                <span className="bg-white/20 rounded-lg px-2 py-1 text-sm font-bold tabular-nums min-w-[2.2rem] text-center">{t.val}</span>
-                <span className="text-white/60 text-xs">{t.label}</span>
-              </span>
-            ))}
-          </div>
-          <div className="bg-white/20 rounded-full h-1.5 max-w-xs">
-            <div className="h-1.5 rounded-full bg-white transition-all duration-1000" style={{ width: `${pct}%` }} />
-          </div>
-        </div>
-        <Link href="/premium" className="bg-white text-vd-primary px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0">
-          Upgrade
-        </Link>
-      </div>
-    </motion.div>
   );
 }
 
@@ -489,17 +506,19 @@ export default function Dashboard() {
         {/* Birthday */}
         {reminders.birthdayInfo?.isBirthday && <BirthdayCard name={session?.user?.name} />}
 
-        {/* Hero Banner */}
-        <HeroBanner name={session?.user?.name} profileComplete={profileComplete} photo={userPhoto} />
+        {/* Unified welcome + premium/trial card */}
+        <DashboardWelcomeCard
+          name={session?.user?.name}
+          profileComplete={profileComplete}
+          photo={userPhoto}
+          premiumInfo={reminders.premiumInfo}
+          freeTrialExpiry={session?.user?.freeTrialExpiry}
+          isPremium={session?.user?.isPremium}
+          freeTrialActive={session?.user?.freeTrialActive}
+        />
 
         {/* Affiliate Dashboard */}
         <AffiliateCard agent={profile?.agent} />
-
-        {/* Premium / Trial banners */}
-        <PremiumValidityCard premiumInfo={reminders.premiumInfo} />
-        {session?.user?.freeTrialExpiry && !session?.user?.isPremium && (
-          <FreeTrialBanner expiry={session.user.freeTrialExpiry} />
-        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
