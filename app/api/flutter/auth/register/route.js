@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import { queryOne, execute } from '@/lib/db';
 import { sendOTPEmail, sendWelcomeEmail } from '@/lib/email';
 import { capturePendingRegistrationGeo } from '@/lib/geoTracking';
+import { isDisposableEmail, DISPOSABLE_EMAIL_MESSAGE } from '@/lib/disposableEmails';
+import { isValidPhone } from '@/lib/profileVerification';
 import { randomUUID } from 'crypto';
 
 function generateOTP() {
@@ -19,6 +21,10 @@ export async function POST(req) {
       return NextResponse.json({ error: 'name, email and password are required' }, { status: 400 });
     if (password.length < 8)
       return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
+    if (isDisposableEmail(email))
+      return NextResponse.json({ error: DISPOSABLE_EMAIL_MESSAGE }, { status: 400 });
+    if (!phone || !isValidPhone(phone))
+      return NextResponse.json({ error: 'A valid phone number is required to register on Vivah Dwar.' }, { status: 400 });
 
     // Check if email already exists in user table
     const existing = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);

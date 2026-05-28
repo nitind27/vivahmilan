@@ -3,6 +3,7 @@ import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { queryOne, execute } from '@/lib/db';
 import { saveFile, deleteFile } from '@/lib/upload';
 import { randomUUID } from 'crypto';
+import { hashFileBuffer, findDuplicatePhotoHash, savePhotoContentHash } from '@/lib/profileVerification';
 
 export const maxDuration = 30;
 
@@ -20,6 +21,16 @@ export async function POST(req) {
   if (file.size > 10 * 1024 * 1024) return NextResponse.json({ error: 'Max size 10MB' }, { status: 400 });
   if (!file.type.startsWith('image/')) return NextResponse.json({ error: 'Only images allowed' }, { status: 400 });
 
+  const bytes = await file.arrayBuffer();
+  const contentHash = await hashFileBuffer(Buffer.from(bytes));
+  const duplicate = await findDuplicatePhotoHash(contentHash, decoded.id);
+  if (duplicate) {
+    return NextResponse.json({
+      error: 'This photo appears to be already used on another account. Please upload your own original photo.',
+      code: 'DUPLICATE_PHOTO',
+    }, { status: 409 });
+  }
+
   const { url } = await saveFile(file, 'photos', decoded.id);
 
   if (isMain) {
@@ -32,6 +43,7 @@ export async function POST(req) {
     'INSERT INTO photo (id, userId, url, isMain, createdAt) VALUES (?, ?, ?, ?, NOW())',
     [id, decoded.id, url, isMain ? 1 : 0]
   );
+  await savePhotoContentHash(id, contentHash);
 
   const photo = await queryOne('SELECT * FROM photo WHERE id = ?', [id]);
   return NextResponse.json(photo, { status: 201 });

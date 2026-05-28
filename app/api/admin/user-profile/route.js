@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne } from '@/lib/db';
 import { getUserGeoLogs } from '@/lib/geoTracking';
+import { getApprovalChecklist } from '@/lib/profileVerification';
 
 function calcAge(dob) {
   if (!dob) return null;
@@ -91,6 +92,8 @@ export async function GET(req) {
     ? { ...profile, age: calcAge(profile.dob), bio: profile.aboutMe, occupation: profile.profession }
     : null;
 
+  const approvalChecklist = await getApprovalChecklist(userId);
+
   return NextResponse.json({
     user: {
       ...user,
@@ -107,5 +110,6 @@ export async function GET(req) {
     interests: recentInterests,
     stats: statsRows || {},
     geoLogs,
+    approvalChecklist,
   });
 }

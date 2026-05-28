@@ -62,8 +62,9 @@ export default function RegisterPage() {
       else if (v.length < 8) e.password = 'Password must be at least 8 characters';
       else if (!/[A-Z]/.test(v) && !/[0-9]/.test(v)) e.password = 'Add a number or uppercase letter';
     }
-    if (k === 'phone' && v && !phoneRegex.test(v)) {
-      e.phone = 'Enter a valid phone number';
+    if (k === 'phone') {
+      if (!v?.trim()) e.phone = 'Phone number is required';
+      else if (!phoneRegex.test(v)) e.phone = 'Enter a valid phone number';
     }
     return e;
   };
@@ -80,9 +81,11 @@ export default function RegisterPage() {
   };
 
   const validateStep1 = () => {
-    const e = {};
+    const e = {
+      ...validateField('phone', form.phone),
+    };
     if (!form.gender) e.gender = 'Please select what you are looking for';
-    if (form.phone && !phoneRegex.test(form.phone)) e.phone = 'Enter a valid phone number';
+    if (!form.phone?.trim()) e.phone = 'Phone number is required for account verification';
     setTouched(p => ({ ...p, gender: true, phone: true }));
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -271,7 +274,7 @@ export default function RegisterPage() {
 
                   <div>
                     <label className="block text-sm font-semibold text-vd-text-sub mb-1.5">
-                      Phone <span className="text-vd-text-light font-normal">(optional)</span>
+                      Phone <span className="text-red-500 font-normal">*</span>
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />

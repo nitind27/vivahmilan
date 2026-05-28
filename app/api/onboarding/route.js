@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import { validateSubmitForReview } from '@/lib/profileVerification';
 
 export async function POST(req) {
   try {
@@ -63,8 +64,19 @@ export async function POST(req) {
     // NOTE: Trial is now activated when admin approves the profile, not here.
     // This ensures the trial starts when the user can actually use it.
 
-    // If final submit — mark profileComplete = 100 to signal ready for admin review
+    // If final submit — validate requirements then mark ready for admin review
     if (_submitForReview) {
+      const validation = await validateSubmitForReview(user.id);
+      if (!validation.ok) {
+        return NextResponse.json({
+          error: validation.message,
+          code: validation.code,
+          checklist: validation.checklist,
+          errors: validation.errors,
+          missingFields: validation.missingFields,
+        }, { status: 400 });
+      }
+
       await execute('UPDATE profile SET profileComplete = 100, updatedAt = NOW() WHERE userId = ?', [user.id]);
       try {
         const { notifyAdmins } = await import('@/lib/adminNotifications');

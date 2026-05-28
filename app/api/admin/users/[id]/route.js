@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { sendAdminVerificationEmail } from '@/lib/email';
 import { getSiteConfig } from '@/lib/siteconfig';
 import { hash } from 'bcryptjs';
+import { validateAdminApproval } from '@/lib/profileVerification';
 
 export async function PATCH(req, { params }) {
   const session = await getServerSession(authOptions);
@@ -17,6 +18,18 @@ export async function PATCH(req, { params }) {
     where: { id },
     select: { name: true, email: true, adminVerified: true, freeTrialUsed: true },
   });
+
+  if (data.adminVerified === true && !user?.adminVerified) {
+    const approval = await validateAdminApproval(id);
+    if (!approval.ok) {
+      return NextResponse.json({
+        error: approval.message,
+        code: approval.code,
+        checklist: approval.checklist,
+        errors: approval.errors,
+      }, { status: 422 });
+    }
+  }
 
   // When approving, also activate free trial if not already used
   let updateData = { ...data };

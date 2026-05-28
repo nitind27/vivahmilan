@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { execute, queryOne } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import { handleReportAutoHide } from '@/lib/reportAutoHide';
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -28,7 +29,17 @@ export async function POST(req) {
       });
     } catch {}
 
-    return NextResponse.json({ success: true, id }, { status: 201 });
+    const autoHide = await handleReportAutoHide(targetId);
+
+    return NextResponse.json({
+      success: true,
+      id,
+      message: autoHide.hidden
+        ? 'Report submitted. This profile has been temporarily hidden pending admin review due to multiple community reports.'
+        : 'Report submitted successfully. Our team will review it shortly.',
+      autoHidden: autoHide.hidden,
+      reportCount: autoHide.reportCount,
+    }, { status: 201 });
   } catch (err) {
     console.error('Report error:', err);
     return NextResponse.json({ error: 'Failed to submit report' }, { status: 500 });

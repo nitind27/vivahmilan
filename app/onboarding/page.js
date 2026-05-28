@@ -149,7 +149,9 @@ function OnboardingInner() {
   // ── Check if all required fields are filled ──────────────────────────────
   const missingRequired = REQUIRED_FIELDS.filter(f => !form[f]);
   const isProfileComplete = missingRequired.length === 0;
-  const canSubmit = isProfileComplete && !!photoPreview && !!docStatus;
+  const hasPhone = !!form.phone?.trim() && /^[+]?[\d\s\-()]{7,15}$/.test(form.phone);
+  const hasVisualProof = !!photoPreview && familyPhotos.length >= 1;
+  const canSubmit = isProfileComplete && hasPhone && hasVisualProof && !!docStatus;
 
   // ── Validation ────────────────────────────────────────────────────────────
   const validateStep = (s) => {
@@ -165,6 +167,7 @@ function OnboardingInner() {
         if (age > 80) errs.push('Please enter a valid date of birth');
       }
       if (form.phone && !/^[+]?[\d\s\-()]{7,15}$/.test(form.phone)) errs.push('Enter a valid phone number');
+      else if (!form.phone?.trim()) errs.push('Phone number is required for profile verification');
       if (form.weight && (isNaN(form.weight) || form.weight < 30 || form.weight > 200)) errs.push('Enter a valid weight (30–200 kg)');
     }
     if (s === 1) {
@@ -295,17 +298,35 @@ function OnboardingInner() {
   };
 
   const submit = async () => {
-    if (!photoPreview) { toast.error('Please upload a profile photo'); return; }
-    if (!docStatus) { toast.error('Please upload an ID document'); return; }
+    if (!canSubmit) {
+      if (!hasPhone) toast.error('Phone number is required for profile verification');
+      else if (!photoPreview) toast.error('Please upload a profile photo');
+      else if (familyPhotos.length < 1) toast.error('Please upload at least one family or lifestyle photo');
+      else if (!docStatus) toast.error('Please upload an ID document (Aadhaar, PAN, Passport, etc.)');
+      else toast.error('Please complete all required profile fields');
+      return;
+    }
     const ok = await saveStep(true);
-    if (ok) {
-      // Notify admin that a new profile is ready for review
-      await fetch('/api/onboarding', {
+    if (!ok) return;
+    setSaving(true);
+    try {
+      const res = await fetch('/api/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, ...form, _submitForReview: true }),
-      }).catch(() => {});
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Could not submit profile for review', { duration: 5000 });
+        data.errors?.slice(0, 3).forEach(msg => toast(msg, { icon: '⚠️' }));
+        return;
+      }
       setSubmitted(true);
+      toast.success('Profile submitted for admin review!');
+    } catch {
+      toast.error('Submission failed. Please try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -647,7 +668,9 @@ function OnboardingInner() {
                 <p className="text-xs text-amber-600 text-right max-w-xs">
                   {!isProfileComplete
                     ? `Fill required fields: ${missingRequired.join(', ')}`
+                    : !hasPhone ? 'Enter a valid phone number'
                     : !photoPreview ? 'Upload a profile photo'
+                    : familyPhotos.length < 1 ? 'Upload at least one family or lifestyle photo'
                     : 'Upload an ID document'}
                 </p>
               )}

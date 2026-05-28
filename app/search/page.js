@@ -10,7 +10,7 @@ import SearchableSelect from '@/components/SearchableSelect';
 import LocationPicker from '@/components/LocationPicker';
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin,
-  GraduationCap, Heart, Users, Briefcase, RotateCcw, ChevronLeft, ChevronRight
+  GraduationCap, Heart, Users, Briefcase, RotateCcw, ChevronLeft, ChevronRight, ShieldCheck
 } from 'lucide-react';
 
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Jewish', 'Other'];
@@ -26,7 +26,7 @@ const DEFAULT_FILTERS = {
   q: '', gender: '', ageMin: '', ageMax: '',
   religion: '', country: '', state: '', city: '',
   education: '', profession: '', heightMin: '', heightMax: '',
-  maritalStatus: '', income: '',
+  maritalStatus: '', income: '', verifiedOnly: '',
 };
 
 // ── Filter Chip ───────────────────────────────────────────────────────────────
@@ -102,7 +102,7 @@ function SearchInner() {
   const set = (key, val) => setFilters(prev => ({ ...prev, [key]: val }));
 
   const activeFilters = Object.entries(filters).filter(([k, v]) => v && k !== 'q').map(([k, v]) => {
-    const labels = { gender: v, ageMin: `Age ≥ ${v}`, ageMax: `Age ≤ ${v}`, religion: v, country: v, state: v, city: v, education: v, profession: v, heightMin: `Height ≥ ${v}cm`, heightMax: `Height ≤ ${v}cm`, maritalStatus: MARITAL.find(m => m.val === v)?.label || v, income: v };
+    const labels = { gender: v, ageMin: `Age ≥ ${v}`, ageMax: `Age ≤ ${v}`, religion: v, country: v, state: v, city: v, education: v, profession: v, heightMin: `Height ≥ ${v}cm`, heightMax: `Height ≤ ${v}cm`, maritalStatus: MARITAL.find(m => m.val === v)?.label || v, income: v, verifiedOnly: 'Verified profiles only' };
     return { key: k, label: labels[k] || v };
   });
 
@@ -260,6 +260,24 @@ function SearchInner() {
                   <RangeInput label="Height (cm)" minVal={filters.heightMin} maxVal={filters.heightMax}
                     onMinChange={v => set('heightMin', v)} onMaxChange={v => set('heightMax', v)}
                     minPlaceholder="150" maxPlaceholder="190" />
+
+                  <div className="col-span-2 sm:col-span-3 lg:col-span-4">
+                    <label className="flex items-center gap-3 p-3.5 border border-vd-border rounded-2xl bg-vd-bg-section cursor-pointer hover:border-vd-primary transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={filters.verifiedOnly === '1'}
+                        onChange={e => set('verifiedOnly', e.target.checked ? '1' : '')}
+                        className="w-4 h-4 rounded accent-vd-primary"
+                      />
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-vd-primary" />
+                        <div>
+                          <p className="text-sm font-semibold text-vd-text-heading">Verified profiles only</p>
+                          <p className="text-xs text-vd-text-light">Show profiles with ID-verified badge only</p>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="flex gap-3 mt-5 pt-4 border-t border-vd-border">

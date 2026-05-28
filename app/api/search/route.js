@@ -27,6 +27,7 @@ export async function GET(req) {
   const ageMax        = searchParams.get('ageMax')        || '';
   const heightMin     = searchParams.get('heightMin')     || '';
   const heightMax     = searchParams.get('heightMax')     || '';
+  const verifiedOnly  = searchParams.get('verifiedOnly')  === '1' || searchParams.get('verifiedOnly') === 'true';
 
   // Get current user's profile for religion/gotra/gender filtering
   const currentUser = await queryOne(
@@ -51,6 +52,10 @@ export async function GET(req) {
 
   const conditions = ['u.id != ?', 'u.isActive = 1', 'u.adminVerified = 1'];
   const params = [session.user.id];
+
+  if (verifiedOnly) {
+    conditions.push('u.verificationBadge = 1');
+  }
 
   if (blockedIds.length) {
     conditions.push(`u.id NOT IN (${blockedIds.map(() => '?').join(',')})`);

@@ -117,11 +117,17 @@ function ProfilesTab() {
     const res = await fetch(`/api/admin/users/${id}`, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
     });
+    const result = await res.json().catch(() => ({}));
     if (res.ok) {
-      toast.success('Updated');
+      toast.success(data.adminVerified ? 'Profile approved successfully' : 'Updated');
       load();
       window.dispatchEvent(new Event('admin-stats-refresh'));
-    } else toast.error('Failed');
+    } else if (result.checklist) {
+      toast.error(result.error || 'Profile does not meet approval requirements', { duration: 6000 });
+      result.errors?.slice(0, 3).forEach(msg => toast(msg, { icon: '⚠️', duration: 5000 }));
+    } else {
+      toast.error(result.error || 'Failed to update user');
+    }
   };
 
   return (
