@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { execute, queryOne } from '@/lib/db';
 import { createOrder } from '@/lib/cashfree';
 import { v4 as uuidv4 } from 'uuid';
+import { dispatchSubscriptionReceipt } from '@/lib/subscriptionReceipt';
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -68,6 +69,7 @@ export async function POST(req) {
     const endDate = new Date(Date.now() + finalDurationDays * 86400000);
     
     // Create subscription
+    const freePaymentId = 'FREE_COUPON_' + orderId;
     await prisma.subscription.create({
       data: {
         userId: session.user.id,
@@ -75,7 +77,7 @@ export async function POST(req) {
         status: 'ACTIVE',
         amount: 0,
         currency: 'INR',
-        paymentId: 'FREE_COUPON_' + orderId,
+        paymentId: freePaymentId,
         startDate: new Date(),
         endDate,
       },
@@ -97,6 +99,12 @@ export async function POST(req) {
         where: { id: appliedCoupon.id },
         data: { usedCount: appliedCoupon.usedCount + 1 }
       });
+    }
+
+    try {
+      await dispatchSubscriptionReceipt(freePaymentId);
+    } catch (err) {
+      console.error('[create-order] receipt email error:', err?.message || err);
     }
 
     return NextResponse.json({ instantActivation: true, plan: planKey });

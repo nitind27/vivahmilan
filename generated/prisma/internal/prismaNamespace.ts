@@ -2459,6 +2459,7 @@ export const SubscriptionScalarFieldEnum = {
   paymentId: 'paymentId',
   startDate: 'startDate',
   endDate: 'endDate',
+  receiptSentAt: 'receiptSentAt',
   createdAt: 'createdAt'
 } as const
 

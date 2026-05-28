@@ -3,8 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { fetchOrder } from '@/lib/cashfree';
 import prisma from '@/lib/prisma';
-
-const PLAN_DURATIONS = { SILVER: 30, GOLD: 30, PLATINUM: 30 };
+import { dispatchSubscriptionReceipt } from '@/lib/subscriptionReceipt';
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -16,19 +15,28 @@ export async function POST(req) {
     const order = await fetchOrder(orderId);
 
     if (order.order_status === 'PAID') {
-      const planKey = plan?.toUpperCase() || 'GOLD';
-      const durationDays = PLAN_DURATIONS[planKey] || 30;
-      const premiumExpiry = new Date(Date.now() + durationDays * 86400000);
+      const planKey = plan?.toUpperCase() || order.order_tags?.plan?.toUpperCase() || 'GOLD';
+
+      const pendingSub = await prisma.subscription.findFirst({
+        where: { userId: session.user.id, paymentId: orderId },
+      });
+      const premiumExpiry = pendingSub?.endDate || new Date(Date.now() + 30 * 86400000);
 
       await prisma.user.update({
         where: { id: session.user.id },
-        data: { isPremium: true, premiumExpiry },
+        data: { isPremium: true, premiumPlan: planKey, premiumExpiry },
       });
 
       await prisma.subscription.updateMany({
         where: { userId: session.user.id, paymentId: orderId },
         data: { status: 'ACTIVE', endDate: premiumExpiry },
       });
+
+      try {
+        await dispatchSubscriptionReceipt(orderId);
+      } catch (err) {
+        console.error('[verify] receipt email error:', err?.message || err);
+      }
 
       return NextResponse.json({ status: 'PAID', isPremium: true, premiumExpiry });
     }

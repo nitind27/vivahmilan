@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import crypto from 'crypto';
+import { dispatchSubscriptionReceipt } from '@/lib/subscriptionReceipt';
 
 const PLAN_DURATIONS = { SILVER: 30, GOLD: 30, PLATINUM: 30 };
 
@@ -70,6 +71,12 @@ export async function POST(req) {
           link: '/admin/subscriptions',
         });
       } catch {}
+
+      try {
+        await dispatchSubscriptionReceipt(orderId);
+      } catch (err) {
+        console.error('[webhook] receipt email error:', err?.message || err);
+      }
     }
 
     if (type === 'PAYMENT_FAILED_WEBHOOK') {

@@ -52,7 +52,7 @@ export async function POST(req) {
       data: {
         userId: decoded.id,
         plan: planKey,
-        status: 'ACTIVE',
+        status: 'PENDING',
         amount: planDetails.amount,
         currency: 'INR',
         paymentId: orderId,

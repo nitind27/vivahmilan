@@ -352,6 +352,7 @@ model subscription {
   paymentId String?
   startDate DateTime           @default(now())
   endDate   DateTime
+  receiptSentAt DateTime?
   createdAt DateTime           @default(now())
 
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)

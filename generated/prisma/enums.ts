@@ -71,7 +71,8 @@ export const NotificationType = {
   PROFILE_VIEWED: 'PROFILE_VIEWED',
   SUBSCRIPTION_EXPIRY: 'SUBSCRIPTION_EXPIRY',
   VERIFICATION_APPROVED: 'VERIFICATION_APPROVED',
-  SYSTEM: 'SYSTEM'
+  SYSTEM: 'SYSTEM',
+  NEW_MATCH: 'NEW_MATCH'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -80,7 +81,8 @@ export type NotificationType = (typeof NotificationType)[keyof typeof Notificati
 export const SubscriptionStatus = {
   ACTIVE: 'ACTIVE',
   EXPIRED: 'EXPIRED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  PENDING: 'PENDING'
 } as const
 
 export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
