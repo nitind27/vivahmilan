@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
+import { maskBlockedPeer } from '@/lib/blockHelper';
 import { parseLocationBody } from '@/lib/chatLocation';
 import { resolveChatAccess } from '@/lib/chatAccess';
+import { getBlockBetween } from '@/lib/blockHelper';
 import { randomUUID } from 'crypto';
 
 // GET - all chat rooms with pagination
@@ -64,22 +66,20 @@ export async function GET(req) {
   const peerIds = [...new Set(rooms.flatMap(r => [r.uA_id, r.uB_id]).filter(id => id && id !== uid))];
   const maps = peerIds.length
     ? await getInteractionMaps(uid, peerIds)
-    : { interestSentMap: {}, interestReceivedMap: {}, shortlistSet: new Set(), blockSet: new Set() };
+    : { interestSentMap: {}, interestReceivedMap: {}, shortlistSet: new Set(), blockSet: new Set(), blockedBySet: new Set() };
+
+  const buildPeer = (id, name, isPremium, lastSeen, gender, city, country, photoUrl) =>
+    maskBlockedPeer({
+      id, name, isPremium: !!isPremium, lastSeen,
+      profile: { gender, city, country },
+      photos: photoUrl ? [{ url: photoUrl }] : [],
+      ...attachInteractionFlags(id, maps),
+    });
 
   const enriched = rooms.map((r) => ({
     id: r.id, userAId: r.userAId, userBId: r.userBId, createdAt: r.createdAt,
-    userA: {
-      id: r.uA_id, name: r.uA_name, isPremium: !!r.uA_isPremium, lastSeen: r.uA_lastSeen,
-      profile: { gender: r.pA_gender, city: r.pA_city, country: r.pA_country },
-      photos: r.phA_url ? [{ url: r.phA_url }] : [],
-      ...attachInteractionFlags(r.uA_id, maps),
-    },
-    userB: {
-      id: r.uB_id, name: r.uB_name, isPremium: !!r.uB_isPremium, lastSeen: r.uB_lastSeen,
-      profile: { gender: r.pB_gender, city: r.pB_city, country: r.pB_country },
-      photos: r.phB_url ? [{ url: r.phB_url }] : [],
-      ...attachInteractionFlags(r.uB_id, maps),
-    },
+    userA: buildPeer(r.uA_id, r.uA_name, r.uA_isPremium, r.uA_lastSeen, r.pA_gender, r.pA_city, r.pA_country, r.phA_url),
+    userB: buildPeer(r.uB_id, r.uB_name, r.uB_isPremium, r.uB_lastSeen, r.pB_gender, r.pB_city, r.pB_country, r.phB_url),
     lastMessage: r.lm_id ? { id: r.lm_id, content: r.lm_content, createdAt: r.lm_createdAt, senderId: r.lm_senderId, type: r.lm_type, isRead: !!r.lm_isRead } : null,
   }));
 
@@ -129,6 +129,16 @@ export async function POST(req) {
     content = content.trim();
   }
   if (!receiverId) return NextResponse.json({ error: 'receiverId required' }, { status: 400 });
+
+  const blockStatus = await getBlockBetween(decoded.id, receiverId);
+  if (blockStatus.isBlocked) {
+    return NextResponse.json({
+      error: blockStatus.blockedByMe
+        ? 'You blocked this user. Unblock them to send messages.'
+        : 'You cannot message this user.',
+      ...blockStatus,
+    }, { status: 403 });
+  }
 
   const [a, b] = [decoded.id, receiverId].sort();
   let room = await queryOne('SELECT id FROM chatroom WHERE userAId = ? AND userBId = ?', [a, b]);

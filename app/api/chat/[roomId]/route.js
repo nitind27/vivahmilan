@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { saveFile } from '@/lib/upload';
 import { resolveChatAccess } from '@/lib/chatAccess';
+import { getBlockBetween } from '@/lib/blockHelper';
 import { randomUUID } from 'crypto';
 
 export const maxDuration = 30;
@@ -76,6 +77,16 @@ export async function POST(req, { params }) {
   }
 
   const receiverId = room.userAId === session.user.id ? room.userBId : room.userAId;
+  const blockStatus = await getBlockBetween(session.user.id, receiverId);
+  if (blockStatus.isBlocked) {
+    return NextResponse.json({
+      error: blockStatus.blockedByMe
+        ? 'You blocked this user. Unblock them to send messages.'
+        : 'You cannot message this user.',
+      ...blockStatus,
+    }, { status: 403 });
+  }
+
   const contentType = req.headers.get('content-type') || '';
   const msgId = randomUUID();
   const now = new Date();

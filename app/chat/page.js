@@ -9,7 +9,7 @@ import Navbar from '@/components/Navbar';
 import {
   Send, MessageCircle, Star, BadgeCheck, ArrowLeft,
   Check, CheckCheck, Smile, Paperclip, Image as ImageIcon,
-  FileText, MapPin, X, Download
+  FileText, MapPin, X, Download, Ban
 } from 'lucide-react';
 import { format, isToday, isYesterday } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -17,6 +17,7 @@ import { connectSocket } from '@/lib/socket';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import ImageEditorModal from '@/components/ImageEditorModal';
 import ChatPlanExpired from '@/components/ChatPlanExpired';
+import { blockedChatMessage } from '@/lib/blockHelper';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 
@@ -59,7 +60,17 @@ async function downloadImage(url, filename) {
   }
 }
 
-function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs }) {
+function BlockedAvatar({ size = 'md' }) {
+  const cls = size === 'sm' ? 'w-10 h-10' : 'w-12 h-12';
+  const iconCls = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
+  return (
+    <div className={`${cls} rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center border border-gray-300 dark:border-gray-600`}>
+      <Ban className={`${iconCls} text-gray-500 dark:text-gray-400`} />
+    </div>
+  );
+}
+
+function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs, hidePeerProfile }) {
   const [zoom, setZoom] = useState(false);
   const [swipeX, setSwipeX] = useState(0);
   const [swipeActive, setSwipeActive] = useState(false);
@@ -285,6 +296,20 @@ function MessageBubble({ msg, isMe, onReply, allMessages, msgRefs }) {
                         msg.content?.startsWith('✨ *Profile Details*');
 
   if (isProfileCard) {
+    if (hidePeerProfile && !isMe) {
+      return (
+        <div className="max-w-xs mr-auto">
+          <div className="rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center gap-2.5">
+            <Ban className="w-4 h-4 text-gray-400 shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Profile hidden</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400">This user&apos;s profile details are not available.</p>
+            </div>
+          </div>
+          <MsgMeta isMe={isMe} msg={msg} />
+        </div>
+      );
+    }
     const isPremiumCard = msg.content.startsWith('🌟');
     return (
       <div className={`w-72 ${isMe ? 'ml-auto' : 'mr-auto'}`}>
@@ -641,6 +666,18 @@ function ChatInner() {
   const getOtherUser = (room) => room?.userAId === session?.user?.id ? room?.userB : room?.userA;
   const isOnline = (uid) => onlineUsers.includes(uid);
 
+  const getLastMsgPreview = (room, lastMsg) => {
+    const other = getOtherUser(room);
+    if (other?.isBlocked) {
+      return other.blockedByMe ? '🚫 You blocked this user' : '🚫 User unavailable';
+    }
+    if (!lastMsg) return 'Start chatting';
+    if (lastMsg.type === 'IMAGE') return '📷 Photo';
+    if (lastMsg.type === 'DOCUMENT') return '📄 Document';
+    if (lastMsg.type === 'LOCATION') return '📍 Location';
+    return lastMsg.content?.replace(/^\[replyTo:[^\]]+\] /, '') || 'Start chatting';
+  };
+
   const handleTyping = (val) => {
     setInput(val);
     if (!activeRoom || !socketRef.current) return;
@@ -885,25 +922,31 @@ function ChatInner() {
               ) : rooms.map(room => {
                 const other = getOtherUser(room);
                 const lastMsg = room.messages?.[0];
-                const online = isOnline(other?.id);
+                const online = other?.isBlocked ? false : isOnline(other?.id);
                 const hasUnread = unreadPerRoom[room.id] > 0;
                 return (
                   <button key={room.id} onClick={() => openRoom(room)}
                     className={`w-full flex items-center gap-3 px-4 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left border-b border-gray-50 dark:border-gray-700/30 ${activeRoom?.id === room.id ? 'bg-vd-accent-soft dark:bg-vd-accent/10 border-l-[3px] border-l-vd-primary' : ''}`}>
                     <div className="relative flex-shrink-0">
-                      <div className="w-12 h-12 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold text-lg">
-                        {other?.image
-                          ? <SmartImage src={other.image} alt="" width={48} height={48} className="object-cover w-full h-full" />
-                          : <span>{other?.name?.[0]}</span>
-                        }
-                      </div>
+                      {other?.isBlocked ? (
+                        <BlockedAvatar />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold text-lg">
+                          {other?.image
+                            ? <SmartImage src={other.image} alt="" width={48} height={48} className="object-cover w-full h-full" />
+                            : <span>{other?.name?.[0]}</span>
+                          }
+                        </div>
+                      )}
                       {online && (
                         <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-0.5">
-                        <p className={`text-sm truncate ${hasUnread ? 'font-bold text-gray-900 dark:text-white' : 'font-semibold text-gray-800 dark:text-gray-100'}`}>{other?.name}</p>
+                        <p className={`text-sm truncate ${other?.isBlocked ? 'text-gray-500 dark:text-gray-400 italic' : hasUnread ? 'font-bold text-gray-900 dark:text-white' : 'font-semibold text-gray-800 dark:text-gray-100'}`}>
+                          {other?.name}
+                        </p>
                         {lastMsg && (
                           <span className={`text-xs flex-shrink-0 ml-2 ${hasUnread ? 'text-vd-primary font-semibold' : 'text-gray-400'}`}>
                             {formatMsgTime(lastMsg.createdAt)}
@@ -911,8 +954,8 @@ function ChatInner() {
                         )}
                       </div>
                       <div className="flex items-center justify-between">
-                        <p className={`text-xs truncate ${hasUnread ? 'text-gray-700 dark:text-gray-200 font-medium' : 'text-gray-400'}`}>
-                          {lastMsg?.type === 'IMAGE' ? '📷 Photo' : lastMsg?.type === 'DOCUMENT' ? '📄 Document' : lastMsg?.type === 'LOCATION' ? '📍 Location' : lastMsg?.content?.replace(/^\[replyTo:[^\]]+\] /, '') || 'Start chatting'}
+                        <p className={`text-xs truncate ${other?.isBlocked ? 'text-gray-400 italic' : hasUnread ? 'text-gray-700 dark:text-gray-200 font-medium' : 'text-gray-400'}`}>
+                          {getLastMsgPreview(room, lastMsg)}
                         </p>
                         {hasUnread && (
                           <span className="flex-shrink-0 ml-2 min-w-5 h-5 vd-gradient-gold text-white text-xs rounded-full flex items-center justify-center px-1.5 font-bold">
@@ -931,32 +974,58 @@ function ChatInner() {
           <div className={`${activeRoom ? 'flex' : 'hidden md:flex'} flex-1 flex-col min-w-0 min-h-0 overflow-hidden relative bg-gray-50 dark:bg-gray-900`}>
             {activeRoom ? (() => {
               const other = getOtherUser(activeRoom);
-              const online = isOnline(other?.id);
+              const online = other?.isBlocked ? false : isOnline(other?.id);
+              const blockInfo = blockedChatMessage(other);
               return (
                 <>
                   {/* Header */}
                   <div className="flex items-center gap-3 px-4 py-3 border-b border-vd-border bg-white dark:bg-gray-800 z-10 flex-shrink-0 shadow-sm">
                     <button onClick={() => setActiveRoom(null)} className="md:hidden p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl"><ArrowLeft className="w-5 h-5" /></button>
                     <div className="relative">
-                      <div className="w-10 h-10 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold">
-                        {other?.image ? <SmartImage src={other.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <span>{other?.name?.[0]}</span>}
-                      </div>
+                      {other?.isBlocked ? (
+                        <BlockedAvatar size="sm" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full overflow-hidden vd-gradient-gold flex items-center justify-center text-white font-bold">
+                          {other?.image ? <SmartImage src={other.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <span>{other?.name?.[0]}</span>}
+                        </div>
+                      )}
                       {online && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <p className="font-semibold text-gray-900 dark:text-white">{other?.name}</p>
-                        {other?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
-                        {other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
+                        <p className={`font-semibold truncate ${other?.isBlocked ? 'text-gray-500 dark:text-gray-400 italic' : 'text-gray-900 dark:text-white'}`}>{other?.name}</p>
+                        {!other?.isBlocked && other?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
+                        {!other?.isBlocked && other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
                       </div>
-                      <p className={`text-xs ${online ? 'text-green-500' : 'text-gray-400'}`}>
-                        {otherTyping ? <span className="text-vd-primary animate-pulse">typing…</span> : online ? 'Online' : formatLastSeen(lastSeenMap[other?.id])}
+                      <p className={`text-xs ${other?.isBlocked ? 'text-gray-400' : online ? 'text-green-500' : 'text-gray-400'}`}>
+                        {other?.isBlocked
+                          ? (other.blockedByMe ? 'Blocked by you' : 'Unavailable')
+                          : otherTyping
+                            ? <span className="text-vd-primary animate-pulse">typing…</span>
+                            : online ? 'Online' : formatLastSeen(lastSeenMap[other?.id])}
                       </p>
                     </div>
-                    <Link href={`/profile/${other?.id}`} className="text-xs text-vd-primary border border-vd-border px-3 py-1.5 rounded-xl hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20 transition-colors font-medium">
-                      Profile
-                    </Link>
+                    {!other?.isBlocked && (
+                      <Link href={`/profile/${other?.id}`} className="text-xs text-vd-primary border border-vd-border px-3 py-1.5 rounded-xl hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20 transition-colors font-medium">
+                        Profile
+                      </Link>
+                    )}
                   </div>
+
+                  {blockInfo && (
+                    <div className="mx-4 mt-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 flex items-start gap-3 flex-shrink-0">
+                      <Ban className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-red-700 dark:text-red-300">{blockInfo.title}</p>
+                        <p className="text-xs text-red-600/80 dark:text-red-400/80 mt-0.5">{blockInfo.subtitle}</p>
+                      </div>
+                      {other?.blockedByMe && (
+                        <Link href="/blocked" className="text-xs font-semibold text-red-600 dark:text-red-400 hover:underline shrink-0 self-center">
+                          Unblock
+                        </Link>
+                      )}
+                    </div>
+                  )}
 
                   {/* Messages */}
                   <div ref={messagesScrollRef} className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6 lg:px-8 py-4 space-y-2 bg-gray-50 dark:bg-gray-900"
@@ -989,7 +1058,14 @@ function ChatInner() {
                           )}
                           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <MessageBubble msg={msg} isMe={isMe} onReply={setReplyTo} allMessages={messages} msgRefs={msgRefs} />
+                            <MessageBubble
+                              msg={msg}
+                              isMe={isMe}
+                              onReply={other?.isBlocked ? undefined : setReplyTo}
+                              allMessages={messages}
+                              msgRefs={msgRefs}
+                              hidePeerProfile={other?.isBlocked}
+                            />
                           </motion.div>
                         </div>
                       );
@@ -1143,6 +1219,14 @@ function ChatInner() {
                   )}
 
                   {/* Input bar */}
+                  {other?.isBlocked ? (
+                    <div className="px-4 md:px-6 lg:px-8 py-4 border-t border-vd-border bg-gray-50 dark:bg-gray-800/80 flex-shrink-0">
+                      <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                        <Ban className="w-4 h-4" />
+                        <span>{other.blockedByMe ? 'Messaging disabled — you blocked this user' : 'Messaging disabled — user unavailable'}</span>
+                      </div>
+                    </div>
+                  ) : (
                   <div className="flex items-end gap-2 px-4 md:px-6 lg:px-8 py-3 border-t border-vd-border bg-white dark:bg-gray-800 flex-shrink-0">
                     <button onClick={() => { setShowAttach(p => !p); setShowEmoji(false); }}
                       className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${showAttach ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:text-vd-primary hover:bg-vd-accent-soft dark:hover:bg-vd-accent/20'}`}>
@@ -1167,6 +1251,7 @@ function ChatInner() {
                       <Send className="w-5 h-5" />
                     </button>
                   </div>
+                  )}
                 </>
               );
             })() : (

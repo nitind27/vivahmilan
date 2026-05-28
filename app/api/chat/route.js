@@ -3,6 +3,30 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne } from '@/lib/db';
 import { resolveChatAccess } from '@/lib/chatAccess';
+import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
+import { maskBlockedPeer } from '@/lib/blockHelper';
+
+function buildChatUser(r, side, maps) {
+  const id = r[`u${side}_id`];
+  const flags = attachInteractionFlags(id, maps);
+  const user = {
+    id,
+    name: r[`u${side}_name`],
+    email: r[`u${side}_email`],
+    image: r[`u${side}_image`],
+    isPremium: r[`u${side}_isPremium`],
+    isVerified: r[`u${side}_isVerified`],
+    profile: {
+      gender: r[`p${side}_gender`],
+      city: r[`p${side}_city`],
+      country: r[`p${side}_country`],
+      profileComplete: r[`p${side}_profileComplete`],
+    },
+    photos: r[`ph${side}_url`] ? [{ url: r[`ph${side}_url`] }] : [],
+    ...flags,
+  };
+  return maskBlockedPeer(user);
+}
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
@@ -52,25 +76,18 @@ export async function GET(req) {
     [uid, uid]
   );
 
+  const peerIds = [...new Set(rooms.flatMap(r => [r.uA_id, r.uB_id]).filter(id => id && id !== uid))];
+  const maps = peerIds.length
+    ? await getInteractionMaps(uid, peerIds)
+    : { interestSentMap: {}, interestReceivedMap: {}, shortlistSet: new Set(), blockSet: new Set(), blockedBySet: new Set() };
+
   const enriched = rooms.map((r) => ({
     id: r.id,
     userAId: r.userAId,
     userBId: r.userBId,
     createdAt: r.createdAt,
-    userA: {
-      id: r.uA_id, name: r.uA_name, email: r.uA_email,
-      image: r.uA_image, isPremium: r.uA_isPremium,
-      isVerified: r.uA_isVerified,
-      profile: { gender: r.pA_gender, city: r.pA_city, country: r.pA_country, profileComplete: r.pA_profileComplete },
-      photos: r.phA_url ? [{ url: r.phA_url }] : [],
-    },
-    userB: {
-      id: r.uB_id, name: r.uB_name, email: r.uB_email,
-      image: r.uB_image, isPremium: r.uB_isPremium,
-      isVerified: r.uB_isVerified,
-      profile: { gender: r.pB_gender, city: r.pB_city, country: r.pB_country, profileComplete: r.pB_profileComplete },
-      photos: r.phB_url ? [{ url: r.phB_url }] : [],
-    },
+    userA: buildChatUser(r, 'A', maps),
+    userB: buildChatUser(r, 'B', maps),
     messages: r.lm_id ? [{
       id: r.lm_id, content: r.lm_content, createdAt: r.lm_createdAt,
       senderId: r.lm_senderId, type: r.lm_type, isRead: r.lm_isRead,
