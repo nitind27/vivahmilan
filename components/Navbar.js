@@ -3,11 +3,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark, Smartphone, Lock, Share2 } from 'lucide-react';
-import { shareProfile } from '@/components/ShareProfileButton';
+import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark, Smartphone, Lock } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
 import { useTheme } from '@/components/ThemeProvider';
-import toast from 'react-hot-toast';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -180,20 +178,6 @@ export default function Navbar() {
                               <User className="w-4 h-4" /> View My Profile
                             </Link>
                           )}
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              setDropOpen(false);
-                              try {
-                                await shareProfile(session.user.id, session.user.name);
-                              } catch (err) {
-                                if (err?.name !== 'AbortError') toast.error(err.message || 'Share failed');
-                              }
-                            }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
-                          >
-                            <Share2 className="w-4 h-4" /> Share My Profile
-                          </button>
                           <Link href="/shortlist" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Bookmark className="w-4 h-4" /> My Shortlist
                           </Link>
