@@ -8,7 +8,6 @@ import SiteLoader, { SiteLoaderInline } from '@/components/SiteLoader';
 import {
   CheckCircle, Star, Zap, Shield, MessageCircle,
   Eye, TrendingUp, Lock, Crown, Sparkles, ChevronDown,
-  Tag, X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -29,14 +28,7 @@ export default function PremiumPage() {
   const [loadingPlans, setLoadingPlans] = useState(true);
   
   const [loadingPlan, setLoadingPlan] = useState(null);
-  const [sdkLoaded, setSdkLoaded] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
-
-  // Coupon state
-  const [showCheckout, setShowCheckout] = useState(null); // holds the plan object
-  const [couponCode, setCouponCode] = useState('');
-  const [discountData, setDiscountData] = useState(null);
-  const [verifyingCoupon, setVerifyingCoupon] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -49,94 +41,14 @@ export default function PremiumPage() {
       .catch(() => setLoadingPlans(false));
   }, []);
 
-  // Load Cashfree JS SDK
-  useEffect(() => {
-    if (document.getElementById('cashfree-sdk')) { setSdkLoaded(true); return; }
-    const script = document.createElement('script');
-    script.id = 'cashfree-sdk';
-    const env = process.env.NEXT_PUBLIC_CASHFREE_ENV || 'sandbox';
-    script.src = env === 'production'
-      ? 'https://sdk.cashfree.com/js/v3/cashfree.js'
-      : 'https://sdk.cashfree.com/js/v3/cashfree.js';
-    script.onload = () => setSdkLoaded(true);
-    document.head.appendChild(script);
-  }, []);
+  const [couponCode, setCouponCode] = useState('');
+  const [discountData, setDiscountData] = useState(null);
+  const [verifyingCoupon, setVerifyingCoupon] = useState(false);
 
-  const applyCoupon = async () => {
-    if (!couponCode) return;
-    setVerifyingCoupon(true);
-    try {
-      const res = await fetch('/api/payment/apply-coupon', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: couponCode, planId: showCheckout.plan })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.error || 'Invalid coupon');
-        setDiscountData(null);
-      } else {
-        toast.success(`Coupon applied! ${data.discountPct}% off`);
-        setDiscountData(data);
-      }
-    } catch (e) {
-      toast.error('Failed to verify coupon');
-    } finally {
-      setVerifyingCoupon(false);
-    }
-  };
-
-  const handleProceedToPay = async (planToCheckout = showCheckout) => {
-    if (!session) { router.push('/login'); return; }
-    if (session.user.isPremium) { toast('You already have an active premium plan!'); return; }
-
-    const plan = planToCheckout;
-    setLoadingPlan(plan.plan);
-    try {
-      // Step 1: Create order on backend (pass the calculated price via duration param if API supports it, 
-      // but the API create-order recalculates it from DB. I need to pass customAmount and durationDays to create-order so it can use them)
-      const res = await fetch('/api/payment/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          plan: plan.plan, 
-          couponCode: discountData ? couponCode : null,
-          customAmount: plan.calculatedPrice,
-          durationDays: plan.calculatedDays
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) { toast.error(data.error || 'Failed to create order'); return; }
-
-      // If price was 0 (100% discount), it activates instantly without cashfree
-      if (data.instantActivation) {
-        toast.success('Subscription activated successfully!');
-        window.location.reload();
-        return;
-      }
-
-      const { paymentSessionId } = data;
-
-      // Step 2: Open Cashfree checkout
-      if (!window.Cashfree) { toast.error('Payment SDK not loaded. Please refresh.'); return; }
-
-      const cashfree = await window.Cashfree({
-        mode: process.env.NEXT_PUBLIC_CASHFREE_ENV === 'production' ? 'production' : 'sandbox',
-      });
-
-      const checkoutOptions = {
-        paymentSessionId,
-        redirectTarget: '_self',
-      };
-
-      cashfree.checkout(checkoutOptions);
-    } catch (err) {
-      console.error(err);
-      toast.error('Something went wrong. Please try again.');
-    } finally {
-      setLoadingPlan(null);
-      setShowCheckout(null);
-    }
+  const goToCheckout = (planName) => {
+    const params = new URLSearchParams({ plan: planName, months: String(selectedMonths) });
+    if (discountData && couponCode.trim()) params.set('coupon', couponCode.trim());
+    router.push(`/payment/checkout?${params.toString()}`);
   };
 
   const getFeaturesList = (perms) => {
@@ -353,21 +265,38 @@ export default function PremiumPage() {
                       return (
                         <button
                           onClick={() => {
-                            const checkoutPlan = { ...p, calculatedPrice: discountedPrice, calculatedDays: isLifetime ? 36500 : selectedMonths * 30 };
+                            if (!session) { router.push('/login'); return; }
                             if (discountedPrice === 0) {
-                              setShowCheckout(checkoutPlan);
-                              handleProceedToPay(checkoutPlan); 
+                              setLoadingPlan(p.plan);
+                              fetch('/api/payment/create-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  plan: p.plan,
+                                  couponCode: discountData ? couponCode : null,
+                                  durationDays: isLifetime ? 36500 : selectedMonths * 30,
+                                }),
+                              }).then(r => r.json()).then(data => {
+                                if (data.instantActivation) {
+                                  toast.success('Premium activated!');
+                                  window.location.reload();
+                                } else toast.error('Activation failed');
+                              }).finally(() => setLoadingPlan(null));
                             } else {
-                              setShowCheckout(checkoutPlan);
+                              goToCheckout(p.plan);
                             }
                           }}
-                          disabled={!sdkLoaded}
+                          disabled={loadingPlan === p.plan}
                           className={`w-full py-3 mt-auto rounded-2xl font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 ${
                             !isActive && isHighlight
                               ? 'bg-white text-vd-primary hover:bg-gray-50'
                               : 'vd-gradient-gold text-white hover:opacity-90'
                           } disabled:opacity-70 disabled:cursor-not-allowed`}>
-                          {btnIcon} {btnText}
+                          {loadingPlan === p.plan ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            btnIcon
+                          )} {btnText}
                         </button>
                       );
                     })()}
@@ -378,54 +307,6 @@ export default function PremiumPage() {
           )}
         </div>
       </section>
-
-      {/* Perks & FAQ Sections unchanged ... */}
-      
-      {/* Checkout Modal */}
-      {showCheckout && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-vd-bg-card border border-vd-border rounded-3xl p-6 w-full max-w-md shadow-2xl relative">
-            <button onClick={() => setShowCheckout(null)} className="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800 rounded-full p-1"><X className="w-5 h-5"/></button>
-            <h3 className="text-2xl font-bold mb-2 flex items-center gap-2"><Star className="w-5 h-5 text-yellow-500 fill-yellow-500"/> Checkout</h3>
-            <p className="text-sm text-gray-400 mb-6">You are purchasing the <strong className="text-white">{showCheckout.displayName}</strong> plan for {showCheckout.durationDays} days.</p>
-            
-            <div className="bg-gray-900 rounded-2xl p-4 mb-6 space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Plan Duration</span>
-                <span className="font-semibold text-white">{showCheckout.calculatedDays >= 3650 ? 'Lifetime' : `${showCheckout.calculatedDays / 30} Months`}</span>
-              </div>
-              {discountData && (
-                <div className="flex justify-between text-sm text-green-400">
-                  <span>Discount ({discountData.discountPct}%)</span>
-                </div>
-              )}
-              <div className="border-t border-gray-700 pt-3 flex justify-between font-bold text-lg">
-                <span>Total Amount</span>
-                <span className="text-vd-primary">₹{showCheckout.calculatedPrice.toLocaleString()}</span>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="text-xs font-semibold text-gray-400 mb-2 block uppercase tracking-wider">Have a Coupon Code?</label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <input value={couponCode} onChange={e => setCouponCode(e.target.value.toUpperCase())} placeholder="ENTER CODE" 
-                    className="w-full pl-9 pr-3 py-3 bg-gray-900 border border-gray-700 rounded-xl text-sm font-semibold uppercase focus:outline-none focus:border-vd-primary" />
-                </div>
-                <button onClick={applyCoupon} disabled={!couponCode || verifyingCoupon} className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold text-sm text-white disabled:opacity-50 transition-colors">
-                  {verifyingCoupon ? '...' : 'Apply'}
-                </button>
-              </div>
-            </div>
-
-            <button onClick={() => handleProceedToPay(showCheckout)} disabled={loadingPlan} className="w-full py-4 vd-gradient-gold text-white rounded-xl font-bold text-lg shadow-lg hover:opacity-90 flex items-center justify-center gap-2">
-              {loadingPlan ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Lock className="w-5 h-5" />}
-              Proceed to Pay ₹{showCheckout.calculatedPrice.toLocaleString()}
-            </button>
-          </motion.div>
-        </div>
-      )}
     </div>
   );
 }
