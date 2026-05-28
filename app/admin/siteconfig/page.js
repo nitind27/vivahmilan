@@ -129,6 +129,63 @@ export default function SiteConfigPage() {
         </button>
       </div>
 
+      {/* Mobile App Links */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <h3 className="font-bold text-lg text-white">Mobile App (Navbar)</h3>
+        <p className="text-xs text-gray-500">Navbar icon Play Store / App Store par le jata hai. URL khali ho to icon hide rahega.</p>
+        <div className="flex items-center justify-between p-4 rounded-xl border bg-gray-900/50 border-gray-700">
+          <div>
+            <p className="text-sm font-semibold text-white">Show app icon in navbar</p>
+            <p className="text-xs text-gray-500 mt-0.5">Shortlist icon ki jagah mobile app icon</p>
+          </div>
+          <Toggle
+            value={config.app_nav_enabled !== '0'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig(p => ({ ...p, app_nav_enabled: newVal }));
+              const res = await fetch('/api/admin/siteconfig', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'app_nav_enabled', value: newVal }),
+              });
+              if (res.ok) toast.success(val ? 'App icon enabled' : 'App icon hidden');
+              else {
+                toast.error('Failed');
+                setConfig(p => ({ ...p, app_nav_enabled: val ? '0' : '1' }));
+              }
+            }}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Google Play Store URL</label>
+          <input
+            value={config.play_store_url || ''}
+            onChange={e => setConfig(p => ({ ...p, play_store_url: e.target.value }))}
+            placeholder="https://play.google.com/store/apps/details?id=com.vivahdwar.app"
+            className={inp}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Apple App Store URL (optional — iOS users)</label>
+          <input
+            value={config.app_store_url || ''}
+            onChange={e => setConfig(p => ({ ...p, app_store_url: e.target.value }))}
+            placeholder="https://apps.apple.com/app/id..."
+            className={inp}
+          />
+        </div>
+        <button
+          disabled={saving}
+          onClick={() => saveMultiple([
+            ['play_store_url', config.play_store_url || ''],
+            ['app_store_url', config.app_store_url || ''],
+          ])}
+          className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60"
+        >
+          {saving ? 'Saving…' : 'Save App Links'}
+        </button>
+      </div>
+
       {/* Site Identity */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
         <h3 className="font-bold text-lg text-white">Site Identity</h3>

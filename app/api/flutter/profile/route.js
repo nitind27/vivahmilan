@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
+import { assertProfileViewAccess } from '@/lib/profileMatchRules';
 import { randomUUID } from 'crypto';
 
 const ALLOWED_PROFILE_COLS = new Set([
@@ -74,6 +75,27 @@ export async function GET(req) {
   // If viewing another user's profile — add interaction flags
   let interactionFlags = {};
   if (targetUserId && targetUserId !== viewerId) {
+    const blocked = await queryOne(
+      'SELECT id FROM block WHERE (blockerId = ? AND blockedId = ?) OR (blockerId = ? AND blockedId = ?)',
+      [viewerId, targetUserId, targetUserId, viewerId]
+    );
+    if (blocked) {
+      return NextResponse.json({
+        error: 'Profile unavailable',
+        code: 'BLOCKED',
+        reason: 'This profile is unavailable due to a block between you and this member.',
+      }, { status: 403 });
+    }
+
+    const access = await assertProfileViewAccess(viewerId, targetUserId);
+    if (!access.allowed) {
+      return NextResponse.json({
+        error: access.reason || 'Profile not accessible',
+        code: access.code,
+        reason: access.reason,
+      }, { status: 403 });
+    }
+
     // Record profile view
     const alreadyViewed = await queryOne(
       'SELECT id FROM profileview WHERE viewerId = ? AND viewedId = ?',

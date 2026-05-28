@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
+import { assertProfileViewAccess } from '@/lib/profileMatchRules';
 import { randomUUID } from 'crypto';
 
 export async function GET(req, { params }) {
@@ -13,12 +14,29 @@ export async function GET(req, { params }) {
   const user = await queryOne('SELECT * FROM `user` WHERE id = ?', [id]);
   if (!user) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
-  // Check if blocked
-  const blocked = await queryOne(
-    'SELECT id FROM block WHERE (blockerId = ? AND blockedId = ?) OR (blockerId = ? AND blockedId = ?)',
-    [session.user.id, id, id, session.user.id]
-  );
-  if (blocked) return NextResponse.json({ error: 'Profile unavailable' }, { status: 403 });
+  if (session.user.id !== id && session.user.role !== 'ADMIN') {
+    // Check if blocked
+    const blocked = await queryOne(
+      'SELECT id FROM block WHERE (blockerId = ? AND blockedId = ?) OR (blockerId = ? AND blockedId = ?)',
+      [session.user.id, id, id, session.user.id]
+    );
+    if (blocked) {
+      return NextResponse.json({
+        error: 'Profile unavailable',
+        code: 'BLOCKED',
+        reason: 'This profile is unavailable due to a block between you and this member.',
+      }, { status: 403 });
+    }
+
+    const access = await assertProfileViewAccess(session.user.id, id);
+    if (!access.allowed) {
+      return NextResponse.json({
+        error: access.reason || 'Profile not accessible',
+        code: access.code,
+        reason: access.reason,
+      }, { status: 403 });
+    }
+  }
 
   const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [id]);
   const photos = await query(

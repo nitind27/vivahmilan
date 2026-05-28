@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne } from '@/lib/db';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
+import { applyStrictMatchFilters, VIEWER_MATCH_SELECT } from '@/lib/matchQueryFilters';
 
 const FREE_LIMIT = 5;
 
@@ -30,17 +31,13 @@ export async function GET(req) {
   const heightMax     = searchParams.get('heightMax')     || '';
 
   const currentUser = await queryOne(
-    `SELECT u.isPremium, u.freeTrialExpiry, p.religion, p.gotra, p.gender
+    `SELECT u.isPremium, u.freeTrialExpiry, ${VIEWER_MATCH_SELECT}
      FROM \`user\` u LEFT JOIN profile p ON p.userId = u.id WHERE u.id = ?`,
     [decoded.id]
   );
 
-  const myReligion     = currentUser?.religion;
-  const myGotra        = currentUser?.gotra;
-  const myGender       = currentUser?.gender;
   const trialActive    = currentUser?.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
   const isPremium      = decoded.isPremium || !!trialActive;
-  const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
 
   const blocks = await query(
     'SELECT blockerId, blockedId FROM block WHERE blockerId = ? OR blockedId = ?',
@@ -56,25 +53,14 @@ export async function GET(req) {
     params.push(...blockedIds);
   }
 
-  if (religion) {
-    conditions.push('p.religion = ?'); params.push(religion);
-  } else if (myReligion) {
-    conditions.push('(p.religion = ? OR p.religion IS NULL)'); params.push(myReligion);
-  }
-
-  if (myGotra?.trim()) {
-    conditions.push('(p.gotra IS NULL OR p.gotra = \'\' OR p.gotra != ?)'); params.push(myGotra.trim());
-  }
+  applyStrictMatchFilters(conditions, params, currentUser, {
+    religion: religion || undefined,
+    gender: gender || undefined,
+  });
 
   if (q) {
     conditions.push('(u.name LIKE ? OR p.city LIKE ? OR p.profession LIKE ? OR p.country LIKE ?)');
     params.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
-  }
-
-  if (gender && gender !== myGender && oppositeGender) {
-    conditions.push('p.gender = ?'); params.push(gender);
-  } else if (oppositeGender) {
-    conditions.push('p.gender = ?'); params.push(oppositeGender);
   }
 
   if (country)      { conditions.push('p.country = ?');       params.push(country); }

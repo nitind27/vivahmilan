@@ -257,7 +257,11 @@ function LoginInner() {
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
-      // Only redirect to dashboard if profile is complete and admin approved
+      const callbackUrl = searchParams?.get('callbackUrl');
+      if (callbackUrl && callbackUrl.startsWith('/')) {
+        router.replace(callbackUrl);
+        return;
+      }
       if (session.user.isNewUser) {
         const email = encodeURIComponent(session.user.email || '');
         const name  = encodeURIComponent(session.user.name || '');
@@ -266,7 +270,7 @@ function LoginInner() {
         router.replace(session.user.role === 'ADMIN' ? '/admin' : '/dashboard');
       }
     }
-  }, [status, session, router]);
+  }, [status, session, router, searchParams]);
 
   const validate = (f) => {
     const e = {};
@@ -316,7 +320,12 @@ function LoginInner() {
       toast.success(rememberMe ? 'Welcome back! You will stay signed in for 30 days.' : 'Welcome back!');
       logWebLogin();
       const s = await getSession();
-      router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
+      const callbackUrl = searchParams?.get('callbackUrl');
+      if (callbackUrl && callbackUrl.startsWith('/')) {
+        router.push(callbackUrl);
+      } else {
+        router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
+      }
     }
   };
 
@@ -396,7 +405,11 @@ function LoginInner() {
                 {/* Google */}
                 <button
                   type="button"
-                  onClick={() => { setGoogleLoading(true); signIn('google', { callbackUrl: '/dashboard' }); }}
+                  onClick={() => {
+                    setGoogleLoading(true);
+                    const callbackUrl = searchParams?.get('callbackUrl');
+                    signIn('google', { callbackUrl: callbackUrl && callbackUrl.startsWith('/') ? callbackUrl : '/dashboard' });
+                  }}
                   disabled={googleLoading}
                   className="w-full flex items-center justify-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 bg-vd-bg-section border border-vd-border rounded-2xl font-medium text-sm text-vd-text-heading hover:bg-vd-accent-soft hover:border-vd-primary/25 transition-all shadow-sm hover:shadow-md mb-3 disabled:opacity-70 disabled:cursor-not-allowed"
                 >

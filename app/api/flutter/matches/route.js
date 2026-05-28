@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne } from '@/lib/db';
+import { applyStrictMatchFilters, VIEWER_MATCH_SELECT } from '@/lib/matchQueryFilters';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 
 const FREE_LIMIT = 5;
@@ -32,8 +33,7 @@ export async function GET(req) {
     const genderFilter  = searchParams.get('gender');
 
     const currentUser = await queryOne(
-      `SELECT u.id, u.isPremium, u.freeTrialExpiry,
-              p.gender, p.religion, p.gotra
+      `SELECT u.id, u.isPremium, u.freeTrialExpiry, ${VIEWER_MATCH_SELECT}
        FROM \`user\` u
        LEFT JOIN profile p ON p.userId = u.id
        WHERE u.id = ?`,
@@ -42,15 +42,8 @@ export async function GET(req) {
 
     if (!currentUser) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-    const myGender   = currentUser.gender;
-    const myReligion = currentUser.religion;
-    const myGotra    = currentUser.gotra;
-
     const trialActive = currentUser.freeTrialExpiry && new Date(currentUser.freeTrialExpiry) > new Date();
     const isPremium   = decoded.isPremium || !!trialActive;
-
-    const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
-    const targetGender   = oppositeGender || (genderFilter !== myGender ? genderFilter : null);
 
     const blocks = await query(
       'SELECT blockerId, blockedId FROM block WHERE blockerId = ? OR blockedId = ?',
@@ -66,20 +59,10 @@ export async function GET(req) {
       params.push(...blockedIds);
     }
 
-    if (myReligion && !religion) {
-      conditions.push('(p.religion = ? OR p.religion IS NULL)');
-      params.push(myReligion);
-    } else if (religion) {
-      conditions.push('p.religion = ?');
-      params.push(religion);
-    }
-
-    if (myGotra && myGotra.trim()) {
-      conditions.push('(p.gotra IS NULL OR p.gotra = \'\' OR p.gotra != ?)');
-      params.push(myGotra.trim());
-    }
-
-    if (targetGender) { conditions.push('p.gender = ?');        params.push(targetGender); }
+    applyStrictMatchFilters(conditions, params, currentUser, {
+      religion: religion || undefined,
+      gender: genderFilter || undefined,
+    });
     if (country)      { conditions.push('p.country = ?');       params.push(country); }
     if (state)        { conditions.push('p.state = ?');         params.push(state); }
     if (city)         { conditions.push('p.city = ?');          params.push(city); }

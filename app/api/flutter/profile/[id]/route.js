@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { queryOne, query, execute } from '@/lib/db';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
+import { assertProfileViewAccess } from '@/lib/profileMatchRules';
 import { randomUUID } from 'crypto';
 
 export async function GET(req, { params }) {
@@ -38,6 +39,29 @@ export async function GET(req, { params }) {
     );
 
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+    if (!isSelf) {
+      const blocked = await queryOne(
+        'SELECT id FROM block WHERE (blockerId = ? AND blockedId = ?) OR (blockerId = ? AND blockedId = ?)',
+        [decoded.id, targetId, targetId, decoded.id]
+      );
+      if (blocked) {
+        return NextResponse.json({
+          error: 'Profile unavailable',
+          code: 'BLOCKED',
+          reason: 'This profile is unavailable due to a block between you and this member.',
+        }, { status: 403 });
+      }
+
+      const access = await assertProfileViewAccess(decoded.id, targetId);
+      if (!access.allowed) {
+        return NextResponse.json({
+          error: access.reason || 'Profile not accessible',
+          code: access.code,
+          reason: access.reason,
+        }, { status: 403 });
+      }
+    }
 
     const [photos, familyPhotos] = await Promise.all([
       query('SELECT id, url, isMain FROM photo WHERE userId = ? ORDER BY isMain DESC, createdAt ASC', [targetId]),

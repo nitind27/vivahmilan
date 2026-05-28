@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import KundaliChart from '@/components/KundaliChart';
 import WithdrawInterestModal from '@/components/WithdrawInterestModal';
+import ShareProfileButton from '@/components/ShareProfileButton';
 
 const REPORT_REASONS = [
   'Fake profile / Impersonation',
@@ -512,9 +513,15 @@ export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { id } = useParams();
+  const [isSharedLink, setIsSharedLink] = useState(false);
+
+  useEffect(() => {
+    setIsSharedLink(new URLSearchParams(window.location.search).get('share') === '1');
+  }, []);
 
   const [user, setUser]               = useState(null);
   const [loading, setLoading]         = useState(true);
+  const [accessError, setAccessError] = useState(null);
   const [shortlisted, setShortlisted] = useState(false);
   const [interestStatus, setInterestStatus] = useState(null);
   const [activePhoto, setActivePhoto] = useState(0);
@@ -525,25 +532,32 @@ export default function ProfilePage() {
   const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
-    if (status === 'unauthenticated') router.push('/login');
-  }, [status, router]);
+    if (status === 'unauthenticated') {
+      router.push(`/login?callbackUrl=${encodeURIComponent(`/profile/${id}${isSharedLink ? '?share=1' : ''}`)}`);
+    }
+  }, [status, router, id, isSharedLink]);
 
   useEffect(() => {
     if (status !== 'authenticated' || !id) return;
+    setAccessError(null);
     fetch(`/api/profile/${id}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) { setLoading(false); return; }
+      .then(async r => {
+        const data = await r.json();
+        if (!r.ok) {
+          setAccessError({ code: data.code, message: data.error, reason: data.reason });
+          setLoading(false);
+          return;
+        }
         setUser(data);
         setShortlisted(data.isShortlisted || false);
-        // Build interestStatus object
         if (data.interestStatus) {
           setInterestStatus({
             status: data.interestStatus,
-            direction: data.interestDirection, // 'sent' | 'received'
+            direction: data.interestDirection,
             id: data.interestId,
           });
         }
+        if (isSharedLink) toast('Profile shared with you', { icon: '🔗' });
         setLoading(false);
       });
 
@@ -552,7 +566,7 @@ export default function ProfilePage() {
       .then(r => r.ok ? r.json() : null)
       .then(data => setKundali(data))
       .catch(() => setKundali(null));
-  }, [status, id]);
+  }, [status, id, isSharedLink]);
 
   const toggleShortlist = async () => {
     const res = await fetch('/api/shortlist', {
@@ -618,6 +632,47 @@ export default function ProfilePage() {
       <SiteLoader message="Loading profile…" fullScreen={false} size="lg" className="pt-24 min-h-[70vh]" />
     </div>
   );
+
+  // ── Access denied (religion/caste/gender mismatch) ───────────────────────
+  if (accessError) {
+    const titles = {
+      GENDER_MISMATCH: 'Gender criteria not met',
+      RELIGION_MISMATCH: 'Religion criteria not met',
+      CASTE_MISMATCH: 'Caste criteria not met',
+      GOTRA_MISMATCH: 'Gotra restriction',
+      BLOCKED: 'Profile blocked',
+      PROFILE_UNAVAILABLE: 'Profile not available',
+    };
+    return (
+      <div className="min-h-screen bg-vd-bg">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[70vh] px-4 pt-20">
+          <div className="text-center max-w-md">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+              <Lock className="w-10 h-10 text-amber-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-vd-text-heading mb-2">
+              {titles[accessError.code] || 'Cannot view this profile'}
+            </h2>
+            <p className="text-vd-text-sub text-sm mb-2">
+              {accessError.reason || accessError.message}
+            </p>
+            <p className="text-xs text-vd-text-light mb-6">
+              Shared profiles are only visible when your religion, caste (for Hindu), and gender match our matrimonial criteria — same as Find Matches.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/matches" className="inline-flex items-center justify-center gap-2 vd-gradient-gold text-white px-6 py-3 rounded-2xl font-semibold hover:opacity-90">
+                Browse Matches <ChevronRight className="w-4 h-4" />
+              </Link>
+              <Link href="/profile/edit" className="inline-flex items-center justify-center gap-2 border border-vd-border px-6 py-3 rounded-2xl font-semibold text-vd-text-sub hover:border-vd-primary transition-colors text-sm">
+                Update My Profile
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── Not found ──────────────────────────────────────────────────────────────
   if (!user || user.error) return (
@@ -827,6 +882,11 @@ export default function ProfilePage() {
           <aside className="lg:col-span-4 space-y-4 lg:sticky lg:top-24">
             <div className="rounded-3xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card p-5 shadow-sm space-y-3">
               <h2 className="text-sm font-bold text-vd-text-heading uppercase tracking-wide">Connect</h2>
+              <ShareProfileButton
+                profileId={id}
+                profileName={user?.name}
+                label={isOwnProfile ? 'Share My Profile' : 'Share Profile'}
+              />
               {!isOwnProfile ? (
                 <>
                   <InterestPanel

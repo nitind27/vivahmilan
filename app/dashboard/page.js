@@ -8,9 +8,10 @@ import Navbar from '@/components/Navbar';
 import SiteLoader from '@/components/SiteLoader';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
+import { shareProfile } from '@/components/ShareProfileButton';
 import {
   Heart, Eye, MessageCircle, Bell, Star, Users, ChevronRight,
-  Clock, Zap, Crown, Calendar, Shield, Search, Settings,
+  Clock, Zap, Crown, Calendar, Shield, Search, Settings, Lock, User,
   TrendingUp, Sparkles, ArrowRight, CheckCircle, Percent, HandCoins, Share2, Bookmark
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -324,6 +325,36 @@ function QuickAction({ icon: Icon, label, href, color, bg, delay = 0 }) {
   );
 }
 
+function ShareMyProfileAction({ userId, userName, color, bg, delay = 0 }) {
+  const [sharing, setSharing] = useState(false);
+  const handleShare = async () => {
+    if (!userId) return;
+    setSharing(true);
+    try {
+      await shareProfile(userId, userName);
+    } catch (err) {
+      if (err?.name !== 'AbortError') toast.error(err.message || 'Share failed');
+    } finally {
+      setSharing(false);
+    }
+  };
+  return (
+    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, type: 'spring', stiffness: 200 }}
+      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <button type="button" onClick={handleShare} disabled={sharing}
+        className={`w-full flex flex-col items-center gap-2 p-4 rounded-2xl ${bg} border border-vd-border hover:shadow-md transition-all disabled:opacity-60`}>
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
+          <Share2 className="w-5 h-5" />
+        </div>
+        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center">
+          {sharing ? 'Sharing…' : 'Share My Profile'}
+        </span>
+      </button>
+    </motion.div>
+  );
+}
+
 // ── Affiliate Dashboard Card ──────────────────────────────────────────────────
 function AffiliateCard({ agent }) {
   if (!agent) return null;
@@ -444,6 +475,8 @@ export default function Dashboard() {
     { icon: Search,   label: 'Search',        href: '/search',       color: 'text-vd-primary', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Star,     label: 'Premium',       href: '/premium',      color: 'text-yellow-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Settings, label: 'Edit Profile',  href: '/profile/edit', color: 'text-blue-500',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: User,     label: 'View My Profile', href: session?.user?.id ? `/profile/${session.user.id}` : '/profile/edit', color: 'text-vd-primary', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: Lock,     label: 'Change Password', href: '/settings/password', color: 'text-purple-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Bell,     label: 'Notifications', href: '/notifications',color: 'text-green-500',  bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Shield,   label: 'Safety',        href: '/safety',       color: 'text-red-500',    bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
   ];
@@ -479,6 +512,13 @@ export default function Dashboard() {
           <h2 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">Quick Actions</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {quickActions.map((a, i) => <QuickAction key={a.label} {...a} delay={0.4 + i * 0.05} />)}
+            <ShareMyProfileAction
+              userId={session?.user?.id}
+              userName={session?.user?.name}
+              color="text-teal-600"
+              bg="bg-vd-bg-section dark:bg-vd-bg-card"
+              delay={0.4 + quickActions.length * 0.05}
+            />
           </div>
         </motion.div>
 

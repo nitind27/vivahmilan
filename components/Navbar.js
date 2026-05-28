@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark } from 'lucide-react';
+import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark, Smartphone, Lock, Share2 } from 'lucide-react';
+import { shareProfile } from '@/components/ShareProfileButton';
 import SmartImage from '@/components/SmartImage';
 import { useTheme } from '@/components/ThemeProvider';
+import toast from 'react-hot-toast';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -16,6 +18,26 @@ export default function Navbar() {
   const [unread, setUnread] = useState(0);
   const [chatUnread, setChatUnread] = useState(0);
   const [clientReady, setClientReady] = useState(false);
+  const [appLinks, setAppLinks] = useState({ playStoreUrl: '', appStoreUrl: '', enabled: true });
+
+  useEffect(() => {
+    fetch('/api/app-links')
+      .then(r => r.json())
+      .then(d => setAppLinks({
+        playStoreUrl: d.playStoreUrl || '',
+        appStoreUrl: d.appStoreUrl || '',
+        enabled: d.enabled !== false,
+      }))
+      .catch(() => {});
+  }, []);
+
+  const showAppIcon = appLinks.enabled && (appLinks.playStoreUrl || appLinks.appStoreUrl);
+
+  const openAppStore = () => {
+    const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS && appLinks.appStoreUrl ? appLinks.appStoreUrl : appLinks.playStoreUrl || appLinks.appStoreUrl;
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   useEffect(() => {
     setClientReady(true);
@@ -99,9 +121,17 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {clientReady && session ? (
               <>
-                <Link href="/shortlist" title="My Shortlist" className="p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
-                  <Bookmark className="w-5 h-5" />
-                </Link>
+                {showAppIcon && (
+                  <button
+                    type="button"
+                    onClick={openAppStore}
+                    title="Download Mobile App"
+                    aria-label="Download Mobile App"
+                    className="p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors"
+                  >
+                    <Smartphone className="w-5 h-5" />
+                  </button>
+                )}
                 <Link href="/chat" className="relative p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
                   <MessageCircle className="w-5 h-5" />
                   {chatUnread > 0 && (
@@ -145,11 +175,33 @@ export default function Navbar() {
                           <Link href="/dashboard" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <User className="w-4 h-4" /> Dashboard
                           </Link>
+                          {session.user.id && (
+                            <Link href={`/profile/${session.user.id}`} onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                              <User className="w-4 h-4" /> View My Profile
+                            </Link>
+                          )}
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              setDropOpen(false);
+                              try {
+                                await shareProfile(session.user.id, session.user.name);
+                              } catch (err) {
+                                if (err?.name !== 'AbortError') toast.error(err.message || 'Share failed');
+                              }
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                          >
+                            <Share2 className="w-4 h-4" /> Share My Profile
+                          </button>
                           <Link href="/shortlist" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Bookmark className="w-4 h-4" /> My Shortlist
                           </Link>
                           <Link href="/profile/edit" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Settings className="w-4 h-4" /> Edit Profile
+                          </Link>
+                          <Link href="/settings/password" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <Lock className="w-4 h-4" /> Change Password
                           </Link>
                           <Link href="/blocked" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Ban className="w-4 h-4" /> Blocked Users
@@ -179,6 +231,17 @@ export default function Navbar() {
               </>
             ) : clientReady ? (
               <div className="flex items-center gap-2">
+                {showAppIcon && (
+                  <button
+                    type="button"
+                    onClick={openAppStore}
+                    title="Download Mobile App"
+                    aria-label="Download Mobile App"
+                    className="p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors"
+                  >
+                    <Smartphone className="w-5 h-5" />
+                  </button>
+                )}
                 <Link href="/login" className="vd-gradient-gold text-white text-sm font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Sign in</Link>
               </div>
             ) : null}

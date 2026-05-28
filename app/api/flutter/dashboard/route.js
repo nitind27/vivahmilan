@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne } from '@/lib/db';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
+import { applyStrictMatchFilters, VIEWER_MATCH_SELECT } from '@/lib/matchQueryFilters';
 
 function buildProfileCard(r, maps) {
   return {
@@ -64,20 +65,14 @@ export async function GET(req) {
 
     // ── Current user profile for match filtering ─────────────────────────────
     const currentUser = await queryOne(
-      'SELECT p.gender, p.religion, p.gotra FROM profile p WHERE p.userId = ?',
+      `SELECT ${VIEWER_MATCH_SELECT} FROM profile p WHERE p.userId = ?`,
       [uid]
     );
-    const myGender       = currentUser?.gender;
-    const myReligion     = currentUser?.religion;
-    const myGotra        = currentUser?.gotra;
-    const oppositeGender = myGender === 'MALE' ? 'FEMALE' : myGender === 'FEMALE' ? 'MALE' : null;
 
     // ── New matches today ────────────────────────────────────────────────────
     const newMatchConds  = ['u.id != ?', 'u.isActive = 1', 'u.adminVerified = 1', 'u.createdAt >= ?'];
     const newMatchParams = [uid, todayStart];
-    if (oppositeGender) { newMatchConds.push('p.gender = ?');                              newMatchParams.push(oppositeGender); }
-    if (myReligion)     { newMatchConds.push('(p.religion = ? OR p.religion IS NULL)');    newMatchParams.push(myReligion); }
-    if (myGotra)        { newMatchConds.push("(p.gotra IS NULL OR p.gotra = '' OR p.gotra != ?)"); newMatchParams.push(myGotra); }
+    applyStrictMatchFilters(newMatchConds, newMatchParams, currentUser);
 
     const newMatchesToday = await query(
       `SELECT u.id AS u_id, u.name AS u_name, u.isPremium AS u_isPremium,
@@ -95,9 +90,7 @@ export async function GET(req) {
     // ── Recommended matches ──────────────────────────────────────────────────
     const recConds  = ['u.id != ?', 'u.isActive = 1', 'u.adminVerified = 1'];
     const recParams = [uid];
-    if (oppositeGender) { recConds.push('p.gender = ?');                              recParams.push(oppositeGender); }
-    if (myReligion)     { recConds.push('(p.religion = ? OR p.religion IS NULL)');    recParams.push(myReligion); }
-    if (myGotra)        { recConds.push("(p.gotra IS NULL OR p.gotra = '' OR p.gotra != ?)"); recParams.push(myGotra); }
+    applyStrictMatchFilters(recConds, recParams, currentUser);
 
     const recommendedMatches = await query(
       `SELECT u.id AS u_id, u.name AS u_name, u.isPremium AS u_isPremium,
