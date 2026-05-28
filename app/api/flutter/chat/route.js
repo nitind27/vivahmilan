@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
-import { maskBlockedPeer } from '@/lib/blockHelper';
+import { maskBlockedPeer } from '@/lib/blockUtils';
 import { parseLocationBody } from '@/lib/chatLocation';
 import { resolveChatAccess } from '@/lib/chatAccess';
 import { getBlockBetween } from '@/lib/blockHelper';

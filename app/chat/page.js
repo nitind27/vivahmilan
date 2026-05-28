@@ -17,7 +17,7 @@ import { connectSocket } from '@/lib/socket';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import ImageEditorModal from '@/components/ImageEditorModal';
 import ChatPlanExpired from '@/components/ChatPlanExpired';
-import { blockedChatMessage } from '@/lib/blockHelper';
+import { blockedChatMessage } from '@/lib/blockUtils';
 
 const EmojiPicker = lazy(() => import('emoji-picker-react'));
 

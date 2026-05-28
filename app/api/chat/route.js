@@ -4,7 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne } from '@/lib/db';
 import { resolveChatAccess } from '@/lib/chatAccess';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
-import { maskBlockedPeer } from '@/lib/blockHelper';
+import { maskBlockedPeer } from '@/lib/blockUtils';
 
 function buildChatUser(r, side, maps) {
   const id = r[`u${side}_id`];
