@@ -29,6 +29,7 @@ export default function AdminKycCallPage() {
   const [capturedImages, setCapturedImages] = useState([]);
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const [userCameraMode, setUserCameraMode] = useState('front'); // front | back
 
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
@@ -129,10 +130,15 @@ export default function AdminKycCallPage() {
     return pc;
   }
 
-  // Request user to switch to back camera
-  const requestBackCamera = () => {
-    socketRef.current?.emit('kyc:switch-camera', { sessionId });
-    toast.success('Requested user to switch to back camera');
+  const requestUserCamera = (mode) => {
+    if (!socketRef.current) return;
+    socketRef.current.emit('kyc:switch-camera', { sessionId, mode });
+    setUserCameraMode(mode);
+    toast.success(
+      mode === 'back'
+        ? 'User switched to back camera — document scan mode'
+        : 'User switched to front camera — face verification mode'
+    );
   };
 
   // Capture screenshot from remote video
@@ -336,9 +342,27 @@ export default function AdminKycCallPage() {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${videoOff ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}>
             {videoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
           </button>
-          <button onClick={requestBackCamera} title="Ask user to switch to back camera"
-            className="w-12 h-12 rounded-full bg-blue-700 hover:bg-blue-600 text-white flex items-center justify-center transition-colors">
-            <SwitchCamera className="w-5 h-5" />
+          <button
+            onClick={() => requestUserCamera('front')}
+            title="Switch user to front camera (face)"
+            className={`h-12 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-semibold transition-colors ${
+              userCameraMode === 'front'
+                ? 'bg-green-600 text-white ring-2 ring-green-400'
+                : 'bg-gray-700 hover:bg-gray-600 text-white'
+            }`}
+          >
+            <Video className="w-4 h-4" /> Front
+          </button>
+          <button
+            onClick={() => requestUserCamera('back')}
+            title="Switch user to back camera (document scan)"
+            className={`h-12 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-semibold transition-colors ${
+              userCameraMode === 'back'
+                ? 'bg-blue-600 text-white ring-2 ring-blue-400'
+                : 'bg-gray-700 hover:bg-gray-600 text-white'
+            }`}
+          >
+            <SwitchCamera className="w-4 h-4" /> Back / ID
           </button>
           <button onClick={captureImage} title="Capture screenshot"
             className="w-12 h-12 rounded-full bg-yellow-600 hover:bg-yellow-500 text-gray-900 flex items-center justify-center transition-colors">
@@ -353,6 +377,33 @@ export default function AdminKycCallPage() {
 
       {/* Side panel */}
       <div className="w-full lg:w-80 bg-gray-900 border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col p-4 gap-4 overflow-y-auto" style={{ maxHeight: '100vh' }}>
+        <div>
+          <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">User Camera Control</p>
+          <p className="text-xs text-gray-400 mb-2">
+            Active: <span className={userCameraMode === 'back' ? 'text-blue-400' : 'text-green-400'}>
+              {userCameraMode === 'back' ? 'Back — document scan' : 'Front — face view'}
+            </span>
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => requestUserCamera('front')}
+              className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                userCameraMode === 'front' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              🎥 Front Camera
+            </button>
+            <button
+              onClick={() => requestUserCamera('back')}
+              className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                userCameraMode === 'back' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              📄 Back / ID Scan
+            </button>
+          </div>
+        </div>
+
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Verification Notes</p>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={4}

@@ -2,7 +2,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { io } from 'socket.io-client';
-import { Video, VideoOff, Mic, MicOff, Camera, RotateCcw, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Video, VideoOff, Mic, MicOff, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { replaceStreamVideoTrack, startCameraWithAudio } from '@/lib/kycCamera';
 
 const ICE_SERVERS = {
   iceServers: [
@@ -20,8 +21,9 @@ export default function UserKycPage() {
   const [audioMuted, setAudioMuted] = useState(false);
   const [videoOff, setVideoOff] = useState(false);
   const [usingBack, setUsingBack] = useState(false);
-  const [docMode, setDocMode] = useState(false); // back camera doc scan mode
+  const [docMode, setDocMode] = useState(false);
   const [adminConnected, setAdminConnected] = useState(false);
+  const [cameraSwitching, setCameraSwitching] = useState(false);
 
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
@@ -43,63 +45,40 @@ export default function UserKycPage() {
       .catch(() => { setErrorMsg('Failed to load session'); setPhase('error'); });
   }, [token]);
 
-  // Start local camera
-  const startCamera = useCallback(async (back = false) => {
+  const switchCamera = useCallback(async (preferBack) => {
+    setCameraSwitching(true);
     try {
-      // Stop only video tracks — keep audio alive to avoid peer connection audio drop
-      if (localStreamRef.current) {
-        localStreamRef.current.getVideoTracks().forEach(t => t.stop());
-      }
-      const constraints = {
-        audio: !localStreamRef.current, // only request audio if no stream yet
-        video: back
-          ? { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
-          : { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
-      };
-      const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+      let stream = localStreamRef.current;
 
-      if (localStreamRef.current) {
-        // Replace video track in existing stream, keep old audio
-        const oldAudio = localStreamRef.current.getAudioTracks()[0];
-        const newVideo = newStream.getVideoTracks()[0];
-        // Build merged stream
-        const tracks = [newVideo];
-        if (oldAudio) tracks.push(oldAudio);
-        const merged = new MediaStream(tracks);
-        localStreamRef.current = merged;
-        if (localVideoRef.current) localVideoRef.current.srcObject = merged;
-        return merged;
+      if (!stream) {
+        stream = await startCameraWithAudio(preferBack);
+        localStreamRef.current = stream;
       } else {
-        localStreamRef.current = newStream;
-        if (localVideoRef.current) localVideoRef.current.srcObject = newStream;
-        return newStream;
+        await replaceStreamVideoTrack(stream, preferBack);
       }
-    } catch (err) {
-      // Fallback without exact constraint
-      try {
-        const constraints = {
-          audio: !localStreamRef.current,
-          video: back ? { facingMode: 'environment' } : { facingMode: 'user' },
-        };
-        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-        if (localStreamRef.current) {
-          const oldAudio = localStreamRef.current.getAudioTracks()[0];
-          const newVideo = newStream.getVideoTracks()[0];
-          const tracks = [newVideo];
-          if (oldAudio) tracks.push(oldAudio);
-          const merged = new MediaStream(tracks);
-          localStreamRef.current = merged;
-          if (localVideoRef.current) localVideoRef.current.srcObject = merged;
-          return merged;
-        }
-        localStreamRef.current = newStream;
-        if (localVideoRef.current) localVideoRef.current.srcObject = newStream;
-        return newStream;
-      } catch {
-        throw err;
+
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+        await localVideoRef.current.play().catch(() => {});
       }
+
+      if (pcRef.current) {
+        const newVideoTrack = stream.getVideoTracks()[0];
+        const sender = pcRef.current.getSenders().find(s => s.track?.kind === 'video');
+        if (sender && newVideoTrack) await sender.replaceTrack(newVideoTrack);
+      }
+
+      setUsingBack(preferBack);
+      setDocMode(preferBack);
+      if (videoOff) {
+        const track = stream.getVideoTracks()[0];
+        if (track) track.enabled = false;
+      }
+      return stream;
+    } finally {
+      setCameraSwitching(false);
     }
-  }, []);
+  }, [videoOff]);
 
   // Join call
   const joinCall = useCallback(async () => {
@@ -109,7 +88,7 @@ export default function UserKycPage() {
     // Mark session active
     await fetch(`/api/kyc/${token}`, { method: 'POST' });
 
-    const stream = await startCamera(false);
+    const stream = await switchCamera(false);
 
     // Connect socket
     const socket = io({ path: '/api/socket', transports: ['websocket', 'polling'] });
@@ -144,16 +123,12 @@ export default function UserKycPage() {
       }
     });
 
-    socket.on('kyc:switch-camera', async () => {
-      // Always switch to back camera when admin requests
-      setUsingBack(true);
-      setDocMode(true);
-      const newStream = await startCamera(true);
-      // Replace only video track in peer connection — audio stays untouched
-      if (pcRef.current) {
-        const newVideoTrack = newStream.getVideoTracks()[0];
-        const sender = pcRef.current.getSenders().find(s => s.track?.kind === 'video');
-        if (sender && newVideoTrack) await sender.replaceTrack(newVideoTrack);
+    socket.on('kyc:switch-camera', async ({ mode } = {}) => {
+      const preferBack = mode !== 'front';
+      try {
+        await switchCamera(preferBack);
+      } catch (err) {
+        console.error('Camera switch failed:', err);
       }
     });
 
@@ -161,7 +136,7 @@ export default function UserKycPage() {
       setPhase('ended');
       cleanup();
     });
-  }, [sessionId, token, startCamera]);
+  }, [sessionId, token, switchCamera]);
 
   function createPeerConnection(socket, sessionId) {
     const pc = new RTCPeerConnection(ICE_SERVERS);
@@ -299,6 +274,11 @@ export default function UserKycPage() {
             📄 Document Scan Mode — Show your ID
           </div>
         )}
+        {cameraSwitching && (
+          <div className="absolute top-4 left-4 bg-black/70 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-2">
+            <Loader2 className="w-3 h-3 animate-spin" /> Switching camera…
+          </div>
+        )}
       </div>
 
       {/* Controls */}
@@ -311,8 +291,10 @@ export default function UserKycPage() {
           className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${videoOff ? 'bg-red-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
           {videoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
         </button>
-        <p className="text-xs text-gray-500 text-center">
-          {docMode ? '📄 Back camera active' : '🎥 Front camera active'}
+        <p className="text-xs text-gray-500 text-center min-w-[120px]">
+          {cameraSwitching
+            ? 'Switching…'
+            : docMode ? '📄 Back camera (document)' : '🎥 Front camera (face)'}
         </p>
       </div>
     </div>

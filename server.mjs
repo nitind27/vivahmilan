@@ -306,9 +306,8 @@ app.prepare().then(() => {
       socket.to(`kyc:${sessionId}`).emit('kyc:ice-candidate', { candidate });
     });
 
-    socket.on('kyc:switch-camera', ({ sessionId }) => {
-      // Admin requests user to switch to back camera
-      socket.to(`kyc:${sessionId}`).emit('kyc:switch-camera');
+    socket.on('kyc:switch-camera', ({ sessionId, mode }) => {
+      socket.to(`kyc:${sessionId}`).emit('kyc:switch-camera', { mode: mode === 'front' ? 'front' : 'back' });
     });
 
     socket.on('kyc:end', ({ sessionId }) => {
