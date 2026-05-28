@@ -23,7 +23,7 @@ export async function GET() {
     prisma.message.count(),
     prisma.user.count({ where: { createdAt: { gte: today }, role: 'USER' } }),
     prisma.user.count({ where: { createdAt: { gte: thisMonth }, role: 'USER' } }),
-    prisma.user.count({ where: { adminVerified: false, role: 'USER' } }),
+    prisma.user.count({ where: { adminVerified: false, isActive: true, role: 'USER' } }),
     prisma.subscription.count(),
     prisma.subscription.count({ where: { status: 'ACTIVE' } }),
     prisma.interest.count(),

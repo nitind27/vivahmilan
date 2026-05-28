@@ -117,7 +117,11 @@ function ProfilesTab() {
     const res = await fetch(`/api/admin/users/${id}`, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
     });
-    if (res.ok) { toast.success('Updated'); load(); } else toast.error('Failed');
+    if (res.ok) {
+      toast.success('Updated');
+      load();
+      window.dispatchEvent(new Event('admin-stats-refresh'));
+    } else toast.error('Failed');
   };
 
   return (

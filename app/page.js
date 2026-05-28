@@ -7,31 +7,34 @@ import Navbar from '@/components/Navbar';
 import SiteLoader from '@/components/SiteLoader';
 import CookieManageButton from '@/components/CookieManageButton';
 import {
-  Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp
+  Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp,
+  Sparkles, Crown, Ticket, ArrowRight, Zap,
 } from 'lucide-react';
+
+const PLAN_ICONS = { FREE: Heart, SILVER: Star, GOLD: Crown, PLATINUM: Award, BRONZE: Zap };
 
 // ── Default Data (fallback) ──────────────────────────────────────────────────
 const DEFAULT_SLIDES = [
   {
     id: 1,
-    tag: '💑 5M+ Happy Couples',
+    tag: '🪔 Vivah Dwar — Your Marriage Gateway',
     headline: 'Find Your',
-    highlight: 'Perfect Match',
-    sub: 'Join 20M+ members and discover your soulmate across 150+ countries with smart AI matching.',
+    highlight: 'Life Partner',
+    sub: 'Browse genuine profiles and discover someone who shares your values, dreams, and family expectations.',
   },
   {
     id: 2,
-    tag: '✅ 100% Verified Profiles',
-    headline: 'Verified &',
-    highlight: 'Trusted Profiles',
-    sub: 'Every profile is manually verified by our team. Your safety and authenticity is our priority.',
+    tag: '✅ Verified Profiles',
+    headline: 'Trusted &',
+    highlight: 'Authentic Matches',
+    sub: 'Every profile is reviewed by our team so you connect with real people in a safe, respectful space.',
   },
   {
     id: 3,
-    tag: '🌍 150+ Countries',
-    headline: 'Love Knows',
-    highlight: 'No Boundaries',
-    sub: 'NRI, Hindu, Muslim, Christian — find your perfect partner regardless of location or religion.',
+    tag: '🌸 Tradition Meets Trust',
+    headline: 'Where Hearts',
+    highlight: 'Find Home',
+    sub: 'Search by community, religion, and location to find a partner who understands your culture and aspirations.',
   },
 ];
 
@@ -575,64 +578,113 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 bg-vd-bg-alt">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <h2 className="text-4xl font-bold mb-4">Simple <span className="vd-gradient-text">Pricing</span></h2>
-            <p className="text-vd-text-sub mb-6">Choose the plan that works for you.</p>
-            {/* Duration Tabs */}
-            <div className="inline-flex bg-vd-bg-section border border-vd-border rounded-2xl p-1 gap-1 flex-wrap justify-center">
+      <section className="relative py-16 sm:py-24 overflow-hidden bg-vd-bg">
+        {/* Decorative background */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute -top-24 left-1/4 w-[28rem] h-[28rem] bg-vd-primary/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-32 right-1/5 w-80 h-80 bg-vd-accent/20 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(200,164,92,0.06),transparent_55%)]" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10 sm:mb-12"
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-vd-primary/10 border border-vd-primary/25 text-vd-primary-dark dark:text-vd-primary-light text-xs font-semibold uppercase tracking-widest mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              Premium Membership
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 text-balance">
+              Find Love with the <span className="vd-gradient-text">Right Plan</span>
+            </h2>
+            <p className="text-vd-text-sub text-sm sm:text-base max-w-xl mx-auto mb-8">
+              Unlock better matches, connect freely, and take your matrimony journey to the next level.
+            </p>
+
+            {/* Duration toggle */}
+            <div className="inline-flex p-1.5 rounded-2xl bg-vd-bg-section/80 backdrop-blur-sm border border-vd-border shadow-sm gap-1 flex-wrap justify-center">
               {DURATION_OPTIONS.map(opt => (
-                <button key={opt.months} onClick={() => setSelectedMonths(opt.months)}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedMonths === opt.months ? 'vd-gradient-gold text-white shadow' : 'text-vd-text-sub hover:text-white'}`}>
+                <button
+                  key={opt.months}
+                  type="button"
+                  onClick={() => setSelectedMonths(opt.months)}
+                  className={`relative px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                    selectedMonths === opt.months
+                      ? 'vd-gradient-gold text-white shadow-md shadow-vd-primary/25'
+                      : 'text-vd-text-sub hover:text-vd-text-heading hover:bg-vd-bg-alt'
+                  }`}
+                >
                   {opt.label}
+                  {opt.months === 0 && selectedMonths !== 0 && (
+                    <span className="ml-1.5 text-[10px] text-green-600 dark:text-green-400 font-bold">Save</span>
+                  )}
                 </button>
               ))}
             </div>
           </motion.div>
 
-          {/* Coupon Input */}
-          <div className="flex justify-center mb-10">
-            <div className="flex items-center gap-2 bg-vd-bg-section border border-vd-border rounded-2xl px-4 py-2 w-full max-w-sm">
+          {/* Coupon */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-md mx-auto mb-8 sm:mb-10"
+          >
+            <div className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-vd-primary/35 bg-gradient-to-r from-vd-bg-section via-vd-bg-section to-vd-accent-soft/40 dark:to-vd-accent-soft/10 px-4 py-3 shadow-sm">
+              <div className="w-10 h-10 rounded-xl vd-gradient-gold flex items-center justify-center flex-shrink-0">
+                <Ticket className="w-5 h-5 text-white" />
+              </div>
               <input
                 value={couponCode}
                 onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponStatus(null); }}
                 onKeyDown={e => e.key === 'Enter' && validateCoupon()}
-                placeholder="Have a coupon code?"
-                className="flex-1 bg-transparent text-sm outline-none placeholder:text-vd-text-sub tracking-widest"
+                placeholder="Enter coupon code"
+                className="flex-1 min-w-0 bg-transparent text-sm outline-none placeholder:text-vd-text-light tracking-wide font-medium"
               />
-              <button onClick={validateCoupon} disabled={couponLoading || !couponCode.trim()}
-                className="text-xs font-semibold px-3 py-1.5 vd-gradient-gold text-white rounded-xl disabled:opacity-50 transition-all">
+              <button
+                type="button"
+                onClick={validateCoupon}
+                disabled={couponLoading || !couponCode.trim()}
+                className="text-xs font-bold px-4 py-2 vd-gradient-gold text-white rounded-xl disabled:opacity-50 transition-all hover:opacity-90 whitespace-nowrap"
+              >
                 {couponLoading ? '…' : 'Apply'}
               </button>
             </div>
-          </div>
-          {couponStatus?.valid && (
-            <p className="text-center text-green-400 text-sm mb-6 font-medium">
-              🎉 Coupon applied! {couponStatus.discountPct}% off on all plans
-            </p>
-          )}
-          {couponStatus?.error && (
-            <p className="text-center text-red-400 text-sm mb-6">{couponStatus.error}</p>
-          )}
+            {couponStatus?.valid && (
+              <p className="text-center text-green-600 dark:text-green-400 text-sm mt-3 font-medium">
+                🎉 {couponStatus.discountPct}% off applied on all plans!
+              </p>
+            )}
+            {couponStatus?.error && (
+              <p className="text-center text-red-500 text-sm mt-3">{couponStatus.error}</p>
+            )}
+          </motion.div>
 
           {pricingPlans.length === 0 ? (
-            <div className="text-center text-vd-text-sub py-10">Loading plans…</div>
+            <div className="text-center text-vd-text-sub py-16">
+              <Sparkles className="w-8 h-8 mx-auto mb-3 text-vd-primary/50 animate-pulse" />
+              Loading plans…
+            </div>
           ) : (
-            <div className={`grid gap-6 max-w-5xl mx-auto ${pricingPlans.length <= 2 ? 'md:grid-cols-2' : pricingPlans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
+            <div className={`grid gap-5 sm:gap-6 max-w-6xl mx-auto items-stretch ${
+              pricingPlans.length <= 2 ? 'md:grid-cols-2' : pricingPlans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'
+            }`}>
               {pricingPlans.map((p, i) => {
                 const basePrice = Number(p.price || 0);
                 const baseDays = Number(p.durationDays || 30);
                 const pricePerDay = baseDays > 0 ? basePrice / baseDays : 0;
                 const isLifetime = selectedMonths === 0;
                 const isFree = basePrice === 0;
-                // Lifetime = fixed ₹4999 for paid plans
                 const totalDays = isLifetime ? 0 : selectedMonths * 30;
                 let totalPrice = isFree ? 0 : isLifetime ? 4999 : Math.round(pricePerDay * totalDays);
-                // Apply coupon discount
                 const discount = couponStatus?.valid ? couponStatus.discountPct : 0;
                 const discountedPrice = isFree ? 0 : Math.round(totalPrice * (1 - discount / 100));
                 const isHighlight = p.plan === 'GOLD';
+                const PlanIcon = PLAN_ICONS[p.plan] || Star;
                 const perms = (() => { try { return JSON.parse(p.permissions || '{}'); } catch { return {}; } })();
                 const features = [
                   perms.canChat && 'Unlimited Chat',
@@ -645,75 +697,172 @@ export default function Home() {
                   'Browse Matches',
                   'Create Profile',
                 ].filter(Boolean);
+                const monthlyEquiv = !isFree && !isLifetime && selectedMonths > 0
+                  ? Math.round(discountedPrice / selectedMonths)
+                  : null;
 
                 return (
-                  <motion.div key={p.plan} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.12, duration: 0.5 }} viewport={{ once: true }}
-                    whileHover={{ y: -6, scale: isHighlight ? 1.04 : 1.02 }}
-                    className={`rounded-2xl p-6 border-2 relative ${isHighlight ? 'vd-gradient-gold text-white border-transparent shadow-2xl scale-105' : 'bg-vd-bg-section border-vd-border'}`}>
-                    {isHighlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Most Popular</div>}
-                    {isLifetime && !isFree && <div className="absolute -top-3 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Best Value</div>}
-                    <h3 className={`text-xl font-bold mb-1 ${isHighlight ? 'text-white' : ''}`}>{p.displayName || p.plan}</h3>
-                    {p.description && <p className={`text-xs mb-3 ${isHighlight ? 'text-white/70' : 'text-vd-text-sub'}`}>{p.description}</p>}
-                    <div className="flex items-baseline gap-1 mb-1">
-                      {isFree ? (
-                        <span className="text-4xl font-bold">Free</span>
-                      ) : (
-                        <>
-                          {discount > 0 && <span className={`text-lg line-through ${isHighlight ? 'text-white/50' : 'text-vd-text-sub'}`}>{formatINR(totalPrice)}</span>}
-                          <span className="text-4xl font-bold">{formatINR(discountedPrice)}</span>
-                        </>
-                      )}
-                    </div>
-                    {!isFree && (
-                      <p className={`text-xs mb-5 ${isHighlight ? 'text-white/70' : 'text-vd-text-sub'}`}>
-                        {isLifetime ? 'one-time · lifetime access' : `for ${selectedMonths} month${selectedMonths > 1 ? 's' : ''}`}
-                        {discount > 0 && <span className="ml-1 text-green-400 font-semibold">({discount}% off)</span>}
-                      </p>
+                  <motion.div
+                    key={p.plan}
+                    initial={{ opacity: 0, y: 32 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1, duration: 0.5 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -8 }}
+                    className={`group relative flex flex-col rounded-3xl overflow-hidden transition-shadow duration-300 ${
+                      isHighlight
+                        ? 'md:-mt-2 md:mb-2 ring-2 ring-vd-primary/60 shadow-2xl shadow-vd-primary/20 bg-gradient-to-b from-[#3d3220] via-[#2a2318] to-[#1c1812] text-white z-10'
+                        : 'bg-vd-bg-section border border-vd-border shadow-lg hover:shadow-xl hover:border-vd-primary/30'
+                    }`}
+                  >
+                    {/* Top accent strip */}
+                    {!isHighlight && (
+                      <div className="h-1 w-full vd-gradient-gold opacity-70 group-hover:opacity-100 transition-opacity" />
                     )}
-                    {isFree && <p className={`text-xs mb-5 ${isHighlight ? 'text-white/70' : 'text-vd-text-sub'}`}>forever</p>}
-                    <ul className="space-y-3 mb-6">
-                      {features.map(f => (
-                        <li key={f} className="flex items-center gap-2 text-sm">
-                          <CheckCircle className={`w-4 h-4 flex-shrink-0 ${isHighlight ? 'text-white' : 'text-vd-primary'}`} />
-                          <span className={isHighlight ? 'text-white/90' : 'text-vd-text-sub'}>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {(() => {
-                      const userPlan = session?.user?.premiumPlan;
-                      const hasAnyPlan = session?.user?.isPremium;
-                      const isActive = p.plan === userPlan && hasAnyPlan;
-                      
-                      const userPlanObj = pricingPlans.find(pl => pl.plan === userPlan);
-                      const userBasePrice = userPlanObj ? Number(userPlanObj.price || 0) : 0;
-                      const currentBasePrice = Number(p.price || 0);
+                    {isHighlight && (
+                      <div className="h-1.5 w-full bg-gradient-to-r from-yellow-300 via-vd-primary-light to-yellow-300" />
+                    )}
 
-                      let btnText = `Get ${p.displayName || p.plan}`;
-                      if (hasAnyPlan) {
-                        if (isActive) {
-                          btnText = `Extend Plan`;
-                        } else if (currentBasePrice > userBasePrice) {
-                          btnText = `Upgrade to ${p.displayName || p.plan}`;
-                        } else {
-                          btnText = `Switch to ${p.displayName || p.plan}`;
+                    {/* Badges */}
+                    {isHighlight && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-yellow-400 text-yellow-950 text-[10px] sm:text-xs font-bold shadow-md">
+                          <Crown className="w-3 h-3" /> Popular
+                        </span>
+                      </div>
+                    )}
+                    {isLifetime && !isFree && !isHighlight && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-500 text-white text-[10px] sm:text-xs font-bold">
+                          Best Value
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="p-5 sm:p-6 flex flex-col flex-1">
+                      {/* Plan header */}
+                      <div className="flex items-start gap-3 mb-5">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md ${
+                          isHighlight ? 'bg-white/15 ring-1 ring-white/20' : 'vd-gradient-gold'
+                        }`}>
+                          <PlanIcon className={`w-5 h-5 ${isHighlight ? 'text-yellow-300' : 'text-white'}`} />
+                        </div>
+                        <div className="min-w-0 pt-0.5">
+                          <h3 className={`text-lg sm:text-xl font-bold leading-tight ${isHighlight ? 'text-white' : 'text-vd-text-heading'}`}>
+                            {p.displayName || p.plan}
+                          </h3>
+                          {p.description && (
+                            <p className={`text-xs mt-1 leading-relaxed ${isHighlight ? 'text-white/65' : 'text-vd-text-sub'}`}>
+                              {p.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Price block */}
+                      <div className={`rounded-2xl p-4 mb-5 ${isHighlight ? 'bg-white/10 ring-1 ring-white/10' : 'bg-vd-bg-alt dark:bg-vd-bg/50'}`}>
+                        <div className="flex items-end gap-2 flex-wrap">
+                          {isFree ? (
+                            <span className={`text-3xl sm:text-4xl font-bold ${isHighlight ? 'text-white' : 'vd-gradient-text'}`}>Free</span>
+                          ) : (
+                            <>
+                              {discount > 0 && (
+                                <span className={`text-sm line-through mb-1 ${isHighlight ? 'text-white/45' : 'text-vd-text-light'}`}>
+                                  {formatINR(totalPrice)}
+                                </span>
+                              )}
+                              <span className={`text-3xl sm:text-4xl font-bold tracking-tight ${isHighlight ? 'text-white' : 'text-vd-text-heading'}`}>
+                                {formatINR(discountedPrice)}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <p className={`text-xs mt-1.5 ${isHighlight ? 'text-white/60' : 'text-vd-text-sub'}`}>
+                          {isFree && 'forever · no credit card'}
+                          {!isFree && isLifetime && 'one-time · lifetime access'}
+                          {!isFree && !isLifetime && (
+                            <>
+                              for {selectedMonths} month{selectedMonths > 1 ? 's' : ''}
+                              {monthlyEquiv && (
+                                <span className={`ml-1.5 font-semibold ${isHighlight ? 'text-vd-primary-light' : 'text-vd-primary'}`}>
+                                  (~{formatINR(monthlyEquiv)}/mo)
+                                </span>
+                              )}
+                            </>
+                          )}
+                          {discount > 0 && !isFree && (
+                            <span className="ml-1.5 text-green-400 font-semibold">({discount}% off)</span>
+                          )}
+                        </p>
+                      </div>
+
+                      {/* Features */}
+                      <div className={`flex-1 border-t pt-5 mb-5 ${isHighlight ? 'border-white/10' : 'border-vd-border'}`}>
+                        <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighlight ? 'text-white/50' : 'text-vd-text-light'}`}>
+                          What&apos;s included
+                        </p>
+                        <ul className="space-y-2.5">
+                          {features.map(f => (
+                            <li key={f} className="flex items-start gap-2.5 text-sm">
+                              <span className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                isHighlight ? 'bg-white/15' : 'bg-vd-primary/10'
+                              }`}>
+                                <CheckCircle className={`w-3 h-3 ${isHighlight ? 'text-yellow-300' : 'text-vd-primary'}`} />
+                              </span>
+                              <span className={isHighlight ? 'text-white/85' : 'text-vd-text-sub'}>{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* CTA */}
+                      {(() => {
+                        const userPlan = session?.user?.premiumPlan;
+                        const hasAnyPlan = session?.user?.isPremium;
+                        const isActive = p.plan === userPlan && hasAnyPlan;
+                        const userPlanObj = pricingPlans.find(pl => pl.plan === userPlan);
+                        const userBasePrice = userPlanObj ? Number(userPlanObj.price || 0) : 0;
+                        const currentBasePrice = Number(p.price || 0);
+
+                        let btnText = `Get ${p.displayName || p.plan}`;
+                        if (hasAnyPlan) {
+                          if (isActive) btnText = 'Extend Plan';
+                          else if (currentBasePrice > userBasePrice) btnText = `Upgrade to ${p.displayName || p.plan}`;
+                          else btnText = `Switch to ${p.displayName || p.plan}`;
                         }
-                      }
 
-                      return (
-                        <Link href={isFree ? '/register' : '/premium'}
-                          className={`block text-center py-3 rounded-xl font-bold transition-all shadow-md ${
-                            isHighlight ? 'bg-white text-vd-primary hover:bg-gray-50' : 'vd-gradient-gold text-white hover:opacity-90'
-                          }`}>
-                          {isFree ? 'Get Started' : btnText}
-                        </Link>
-                      );
-                    })()}
+                        return (
+                          <Link
+                            href={isFree ? '/register' : '/premium'}
+                            className={`group/btn flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 ${
+                              isHighlight
+                                ? 'bg-white text-vd-primary-dark hover:bg-vd-primary-light hover:shadow-lg hover:shadow-white/20'
+                                : 'vd-gradient-gold text-white hover:opacity-90 hover:shadow-lg hover:shadow-vd-primary/25'
+                            }`}
+                          >
+                            {isFree ? 'Get Started Free' : btnText}
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
+                          </Link>
+                        );
+                      })()}
+                    </div>
                   </motion.div>
                 );
               })}
             </div>
           )}
+
+          {/* Trust strip */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-vd-text-light"
+          >
+            <span className="inline-flex items-center gap-1.5"><Shield className="w-3.5 h-3.5 text-vd-primary" /> Secure payment</span>
+            <span className="inline-flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-vd-primary" /> Instant activation</span>
+            <span className="inline-flex items-center gap-1.5"><Heart className="w-3.5 h-3.5 text-vd-primary" /> Trusted by couples</span>
+          </motion.div>
         </div>
       </section>
 

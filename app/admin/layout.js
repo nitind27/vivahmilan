@@ -80,7 +80,12 @@ export default function AdminLayout({ children }) {
     if (status === 'authenticated' && session?.user?.role === 'ADMIN') {
       refreshStats();
       const interval = setInterval(refreshStats, 60000);
-      return () => clearInterval(interval);
+      const onRefresh = () => refreshStats();
+      window.addEventListener('admin-stats-refresh', onRefresh);
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('admin-stats-refresh', onRefresh);
+      };
     }
   }, [status, session, refreshStats]);
 
@@ -107,7 +112,9 @@ export default function AdminLayout({ children }) {
         <tab.icon className="w-4 h-4 flex-shrink-0" />
         <span className="flex-1 text-left">{tab.label}</span>
         {badgeCount > 0 && (
-          <span className="bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{badgeCount}</span>
+          <span className="bg-red-500 text-white text-[10px] font-bold min-w-[1.25rem] h-5 px-1 rounded-full flex items-center justify-center">
+            {badgeCount > 99 ? '99+' : badgeCount}
+          </span>
         )}
       </Link>
     );
