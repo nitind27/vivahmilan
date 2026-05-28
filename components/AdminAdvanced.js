@@ -575,12 +575,43 @@ export function PremiumManagerTab() {
   const [saving, setSaving] = useState(null);
 
   const searchUsers = async () => {
-    if (!search.trim()) return;
+    const val = search.trim();
+    if (!val) return;
     setLoading(true);
-    const res = await fetch(`/api/admin/users?search=${encodeURIComponent(search)}&limit=20`);
-    const data = await res.json();
-    setUsers(data.users || []);
-    setLoading(false);
+    setUsers([]);
+    try {
+      const res = await fetch(`/api/admin/users?search=${encodeURIComponent(val)}&limit=20`);
+      const data = await res.json();
+      let found = data.users || [];
+
+      // Fallback: phone lookup via matchmaker when users API returns empty
+      if (!found.length && /[\d+]/.test(val.replace(/\s/g, ''))) {
+        const clean = val.replace(/\s/g, '').replace(/^0+/, '');
+        const mm = await fetch(`/api/admin/matchmaker?phone=${encodeURIComponent(clean)}`);
+        if (mm.ok) {
+          const mmData = await mm.json();
+          if (mmData.user) {
+            found = [{
+              id: mmData.user.id,
+              name: mmData.user.name,
+              email: mmData.user.email,
+              phone: mmData.user.phone,
+              image: mmData.user.mainPhoto || mmData.user.image,
+              isPremium: !!mmData.user.isPremium,
+              premiumPlan: mmData.user.premiumPlan,
+              premiumExpiry: mmData.user.premiumExpiry,
+            }];
+          }
+        }
+      }
+
+      setUsers(found);
+      if (!found.length) toast.error('No user found for this search');
+    } catch {
+      toast.error('Search failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const grantPremium = async (userId, plan, days) => {
@@ -646,7 +677,8 @@ export function PremiumManagerTab() {
                     {!!u.isPremium && <span className="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-0.5 rounded-full">⭐ {u.premiumPlan || 'Premium'}</span>}
                     {!u.isPremium && <span className="text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded-full">Free</span>}
                   </div>
-                  <p className="text-xs text-gray-400">{u.email}</p>
+                  <p className="text-xs text-gray-400">{u.email || '—'}</p>
+                  {u.phone && <p className="text-xs text-gray-400">📞 {u.phone}</p>}
                   {!!u.isPremium && u.premiumExpiry && (
                     <p className="text-xs text-yellow-600">Expires: {format(new Date(u.premiumExpiry), 'dd MMM yyyy')}</p>
                   )}

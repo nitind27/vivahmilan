@@ -89,6 +89,14 @@ export async function POST(req) {
 
     // If live agent session, don't auto-respond
     if (session.status === 'live') {
+      try {
+        const { notifyAdmins } = await import('@/lib/adminNotifications');
+        await notifyAdmins({
+          title: '💬 New Support Message',
+          message: message.trim().slice(0, 120),
+          link: '/admin/support',
+        });
+      } catch {}
       return NextResponse.json({ sessionId: sid, status: 'live', botReply: null });
     }
 
@@ -112,6 +120,14 @@ export async function POST(req) {
     if (intent === 'agent') {
       newStatus = 'live';
       await execute('UPDATE support_session SET status = ?, updatedAt = ? WHERE id = ?', ['live', now, sid]);
+      try {
+        const { notifyAdmins } = await import('@/lib/adminNotifications');
+        await notifyAdmins({
+          title: '🧑‍💼 Support Agent Requested',
+          message: 'A user is waiting to talk to a human support agent.',
+          link: '/admin/support',
+        });
+      } catch {}
     }
 
     // Save bot reply

@@ -1,8 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { Search, Crown, Mail, Phone, Calendar, IndianRupee, ShieldCheck } from 'lucide-react';
-import toast from 'react-hot-toast';
 
 export default function SubscriptionsPage() {
   const [subs, setSubs] = useState([]);
@@ -13,19 +12,33 @@ export default function SubscriptionsPage() {
   const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
-    // Fetch subscriptions
-    fetch('/api/admin/subscriptions')
-      .then(r => r.json())
-      .then(d => { setSubs(Array.isArray(d) ? d : []); })
+    Promise.all([
+      fetch('/api/admin/subscriptions').then(r => r.json()),
+      fetch('/api/admin/plans').then(r => r.json()),
+    ])
+      .then(([subsData, plansData]) => {
+        setSubs(Array.isArray(subsData) ? subsData : []);
+        setPlans(Array.isArray(plansData) ? plansData : []);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
-
-    // Fetch dynamic plans for the dropdown filter
-    fetch('/api/admin/plans')
-      .then(r => r.json())
-      .then(d => { setPlans(Array.isArray(d) ? d : []); })
-      .catch(() => {});
   }, []);
+
+  /** plan = DB code (SILVER, GOLD); displayName = label in UI */
+  const planOptions = useMemo(() => {
+    const map = new Map();
+    for (const p of plans) {
+      const code = p.plan || p.id;
+      if (!code) continue;
+      map.set(code, p.displayName || p.plan || code);
+    }
+    for (const s of subs) {
+      if (s.plan && !map.has(s.plan)) map.set(s.plan, s.plan);
+    }
+    return Array.from(map.entries())
+      .map(([value, label]) => ({ value, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [plans, subs]);
 
   const filtered = subs.filter(s => {
     const lq = q.toLowerCase();
@@ -47,20 +60,29 @@ export default function SubscriptionsPage() {
         </div>
         
         <div className="flex gap-3 w-full sm:w-auto">
-          <select value={planFilter} onChange={e => setPlanFilter(e.target.value)} 
-            className="flex-1 sm:flex-none px-4 py-3 bg-gray-900 border border-gray-700 rounded-2xl text-sm font-medium focus:outline-none focus:border-vd-primary transition-colors text-gray-300">
-            <option value="">All Plans</option>
-            {plans.map(p => (
-              <option key={p.id} value={p.name}>{p.name}</option>
+          <select
+            value={planFilter}
+            onChange={e => setPlanFilter(e.target.value)}
+            className="flex-1 sm:min-w-[180px] px-4 py-3 bg-gray-900 border border-gray-700 rounded-2xl text-sm font-medium focus:outline-none focus:border-vd-primary transition-colors text-white appearance-auto cursor-pointer"
+          >
+            <option value="" className="bg-gray-900 text-white">All Plans</option>
+            {planOptions.map(({ value, label }) => (
+              <option key={value} value={value} className="bg-gray-900 text-white">
+                {label}
+              </option>
             ))}
           </select>
-          
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} 
-            className="flex-1 sm:flex-none px-4 py-3 bg-gray-900 border border-gray-700 rounded-2xl text-sm font-medium focus:outline-none focus:border-vd-primary transition-colors text-gray-300">
-            <option value="">All Status</option>
-            <option value="ACTIVE">✅ Active</option>
-            <option value="EXPIRED">❌ Expired</option>
-            <option value="CANCELLED">🚫 Cancelled</option>
+
+          <select
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+            className="flex-1 sm:min-w-[160px] px-4 py-3 bg-gray-900 border border-gray-700 rounded-2xl text-sm font-medium focus:outline-none focus:border-vd-primary transition-colors text-white appearance-auto cursor-pointer"
+          >
+            <option value="" className="bg-gray-900 text-white">All Status</option>
+            <option value="ACTIVE" className="bg-gray-900 text-white">Active</option>
+            <option value="EXPIRED" className="bg-gray-900 text-white">Expired</option>
+            <option value="CANCELLED" className="bg-gray-900 text-white">Cancelled</option>
+            <option value="PENDING" className="bg-gray-900 text-white">Pending</option>
           </select>
         </div>
       </div>
@@ -119,7 +141,7 @@ export default function SubscriptionsPage() {
                   
                   <div className="flex items-baseline gap-2 mb-4">
                     <h4 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400 uppercase tracking-tight">
-                      {s.plan}
+                      {planOptions.find(p => p.value === s.plan)?.label || s.plan}
                     </h4>
                   </div>
 

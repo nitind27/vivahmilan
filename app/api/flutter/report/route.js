@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
-import { execute } from '@/lib/db';
+import { execute, queryOne } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
 export async function POST(req) {
@@ -17,5 +17,16 @@ export async function POST(req) {
     'INSERT INTO report (id, reporterId, targetId, reason, details, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
     [id, decoded.id, targetId, reason, details || null, 'PENDING']
   );
+
+  try {
+    const reporter = await queryOne('SELECT name FROM `user` WHERE id = ?', [decoded.id]);
+    const { notifyAdmins } = await import('@/lib/adminNotifications');
+    await notifyAdmins({
+      title: '🚩 New Report Submitted',
+      message: `${reporter?.name || 'A user'} reported a profile: ${reason}`,
+      link: '/admin/reports',
+    });
+  } catch {}
+
   return NextResponse.json({ success: true, id }, { status: 201 });
 }

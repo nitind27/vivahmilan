@@ -74,6 +74,15 @@ export async function POST(req) {
           console.error('[verify-otp] geo log error:', e.message)
         );
 
+        try {
+          const { notifyAdmins } = await import('@/lib/adminNotifications');
+          await notifyAdmins({
+            title: '👤 New User Registered',
+            message: `${pending.name} (${pending.email}) just registered.`,
+            link: '/admin/members',
+          });
+        } catch {}
+
         // Early Bird Auto-Assignment
         try {
           const ebConfigRow = await queryOne("SELECT value FROM siteconfig WHERE `key` = 'early_bird_settings'");

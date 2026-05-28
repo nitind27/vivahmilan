@@ -7,7 +7,7 @@ import { Heart, User, Mail, Lock, Phone, ChevronRight, ChevronLeft, Sparkles, Ey
 import { signIn, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import SiteLoader from '@/components/SiteLoader';
-import { getClientGeo } from '@/lib/clientGeo';
+import { getClientGeo, getClientPublicIP } from '@/lib/clientGeo';
 
 const steps = ['Account', 'Personal', 'Done'];
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -97,11 +97,14 @@ export default function RegisterPage() {
   const submit = async () => {
     setLoading(true);
     try {
-      const geo = await getClientGeo();
+      const [geo, clientPublicIp] = await Promise.all([
+        getClientGeo(8000, { highAccuracy: true }),
+        getClientPublicIP(),
+      ]);
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, platform: 'web', ...geo }),
+        body: JSON.stringify({ ...form, platform: 'web', ...geo, ...(clientPublicIp ? { clientPublicIp } : {}) }),
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); setLoading(false); return; }

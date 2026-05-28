@@ -60,6 +60,16 @@ export async function POST(req) {
           link: '/dashboard',
         },
       });
+
+      try {
+        const payer = await prisma.user.findUnique({ where: { id: userId }, select: { name: true } });
+        const { notifyAdmins } = await import('@/lib/adminNotifications');
+        await notifyAdmins({
+          title: '💳 New Premium Subscription',
+          message: `${payer?.name || 'A user'} purchased the ${plan} plan.`,
+          link: '/admin/subscriptions',
+        });
+      } catch {}
     }
 
     if (type === 'PAYMENT_FAILED_WEBHOOK') {

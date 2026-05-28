@@ -10,12 +10,25 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const page  = parseInt(searchParams.get('page')  || '1');
   const limit = parseInt(searchParams.get('limit') || '50');
-  const search = searchParams.get('search') || '';
+  const search = (searchParams.get('search') || '').trim();
   const status = searchParams.get('status') || ''; // 'pending', 'approved', 'rejected'
+
+  const searchOr = [];
+  if (search) {
+    searchOr.push({ name: { contains: search } }, { email: { contains: search } });
+    const phoneDigits = search.replace(/\D/g, '');
+    const phoneNorm = search.replace(/\s/g, '');
+    if (phoneDigits.length >= 4) {
+      searchOr.push({ phone: { contains: phoneDigits } });
+    }
+    if (phoneNorm.length >= 4 && phoneNorm !== phoneDigits) {
+      searchOr.push({ phone: { contains: phoneNorm } });
+    }
+  }
 
   const where = {
     role: 'USER',
-    ...(search ? { OR: [{ name: { contains: search } }, { email: { contains: search } }] } : {}),
+    ...(searchOr.length ? { OR: searchOr } : {}),
   };
 
   if (status === 'pending') {

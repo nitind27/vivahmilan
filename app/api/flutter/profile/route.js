@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
+import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
 import { randomUUID } from 'crypto';
 
 const ALLOWED_PROFILE_COLS = new Set([
@@ -61,26 +62,7 @@ export async function GET(req) {
   const photos = await query('SELECT * FROM photo WHERE userId = ? ORDER BY isMain DESC, createdAt ASC', [profileUserId]);
   const familyPhotos = await query('SELECT * FROM family_photo WHERE userId = ? ORDER BY createdAt DESC', [profileUserId]).catch(() => []);
 
-  // Active subscription / premium plan details
-  const subscription = await queryOne(
-    `SELECT s.id, s.plan, s.status, s.amount, s.currency, s.startDate, s.endDate,
-            pc.displayName, pc.permissions, pc.durationDays, pc.description
-     FROM subscription s
-     LEFT JOIN planconfig pc ON pc.plan = s.plan
-     WHERE s.userId = ? AND s.status = 'ACTIVE' AND s.endDate > NOW()
-     ORDER BY s.endDate DESC LIMIT 1`,
-    [profileUserId]
-  );
-
-  let premiumPlanDetails = null;
-  if (subscription) {
-    premiumPlanDetails = {
-      ...subscription,
-      permissions: typeof subscription.permissions === 'string'
-        ? JSON.parse(subscription.permissions || '[]')
-        : (subscription.permissions || []),
-    };
-  }
+  const premiumPlanDetails = await getPremiumPlanDetails(profileUserId, user.premiumPlan);
 
   // Recalculate and sync profileComplete
   const computedComplete = calcProfileComplete(profile, user.name, photos);
@@ -201,25 +183,7 @@ export async function PUT(req) {
     [decoded.id]
   );
 
-  const subscription = await queryOne(
-    `SELECT s.id, s.plan, s.status, s.amount, s.currency, s.startDate, s.endDate,
-            pc.displayName, pc.permissions, pc.durationDays, pc.description
-     FROM subscription s
-     LEFT JOIN planconfig pc ON pc.plan = s.plan
-     WHERE s.userId = ? AND s.status = 'ACTIVE' AND s.endDate > NOW()
-     ORDER BY s.endDate DESC LIMIT 1`,
-    [decoded.id]
-  );
-
-  let premiumPlanDetails = null;
-  if (subscription) {
-    premiumPlanDetails = {
-      ...subscription,
-      permissions: typeof subscription.permissions === 'string'
-        ? JSON.parse(subscription.permissions || '[]')
-        : (subscription.permissions || []),
-    };
-  }
+  const premiumPlanDetails = await getPremiumPlanDetails(decoded.id, fullUser?.premiumPlan);
 
   return NextResponse.json({ ...fullUser, profile, photos, premiumPlanDetails });
 }

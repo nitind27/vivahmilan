@@ -42,14 +42,14 @@ export async function POST(req) {
     [decoded.id]
   );
 
-  // Notify admin via notification (optional — if admin notification table exists)
   try {
-    const { randomUUID } = await import('crypto');
-    await execute(
-      "INSERT INTO notification (id, userId, type, title, message, isRead, link, createdAt) SELECT ?, id, 'ADMIN_REVIEW', 'New Profile Submitted', ?, 0, ?, NOW() FROM `user` WHERE role = 'ADMIN' LIMIT 1",
-      [randomUUID(), `${user.name} has submitted their profile for review.`, `/admin/pending`]
-    );
-  } catch { /* ignore if admin notification fails */ }
+    const { notifyAdmins } = await import('@/lib/adminNotifications');
+    await notifyAdmins({
+      title: '📋 New Profile Submitted',
+      message: `${user.name} has submitted their profile for review.`,
+      link: '/admin/pending',
+    });
+  } catch {}
 
   return NextResponse.json({
     success: true,

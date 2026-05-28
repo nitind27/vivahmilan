@@ -66,6 +66,14 @@ export async function POST(req) {
     // If final submit — mark profileComplete = 100 to signal ready for admin review
     if (_submitForReview) {
       await execute('UPDATE profile SET profileComplete = 100, updatedAt = NOW() WHERE userId = ?', [user.id]);
+      try {
+        const { notifyAdmins } = await import('@/lib/adminNotifications');
+        await notifyAdmins({
+          title: '📋 New Profile Submitted',
+          message: `${user.name || user.email} has submitted their profile for review.`,
+          link: '/admin/pending',
+        });
+      } catch {}
     }
 
     return NextResponse.json({ success: true });

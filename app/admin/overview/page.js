@@ -27,6 +27,39 @@ function UserSearchBar() {
   const [viewUserId, setViewUserId] = useState(null);
   const inputRef = useRef(null);
 
+  const enrichUser = async (baseUser) => {
+    if (!baseUser?.id) return baseUser;
+    try {
+      const res = await fetch(`/api/admin/user-profile?userId=${baseUser.id}`);
+      if (!res.ok) return baseUser;
+      const full = await res.json();
+      const u = full.user || {};
+      const p = full.profile || {};
+      const s = full.stats || {};
+      const active = full.activeSubscription;
+      return {
+        ...baseUser,
+        ...u,
+        gender: p.gender || baseUser.gender,
+        dob: p.dob || baseUser.dob,
+        religion: p.religion || baseUser.religion,
+        caste: p.caste || baseUser.caste,
+        city: p.city || baseUser.city,
+        state: p.state || baseUser.state,
+        country: p.country || baseUser.country,
+        education: p.education || baseUser.education,
+        profession: p.profession || baseUser.profession,
+        profileComplete: p.profileComplete,
+        mainPhoto: u.photo || baseUser.mainPhoto || baseUser.image,
+        stats: s,
+        activeSubscription: active,
+        premiumPlanLabel: full.premiumPlanConfig?.displayName || u.premiumPlan || active?.planDisplayName || active?.plan,
+      };
+    } catch {
+      return baseUser;
+    }
+  };
+
   const search = async () => {
     const val = q.trim();
     if (!val) return;
@@ -34,24 +67,43 @@ function UserSearchBar() {
     setResult(null);
     setNotFound(false);
     try {
-      // Try phone lookup first via matchmaker API, then fallback to users search
+      let found = null;
       const res = await fetch(`/api/admin/matchmaker?phone=${encodeURIComponent(val)}`);
       if (res.ok) {
         const data = await res.json();
-        if (data.user) { setResult(data.user); return; }
+        if (data.user) found = data.user;
       }
-      // Fallback: search by name/email
-      const res2 = await fetch(`/api/admin/users?search=${encodeURIComponent(val)}&limit=1`);
-      const data2 = await res2.json();
-      const user = data2.users?.[0];
-      if (user) {
-        // Fetch full profile
-        const res3 = await fetch(`/api/admin/matchmaker?phone=${encodeURIComponent(user.phone || '')}`);
-        if (res3.ok && user.phone) {
-          const d3 = await res3.json();
-          if (d3.user) { setResult(d3.user); return; }
+      if (!found) {
+        const res2 = await fetch(`/api/admin/users?search=${encodeURIComponent(val)}&limit=1`);
+        const data2 = await res2.json();
+        const user = data2.users?.[0];
+        if (user) {
+          if (user.phone) {
+            const res3 = await fetch(`/api/admin/matchmaker?phone=${encodeURIComponent(user.phone)}`);
+            if (res3.ok) {
+              const d3 = await res3.json();
+              if (d3.user) found = d3.user;
+            }
+          }
+          if (!found) {
+            found = {
+              ...user,
+              gender: user.profile?.gender,
+              dob: user.profile?.dob,
+              religion: user.profile?.religion,
+              caste: user.profile?.caste,
+              city: user.profile?.city,
+              state: user.profile?.state,
+              country: user.profile?.country,
+              education: user.profile?.education,
+              profession: user.profile?.profession,
+              mainPhoto: user.image,
+            };
+          }
         }
-        setResult({ ...user, gender: user.profile?.gender, dob: user.profile?.dob, religion: user.profile?.religion, caste: user.profile?.caste, city: user.profile?.city, state: user.profile?.state, country: user.profile?.country, education: user.profile?.education, profession: user.profile?.profession, mainPhoto: user.image });
+      }
+      if (found) {
+        setResult(await enrichUser(found));
       } else {
         setNotFound(true);
       }
@@ -142,6 +194,19 @@ function UserSearchBar() {
                   {result.education && <span>🎓 {result.education}</span>}
                   {result.profession && <span>💼 {result.profession}</span>}
                   {result.createdAt && <span>📅 Joined {format(new Date(result.createdAt), 'dd MMM yyyy')}</span>}
+                  <span className={result.isPremium || result.activeSubscription ? 'text-yellow-400' : 'text-gray-500'}>
+                    💳 {result.isPremium || result.activeSubscription
+                      ? (result.premiumPlanLabel || result.premiumPlan || result.activeSubscription?.plan || 'Premium')
+                      : 'Free plan'}
+                  </span>
+                  {result.stats && (
+                    <>
+                      <span>💕 {result.stats.interestsSent ?? 0} interests sent</span>
+                      <span>📥 {result.stats.interestsReceived ?? 0} received</span>
+                      <span>✅ {result.stats.interestsSentAccepted ?? 0} accepted (sent)</span>
+                    </>
+                  )}
+                  {result.profileComplete != null && <span>📊 Profile {result.profileComplete}%</span>}
                 </div>
 
                 {/* Action buttons */}

@@ -11,9 +11,19 @@ export async function POST(req) {
     }
 
     const body = await req.json().catch(() => ({}));
-    await recordLoginGeo(session.user.id, req, body);
+    const geo = await recordLoginGeo(session.user.id, req, body);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      geo: geo ? {
+        ip: geo.ip,
+        city: geo.city,
+        country: geo.country,
+        latitude: geo.latitude,
+        longitude: geo.longitude,
+        geoSource: geo.geoSource,
+      } : null,
+    });
   } catch (err) {
     console.error('[log-login] error:', err.message);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

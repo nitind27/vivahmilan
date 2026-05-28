@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { queryOne, query, execute } from '@/lib/db';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
+import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
 import { randomUUID } from 'crypto';
 
 export async function GET(req, { params }) {
@@ -43,37 +44,7 @@ export async function GET(req, { params }) {
       query('SELECT id, url, caption, memberCount, createdAt FROM family_photo WHERE userId = ? ORDER BY createdAt DESC', [targetId]).catch(() => []),
     ]);
 
-    // Active subscription + plan config
-    const subscription = await queryOne(
-      `SELECT s.id, s.plan, s.status, s.amount, s.currency, s.startDate, s.endDate, s.paymentId,
-              pc.displayName, pc.permissions, pc.durationDays, pc.description, pc.price
-       FROM subscription s
-       LEFT JOIN planconfig pc ON pc.plan = s.plan
-       WHERE s.userId = ? AND s.status = 'ACTIVE' AND s.endDate > NOW()
-       ORDER BY s.endDate DESC LIMIT 1`,
-      [targetId]
-    );
-
-    let premiumPlanDetails = null;
-    if (subscription) {
-      premiumPlanDetails = {
-        id:           subscription.id,
-        plan:         subscription.plan,
-        status:       subscription.status,
-        amount:       subscription.amount,
-        currency:     subscription.currency,
-        startDate:    subscription.startDate,
-        endDate:      subscription.endDate,
-        paymentId:    subscription.paymentId,
-        displayName:  subscription.displayName,
-        durationDays: subscription.durationDays,
-        description:  subscription.description,
-        price:        subscription.price,
-        permissions:  typeof subscription.permissions === 'string'
-          ? JSON.parse(subscription.permissions || '[]')
-          : (subscription.permissions || []),
-      };
-    }
+    const premiumPlanDetails = await getPremiumPlanDetails(targetId, user.premiumPlan);
 
     // Interaction flags — only when viewing another user's profile
     let interactionFlags = {};

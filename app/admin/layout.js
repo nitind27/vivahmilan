@@ -1,6 +1,6 @@
 'use client';
 import SiteLoader from '@/components/SiteLoader';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import {
   FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw,
   TrendingUp
 } from 'lucide-react';
+import AdminNotifications from '@/components/AdminNotifications';
 
 export const ADMIN_TABS = [
   { id: 'overview',      label: 'Overview',         icon: BarChart2,     badge: null },
@@ -41,17 +42,47 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [stats, setStats] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const desktopNavRef = useRef(null);
+  const mobileNavRef = useRef(null);
+  const sidebarScrollTop = useRef(0);
+
+  const saveSidebarScroll = useCallback(() => {
+    const el = desktopNavRef.current || mobileNavRef.current;
+    if (el) sidebarScrollTop.current = el.scrollTop;
+  }, []);
+
+  const restoreSidebarScroll = useCallback(() => {
+    const top = sidebarScrollTop.current;
+    for (const el of [desktopNavRef.current, mobileNavRef.current]) {
+      if (el) el.scrollTop = top;
+    }
+    requestAnimationFrame(() => {
+      for (const el of [desktopNavRef.current, mobileNavRef.current]) {
+        if (el) el.scrollTop = top;
+      }
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    restoreSidebarScroll();
+  }, [pathname, restoreSidebarScroll]);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
     if (status === 'authenticated' && session?.user?.role !== 'ADMIN') router.push('/dashboard');
   }, [status, session, router]);
 
+  const refreshStats = useCallback(() => {
+    fetch('/api/admin/stats').then(r => r.json()).then(setStats).catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.role === 'ADMIN') {
-      fetch('/api/admin/stats').then(r => r.json()).then(setStats).catch(() => {});
+      refreshStats();
+      const interval = setInterval(refreshStats, 60000);
+      return () => clearInterval(interval);
     }
-  }, [status, session]);
+  }, [status, session, refreshStats]);
 
   if (status === 'loading') return <SiteLoader message="Loading admin…" size="lg" className="bg-gray-950" />;
   if (status !== 'authenticated' || session?.user?.role !== 'ADMIN') return null;
@@ -63,9 +94,16 @@ export default function AdminLayout({ children }) {
     const isActive = tab.id === activeId;
     const badgeCount = tab.badge ? stats?.[tab.badge] : 0;
     return (
-      <Link href={`/admin/${tab.id}`}
-        onClick={() => setMobileOpen(false)}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
+      <Link
+        href={`/admin/${tab.id}`}
+        scroll={false}
+        onClick={() => {
+          saveSidebarScroll();
+          setMobileOpen(false);
+        }}
+        onMouseDown={saveSidebarScroll}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}
+      >
         <tab.icon className="w-4 h-4 flex-shrink-0" />
         <span className="flex-1 text-left">{tab.label}</span>
         {badgeCount > 0 && (
@@ -97,11 +135,16 @@ export default function AdminLayout({ children }) {
             <div className="p-4 border-b border-gray-800">
               <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
             </div>
-            <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+            <nav
+              ref={mobileNavRef}
+              className="flex-1 p-3 space-y-1 overflow-y-auto overscroll-contain"
+              style={{ overflowAnchor: 'none' }}
+              onScroll={(e) => { sidebarScrollTop.current = e.currentTarget.scrollTop; }}
+            >
               {ADMIN_TABS.map(t => <NavItem key={t.id} tab={t} />)}
             </nav>
             <div className="p-3 border-t border-gray-800 space-y-1">
-              <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
+              <Link href="/dashboard" scroll={false} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
                 <Eye className="w-4 h-4" /> View Site
               </Link>
               <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-900/20 transition-all">
@@ -113,7 +156,7 @@ export default function AdminLayout({ children }) {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 bg-gray-900 border-r border-gray-800 flex-col fixed h-full z-20">
+      <aside className="hidden md:flex w-64 bg-gray-900 border-r border-gray-800 flex-col fixed inset-y-0 left-0 z-20 overflow-hidden">
         <div className="p-5 border-b border-gray-800">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 vd-gradient-gold rounded-full flex items-center justify-center">
@@ -123,11 +166,16 @@ export default function AdminLayout({ children }) {
           </div>
           <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
         </div>
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        <nav
+          ref={desktopNavRef}
+          className="flex-1 p-3 space-y-1 overflow-y-auto overscroll-contain min-h-0"
+          style={{ overflowAnchor: 'none' }}
+          onScroll={(e) => { sidebarScrollTop.current = e.currentTarget.scrollTop; }}
+        >
           {ADMIN_TABS.map(t => <NavItem key={t.id} tab={t} />)}
         </nav>
-        <div className="p-3 border-t border-gray-800 space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
+        <div className="p-3 border-t border-gray-800 space-y-1 shrink-0">
+          <Link href="/dashboard" scroll={false} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
             <Eye className="w-4 h-4" /> View Site
           </Link>
           <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-900/20 transition-all">
@@ -146,10 +194,13 @@ export default function AdminLayout({ children }) {
                 {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
             </div>
-            <button onClick={() => window.location.reload()}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
-              <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">Refresh</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <AdminNotifications onStatsRefresh={refreshStats} />
+              <button onClick={() => window.location.reload()}
+                className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
+                <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">Refresh</span>
+              </button>
+            </div>
           </div>
           {children}
         </div>

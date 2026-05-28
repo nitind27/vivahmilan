@@ -17,6 +17,17 @@ export async function POST(req) {
       'INSERT INTO report (id, reporterId, targetId, reason, details, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
       [id, session.user.id, targetId, reason, details || null, 'PENDING']
     );
+
+    try {
+      const reporter = await queryOne('SELECT name FROM `user` WHERE id = ?', [session.user.id]);
+      const { notifyAdmins } = await import('@/lib/adminNotifications');
+      await notifyAdmins({
+        title: '🚩 New Report Submitted',
+        message: `${reporter?.name || 'A user'} reported a profile: ${reason}`,
+        link: '/admin/reports',
+      });
+    } catch {}
+
     return NextResponse.json({ success: true, id }, { status: 201 });
   } catch (err) {
     console.error('Report error:', err);

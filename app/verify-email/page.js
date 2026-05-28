@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Heart, Mail, RefreshCw, CheckCircle, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { getClientGeo } from '@/lib/clientGeo';
+import { getClientGeo, getClientPublicIP } from '@/lib/clientGeo';
 import SiteLoader from '@/components/SiteLoader';
 
 function VerifyInner() {
@@ -50,11 +50,14 @@ function VerifyInner() {
     if (code.length !== 6) { toast.error('Enter 6-digit OTP'); return; }
     setLoading(true);
     try {
-      const geo = await getClientGeo();
+      const [geo, clientPublicIp] = await Promise.all([
+        getClientGeo(8000, { highAccuracy: true }),
+        getClientPublicIP(),
+      ]);
       const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp: code, type: 'EMAIL_VERIFY', platform: 'web', ...geo }),
+        body: JSON.stringify({ email, otp: code, type: 'EMAIL_VERIFY', platform: 'web', ...geo, ...(clientPublicIp ? { clientPublicIp } : {}) }),
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); return; }
