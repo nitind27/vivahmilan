@@ -92,6 +92,17 @@ export default function AdminLayout({ children }) {
   if (status === 'loading') return <SiteLoader message="Loading admin…" size="lg" className="bg-gray-950" />;
   if (status !== 'authenticated' || session?.user?.role !== 'ADMIN') return null;
 
+  const isKycCall = /^\/admin\/kyc\/[^/]+$/.test(pathname || '');
+
+  // Video KYC call — fullscreen, no admin chrome (sidebar/padding causes scroll)
+  if (isKycCall) {
+    return (
+      <div className="fixed inset-0 z-50 bg-gray-950 overflow-hidden">
+        {children}
+      </div>
+    );
+  }
+
   const activeId = pathname.split('/admin/')[1]?.split('/')[0] || 'overview';
   const activeTab = ADMIN_TABS.find(t => t.id === activeId);
 

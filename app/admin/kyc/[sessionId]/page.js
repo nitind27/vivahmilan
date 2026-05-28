@@ -287,123 +287,110 @@ export default function AdminKycCallPage() {
     </div>
   );
 
-  // Call phase
+  // Call phase — locked to viewport; controls always visible without scroll
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col lg:flex-row">
-      {/* Video area */}
-      <div className="flex-1 flex flex-col">
+    <div className="h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-gray-950 flex flex-col lg:flex-row">
+      {/* Video column */}
+      <div className="flex-1 flex flex-col min-h-0 min-w-0">
         {/* Header */}
-        <div className="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${userConnected ? 'bg-green-400 animate-pulse' : 'bg-yellow-400 animate-pulse'}`} />
-            <span className="text-white font-semibold text-sm">
+        <div className="flex-shrink-0 bg-gray-900 border-b border-gray-800 px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${userConnected ? 'bg-green-400 animate-pulse' : 'bg-yellow-400 animate-pulse'}`} />
+            <span className="text-white font-semibold text-sm truncate">
               KYC: {kycInfo?.userName}
             </span>
           </div>
-          {!userConnected && (
-            <span className="text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded-full">
-              Waiting for user to join…
+          {!userConnected ? (
+            <span className="text-[10px] sm:text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded-full flex-shrink-0">
+              Waiting…
             </span>
-          )}
-          {userConnected && (
-            <span className="text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded-full flex items-center gap-1">
-              <Users className="w-3 h-3" /> User Connected
+          ) : (
+            <span className="text-[10px] sm:text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded-full flex items-center gap-1 flex-shrink-0">
+              <Users className="w-3 h-3" /> Connected
             </span>
           )}
         </div>
 
-        {/* Remote video (user) */}
-        <div className="flex-1 relative bg-black">
-          <video ref={remoteVideoRef} autoPlay playsInline
-            className="w-full h-full object-cover"
+        {/* Remote video — bounded height */}
+        <div className="flex-1 min-h-0 relative bg-black overflow-hidden">
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="absolute inset-0 w-full h-full object-contain bg-black"
           />
           {!userConnected && (
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/80">
               <div className="text-center">
-                <Loader2 className="w-10 h-10 text-yellow-500 animate-spin mx-auto mb-3" />
-                <p className="text-gray-400 text-sm">Waiting for user to join…</p>
+                <Loader2 className="w-8 h-8 text-yellow-500 animate-spin mx-auto mb-2" />
+                <p className="text-gray-400 text-xs sm:text-sm">Waiting for user…</p>
               </div>
             </div>
           )}
 
           {/* Local PiP */}
-          <div className="absolute bottom-4 right-4 w-32 h-24 rounded-xl overflow-hidden border-2 border-gray-600 shadow-xl">
+          <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-20 h-14 sm:w-28 sm:h-20 rounded-lg overflow-hidden border-2 border-gray-600 shadow-xl z-10">
             <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" style={{ transform: 'scaleX(-1)' }} />
+          </div>
+
+          {/* Camera mode badge on video */}
+          <div className={`absolute top-2 left-2 text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-full z-10 ${
+            userCameraMode === 'back' ? 'bg-blue-600/90 text-white' : 'bg-green-600/90 text-white'
+          }`}>
+            User: {userCameraMode === 'back' ? '📄 Back / ID' : '🎥 Front'}
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="bg-gray-900 border-t border-gray-800 px-4 py-4 flex items-center justify-center gap-3 flex-wrap">
-          <button onClick={toggleAudio}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${audioMuted ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}>
-            {audioMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-          </button>
-          <button onClick={toggleVideo}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${videoOff ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}>
-            {videoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
-          </button>
-          <button
-            onClick={() => requestUserCamera('front')}
-            title="Switch user to front camera (face)"
-            className={`h-12 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-semibold transition-colors ${
-              userCameraMode === 'front'
-                ? 'bg-green-600 text-white ring-2 ring-green-400'
-                : 'bg-gray-700 hover:bg-gray-600 text-white'
-            }`}
-          >
-            <Video className="w-4 h-4" /> Front
-          </button>
-          <button
-            onClick={() => requestUserCamera('back')}
-            title="Switch user to back camera (document scan)"
-            className={`h-12 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-semibold transition-colors ${
-              userCameraMode === 'back'
-                ? 'bg-blue-600 text-white ring-2 ring-blue-400'
-                : 'bg-gray-700 hover:bg-gray-600 text-white'
-            }`}
-          >
-            <SwitchCamera className="w-4 h-4" /> Back / ID
-          </button>
-          <button onClick={captureImage} title="Capture screenshot"
-            className="w-12 h-12 rounded-full bg-yellow-600 hover:bg-yellow-500 text-gray-900 flex items-center justify-center transition-colors">
-            <Camera className="w-5 h-5" />
-          </button>
-          <button onClick={endCall}
-            className="w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center transition-colors">
-            <PhoneOff className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Side panel */}
-      <div className="w-full lg:w-80 bg-gray-900 border-t lg:border-t-0 lg:border-l border-gray-800 flex flex-col p-4 gap-4 overflow-y-auto" style={{ maxHeight: '100vh' }}>
-        <div>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">User Camera Control</p>
-          <p className="text-xs text-gray-400 mb-2">
-            Active: <span className={userCameraMode === 'back' ? 'text-blue-400' : 'text-green-400'}>
-              {userCameraMode === 'back' ? 'Back — document scan' : 'Front — face view'}
-            </span>
-          </p>
+        {/* Controls — always pinned at bottom of video column */}
+        <div className="flex-shrink-0 bg-gray-900 border-t border-gray-800 px-2 sm:px-4 py-2 sm:py-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] space-y-2">
+          {/* Camera switch — primary row, full width on mobile */}
           <div className="flex gap-2">
             <button
               onClick={() => requestUserCamera('front')}
-              className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                userCameraMode === 'front' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              className={`flex-1 h-10 sm:h-11 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold transition-colors ${
+                userCameraMode === 'front'
+                  ? 'bg-green-600 text-white ring-2 ring-green-400/60'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
-              🎥 Front Camera
+              <Video className="w-4 h-4 flex-shrink-0" /> Front Camera
             </button>
             <button
               onClick={() => requestUserCamera('back')}
-              className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                userCameraMode === 'back' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              className={`flex-1 h-10 sm:h-11 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold transition-colors ${
+                userCameraMode === 'back'
+                  ? 'bg-blue-600 text-white ring-2 ring-blue-400/60'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
-              📄 Back / ID Scan
+              <SwitchCamera className="w-4 h-4 flex-shrink-0" /> Back / ID Scan
+            </button>
+          </div>
+
+          {/* Action buttons row */}
+          <div className="flex items-center justify-center gap-2 sm:gap-3">
+            <button onClick={toggleAudio}
+              className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-colors ${audioMuted ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}>
+              {audioMuted ? <MicOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Mic className="w-4 h-4 sm:w-5 sm:h-5" />}
+            </button>
+            <button onClick={toggleVideo}
+              className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-colors ${videoOff ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}>
+              {videoOff ? <VideoOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Video className="w-4 h-4 sm:w-5 sm:h-5" />}
+            </button>
+            <button onClick={captureImage} title="Capture screenshot"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-yellow-600 hover:bg-yellow-500 text-gray-900 flex items-center justify-center transition-colors">
+              <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <button onClick={endCall}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center transition-colors">
+              <PhoneOff className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
+      </div>
 
+      {/* Side panel — desktop only; scrollable notes/captures */}
+      <div className="hidden lg:flex lg:w-72 xl:w-80 flex-shrink-0 flex-col bg-gray-900 border-l border-gray-800 p-4 gap-4 overflow-y-auto min-h-0">
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Verification Notes</p>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={4}

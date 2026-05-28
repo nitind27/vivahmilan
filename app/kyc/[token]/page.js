@@ -226,76 +226,92 @@ export default function UserKycPage() {
     </div>
   );
 
-  // Call phase
+  // Call phase — full viewport, no page scroll
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col">
+    <div className="h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-gray-950 flex flex-col">
       {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
+      <div className="flex-shrink-0 bg-gray-900 border-b border-gray-800 px-3 py-2.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           <span className="text-white font-semibold text-sm">Video KYC</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {adminConnected
-            ? <span className="text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded-full">Admin Connected</span>
-            : <span className="text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded-full">Waiting for admin…</span>
+            ? <span className="text-[10px] sm:text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded-full">Admin Connected</span>
+            : <span className="text-[10px] sm:text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded-full">Waiting…</span>
           }
         </div>
       </div>
 
-      {/* Video area */}
-      <div className="flex-1 relative bg-black">
-        {/* Remote (admin) video */}
-        <video ref={remoteVideoRef} autoPlay playsInline
-          className="w-full h-full object-cover"
-          style={{ background: '#111' }}
+      {/* Video area — fills remaining space above controls */}
+      <div className="flex-1 min-h-0 relative bg-black overflow-hidden">
+        <video
+          ref={remoteVideoRef}
+          autoPlay
+          playsInline
+          className="absolute inset-0 w-full h-full object-contain bg-black"
         />
 
-        {/* Local (user) video — PiP */}
-        <div className={`absolute bottom-4 right-4 rounded-2xl overflow-hidden border-2 shadow-xl transition-all ${docMode ? 'w-48 h-36 border-yellow-500' : 'w-32 h-24 border-gray-600'}`}>
+        {/* Local PiP — compact so it doesn't cover controls */}
+        <div className={`absolute bottom-2 right-2 sm:bottom-3 sm:right-3 rounded-xl overflow-hidden border-2 shadow-xl z-10 transition-all ${
+          docMode ? 'w-28 h-20 sm:w-36 sm:h-28 border-yellow-500' : 'w-20 h-14 sm:w-24 sm:h-16 border-gray-600'
+        }`}>
           {docMode && (
             <div className="absolute inset-0 z-10 pointer-events-none">
-              {/* Document border overlay */}
-              <div className="absolute inset-2 border-2 border-yellow-400 rounded-lg opacity-80" />
-              <div className="absolute top-1 left-1/2 -translate-x-1/2 text-yellow-400 text-xs font-bold bg-black/60 px-2 py-0.5 rounded">
-                Place Document Here
+              <div className="absolute inset-1.5 border-2 border-yellow-400 rounded-md opacity-80" />
+              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 text-yellow-400 text-[9px] font-bold bg-black/60 px-1.5 py-0.5 rounded whitespace-nowrap">
+                Place ID Here
               </div>
             </div>
           )}
-          <video ref={localVideoRef} autoPlay playsInline muted
+          <video
+            ref={localVideoRef}
+            autoPlay
+            playsInline
+            muted
             className="w-full h-full object-cover"
             style={!docMode ? { transform: 'scaleX(-1)' } : {}}
           />
         </div>
 
-        {/* Doc mode banner */}
+        {/* Status banners — compact top */}
         {docMode && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-gray-900 font-bold px-4 py-2 rounded-full text-sm animate-pulse">
-            📄 Document Scan Mode — Show your ID
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 max-w-[90%] bg-yellow-500 text-gray-900 font-bold px-3 py-1.5 rounded-full text-[10px] sm:text-xs text-center z-10">
+            📄 Document Scan — Show your ID
+          </div>
+        )}
+        {!docMode && (
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-green-600/90 text-white font-semibold px-3 py-1 rounded-full text-[10px] sm:text-xs z-10">
+            🎥 Face Camera Active
           </div>
         )}
         {cameraSwitching && (
-          <div className="absolute top-4 left-4 bg-black/70 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-2">
-            <Loader2 className="w-3 h-3 animate-spin" /> Switching camera…
+          <div className="absolute top-2 left-2 bg-black/70 text-white text-[10px] px-2 py-1 rounded-full flex items-center gap-1.5 z-10">
+            <Loader2 className="w-3 h-3 animate-spin" /> Switching…
           </div>
         )}
       </div>
 
-      {/* Controls */}
-      <div className="bg-gray-900 border-t border-gray-800 px-4 py-4 flex items-center justify-center gap-4">
-        <button onClick={toggleAudio}
-          className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${audioMuted ? 'bg-red-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
-          {audioMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-        </button>
-        <button onClick={toggleVideo}
-          className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${videoOff ? 'bg-red-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
-          {videoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
-        </button>
-        <p className="text-xs text-gray-500 text-center min-w-[120px]">
-          {cameraSwitching
-            ? 'Switching…'
-            : docMode ? '📄 Back camera (document)' : '🎥 Front camera (face)'}
-        </p>
+      {/* Controls — fixed bottom bar */}
+      <div className="flex-shrink-0 bg-gray-900 border-t border-gray-800 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="flex items-center justify-center gap-3 sm:gap-4">
+          <button onClick={toggleAudio}
+            className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${audioMuted ? 'bg-red-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
+            {audioMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+          </button>
+          <button onClick={toggleVideo}
+            className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${videoOff ? 'bg-red-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
+            {videoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+          </button>
+          <div className="text-center min-w-0 flex-1 max-w-[160px]">
+            <p className="text-[10px] sm:text-xs text-gray-400 truncate">
+              {cameraSwitching
+                ? 'Switching camera…'
+                : docMode ? '📄 Back — document' : '🎥 Front — face'}
+            </p>
+            <p className="text-[9px] text-gray-600 hidden sm:block">Admin controls camera</p>
+          </div>
+        </div>
       </div>
     </div>
   );

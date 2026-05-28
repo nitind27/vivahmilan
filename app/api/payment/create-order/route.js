@@ -38,14 +38,15 @@ export async function POST(req) {
   let appliedAgent = null;
 
   if (couponCode) {
-    const coupon = await prisma.couponcode.findUnique({ where: { code: couponCode } });
+    const normalizedCoupon = String(couponCode).trim().toUpperCase();
+    const coupon = await prisma.couponCode.findUnique({ where: { code: normalizedCoupon } });
     if (coupon && coupon.isActive && coupon.usedCount < coupon.maxUses && (!coupon.expiresAt || new Date(coupon.expiresAt) > new Date())) {
       const discount = amount * (coupon.discountPct / 100);
       amount = Math.max(0, amount - discount);
       appliedCoupon = coupon;
     } else {
       // Check if it's an agent referral code instead
-      const agent = await queryOne('SELECT * FROM agent WHERE referralCode = ?', [couponCode.toUpperCase()]);
+      const agent = await queryOne('SELECT * FROM agent WHERE referralCode = ?', [normalizedCoupon]);
       if (agent) {
         // Apply 5% discount for using agent code
         const discount = amount * 0.05;
@@ -95,7 +96,7 @@ export async function POST(req) {
 
     // Mark coupon as used
     if (appliedCoupon) {
-      await prisma.couponcode.update({
+      await prisma.couponCode.update({
         where: { id: appliedCoupon.id },
         data: { usedCount: appliedCoupon.usedCount + 1 }
       });
@@ -150,7 +151,7 @@ export async function POST(req) {
     });
     
     if (appliedCoupon) {
-      await prisma.couponcode.update({
+      await prisma.couponCode.update({
         where: { id: appliedCoupon.id },
         data: { usedCount: appliedCoupon.usedCount + 1 }
       });

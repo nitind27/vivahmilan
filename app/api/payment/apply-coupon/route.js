@@ -11,11 +11,12 @@ export async function POST(req) {
   const { code, planId } = await req.json();
   if (!code || !planId) return NextResponse.json({ error: 'Code and planId required' }, { status: 400 });
 
+  const normalizedCode = code.trim().toUpperCase();
   let isAgent = false;
   let discountPct = 0;
-  let couponCode = code;
+  let couponCode = normalizedCode;
 
-  const coupon = await prisma.couponcode.findUnique({ where: { code } });
+  const coupon = await prisma.couponCode.findUnique({ where: { code: normalizedCode } });
   
   if (coupon) {
     if (!coupon.isActive) return NextResponse.json({ error: 'Coupon is not active' }, { status: 400 });
@@ -24,7 +25,7 @@ export async function POST(req) {
     discountPct = coupon.discountPct;
   } else {
     // Check if it's an agent referral code
-    const agent = await queryOne('SELECT id, referralCode FROM agent WHERE referralCode = ?', [code.toUpperCase()]);
+    const agent = await queryOne('SELECT id, referralCode FROM agent WHERE referralCode = ?', [normalizedCode]);
     if (!agent) return NextResponse.json({ error: 'Invalid promo or referral code' }, { status: 404 });
     isAgent = true;
     discountPct = 5; // Give buyer a 5% incentive to use referral codes
