@@ -240,6 +240,7 @@ function LoginInner() {
   const [pendingEmail, setPendingEmail] = useState(null);
   const [showQR, setShowQR] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginMode, setLoginMode] = useState('member');
 
   useEffect(() => {
     setRememberMe(getRememberPreference());
@@ -299,7 +300,8 @@ function LoginInner() {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setLoading(true);
-    const res = await signIn('credentials', {
+    const provider = loginMode === 'family' ? 'family-login' : 'credentials';
+    const res = await signIn(provider, {
       email: form.email.trim(),
       password: form.password,
       remember: rememberMe ? 'true' : 'false',
@@ -317,7 +319,7 @@ function LoginInner() {
       toast.error(res.error === 'CredentialsSignin' ? 'Invalid email or password' : res.error);
     } else {
       saveRememberLogin(form.email, rememberMe);
-      toast.success(rememberMe ? 'Welcome back! You will stay signed in for 30 days.' : 'Welcome back!');
+      toast.success(rememberMe ? 'Welcome back! You will stay signed in for 30 days.' : loginMode === 'family' ? 'Family login successful' : 'Welcome back!');
       logWebLogin();
       const s = await getSession();
       const callbackUrl = searchParams?.get('callbackUrl');
@@ -399,9 +401,24 @@ function LoginInner() {
                     <span className="text-xs font-medium text-vd-primary uppercase tracking-wider">Welcome Back</span>
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-bold text-vd-text-heading">Sign in to your account</h1>
-                  <p className="text-vd-text-sub text-sm mt-1">Continue your journey to find the perfect match</p>
+                  <p className="text-vd-text-sub text-sm mt-1">
+                    {loginMode === 'family' ? 'Family member login — browse profiles read-only' : 'Continue your journey to find the perfect match'}
+                  </p>
                 </div>
 
+                <div className="flex bg-vd-bg-alt rounded-xl p-1 border border-vd-border mb-4">
+                  <button type="button" onClick={() => setLoginMode('member')}
+                    className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${loginMode === 'member' ? 'bg-vd-primary text-white' : 'text-vd-text-sub'}`}>
+                    Member Login
+                  </button>
+                  <button type="button" onClick={() => setLoginMode('family')}
+                    className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${loginMode === 'family' ? 'bg-vd-primary text-white' : 'text-vd-text-sub'}`}>
+                    Family Login
+                  </button>
+                </div>
+
+                {loginMode === 'member' && (
+                <>
                 {/* Google */}
                 <button
                   type="button"
@@ -449,6 +466,8 @@ function LoginInner() {
                   <span className="text-xs text-vd-text-light font-medium px-2">OR</span>
                   <div className="flex-1 h-px bg-vd-border" />
                 </div>
+                </>
+                )}
 
                 <form onSubmit={handleSubmit} noValidate className="space-y-4">
                   <div>
@@ -472,7 +491,9 @@ function LoginInner() {
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <label className="block text-sm font-semibold text-vd-text-sub">Password</label>
+                      {loginMode === 'member' && (
                       <Link href="/forgot-password" className="text-xs text-vd-primary hover:text-vd-primary-dark font-medium">Forgot password?</Link>
+                      )}
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />

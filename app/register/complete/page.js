@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { Heart, CheckCircle, Clock, ChevronRight, ChevronLeft, User, MapPin, BookOpen, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SiteLoader from '@/components/SiteLoader';
+import AboutMeField from '@/components/AboutMeField';
+import { validateAboutMe } from '@/lib/aboutMeValidation';
 
 const RELIGIONS = ['Hindu','Muslim','Christian','Sikh','Buddhist','Jain','Jewish','Parsi','Other'];
 const GENDERS   = ['MALE','FEMALE','OTHER'];
@@ -71,6 +73,11 @@ function CompleteInner() {
   const handleSubmit = async () => {
     if (!form.gender || !form.dob || !form.religion) {
       toast.error('Please fill Gender, Date of Birth and Religion');
+      return;
+    }
+    const aboutCheck = validateAboutMe(form.aboutMe, { required: true });
+    if (!aboutCheck.ok) {
+      toast.error(aboutCheck.error);
       return;
     }
     setSaving(true);
@@ -190,11 +197,12 @@ function CompleteInner() {
               {inp('Date of Birth *', form.dob, set('dob'), 'date')}
               {inp('Phone Number', form.phone, set('phone'), 'tel', '+91 9999999999')}
               {sel('Marital Status', form.maritalStatus, set('maritalStatus'), MARITAL)}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">About Me</label>
-                <textarea value={form.aboutMe} onChange={e => set('aboutMe')(e.target.value)} rows={3} placeholder="Tell something about yourself..."
-                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-vd-primary resize-none" />
-              </div>
+              <AboutMeField
+                value={form.aboutMe}
+                onChange={(v) => set('aboutMe')(v)}
+                rows={5}
+                inputClassName="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-vd-primary resize-none"
+              />
             </>}
 
             {/* Step 1: Religion */}

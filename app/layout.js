@@ -6,6 +6,7 @@ import SetPasswordModal from '@/components/SetPasswordModal';
 import MarketingPopup from '@/components/MarketingPopup';
 import PageTracker from '@/components/PageTracker';
 import CookieConsent from '@/components/CookieConsent';
+import InstallPWA from '@/components/InstallPWA';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
@@ -16,6 +17,12 @@ export const metadata = {
     title: 'Milan Matrimony',
     description: 'Find your perfect life partner',
     type: 'website',
+  },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Milan',
   },
 };
 
@@ -28,12 +35,19 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#C8A45C" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="apple-touch-icon" href="/logo/icon.png" />
       </head>
       <body className={`bg-vd-bg dark:bg-vd-bg text-vd-text-heading dark:text-vd-text-heading`} suppressHydrationWarning>
         <Providers>
           <SWRegister />
           <PageTracker />
           {children}
+          <InstallPWA />
           <SetPasswordModal />
           <MarketingPopup />
           <ChatBot />

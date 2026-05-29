@@ -1,15 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Check, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function StoriesPage() {
+  const [tab, setTab] = useState('published');
   const [stories, setStories] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const [editStory, setEditStory] = useState(null);
   const [newStory, setNewStory] = useState({ coupleName: '', location: '', story: '', imageUrl: '', sortOrder: 0 });
 
   const load = () => fetch('/api/admin/stories').then(r => r.json()).then(d => setStories(Array.isArray(d) ? d : [])).catch(() => {});
-  useEffect(() => { load(); }, []);
+  const loadSubs = () => fetch('/api/admin/story-submissions').then(r => r.json()).then(d => setSubmissions(d.submissions || [])).catch(() => {});
+
+  useEffect(() => { load(); loadSubs(); }, []);
 
   const save = async (data) => {
     const res = await fetch('/api/admin/stories', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -23,10 +27,63 @@ export default function StoriesPage() {
     toast.success('Deleted'); load();
   };
 
+  const reviewSub = async (id, action) => {
+    const adminNote = action === 'reject' ? prompt('Rejection reason (optional):') : '';
+    const res = await fetch('/api/admin/story-submissions', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action, adminNote: adminNote || undefined }),
+    });
+    if (res.ok) {
+      toast.success(action === 'approve' ? 'Published on homepage' : 'Rejected');
+      loadSubs();
+      load();
+    } else toast.error('Failed');
+  };
+
   const inp = "w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500";
+  const pendingCount = submissions.filter(s => s.status === 'PENDING').length;
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => setTab('published')} className={`px-4 py-2 rounded-xl text-sm font-semibold ${tab === 'published' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}>
+          Published ({stories.length})
+        </button>
+        <button onClick={() => setTab('pending')} className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 ${tab === 'pending' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}>
+          User Submissions
+          {pendingCount > 0 && <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{pendingCount}</span>}
+        </button>
+      </div>
+
+      {tab === 'pending' ? (
+        <div className="space-y-3">
+          {submissions.length === 0 && <div className="text-center py-10 text-gray-500">No user submissions yet.</div>}
+          {submissions.map(s => (
+            <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <p className="font-semibold text-white">{s.coupleName}</p>
+                  <p className="text-xs text-gray-400">{s.location} · by {s.submitterName} ({s.submitterEmail})</p>
+                  <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${s.status === 'PENDING' ? 'bg-amber-900/40 text-amber-400' : s.status === 'APPROVED' ? 'bg-green-900/40 text-green-400' : 'bg-red-900/40 text-red-400'}`}>
+                    {s.status}
+                  </span>
+                </div>
+                {s.status === 'PENDING' && (
+                  <div className="flex gap-2 shrink-0">
+                    <button onClick={() => reviewSub(s.id, 'approve')} className="p-2 bg-green-900/40 text-green-400 rounded-lg hover:bg-green-900/60"><Check className="w-4 h-4" /></button>
+                    <button onClick={() => reviewSub(s.id, 'reject')} className="p-2 bg-red-900/40 text-red-400 rounded-lg hover:bg-red-900/60"><X className="w-4 h-4" /></button>
+                  </div>
+                )}
+              </div>
+              <p className="text-sm text-gray-300 line-clamp-4">&ldquo;{s.story}&rdquo;</p>
+              {s.weddingDate && <p className="text-xs text-gray-500 mt-2">Wedding: {s.weddingDate}</p>}
+              {s.metOnPlatform && <p className="text-xs text-vd-primary mt-1">Met on platform ✓</p>}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <>
       <p className="text-gray-400 text-sm">Manage success stories shown on the homepage.</p>
       <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
         <h3 className="font-bold text-lg mb-4">Add New Story</h3>
@@ -77,6 +134,8 @@ export default function StoriesPage() {
           </div>
         ))}
       </div>
+        </>
+      )}
     </div>
   );
 }

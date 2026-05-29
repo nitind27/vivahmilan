@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import SiteLoader, { SiteLoaderInline } from '@/components/SiteLoader';
+import { normalizePlans, parsePlanPermissions } from '@/lib/plans.js';
 import {
   CheckCircle, Star, Zap, Shield, MessageCircle,
   Eye, TrendingUp, Lock, Crown, Sparkles, ChevronDown,
@@ -35,10 +36,11 @@ export default function PremiumPage() {
   }, [status, router]);
 
   useEffect(() => {
-    fetch('/api/plans') // Need to create this endpoint or use /api/admin/plans without auth? Wait, users need an endpoint.
-      .then(r => r.json())
-      .then(d => { setPlans(Array.isArray(d) ? d.filter(p => p.isActive) : []); setLoadingPlans(false); })
-      .catch(() => setLoadingPlans(false));
+    fetch('/api/plans')
+      .then(r => (r.ok ? r.json() : Promise.reject()))
+      .then(d => setPlans(normalizePlans(d)))
+      .catch(() => setPlans([]))
+      .finally(() => setLoadingPlans(false));
   }, []);
 
   const [couponCode, setCouponCode] = useState('');
@@ -169,6 +171,12 @@ export default function PremiumPage() {
 
           {loadingPlans ? (
             <SiteLoaderInline message="Loading plans…" className="py-20" />
+          ) : plans.length === 0 ? (
+            <div className="text-center py-20 text-gray-500">
+              <Crown className="w-10 h-10 mx-auto mb-3 text-vd-primary/40" />
+              <p className="font-medium text-gray-700 dark:text-gray-300">No premium plans available right now.</p>
+              <p className="text-sm mt-1">Please check back later or contact support.</p>
+            </div>
           ) : (
             <div className={`grid gap-6 max-w-5xl mx-auto ${plans.length <= 2 ? 'md:grid-cols-2' : plans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
               {plans.map((p, i) => {
@@ -188,7 +196,7 @@ export default function PremiumPage() {
                 const discount = discountData ? discountData.discountPct : 0;
                 const discountedPrice = isFree ? 0 : Math.round(totalPrice * (1 - discount / 100));
                 
-                const perms = p.permissions ? JSON.parse(p.permissions) : {};
+                const perms = parsePlanPermissions(p.permissions);
                 const features = getFeaturesList(perms);
                 
                 return (

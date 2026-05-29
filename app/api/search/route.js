@@ -28,6 +28,10 @@ export async function GET(req) {
   const heightMin     = searchParams.get('heightMin')     || '';
   const heightMax     = searchParams.get('heightMax')     || '';
   const verifiedOnly  = searchParams.get('verifiedOnly')  === '1' || searchParams.get('verifiedOnly') === 'true';
+  const rashi         = searchParams.get('rashi')         || '';
+  const nakshatra     = searchParams.get('nakshatra')     || '';
+  const manglik       = searchParams.get('manglik')       || '';
+  const hasKundali    = searchParams.get('hasKundali')    === '1' || searchParams.get('hasKundali') === 'true';
 
   // Get current user's profile for religion/gotra/gender filtering
   const currentUser = await queryOne(
@@ -122,8 +126,29 @@ export async function GET(req) {
     conditions.push('p.dob >= ?'); params.push(dobMin);
   }
 
+  const kundaliJoin = (rashi || nakshatra || manglik || hasKundali)
+    ? ' LEFT JOIN kundali k ON k.userId = u.id'
+    : '';
+
+  if (hasKundali) {
+    conditions.push('k.userId IS NOT NULL');
+  }
+  if (rashi) {
+    conditions.push('k.rashi = ?');
+    params.push(rashi);
+  }
+  if (nakshatra) {
+    conditions.push('k.nakshatra = ?');
+    params.push(nakshatra);
+  }
+  if (manglik === '1') {
+    conditions.push('k.manglik = 1');
+  } else if (manglik === '0') {
+    conditions.push('(k.manglik = 0 OR k.manglik IS NULL)');
+  }
+
   const where  = 'WHERE ' + conditions.join(' AND ');
-  const baseSQL = `FROM \`user\` u LEFT JOIN profile p ON p.userId = u.id ${where}`;
+  const baseSQL = `FROM \`user\` u LEFT JOIN profile p ON p.userId = u.id${kundaliJoin} ${where}`;
 
   const countRow = await queryOne(`SELECT COUNT(*) as cnt ${baseSQL}`, params);
   const total = Number(countRow?.cnt ?? 0);

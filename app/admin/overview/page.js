@@ -4,13 +4,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Users, Star, UserCheck, Flag, MessageCircle, Heart, TrendingUp, Shield,
-  Search, X, CheckCircle, RefreshCw, Crown, Sparkles, Bell,
+  Search, X, CheckCircle, RefreshCw, Crown, Sparkles,
   Eye, ChevronRight, ArrowUpRight, ArrowDownRight, MapPin, Calendar, Zap,
-  AlertTriangle, CreditCard, LayoutGrid, SlidersHorizontal
+  AlertTriangle, CreditCard, SlidersHorizontal, Activity, UserPlus, Gauge
 } from 'lucide-react';
 import { format } from 'date-fns';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
-import { ADMIN_TABS } from '@/app/admin/layout';
 
 const PERIOD_OPTIONS = [
   { value: 7, label: '7 days' },
@@ -466,13 +465,175 @@ function UserSearchBar() {
   );
 }
 
-const SHORTCUT_GROUPS = [
-  { title: 'Members & Profiles', ids: ['pending', 'members', 'createprofile', 'matchmaker', 'premium'] },
-  { title: 'Revenue & Plans', ids: ['subscriptions', 'plans', 'coupons', 'affiliates'] },
-  { title: 'Content & Site', ids: ['homepage', 'stories', 'marketing', 'options', 'siteconfig'] },
-  { title: 'Moderation', ids: ['reports', 'activity', 'broadcast', 'support'] },
-  { title: 'Insights', ids: ['analytics'] },
-];
+function calcHealthScore(stats) {
+  if (!stats?.totalUsers) return { score: 0, label: 'Loading…', color: 'text-gray-400' };
+  const pending = (stats.pendingAdminVerify || 0) + (stats.pendingReports || 0) + (stats.pendingVerifications || 0);
+  const pendingPenalty = Math.min(35, (pending / stats.totalUsers) * 150);
+  const raw = (stats.verifyRate || 0) * 0.35
+    + (stats.premiumRate || 0) * 0.25
+    + (stats.avgProfileComplete || 0) * 0.25
+    + 15
+    - pendingPenalty;
+  const score = Math.round(Math.min(100, Math.max(0, raw)));
+  if (score >= 80) return { score, label: 'Excellent', color: 'text-green-400' };
+  if (score >= 60) return { score, label: 'Good', color: 'text-blue-400' };
+  if (score >= 40) return { score, label: 'Fair', color: 'text-yellow-400' };
+  return { score, label: 'Needs work', color: 'text-orange-400' };
+}
+
+function HealthRing({ stats, loading }) {
+  const size = 100;
+  const stroke = 8;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center">
+        <Skeleton className="w-[100px] h-[100px] rounded-full" />
+        <Skeleton className="h-3 w-16 mt-2" />
+      </div>
+    );
+  }
+
+  const { score, label, color } = calcHealthScore(stats);
+  const ringOffset = circ - (score / 100) * circ;
+  const ringColor = score >= 80 ? '#22c55e' : score >= 60 ? '#3b82f6' : score >= 40 ? '#eab308' : '#f97316';
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="-rotate-90">
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#374151" strokeWidth={stroke} />
+          <circle
+            cx={size / 2} cy={size / 2} r={r} fill="none"
+            stroke={ringColor} strokeWidth={stroke} strokeLinecap="round"
+            strokeDasharray={circ} strokeDashoffset={ringOffset}
+            className="transition-all duration-700"
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className={`text-2xl font-bold tabular-nums ${color}`}>{score}</span>
+          <span className="text-[9px] text-gray-500 uppercase">Health</span>
+        </div>
+      </div>
+      <p className={`text-xs font-semibold mt-2 ${color}`}>{label}</p>
+    </div>
+  );
+}
+
+function PlatformCommandCenter({ stats, loading, days }) {
+  const funnel = useMemo(() => {
+    const total = stats?.totalUsers || 0;
+    return [
+      { label: 'Registered', value: total, pct: 100, color: 'bg-blue-500' },
+      { label: 'Verified', value: stats?.verifiedUsers ?? 0, pct: total ? Math.round(((stats?.verifiedUsers ?? 0) / total) * 100) : 0, color: 'bg-green-500' },
+      { label: 'Premium', value: stats?.premiumUsers ?? 0, pct: total ? Math.round(((stats?.premiumUsers ?? 0) / total) * 100) : 0, color: 'bg-yellow-500' },
+    ];
+  }, [stats]);
+
+  const todayItems = [
+    { icon: UserPlus, label: 'New signups', value: stats?.newUsersToday, color: 'text-green-400', bg: 'bg-green-900/20' },
+    { icon: Heart, label: 'Interests sent', value: stats?.newInterestsToday, color: 'text-pink-400', bg: 'bg-pink-900/20' },
+    { icon: MessageCircle, label: 'Messages', value: stats?.newMessagesToday, color: 'text-blue-400', bg: 'bg-blue-900/20' },
+    { icon: AlertTriangle, label: 'Action queue', value: (stats?.pendingAdminVerify ?? 0) + (stats?.pendingReports ?? 0) + (stats?.pendingVerifications ?? 0), color: 'text-orange-400', bg: 'bg-orange-900/20' },
+  ];
+
+  const periodGrowth = stats?.newUsersPeriod ?? 0;
+
+  return (
+    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+      <div className="px-4 sm:px-5 py-3 border-b border-gray-700 bg-gradient-to-r from-gray-800 via-gray-800 to-vd-primary/5">
+        <h3 className="font-semibold text-white flex items-center gap-2 text-sm">
+          <Gauge className="w-4 h-4 text-vd-primary" />
+          Platform Command Center
+          <span className="text-[10px] text-gray-500 font-normal ml-auto">Last {days} days · live snapshot</span>
+        </h3>
+      </div>
+
+      <div className="p-4 sm:p-5 grid grid-cols-1 lg:grid-cols-3 gap-5 min-w-0">
+        {/* Health */}
+        <div className="flex flex-col items-center justify-center p-4 bg-gray-900/40 rounded-xl border border-gray-700/50 min-w-0">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 self-start">Platform Health</p>
+          <HealthRing stats={stats} loading={loading} />
+          {!loading && (
+            <div className="mt-3 w-full space-y-1.5 text-[11px] text-gray-500">
+              <div className="flex justify-between gap-2"><span>Verified</span><span className="text-gray-300 tabular-nums">{stats?.verifyRate ?? 0}%</span></div>
+              <div className="flex justify-between gap-2"><span>Premium</span><span className="text-gray-300 tabular-nums">{stats?.premiumRate ?? 0}%</span></div>
+              <div className="flex justify-between gap-2"><span>Avg profile</span><span className="text-gray-300 tabular-nums">{stats?.avgProfileComplete ?? 0}%</span></div>
+            </div>
+          )}
+        </div>
+
+        {/* Today's pulse */}
+        <div className="p-4 bg-gray-900/40 rounded-xl border border-gray-700/50 min-w-0">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5 text-vd-primary" /> Today&apos;s Pulse
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {todayItems.map(item => (
+              <div key={item.label} className="flex items-center gap-2.5 p-2.5 bg-gray-800/60 rounded-lg min-w-0">
+                <div className={`w-8 h-8 ${item.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                  <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
+                </div>
+                <div className="min-w-0">
+                  {loading
+                    ? <Skeleton className="h-5 w-10 mb-1" />
+                    : <p className="text-base font-bold text-white tabular-nums truncate">{fmt(item.value)}</p>}
+                  <p className="text-[10px] text-gray-500 truncate">{item.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          {!loading && (
+            <p className="text-[10px] text-gray-600 mt-3 text-center">
+              +{fmt(periodGrowth)} new members in selected period
+            </p>
+          )}
+        </div>
+
+        {/* Member funnel */}
+        <div className="p-4 bg-gray-900/40 rounded-xl border border-gray-700/50 min-w-0">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <TrendingUp className="w-3.5 h-3.5 text-green-400" /> Member Journey
+          </p>
+          {loading ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-10 w-full" />)}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {funnel.map(step => (
+                <div key={step.label} className="min-w-0">
+                  <div className="flex items-center justify-between text-xs mb-1 gap-2">
+                    <span className="text-gray-400 truncate">{step.label}</span>
+                    <span className="text-white font-semibold tabular-nums flex-shrink-0">{fmt(step.value)}</span>
+                  </div>
+                  <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div className={`h-2 ${step.color} rounded-full transition-all duration-500`} style={{ width: `${step.pct}%` }} />
+                  </div>
+                  <p className="text-[10px] text-gray-600 mt-0.5 tabular-nums">{step.pct}% of registered</p>
+                </div>
+              ))}
+              <div className="pt-2 border-t border-gray-700/50 grid grid-cols-2 gap-2 text-[10px]">
+                <div className="text-center p-2 bg-gray-800/50 rounded-lg">
+                  <p className="text-gray-500">Accept rate</p>
+                  <p className="text-green-400 font-bold tabular-nums mt-0.5">
+                    {stats?.totalInterests ? Math.round(((stats.interestsAccepted || 0) / stats.totalInterests) * 100) : 0}%
+                  </p>
+                </div>
+                <div className="text-center p-2 bg-gray-800/50 rounded-lg">
+                  <p className="text-gray-500">Free members</p>
+                  <p className="text-blue-400 font-bold tabular-nums mt-0.5">{fmt(stats?.freeUsers)}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function OverviewPage() {
   const router = useRouter();
@@ -484,7 +645,6 @@ export default function OverviewPage() {
   const [geoSortDesc, setGeoSortDesc] = useState(true);
   const [userSort, setUserSort] = useState({ key: 'createdAt', desc: true });
   const [userFilter, setUserFilter] = useState('all');
-  const [showAllShortcuts, setShowAllShortcuts] = useState(false);
   const loadRef = useRef(0);
   const hasLoadedRef = useRef(false);
 
@@ -628,6 +788,9 @@ export default function OverviewPage() {
         </div>
       )}
 
+      {/* Quick user lookup — most-used admin action */}
+      <UserSearchBar />
+
       {/* Pending alerts */}
       {!initialLoading && pendingTotal > 0 && (
         <div className="bg-orange-900/20 border border-orange-700/40 rounded-2xl p-4 flex flex-wrap items-center gap-3">
@@ -653,78 +816,7 @@ export default function OverviewPage() {
         </div>
       )}
 
-      {!initialLoading && (
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-700 flex items-center justify-between">
-          <h3 className="font-semibold text-white flex items-center gap-2">
-            <LayoutGrid className="w-4 h-4 text-vd-primary" /> Admin Shortcuts
-          </h3>
-          <button
-            type="button"
-            onClick={() => setShowAllShortcuts(v => !v)}
-            className="text-xs text-gray-400 hover:text-white transition-colors"
-          >
-            {showAllShortcuts ? 'Grouped view' : 'Show all'}
-          </button>
-        </div>
-        <div className="p-4">
-          {showAllShortcuts ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-              {ADMIN_TABS.map(tab => {
-                const badge = tab.badge ? stats?.[tab.badge] : 0;
-                return (
-                  <Link
-                    key={tab.id}
-                    href={`/admin/${tab.id}`}
-                    className="flex items-center gap-2.5 px-3 py-3 bg-gray-700/40 hover:bg-gray-700 rounded-xl border border-gray-700/50 hover:border-gray-600 transition-all group min-w-0 overflow-hidden"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 group-hover:bg-vd-primary/20">
-                      <tab.icon className="w-4 h-4 text-gray-400 group-hover:text-vd-primary" />
-                    </div>
-                    <span className="text-xs font-medium text-gray-300 group-hover:text-white truncate flex-1">{tab.label}</span>
-                    {badge > 0 && (
-                      <span className="bg-red-500 text-white text-[10px] font-bold min-w-[1.1rem] h-4 px-1 rounded-full flex items-center justify-center">
-                        {badge > 99 ? '99+' : badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {SHORTCUT_GROUPS.map(group => (
-                <div key={group.title}>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{group.title}</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                    {group.ids.map(id => {
-                      const tab = ADMIN_TABS.find(t => t.id === id);
-                      if (!tab) return null;
-                      const badge = tab.badge ? stats?.[tab.badge] : 0;
-                      return (
-                        <Link
-                          key={tab.id}
-                          href={`/admin/${tab.id}`}
-                          className="flex items-center gap-2 px-3 py-2.5 bg-gray-700/30 hover:bg-gray-700 rounded-xl border border-gray-700/50 hover:border-gray-600 transition-all group min-w-0 overflow-hidden"
-                        >
-                          <tab.icon className="w-4 h-4 text-gray-500 group-hover:text-vd-primary flex-shrink-0" />
-                          <span className="text-xs text-gray-400 group-hover:text-white truncate flex-1">{tab.label}</span>
-                          {badge > 0 && (
-                            <span className="bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                              {badge > 9 ? '9+' : badge}
-                            </span>
-                          )}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-      )}
+      <PlatformCommandCenter stats={stats} loading={showKpiSkeleton} days={days} />
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
@@ -937,30 +1029,6 @@ export default function OverviewPage() {
           </table>
         </div>
       </div>
-
-      {/* Quick actions row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          { label: 'Approve pending users', count: stats?.pendingAdminVerify, href: '/admin/pending', icon: UserCheck, color: 'from-orange-600/20 to-orange-900/10 border-orange-700/40' },
-          { label: 'Review reports', count: stats?.pendingReports, href: '/admin/reports', icon: Flag, color: 'from-red-600/20 to-red-900/10 border-red-700/40' },
-          { label: 'Manage subscriptions', count: stats?.activeSubscriptions, href: '/admin/subscriptions', icon: Star, color: 'from-yellow-600/20 to-yellow-900/10 border-yellow-700/40' },
-          { label: 'Broadcast message', count: null, href: '/admin/broadcast', icon: Bell, color: 'from-blue-600/20 to-blue-900/10 border-blue-700/40' },
-        ].map(action => (
-          <button
-            key={action.href}
-            type="button"
-            onClick={() => router.push(action.href)}
-            className={`bg-gradient-to-br ${action.color} border rounded-2xl p-4 text-left hover:opacity-90 transition-opacity group`}
-          >
-            <action.icon className="w-5 h-5 text-white/70 mb-2 group-hover:text-white" />
-            <p className="text-sm font-semibold text-white">{action.label}</p>
-            {action.count != null && <p className="text-xs text-gray-400 mt-0.5">{fmt(action.count)} pending</p>}
-          </button>
-        ))}
-      </div>
-
-      {/* User search at bottom too for quick access */}
-      <UserSearchBar />
     </div>
   );
 }

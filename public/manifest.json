@@ -1,0 +1,30 @@
+{
+  "name": "Milan Matrimony",
+  "short_name": "Milan",
+  "description": "Find your perfect life partner — verified matrimonial profiles",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#FFFDF8",
+  "theme_color": "#C8A45C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["social", "lifestyle"],
+  "shortcuts": [
+    { "name": "Search", "url": "/search", "description": "Find matches" },
+    { "name": "Messages", "url": "/chat", "description": "Open chat" },
+    { "name": "Interests", "url": "/interests", "description": "View interests" }
+  ]
+}

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
 import { validateSubmitForReview } from '@/lib/profileVerification';
+import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 
 export async function POST(req) {
   try {
@@ -35,6 +36,13 @@ export async function POST(req) {
     const filled = fields.filter(f => sanitized[f]).length;
     const profileComplete = Math.round((filled / fields.length) * 100);
 
+    if (sanitized.aboutMe != null && sanitized.aboutMe !== '') {
+      const aboutErr = assertAboutMeForSave(sanitized.aboutMe);
+      if (aboutErr) {
+        return NextResponse.json({ error: aboutErr.error, code: aboutErr.code }, { status: 400 });
+      }
+    }
+
     // Update user name/phone
     if (name || phone) {
       await execute(
@@ -66,6 +74,11 @@ export async function POST(req) {
 
     // If final submit — validate requirements then mark ready for admin review
     if (_submitForReview) {
+      const aboutErr = assertAboutMeForSave(sanitized.aboutMe, { required: true });
+      if (aboutErr) {
+        return NextResponse.json({ error: aboutErr.error, code: aboutErr.code }, { status: 400 });
+      }
+
       const validation = await validateSubmitForReview(user.id);
       if (!validation.ok) {
         return NextResponse.json({

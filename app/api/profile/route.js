@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 
 // Auto-migrate: add missing columns if they don't exist
 async function ensureColumns() {
@@ -74,6 +75,13 @@ export async function PUT(req) {
   const fields = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
   const filled = fields.filter(f => sanitized[f] != null).length;
   const profileComplete = Math.round((filled / fields.length) * 100);
+
+  if (Object.prototype.hasOwnProperty.call(profileData, 'aboutMe') && sanitized.aboutMe) {
+    const aboutErr = assertAboutMeForSave(sanitized.aboutMe);
+    if (aboutErr) {
+      return NextResponse.json({ error: aboutErr.error, code: aboutErr.code }, { status: 400 });
+    }
+  }
 
   if (name || phone) {
     await execute(

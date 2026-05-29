@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark, Smartphone, Lock } from 'lucide-react';
+import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark, Smartphone, Lock, Eye, Gift } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -181,8 +181,20 @@ export default function Navbar() {
                           <Link href="/shortlist" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Bookmark className="w-4 h-4" /> My Shortlist
                           </Link>
+                          <Link href="/views" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <Eye className="w-4 h-4" /> Who Viewed Me
+                          </Link>
+                          <Link href="/settings" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <Settings className="w-4 h-4" /> Settings
+                          </Link>
+                          <Link href="/refer" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <Gift className="w-4 h-4" /> Refer & Earn
+                          </Link>
+                          <Link href="/share-story" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <Heart className="w-4 h-4" /> Share Story
+                          </Link>
                           <Link href="/profile/edit" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            <Settings className="w-4 h-4" /> Edit Profile
+                            <User className="w-4 h-4" /> Edit Profile
                           </Link>
                           <Link href="/settings/password" onClick={() => setDropOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <Lock className="w-4 h-4" /> Change Password

@@ -153,6 +153,19 @@ export async function GET(req) {
         today_profile_views: Number(todayProfileViewRow?.cnt)   || 0,
         today_messages:      Number(todayMessagesRow?.cnt)      || 0,
       },
+      features: {
+        who_viewed_me: '/api/flutter/profile-views',
+        settings: '/api/flutter/settings',
+        referral: '/api/flutter/referral',
+        saved_searches: '/api/flutter/saved-searches',
+        match_score: '/api/flutter/match-score',
+        kundali_match: '/api/flutter/kundali/match',
+        kundali_match_pdf: '/api/flutter/kundali/match/pdf',
+        recently_viewed: '/api/flutter/recently-viewed',
+        success_stories: '/api/flutter/success-stories',
+        compare_profiles: '/api/flutter/compare',
+        permissions: '/api/flutter/features',
+      },
       new_matches_today: newMatchesToday.map(r =>
         buildProfileCard(r, maps)
       ),

@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/components/Navbar';
-import SiteLoader from '@/components/SiteLoader';
+import SiteLoader, { SiteLoaderInline } from '@/components/SiteLoader';
+import { normalizePlans, parsePlanPermissions } from '@/lib/plans.js';
 import CookieManageButton from '@/components/CookieManageButton';
 import {
   Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp,
@@ -142,6 +143,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
   const [pricingPlans, setPricingPlans] = useState([]);
+  const [pricingPlansLoading, setPricingPlansLoading] = useState(true);
   const [selectedMonths, setSelectedMonths] = useState(3);
   const [couponCode, setCouponCode] = useState('');
   const [couponStatus, setCouponStatus] = useState(null);
@@ -195,9 +197,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/admin/plans').then(r => r.json()).then(data => {
-      if (Array.isArray(data)) setPricingPlans(data.filter(p => p.isActive !== false));
-    }).catch(() => {});
+    fetch('/api/plans')
+      .then(r => (r.ok ? r.json() : Promise.reject()))
+      .then(data => setPricingPlans(normalizePlans(data)))
+      .catch(() => setPricingPlans([]))
+      .finally(() => setPricingPlansLoading(false));
   }, []);
 
   useEffect(() => {
@@ -508,7 +512,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Success <span className="vd-gradient-text">Stories</span></h2>
-            <p className="text-vd-text-sub">Real couples, real love stories.</p>
+            <p className="text-vd-text-sub mb-4">Real couples, real love stories.</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/stories" className="text-sm font-semibold text-vd-primary border border-vd-primary/30 px-5 py-2 rounded-full hover:bg-vd-accent-soft transition-colors">
+                View All Stories
+              </Link>
+              <Link href="/share-story" className="text-sm font-semibold vd-gradient-gold text-white px-5 py-2 rounded-full hover:opacity-90 transition-opacity">
+                Share Your Story
+              </Link>
+            </div>
           </motion.div>
 
           {stories.length === 0 ? (
@@ -664,10 +676,13 @@ export default function Home() {
             )}
           </motion.div>
 
-          {pricingPlans.length === 0 ? (
+          {pricingPlansLoading ? (
+            <SiteLoaderInline message="Loading plans…" className="py-16" />
+          ) : pricingPlans.length === 0 ? (
             <div className="text-center text-vd-text-sub py-16">
-              <Sparkles className="w-8 h-8 mx-auto mb-3 text-vd-primary/50 animate-pulse" />
-              Loading plans…
+              <Sparkles className="w-8 h-8 mx-auto mb-3 text-vd-primary/50" />
+              <p className="font-medium">Plans coming soon</p>
+              <Link href="/premium" className="text-vd-primary text-sm underline mt-2 inline-block">View Premium page</Link>
             </div>
           ) : (
             <div className={`grid gap-5 sm:gap-6 max-w-6xl mx-auto items-stretch ${
@@ -685,7 +700,7 @@ export default function Home() {
                 const discountedPrice = isFree ? 0 : Math.round(totalPrice * (1 - discount / 100));
                 const isHighlight = p.plan === 'GOLD';
                 const PlanIcon = PLAN_ICONS[p.plan] || Star;
-                const perms = (() => { try { return JSON.parse(p.permissions || '{}'); } catch { return {}; } })();
+                const perms = parsePlanPermissions(p.permissions);
                 const features = [
                   perms.canChat && 'Unlimited Chat',
                   perms.canSeeContact && 'See Contact Details',

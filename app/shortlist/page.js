@@ -7,13 +7,14 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
 import { SiteLoaderInline } from '@/components/SiteLoader';
-import { Heart, Search, ChevronRight, Bookmark } from 'lucide-react';
+import { Heart, Search, ChevronRight, Bookmark, Scale, CheckSquare, Square } from 'lucide-react';
 
 export default function ShortlistPage() {
   const { status } = useSession();
   const router = useRouter();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [compareIds, setCompareIds] = useState([]);
 
   const loadShortlist = useCallback(() => {
     setLoading(true);
@@ -37,8 +38,19 @@ export default function ShortlistPage() {
     if (status === 'authenticated') loadShortlist();
   }, [status, loadShortlist]);
 
+  const toggleCompare = (id) => {
+    setCompareIds(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  };
+
+  const compareHref = compareIds.length >= 2 ? `/compare?ids=${compareIds.join(',')}` : null;
+
   const handleShortlistChange = (targetId, shortlisted) => {
     if (!shortlisted) {
+      setCompareIds(prev => prev.filter(x => x !== targetId));
       setList(prev => prev.filter(item => item.target?.id !== targetId && item.targetId !== targetId));
     }
   };
@@ -74,16 +86,24 @@ export default function ShortlistPage() {
               </div>
             </div>
             {!loading && list.length > 0 && (
-              <span className="self-start sm:self-auto vd-gradient-gold text-white text-sm px-4 py-1.5 rounded-full font-semibold shadow-sm">
-                {list.length} profile{list.length !== 1 ? 's' : ''}
-              </span>
+              <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                {compareIds.length >= 2 && compareHref && (
+                  <Link href={compareHref}
+                    className="inline-flex items-center gap-2 bg-vd-primary text-white text-sm px-4 py-1.5 rounded-full font-semibold shadow-sm hover:opacity-90">
+                    <Scale className="w-4 h-4" /> Compare ({compareIds.length})
+                  </Link>
+                )}
+                <span className="vd-gradient-gold text-white text-sm px-4 py-1.5 rounded-full font-semibold shadow-sm">
+                  {list.length} profile{list.length !== 1 ? 's' : ''}
+                </span>
+              </div>
             )}
           </div>
 
           {/* Hint */}
           <div className="mt-5 rounded-2xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
             <span className="font-medium text-vd-primary">Tip:</span> Tap the heart on any profile card to save it here.
-            Your shortlist is private — others cannot see it.
+            Select 2–3 profiles with the checkbox to compare side by side.
           </div>
         </motion.div>
 
@@ -117,14 +137,23 @@ export default function ShortlistPage() {
           </motion.div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {list.map((item, i) => (
+            {list.map((item, i) => {
+              const uid = item.target?.id || item.targetId;
+              const selected = compareIds.includes(uid);
+              return (
+              <div key={item.id} className="relative">
+                <button type="button" onClick={() => toggleCompare(uid)}
+                  className={`absolute top-3 left-3 z-10 p-1.5 rounded-lg border shadow-sm transition-colors ${selected ? 'bg-vd-primary border-vd-primary text-white' : 'bg-white/90 border-vd-border text-vd-text-light hover:border-vd-primary'}`}
+                  title="Select to compare">
+                  {selected ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
+                </button>
               <ProfileCard
-                key={item.id}
                 user={{ ...item.target, isShortlisted: true }}
                 index={i}
                 onShortlistChange={handleShortlistChange}
               />
-            ))}
+              </div>
+            );})}
           </div>
         )}
       </div>

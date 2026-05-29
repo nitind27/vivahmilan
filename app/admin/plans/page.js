@@ -10,7 +10,8 @@ const DEFAULT_PERMISSIONS = {
   canBoostProfile: false,
   canSeeWhoViewed: false,
   unlimitedInterests: false,
-  aiMatchScore: false
+  aiMatchScore: false,
+  kundaliMatchPdf: false,
 };
 
 function Toggle({ value, onChange }) {
@@ -209,7 +210,7 @@ export default function PlansPage() {
               <div className="border-t border-gray-700 pt-4">
                 <p className="text-sm font-semibold mb-3 text-gray-300">Permissions</p>
                 <div className="space-y-3">
-                  {[{ key: 'canChat', label: 'Can Chat' }, { key: 'canSeeContact', label: 'See Contact Details' }, { key: 'canBoostProfile', label: 'Profile Boost' }, { key: 'canSeeWhoViewed', label: 'See Who Viewed' }, { key: 'unlimitedInterests', label: 'Unlimited Interests' }, { key: 'aiMatchScore', label: 'AI Match Score' }].map(p => (
+                  {[{ key: 'canChat', label: 'Can Chat' }, { key: 'canSeeContact', label: 'See Contact Details' }, { key: 'canBoostProfile', label: 'Profile Boost' }, { key: 'canSeeWhoViewed', label: 'See Who Viewed' }, { key: 'unlimitedInterests', label: 'Unlimited Interests' }, { key: 'aiMatchScore', label: 'AI Match Score' }, { key: 'kundaliMatchPdf', label: 'Kundali PDF Report' }].map(p => (
                     <div key={p.key} className="flex items-center justify-between">
                       <span className="text-sm text-gray-300">{p.label}</span>
                       <Toggle value={editPlan.permissions[p.key]} onChange={v => setEditPlan(prev => ({ ...prev, permissions: { ...prev.permissions, [p.key]: v } }))} />

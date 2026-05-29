@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 
 const TABS = [
   { id: 'profile', label: 'Profile' },
+  { id: 'notes', label: 'CRM Notes' },
   { id: 'subscription', label: 'Subscription' },
   { id: 'activity', label: 'Activity' },
   { id: 'documents', label: 'Documents' },
@@ -97,6 +98,8 @@ export default function AdminUserProfileModal({ userId, onClose }) {
             <p className="text-center text-gray-400 py-12">No data found.</p>
           ) : tab === 'profile' ? (
             <ProfileTab data={data} />
+          ) : tab === 'notes' ? (
+            <NotesTab userId={userId} />
           ) : tab === 'subscription' ? (
             <SubscriptionTab data={data} />
           ) : tab === 'activity' ? (
@@ -652,6 +655,69 @@ function GeoSummary({ user: u }) {
           <p className="text-xs text-gray-400 mt-1">{fmtDateTime(u.lastLoginAt)}</p>
         )}
       </div>
+    </div>
+  );
+}
+
+function NotesTab({ userId }) {
+  const [notes, setNotes] = useState([]);
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = () => {
+    setLoading(true);
+    fetch(`/api/admin/notes?userId=${userId}`)
+      .then(r => r.json())
+      .then(d => setNotes(d.notes || []))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { load(); }, [userId]);
+
+  const add = async () => {
+    if (!text.trim()) return;
+    setSaving(true);
+    try {
+      await fetch('/api/admin/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, note: text }),
+      });
+      setText('');
+      load();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <SiteLoaderInline message="Loading notes…" className="py-8" />;
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder="Add internal CRM note (only visible to admins)…"
+          className="w-full border border-gray-200 rounded-xl p-3 text-sm min-h-[80px] focus:outline-none focus:border-pink-400"
+        />
+        <button type="button" onClick={add} disabled={saving || !text.trim()} className="mt-2 px-4 py-2 bg-pink-600 text-white rounded-xl text-sm font-semibold disabled:opacity-50">
+          {saving ? 'Saving…' : 'Add Note'}
+        </button>
+      </div>
+      {notes.length === 0 ? (
+        <p className="text-sm text-gray-400 text-center py-6">No notes yet.</p>
+      ) : (
+        <div className="space-y-2">
+          {notes.map(n => (
+            <div key={n.id} className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+              <p className="text-sm text-gray-800 whitespace-pre-wrap">{n.note}</p>
+              <p className="text-xs text-gray-400 mt-2">{n.adminName || 'Admin'} · {fmtDateTime(n.createdAt)}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

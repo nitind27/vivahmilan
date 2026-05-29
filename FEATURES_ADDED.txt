@@ -1,0 +1,620 @@
+================================================================================
+  MILAN MATRIMONIAL APP — NAYE FEATURES + TESTING GUIDE
+  Last updated: May 2026
+================================================================================
+
+Yeh file un sab features ki list hai jo recently add kiye gaye hain,
+aur har feature ko kaise test karna hai woh step-by-step likha hai.
+
+NOTE: Phone OTP / SMS intentionally add NAHI kiya (paid service — MSG91 + DLT).
+
+
+================================================================================
+  PEHLE SETUP (Testing se pehle)
+================================================================================
+
+1. App chalao:
+   npm run dev
+   (Default: http://localhost:3006 — apne .env ke NEXTAUTH_URL ke hisaab se)
+
+2. Database tables auto-create hongi jab pehli baar feature use karoge.
+   Agar confirm karna ho to yeh command chalao:
+   node scripts/run-ensure-feature-tables.js
+   (Production DB ke liye .env.production use hota hai)
+
+3. .env mein yeh variables honi chahiye:
+   - DATABASE_* (MySQL connection)
+   - NEXTAUTH_SECRET, NEXTAUTH_URL
+   - EMAIL_SERVER_* (email alerts ke liye)
+   - CRON_SECRET (cron jobs ke liye)
+   - VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY (web push ke liye)
+
+4. Premium features test karne ke liye:
+   Admin → Plans (/admin/plans) par plan permissions enable karo:
+   - canSeeWhoViewed
+   - aiMatchScore
+   - kundaliMatchPdf
+
+5. Test accounts:
+   - Normal user account (registered + approved)
+   - Admin account (role = ADMIN)
+   - Doosra user account (match / interest test ke liye)
+
+
+================================================================================
+  SECTION A — USER FEATURES (Member)
+================================================================================
+
+--------------------------------------------------------------------------------
+A1. SAVED SEARCHES
+--------------------------------------------------------------------------------
+Kya hai:
+  Search filters save karo, baad mein load karo, delete karo.
+
+Kahan:
+  /search
+
+Kaise test karo:
+  1. Login karo → /search par jao
+  2. Filters lagao (city, religion, age, etc.)
+  3. "Save Search" button dabao → naam do → save
+  4. Saved searches list se wapas load karo — filters restore hone chahiye
+  5. Delete icon se saved search hatao
+
+Expected:
+  - Save / Load / Delete sab kaam kare
+  - API: GET/POST/DELETE /api/saved-searches
+
+
+--------------------------------------------------------------------------------
+A2. SAVED SEARCH EMAIL + PUSH ALERTS
+--------------------------------------------------------------------------------
+Kya hai:
+  Jab naye profiles tumhare saved filter se match karein, email + push notification.
+
+Kahan:
+  /search (save karte waqt bell / alert checkbox)
+  /dashboard (login par background check)
+
+Kaise test karo:
+  1. /search par filter lagao
+  2. Save karte waqt "Email alerts" / bell toggle ON karo
+  3. Doosre account se naya profile banao jo filter match kare
+  4. Pehle account se dashboard kholo — alert trigger hona chahiye
+  5. Email inbox check karo (EMAIL_SERVER configured hona chahiye)
+  6. Browser notification allow karo — push bhi aana chahiye
+
+Manual cron test:
+  curl "http://localhost:3006/api/cron/saved-search-alerts?secret=YOUR_CRON_SECRET"
+
+Expected:
+  - Email aaye "X new matches" subject ke saath
+  - Dashboard / browser notification
+  - savedsearch.lastAlertAt DB mein update ho
+
+
+--------------------------------------------------------------------------------
+A3. KUNDALI SEARCH FILTERS
+--------------------------------------------------------------------------------
+Kya hai:
+  Search mein rashi, nakshatra, manglik, hasKundali filters.
+
+Kahan:
+  /search → Advanced / Kundali filters section
+
+Kaise test karo:
+  1. Do users ke paas kundali generate ho (profile edit → birth details)
+  2. /search par "Has Kundali" = Yes filter lagao
+  3. Rashi / Nakshatra / Manglik filter try karo
+  4. Results sirf matching profiles dikhane chahiye
+
+Expected:
+  - Filtered results sahi aayein
+  - API: GET /api/search?rashi=...&nakshatra=...&manglik=...&hasKundali=1
+
+
+--------------------------------------------------------------------------------
+A4. KUNDALI MATCH REPORT (Guna Milan)
+--------------------------------------------------------------------------------
+Kya hai:
+  Do profiles ke beech Ashtakoot Guna Milan score + breakdown.
+
+Kahan:
+  /profile/[user-id] → Kundali Match Report section
+  (Dono users ke paas kundali honi chahiye)
+
+Kaise test karo:
+  1. Apna profile edit karo → birth details → kundali generate
+  2. Partner profile kholo jiska bhi kundali ho
+  3. "Kundali Match Report" card dikhega
+  4. Total gunas, verdict, koota breakdown dekho
+  5. EN / हि language toggle try karo
+
+Expected:
+  - Score 0–36 dikhe
+  - Agar apna kundali nahi → "Generate My Kundali" message
+  - API: GET /api/kundali/match?partnerId=USER_ID
+
+
+--------------------------------------------------------------------------------
+A5. KUNDALI MATCH PDF (Premium)
+--------------------------------------------------------------------------------
+Kya hai:
+  Guna Milan report PDF download — English ya Hindi.
+
+Kahan:
+  Profile page → Kundali Match Report → PDF button
+  Premium + admin ne plan par "Kundali PDF Report" enable kiya ho
+
+Kaise test karo:
+  1. Admin → /admin/plans → apne plan par kundaliMatchPdf ON karo
+  2. User ko premium do ya premium plan lo
+  3. Partner profile kholo → Kundali Match → PDF dabao
+  4. Hindi ke liye "हि" select karke PDF download karo
+  5. PDF kholo — Hindi mein Devanagari text hona chahiye
+
+Expected:
+  - Premium ke bina lock icon + /premium link
+  - Premium ke saath PDF download
+  - API: GET /api/kundali/match/pdf?partnerId=ID&lang=hi
+
+
+--------------------------------------------------------------------------------
+A6. PROFILE COMPARE
+--------------------------------------------------------------------------------
+Kya hai:
+  2–4 profiles side-by-side compare karo.
+
+Kahan:
+  /compare
+  /shortlist → checkbox se profiles select karke compare
+
+Kaise test karo:
+  1. /shortlist par jao
+  2. 2 ya 3 profiles ke checkbox tick karo
+  3. "Compare" button dabao → /compare page
+  4. Age, height, education, religion, etc. side-by-side dekho
+
+Expected:
+  - Max 4 profiles compare
+  - API: GET /api/compare?ids=id1,id2
+
+
+--------------------------------------------------------------------------------
+A7. SUCCESS STORIES
+--------------------------------------------------------------------------------
+Kya hai:
+  Users apni shaadi ki kahani submit karte hain, admin approve karta hai.
+
+Kahan:
+  Submit: /share-story
+  Public list: /stories
+  Admin approve: /admin/stories → "Submissions" tab
+
+Kaise test karo:
+  1. Login → /share-story
+  2. Couple name, location, story likho
+  3. Photo upload karo (optional)
+  4. Submit → "Pending approval" message
+  5. Admin login → /admin/stories → Submissions tab
+  6. Approve karo
+  7. /stories par approved story public dikhe
+
+Expected:
+  - Submit → status PENDING
+  - Admin approve → /stories par visible
+  - API: POST /api/success-stories, PATCH /api/admin/story-submissions
+
+
+--------------------------------------------------------------------------------
+A8. RECENTLY VIEWED PROFILES
+--------------------------------------------------------------------------------
+Kya hai:
+  Jo profiles tumne recently dekhi, dashboard par dikhti hain.
+
+Kahan:
+  /dashboard → "Recently Viewed" section
+
+Kaise test karo:
+  1. 2–3 alag profiles kholo (/profile/xxx)
+  2. Dashboard par wapas jao
+  3. Recently viewed list mein woh profiles honi chahiye
+
+Expected:
+  - API: GET /api/recently-viewed
+  - Profile view record DB mein save ho
+
+
+--------------------------------------------------------------------------------
+A9. WHO VIEWED MY PROFILE (Premium)
+--------------------------------------------------------------------------------
+Kya hai:
+  Kaun kaun ne tumhara profile dekha — premium feature.
+
+Kahan:
+  /views
+
+Kaise test karo:
+  1. User A premium ho + canSeeWhoViewed plan permission ON ho
+  2. User B se User A ka profile khulwao
+  3. User A → /views → User B dikhna chahiye
+
+Expected:
+  - Free user ko upgrade message
+  - Premium user ko viewer list
+  - API: GET /api/profile-views
+
+
+--------------------------------------------------------------------------------
+A10. INTEREST MESSAGE TEMPLATES
+--------------------------------------------------------------------------------
+Kya hai:
+  Send Interest karte waqt ready-made message templates.
+
+Kahan:
+  /profile/[id] → Send Interest → template chips
+
+Kaise test karo:
+  1. Kisi profile par Send Interest dabao
+  2. Template chips (e.g. "Would like to connect") par click karo
+  3. Message box mein text auto-fill ho
+  4. Send karo → /interests par pending dikhe
+
+Expected:
+  - Template click → textarea fill
+  - Interest successfully sent
+
+
+--------------------------------------------------------------------------------
+A11. REFER & EARN
+--------------------------------------------------------------------------------
+Kya hai:
+  Apna referral link share karo, naye signups track ho.
+
+Kahan:
+  /refer
+  /settings → Refer & Earn link
+
+Kaise test karo:
+  1. /refer par jao → apna referral code / link copy karo
+  2. Incognito mein /register?ref=YOUR_CODE se naya account banao
+  3. Admin → /admin/referrals par referral count check karo
+
+Expected:
+  - Unique referral code har user ko
+  - totalReferrals count badhe
+  - API: GET /api/referral
+
+
+--------------------------------------------------------------------------------
+A12. VIDEO INTRO ON PROFILE
+--------------------------------------------------------------------------------
+Kya hai:
+  30–60 sec intro video upload — profile par dikhe.
+
+Kahan:
+  Upload: /profile/edit → Step "Photos & ID" → Intro Video section
+  View: /profile/[your-id]
+
+Kaise test karo:
+  1. /profile/edit → last step (Photos & ID)
+  2. Intro video upload karo (MP4/WebM, max 50MB)
+  3. Apna profile kholo → video player dikhna chahiye
+  4. Remove video try karo
+
+Expected:
+  - Upload success toast
+  - Profile par video player
+  - API: POST/DELETE /api/upload/intro-video
+  - DB: profile.introVideoUrl column
+
+
+--------------------------------------------------------------------------------
+A13. FAMILY LOGIN (Read-only browse)
+--------------------------------------------------------------------------------
+Kya hai:
+  Parents / family members alag login se profiles browse kar sakte hain.
+  Interest, chat, edit — sab blocked.
+
+Kahan:
+  Setup: /settings → Family Login section
+  Login: /login → "Family Login" tab
+
+Kaise test karo:
+  1. Main user → /settings → Family Login
+  2. Parent ka naam, email, password add karo (max 3)
+  3. Logout → /login → Family Login tab
+  4. Family credentials se login karo
+  5. Dashboard par "Family Login — read-only" banner dikhe
+  6. /search se profiles dekho — kaam karna chahiye
+  7. Kisi profile par Send Interest try karo — blocked hona chahiye
+  8. /profile/edit, /premium, /settings — redirect to dashboard
+
+Expected:
+  - Family browse + search OK
+  - Interest / chat / edit blocked
+  - Session role = FAMILY
+  - DB table: familyaccess
+
+
+--------------------------------------------------------------------------------
+A14. PREMIUM RENEWAL EMAIL REMINDERS
+--------------------------------------------------------------------------------
+Kya hai:
+  Premium expire hone se 7, 3, 1 din pehle email reminder.
+
+Kahan:
+  Toggle: /settings → Subscription → "Email renewal reminders"
+  Notifications: /notifications
+
+Kaise test karo:
+  1. /settings par renewal reminders ON karo
+  2. Admin se user ki premiumExpiry 3 din baad set karo (DB ya admin panel)
+  3. Cron chalao:
+     curl "http://localhost:3006/api/cron/renewal-reminders?secret=YOUR_CRON_SECRET"
+  4. Email inbox + /notifications check karo
+
+Expected:
+  - Email: "Premium expires in X days"
+  - In-app notification with link /premium
+  - DB: userpreference.autoRenew = 1 jab toggle ON
+
+
+--------------------------------------------------------------------------------
+A15. PWA — INSTALL APP
+--------------------------------------------------------------------------------
+Kya hai:
+  Mobile/desktop par "Add to Home Screen" / Install prompt.
+
+Kahan:
+  Koi bhi page (Chrome mobile ya desktop)
+
+Kaise test karo:
+  1. Chrome mein site kholo (HTTPS ya localhost)
+  2. Neeche "Install Milan App" prompt aana chahiye
+  3. Install dabao → home screen par icon aaye
+  4. manifest.json check: /manifest.json
+
+Expected:
+  - Install banner (pehli baar)
+  - Standalone app open ho
+  - Icons: /logo/icon.png
+
+
+--------------------------------------------------------------------------------
+A16. WEB PUSH NOTIFICATIONS
+--------------------------------------------------------------------------------
+Kya hai:
+  Browser push — chat, interest, saved search alerts.
+
+Kahan:
+  Automatic jab browser permission allow ho
+
+Kaise test karo:
+  1. Site par notification allow karo
+  2. Doosre account se interest bhejo ya message bhejo
+  3. Push notification aana chahiye
+  4. Saved search alert (A2) bhi push trigger karta hai
+
+Expected:
+  - Service worker: /sw.js registered
+  - VAPID keys .env mein configured
+
+
+--------------------------------------------------------------------------------
+A17. AUTH MIDDLEWARE (Route Protection)
+--------------------------------------------------------------------------------
+Kya hai:
+  Login ke bina protected pages block.
+  Admin routes sirf ADMIN role ke liye.
+  Family role restricted routes.
+
+Kaise test karo:
+  1. Logout → /dashboard kholo → /login redirect
+  2. Normal user → /admin → /dashboard redirect
+  3. Family login → /profile/edit → /dashboard redirect
+
+Expected:
+  - middleware.js sahi redirect kare
+
+
+================================================================================
+  SECTION B — ADMIN FEATURES
+================================================================================
+
+--------------------------------------------------------------------------------
+B1. ADMIN OVERVIEW (Command Center)
+--------------------------------------------------------------------------------
+Kahan: /admin/overview
+
+Test:
+  1. Admin login
+  2. Stats cards dekho — members, premium, pending, gender split
+  3. Quick links kaam karein
+
+API: GET /api/admin/stats
+
+
+--------------------------------------------------------------------------------
+B2. MODERATION QUEUE
+--------------------------------------------------------------------------------
+Kahan: /admin/moderation
+
+Test:
+  1. Pending profiles / reports list dekho
+  2. Approve / reject actions try karo
+
+API: GET /api/admin/moderation
+
+
+--------------------------------------------------------------------------------
+B3. ADMIN CRM NOTES
+--------------------------------------------------------------------------------
+Kahan: Admin member profile par notes (API based)
+
+Test:
+  1. Admin → member detail
+  2. Note add karo → save → list mein dikhe
+
+API: GET/POST /api/admin/notes
+DB: adminnote table
+
+
+--------------------------------------------------------------------------------
+B4. REVENUE DASHBOARD
+--------------------------------------------------------------------------------
+Kahan: /admin/revenue
+
+Test:
+  1. Admin login → Revenue page
+  2. Total revenue, plan-wise breakdown, recent payments dekho
+
+API: GET /api/admin/revenue
+
+
+--------------------------------------------------------------------------------
+B5. REFERRAL PANEL
+--------------------------------------------------------------------------------
+Kahan: /admin/referrals
+
+Test:
+  1. Sab users ke referral codes aur counts dekho
+  2. Kisne kisko refer kiya — list check karo
+
+API: GET /api/admin/referrals
+
+
+--------------------------------------------------------------------------------
+B6. SUCCESS STORY SUBMISSIONS
+--------------------------------------------------------------------------------
+Kahan: /admin/stories → Submissions tab
+
+Test:
+  1. User se story submit karwao
+  2. Admin → Submissions → Approve / Reject
+  3. Approved → /stories par public
+
+API: GET/PATCH /api/admin/story-submissions
+
+
+--------------------------------------------------------------------------------
+B7. PLAN PERMISSIONS (New flags)
+--------------------------------------------------------------------------------
+Kahan: /admin/plans
+
+Naye permission toggles:
+  - canSeeWhoViewed (Who Viewed Me)
+  - aiMatchScore (AI Match Score badge)
+  - kundaliMatchPdf (Kundali PDF download)
+
+Test:
+  1. Plan edit karo → toggles ON/OFF
+  2. User ko woh plan do
+  3. Feature access verify karo
+
+
+================================================================================
+  SECTION C — DATABASE CHANGES (Auto-created)
+================================================================================
+
+Nayi tables (ensureFeatureTables.js):
+  - savedsearch        → Saved searches + alerts
+  - familyaccess       → Family login credentials
+  - storysubmission    → Success story submissions
+  - userreferral       → Referral tracking
+  - adminnote          → Admin CRM notes
+  - userpreference     → User settings (if not exists)
+
+Naye columns:
+  - profile.introVideoUrl       → Intro video URL
+  - userpreference.autoRenew    → Renewal email toggle
+  - savedsearch.lastAlertAt     → Last alert sent time
+  - savedsearch.alertEnabled    → Alert on/off
+
+Verify command:
+  node scripts/check-db-features.cjs
+
+Apply missing migrations:
+  node scripts/run-ensure-feature-tables.js
+
+
+================================================================================
+  SECTION D — CRON JOBS (Production setup)
+================================================================================
+
+.env mein set karo:
+  CRON_SECRET=your-secret-here
+
+Daily cron (server / Hostinger / cron-job.org):
+
+  # Saved search alerts — subah 9 baje
+  curl "https://YOUR-DOMAIN.com/api/cron/saved-search-alerts?secret=YOUR_CRON_SECRET"
+
+  # Premium renewal reminders — subah 10 baje
+  curl "https://YOUR-DOMAIN.com/api/cron/renewal-reminders?secret=YOUR_CRON_SECRET"
+
+Local test:
+  curl "http://localhost:3006/api/cron/saved-search-alerts?secret=cron-secret-2026"
+  curl "http://localhost:3006/api/cron/renewal-reminders?secret=cron-secret-2026"
+
+
+================================================================================
+  SECTION E — FLUTTER APP APIs (Mobile)
+================================================================================
+
+Mobile app ke liye bhi yeh APIs add/update hui hain:
+  - GET  /api/flutter/kundali/match
+  - GET  /api/flutter/kundali/match/pdf?lang=hi
+  - GET  /api/flutter/compare
+  - GET  /api/flutter/saved-searches
+  - POST /api/flutter/saved-searches
+  - GET  /api/flutter/success-stories
+  - GET  /api/flutter/referral
+  - GET  /api/flutter/features (plan permissions)
+
+Flutter test: Postman ya mobile app se JWT token ke saath call karo.
+
+
+================================================================================
+  SECTION F — JO ADD NAHI KIYA (Jaana-boojh kar skip)
+================================================================================
+
+  X  Phone OTP / SMS login       → Paid (MSG91 + DLT registration)
+  X  Cashfree auto-debit          → Recurring mandate — alag integration
+  X  TURN server (KYC video)      → Free STUN hai; reliable video ke liye paid
+  X  Referral automatic payout    → Sirf tracking hai; reward logic nahi
+  X  Private notes on profiles    → Abhi implement nahi
+  X  Flutter family login API     → Sirf web par hai abhi
+
+
+================================================================================
+  QUICK TEST CHECKLIST (15 minute smoke test)
+================================================================================
+
+  [ ] Login / Register kaam kare
+  [ ] /search — filter + save search
+  [ ] /profile/[id] — kundali match dikhe (dono ke kundali hon)
+  [ ] /compare — 2 profiles compare
+  [ ] /share-story — submit → admin approve → /stories
+  [ ] /settings — family login add → family tab se login
+  [ ] /profile/edit — intro video upload
+  [ ] /views — premium par who viewed
+  [ ] /admin/overview — stats load
+  [ ] /admin/revenue — data dikhe
+  [ ] /admin/referrals — referral list
+  [ ] Cron curl — 200 OK response
+  [ ] PWA install prompt (Chrome mobile)
+
+
+================================================================================
+  HELP / SCRIPTS
+================================================================================
+
+  scripts/check-db-features.cjs       → DB tables/columns verify
+  scripts/run-ensure-feature-tables.js → Missing DB items create karo
+  lib/ensureFeatureTables.js          → Auto-migration source code
+  FEATURES_ADDED.txt                  → Yeh file
+
+================================================================================
+  END OF DOCUMENT
+================================================================================

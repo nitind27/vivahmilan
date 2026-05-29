@@ -435,6 +435,8 @@ export default function Dashboard() {
   const [profile, setProfile]           = useState(null);
   const [unreadChat, setUnreadChat]     = useState(0);
   const [shortlistCount, setShortlistCount] = useState(0);
+  const [viewCount, setViewCount]           = useState(0);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [loading, setLoading]           = useState(true);
   const [reminders, setReminders]       = useState({ premiumInfo: null, birthdayInfo: null });
 
@@ -454,15 +456,20 @@ export default function Dashboard() {
       safeFetch('/api/chat/unread'),
       safeFetch('/api/reminders', { method: 'POST' }),
       safeFetch('/api/shortlist'),
-    ]).then(([m, i, n, p, u, rem, sl]) => {
+      safeFetch('/api/profile-views'),
+      safeFetch('/api/recently-viewed?limit=6'),
+    ]).then(([m, i, n, p, u, rem, sl, views, recent]) => {
       setMatches(m?.users || []);
       setInterests(i || []);
       setNotifications(n?.notifications || []);
       setProfile(p);
       setUnreadChat(u?.total || 0);
       setShortlistCount(Array.isArray(sl) ? sl.length : 0);
+      setViewCount(views?.total ?? 0);
+      setRecentlyViewed(recent?.users || []);
       setReminders(rem || { premiumInfo: null, birthdayInfo: null });
       setLoading(false);
+      fetch('/api/saved-searches/check-alerts', { method: 'POST' }).catch(() => {});
     });
   }, [status]);
 
@@ -481,19 +488,19 @@ export default function Dashboard() {
 
   const stats = [
     { icon: Heart,         label: 'Interests',      value: interests.length > 0 ? interests.length : '—',  color: 'text-vd-primary',   bg: 'bg-vd-accent-soft dark:bg-vd-accent/20',   href: '/interests',  badge: pendingInterests > 0 },
-    { icon: Bookmark,      label: 'Shortlist',      value: shortlistCount > 0 ? shortlistCount : '—',       color: 'text-rose-500',     bg: 'bg-rose-50 dark:bg-rose-900/20',         href: '/shortlist',  badge: shortlistCount > 0 },
+    { icon: Eye,           label: 'Profile Views',  value: viewCount > 0 ? viewCount : '—',                   color: 'text-teal-500',     bg: 'bg-teal-50 dark:bg-teal-900/20',         href: '/views',      badge: viewCount > 0 },
     { icon: MessageCircle, label: 'Unread Msgs',    value: unreadChat > 0 ? unreadChat : '—',               color: 'text-indigo-500', bg: 'bg-indigo-50 dark:bg-indigo-900/20', href: '/chat',       badge: unreadChat > 0 },
     { icon: Users,         label: 'Matches',        value: matches.length > 0 ? matches.length : '—',       color: 'text-blue-500',   bg: 'bg-blue-50 dark:bg-blue-900/20',    href: '/matches' },
   ];
 
   const quickActions = [
     { icon: Heart,    label: 'Find Matches',  href: '/matches',      color: 'text-vd-primary',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Bookmark, label: 'My Shortlist', href: '/shortlist',   color: 'text-rose-500',     bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: Eye,      label: 'Who Viewed Me', href: '/views',        color: 'text-teal-500',     bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Search,   label: 'Search',        href: '/search',       color: 'text-vd-primary', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Star,     label: 'Premium',       href: '/premium',      color: 'text-yellow-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Settings, label: 'Edit Profile',  href: '/profile/edit', color: 'text-blue-500',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: User,     label: 'View My Profile', href: session?.user?.id ? `/profile/${session.user.id}` : '/profile/edit', color: 'text-vd-primary', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Lock,     label: 'Change Password', href: '/settings/password', color: 'text-purple-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: Settings, label: 'Settings',      href: '/settings',     color: 'text-purple-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: HandCoins,label: 'Refer & Earn',  href: '/refer',        color: 'text-green-500',  bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+    { icon: Heart,    label: 'Share Story',   href: '/share-story',  color: 'text-pink-500',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Bell,     label: 'Notifications', href: '/notifications',color: 'text-green-500',  bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
     { icon: Shield,   label: 'Safety',        href: '/safety',       color: 'text-red-500',    bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
   ];
@@ -505,6 +512,16 @@ export default function Dashboard() {
 
         {/* Birthday */}
         {reminders.birthdayInfo?.isBirthday && <BirthdayCard name={session?.user?.name} />}
+
+        {session?.user?.isFamilyLogin && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            className="mb-4 p-4 rounded-2xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+            <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+              👨‍👩‍👧 Family Login — browsing {session.user.ownerName ? `${session.user.ownerName}'s` : 'member'} profile
+            </p>
+            <p className="text-xs text-blue-600/80 dark:text-blue-300/80 mt-1">Read-only mode. Search & view profiles — interests and chat are disabled.</p>
+          </motion.div>
+        )}
 
         {/* Unified welcome + premium/trial card */}
         <DashboardWelcomeCard
@@ -599,6 +616,34 @@ export default function Dashboard() {
                 <Link href="/interests" className="flex items-center justify-center gap-1 text-vd-primary text-sm font-semibold mt-3 hover:text-vd-primary-dark transition-colors">
                   View all <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
+              </motion.div>
+            )}
+
+            {recentlyViewed.length > 0 && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 }}
+                className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-5 border border-vd-border shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-vd-primary" /> Recently Viewed
+                  </h3>
+                </div>
+                <div className="space-y-2">
+                  {recentlyViewed.slice(0, 5).map(u => (
+                    <Link key={u.id} href={`/profile/${u.id}`}
+                      className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 p-2.5 rounded-xl transition-colors group">
+                      <div className="w-10 h-10 rounded-full vd-gradient-gold flex items-center justify-center text-white font-bold text-sm flex-shrink-0 overflow-hidden">
+                        {u.photos?.[0]?.url ? (
+                          <img src={u.photos[0].url} alt="" className="w-full h-full object-cover" />
+                        ) : u.name?.[0]}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-semibold text-sm truncate text-gray-900 dark:text-white">{u.name}</p>
+                        <p className="text-xs text-gray-400 truncate">{u.profile?.city || '—'}</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-vd-primary flex-shrink-0" />
+                    </Link>
+                  ))}
+                </div>
               </motion.div>
             )}
 

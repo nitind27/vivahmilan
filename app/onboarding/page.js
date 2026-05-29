@@ -17,6 +17,8 @@ import {
 } from '@/lib/religionData';
 import { getCastesByReligion } from '@/lib/casteData';
 import SiteLoader from '@/components/SiteLoader';
+import AboutMeField from '@/components/AboutMeField';
+import { validateAboutMe } from '@/lib/aboutMeValidation';
 
 const inputCls = "w-full px-4 py-3 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all";
 const labelCls = "block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide";
@@ -147,7 +149,10 @@ function OnboardingInner() {
   }, [email]);
 
   // ── Check if all required fields are filled ──────────────────────────────
-  const missingRequired = REQUIRED_FIELDS.filter(f => !form[f]);
+  const missingRequired = REQUIRED_FIELDS.filter((f) => {
+    if (f === 'aboutMe') return !validateAboutMe(form.aboutMe, { required: true }).ok;
+    return !form[f];
+  });
   const isProfileComplete = missingRequired.length === 0;
   const hasPhone = !!form.phone?.trim() && /^[+]?[\d\s\-()]{7,15}$/.test(form.phone);
   const hasVisualProof = !!photoPreview && familyPhotos.length >= 1;
@@ -169,6 +174,8 @@ function OnboardingInner() {
       if (form.phone && !/^[+]?[\d\s\-()]{7,15}$/.test(form.phone)) errs.push('Enter a valid phone number');
       else if (!form.phone?.trim()) errs.push('Phone number is required for profile verification');
       if (form.weight && (isNaN(form.weight) || form.weight < 30 || form.weight > 200)) errs.push('Enter a valid weight (30–200 kg)');
+      const aboutCheck = validateAboutMe(form.aboutMe, { required: true });
+      if (!aboutCheck.ok) errs.push(aboutCheck.error);
     }
     if (s === 1) {
       if (!form.religion) errs.push('Religion is required');
@@ -417,9 +424,12 @@ function OnboardingInner() {
                   <Sel label="Marital Status" value={form.maritalStatus} onChange={v => set('maritalStatus', v)} options={MARITAL} />
                   <Inp label="Phone Number" value={form.phone} onChange={v => set('phone', v)} placeholder="+91 9999999999" />
                   <div className="col-span-2">
-                    <Field label="About Me">
-                      <textarea value={form.aboutMe} onChange={e => set('aboutMe', e.target.value)} rows={3} className={inputCls + ' resize-none'} placeholder="Tell us about yourself, your interests, what you're looking for..." />
-                    </Field>
+                    <AboutMeField
+                      value={form.aboutMe}
+                      onChange={(v) => set('aboutMe', v)}
+                      rows={5}
+                      inputClassName={inputCls + ' resize-none'}
+                    />
                   </div>
                 </div>
               </div>

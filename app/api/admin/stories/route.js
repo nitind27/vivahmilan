@@ -4,8 +4,11 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN')
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   const stories = await prisma.successStory.findMany({
-    where: { isActive: true },
     orderBy: { sortOrder: 'asc' },
   });
   return NextResponse.json(stories);

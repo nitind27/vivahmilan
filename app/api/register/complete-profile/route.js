@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
+import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 
 export async function POST(req) {
   try {
@@ -7,6 +8,11 @@ export async function POST(req) {
             motherTongue, country, state, city, education, profession, income, aboutMe } = await req.json();
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
+
+    const aboutErr = assertAboutMeForSave(aboutMe, { required: true });
+    if (aboutErr) {
+      return NextResponse.json({ error: aboutErr.error, code: aboutErr.code }, { status: 400 });
+    }
 
     const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });

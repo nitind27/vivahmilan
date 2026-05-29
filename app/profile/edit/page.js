@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import SearchableSelect from '@/components/SearchableSelect';
 import LocationPicker from '@/components/LocationPicker';
 import { PhotoUploadSection, DocumentUploadSection, FamilyPhotoUploadSection } from '@/components/PhotoUpload';
+import IntroVideoSection from '@/components/IntroVideoSection';
 import { Save, ChevronRight, ChevronLeft, Check, User, MapPin, Heart, Briefcase, Users, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -17,6 +18,8 @@ import { getCastesByReligion } from '@/lib/casteData';
 import BirthDetailsForm from '@/components/BirthDetailsForm';
 import KundaliChart from '@/components/KundaliChart';
 import SiteLoader from '@/components/SiteLoader';
+import AboutMeField from '@/components/AboutMeField';
+import { validateAboutMe } from '@/lib/aboutMeValidation';
 
 // ── Reusable field components ─────────────────────────────────────────────────
 const inputCls = "w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-sm focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft dark:focus:ring-vd-accent/20 transition-all";
@@ -112,6 +115,7 @@ function EditProfilePage() {
   const searchParams = useSearchParams();
   const isWelcome = searchParams?.get('welcome') === '1';
   const [step, setStep] = useState(0);
+  const [introVideoUrl, setIntroVideoUrl] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savedSteps, setSavedSteps] = useState([]);
@@ -208,6 +212,7 @@ function EditProfilePage() {
         partnerMaritalStatus: p.partnerMaritalStatus || '',
         partnerManglik: p.partnerManglik || '',
       }));
+      setIntroVideoUrl(p.introVideoUrl || null);
       setLoading(false);
     });
 
@@ -216,6 +221,13 @@ function EditProfilePage() {
   }, [status]);
 
   const saveCurrentStep = async () => {
+    if (form.aboutMe?.trim()) {
+      const aboutCheck = validateAboutMe(form.aboutMe, { required: true });
+      if (!aboutCheck.ok) {
+        toast.error(aboutCheck.error);
+        return;
+      }
+    }
     setSaving(true);
     try {
       const res = await fetch('/api/profile', {
@@ -227,7 +239,8 @@ function EditProfilePage() {
         toast.success('Saved!');
         setSavedSteps(prev => [...new Set([...prev, step])]);
       } else {
-        toast.error('Save failed');
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || 'Save failed');
       }
     } catch { toast.error('Error saving'); }
     finally { setSaving(false); }
@@ -249,8 +262,10 @@ function EditProfilePage() {
     : [];
 
   const profileComplete = (() => {
-    const fields = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe', 'caste', 'motherTongue'];
-    return Math.round(fields.filter(f => form[f]).length / fields.length * 100);
+    const fields = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'caste', 'motherTongue'];
+    let filled = fields.filter(f => form[f]).length;
+    if (validateAboutMe(form.aboutMe, { required: true }).ok) filled += 1;
+    return Math.round(filled / (fields.length + 1) * 100);
   })();
 
   if (loading) return (
@@ -326,7 +341,14 @@ function EditProfilePage() {
                   <Select label="Body Type" value={form.bodyType} onChange={v => set('bodyType', v)} options={BODY_TYPES} />
                   <Select label="Complexion" value={form.complexion} onChange={v => set('complexion', v)} options={COMPLEXIONS} />
                   <Input label="Phone Number" value={form.phone} onChange={v => set('phone', v)} placeholder="+91 9999999999" />
-                  <div className="col-span-2"><Textarea label="About Me" value={form.aboutMe} onChange={v => set('aboutMe', v)} placeholder="Describe yourself, your interests, what you're looking for..." rows={4} /></div>
+                  <div className="col-span-2">
+                    <AboutMeField
+                      value={form.aboutMe}
+                      onChange={(v) => set('aboutMe', v)}
+                      rows={5}
+                      inputClassName={inputCls + ' resize-none'}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -526,6 +548,7 @@ function EditProfilePage() {
                 <div className="border-t border-vd-border pt-6">
                   <DocumentUploadSection />
                 </div>
+                <IntroVideoSection initialUrl={introVideoUrl} />
               </div>
             )}
           </motion.div>

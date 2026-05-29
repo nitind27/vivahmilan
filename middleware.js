@@ -1,4 +1,73 @@
-// Maintenance mode is handled in server.mjs directly — no middleware needed
 import { NextResponse } from 'next/server';
-export function middleware() { return NextResponse.next(); }
-export const config = { matcher: [] };
+import { getToken } from 'next-auth/jwt';
+
+const PUBLIC_PREFIXES = [
+  '/login', '/register', '/forgot-password', '/verify-email', '/google-verify',
+  '/onboarding', '/register/complete', '/api/auth', '/api/register', '/api/public',
+  '/api/stories', '/api/kyc', '/kyc', '/maintenance', '/terms', '/privacy',
+  '/api/plans',
+  '/refund', '/cookies', '/safety', '/help', '/contact', '/report-abuse',
+  '/stories', '/share-story', '/payment/status',
+];
+
+const USER_PREFIXES = [
+  '/dashboard', '/search', '/matches', '/chat', '/interests', '/shortlist',
+  '/compare', '/views', '/settings', '/refer', '/premium', '/notifications',
+  '/profile/edit', '/blocked', '/share-story',
+];
+
+function isPublic(pathname) {
+  if (pathname === '/' || pathname.startsWith('/_next') || pathname.startsWith('/uploads')) return true;
+  if (pathname.match(/\.(ico|png|jpg|jpeg|svg|webp|js|css|woff2?|json|txt|mp4|webm)$/)) return true;
+  return PUBLIC_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
+}
+
+function needsAuth(pathname) {
+  if (pathname.startsWith('/profile/') && !pathname.startsWith('/profile/edit')) return true;
+  return USER_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
+}
+
+export async function middleware(req) {
+  const { pathname } = req.nextUrl;
+
+  if (isPublic(pathname)) return NextResponse.next();
+
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  if (pathname.startsWith('/admin')) {
+    if (!token) {
+      const url = new URL('/login', req.url);
+      url.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(url);
+    }
+    if (token.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (needsAuth(pathname)) {
+    if (!token) {
+      const url = new URL('/login', req.url);
+      url.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(url);
+    }
+    if (token.role === 'FAMILY' && (pathname.startsWith('/profile/edit') || pathname.startsWith('/premium') || pathname.startsWith('/settings') || pathname.startsWith('/refer') || pathname.startsWith('/share-story'))) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+  }
+
+  if (pathname.startsWith('/api/admin')) {
+    if (!token || token.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|sw.js|logo).*)',
+  ],
+};

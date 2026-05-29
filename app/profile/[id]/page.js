@@ -19,8 +19,11 @@ import { differenceInYears, format } from 'date-fns';
 import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import KundaliChart from '@/components/KundaliChart';
+import KundaliMatchReport from '@/components/KundaliMatchReport';
 import WithdrawInterestModal from '@/components/WithdrawInterestModal';
 import ShareProfileButton from '@/components/ShareProfileButton';
+import MatchScoreBadge from '@/components/MatchScoreBadge';
+import { INTEREST_TEMPLATES } from '@/lib/interestTemplates';
 
 const REPORT_REASONS = [
   'Fake profile / Impersonation',
@@ -349,7 +352,6 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
   const status    = interestStatus?.status;
 
   const sendInterest = async () => {
-    if (showMsgBox && !msg.trim()) { toast.error('Write a message'); return; }
     setLoading(true);
     try {
       const res = await fetch('/api/interest', {
@@ -392,6 +394,15 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
   };
 
   if (isOwnProfile) return null;
+
+  if (session?.user?.isFamilyLogin) {
+    return (
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 text-center">
+        <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">Family browse mode</p>
+        <p className="text-xs text-gray-500 mt-1">Only the profile owner can send interests.</p>
+      </div>
+    );
+  }
 
   // ── ACCEPTED ──────────────────────────────────────────────────────────────
   if (status === 'ACCEPTED') {
@@ -485,7 +496,15 @@ function InterestPanel({ interestStatus, interestId, isOwnProfile, isPremium, us
     <div className="space-y-2">
       <AnimatePresence>
         {showMsgBox && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-2">
+            <div className="flex flex-wrap gap-1.5">
+              {INTEREST_TEMPLATES.map(t => (
+                <button key={t.id} type="button" onClick={() => setMsg(t.message)}
+                  className="text-xs px-2.5 py-1 rounded-full border border-vd-border bg-vd-bg-alt hover:border-vd-primary hover:text-vd-primary transition-colors">
+                  {t.label}
+                </button>
+              ))}
+            </div>
             <textarea value={msg} onChange={e => setMsg(e.target.value)} rows={3}
               className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 text-sm resize-none input-focus"
               placeholder="Write a personal message (optional)…" maxLength={200} />
@@ -803,6 +822,13 @@ export default function ProfilePage() {
             setActivePhoto={setActivePhoto}
           />
 
+          {profile.introVideoUrl && (
+            <div className="px-6 sm:px-8 py-4 border-t border-vd-border bg-vd-bg-alt/50">
+              <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-2">Intro Video</p>
+              <video src={profile.introVideoUrl} controls className="w-full max-w-lg rounded-xl border border-vd-border bg-black" />
+            </div>
+          )}
+
           <div className="p-6 sm:p-8 border-t border-vd-border">
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
               <div className="flex-1 min-w-0">
@@ -829,6 +855,11 @@ export default function ProfilePage() {
                   {user.name}
                   {!!user.verificationBadge && <VerifiedBadge size="lg" variant="icon" />}
                 </h1>
+                {!isOwnProfile && (
+                  <div className="mt-2">
+                    <MatchScoreBadge userId={id} />
+                  </div>
+                )}
 
                 <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-vd-text-sub">
                   {age != null && <span>{age} years</span>}
@@ -1001,6 +1032,12 @@ export default function ProfilePage() {
               <ProfileSection title="Partner Preferences" icon={Target} delay={0.2}>
                 <DetailGrid items={partnerItems} />
               </ProfileSection>
+            )}
+
+            {!isOwnProfile && kundali && (
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.21 }}>
+                <KundaliMatchReport partnerId={id} partnerName={user?.name} />
+              </motion.div>
             )}
 
             {kundali !== undefined && (

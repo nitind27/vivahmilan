@@ -3,6 +3,7 @@ import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
 import { assertProfileViewAccess } from '@/lib/profileMatchRules';
+import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 import { randomUUID } from 'crypto';
 
 const ALLOWED_PROFILE_COLS = new Set([
@@ -168,6 +169,13 @@ export async function PUT(req) {
       sanitized[key] = isNaN(num) ? null : num;
     } else {
       sanitized[key] = val;
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(profileData, 'aboutMe') && sanitized.aboutMe) {
+    const aboutErr = assertAboutMeForSave(sanitized.aboutMe);
+    if (aboutErr) {
+      return NextResponse.json({ error: aboutErr.error, code: aboutErr.code }, { status: 400 });
     }
   }
 

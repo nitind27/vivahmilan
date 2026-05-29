@@ -10,8 +10,22 @@ import SearchableSelect from '@/components/SearchableSelect';
 import LocationPicker from '@/components/LocationPicker';
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin,
-  GraduationCap, Heart, Users, Briefcase, RotateCcw, ChevronLeft, ChevronRight, ShieldCheck
+  GraduationCap, Heart, Users, Briefcase, RotateCcw, ChevronLeft, ChevronRight, ShieldCheck,
+  Bookmark, Save, Trash2, Sparkles, Bell
 } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+const RASHIS = [
+  'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+  'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces',
+];
+const NAKSHATRAS = [
+  'Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra',
+  'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni',
+  'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha',
+  'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishtha',
+  'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati',
+];
 
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Jewish', 'Other'];
 const EDUCATIONS = ["High School", "Diploma", "Bachelor's", "Master's", "PhD", "MBBS", "CA", "Other"];
@@ -27,6 +41,7 @@ const DEFAULT_FILTERS = {
   religion: '', country: '', state: '', city: '',
   education: '', profession: '', heightMin: '', heightMax: '',
   maritalStatus: '', income: '', verifiedOnly: '',
+  rashi: '', nakshatra: '', manglik: '', hasKundali: '',
 };
 
 // ── Filter Chip ───────────────────────────────────────────────────────────────
@@ -94,6 +109,64 @@ function SearchInner() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [savedSearches, setSavedSearches] = useState([]);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveName, setSaveName] = useState('');
+  const [saveAlertEnabled, setSaveAlertEnabled] = useState(true);
+  const [savingSearch, setSavingSearch] = useState(false);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    fetch('/api/saved-searches')
+      .then(r => r.ok ? r.json() : { searches: [] })
+      .then(d => setSavedSearches(d.searches || []))
+      .catch(() => {});
+  }, [status]);
+
+  const saveCurrentSearch = async () => {
+    if (!saveName.trim()) { toast.error('Enter a name for this search'); return; }
+    setSavingSearch(true);
+    try {
+      const res = await fetch('/api/saved-searches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: saveName.trim(), filters, alertEnabled: saveAlertEnabled }),
+      });
+      if (!res.ok) { toast.error('Could not save search'); return; }
+      toast.success('Search saved');
+      setShowSaveModal(false);
+      setSaveName('');
+      const d = await fetch('/api/saved-searches').then(r => r.json());
+      setSavedSearches(d.searches || []);
+    } finally { setSavingSearch(false); }
+  };
+
+  const loadSavedSearch = (s) => {
+    const merged = { ...DEFAULT_FILTERS, ...(s.filters || {}), q: s.filters?.q || '' };
+    setFilters(merged);
+    doSearch(1, merged);
+    toast.success(`Loaded "${s.name}"`);
+  };
+
+  const deleteSavedSearch = async (id) => {
+    const res = await fetch(`/api/saved-searches?id=${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      setSavedSearches(prev => prev.filter(s => s.id !== id));
+      toast.success('Saved search removed');
+    }
+  };
+
+  const toggleSearchAlert = async (id, alertEnabled) => {
+    const res = await fetch('/api/saved-searches', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, alertEnabled }),
+    });
+    if (res.ok) {
+      setSavedSearches(prev => prev.map(s => s.id === id ? { ...s, alertEnabled } : s));
+      toast.success(alertEnabled ? 'Email alerts enabled' : 'Email alerts off');
+    }
+  };
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -102,15 +175,22 @@ function SearchInner() {
   const set = (key, val) => setFilters(prev => ({ ...prev, [key]: val }));
 
   const activeFilters = Object.entries(filters).filter(([k, v]) => v && k !== 'q').map(([k, v]) => {
-    const labels = { gender: v, ageMin: `Age ≥ ${v}`, ageMax: `Age ≤ ${v}`, religion: v, country: v, state: v, city: v, education: v, profession: v, heightMin: `Height ≥ ${v}cm`, heightMax: `Height ≤ ${v}cm`, maritalStatus: MARITAL.find(m => m.val === v)?.label || v, income: v, verifiedOnly: 'Verified profiles only' };
+    const labels = {
+      gender: v, ageMin: `Age ≥ ${v}`, ageMax: `Age ≤ ${v}`, religion: v, country: v, state: v, city: v,
+      education: v, profession: v, heightMin: `Height ≥ ${v}cm`, heightMax: `Height ≤ ${v}cm`,
+      maritalStatus: MARITAL.find(m => m.val === v)?.label || v, income: v, verifiedOnly: 'Verified only',
+      rashi: `Rashi: ${v}`, nakshatra: `Nakshatra: ${v}`, manglik: v === '1' ? 'Manglik' : 'Non-Manglik',
+      hasKundali: 'Has Kundali',
+    };
     return { key: k, label: labels[k] || v };
   });
 
-  const doSearch = useCallback(async (pg = 1) => {
+  const doSearch = useCallback(async (pg = 1, filterOverride = null) => {
     setLoading(true);
     setSearched(true);
+    const f = filterOverride || filters;
     const params = new URLSearchParams({ page: pg, limit: 12 });
-    Object.entries(filters).forEach(([k, v]) => { if (v) params.set(k, v); });
+    Object.entries(f).forEach(([k, v]) => { if (v) params.set(k, v); });
     try {
       const res = await fetch(`/api/search?${params}`);
       const data = await res.json();
@@ -216,7 +296,60 @@ function SearchInner() {
               {total} result{total !== 1 ? 's' : ''} found
             </span>
           )}
+
+          {searched && (
+            <button onClick={() => setShowSaveModal(true)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-vd-border text-xs font-semibold text-vd-text-sub hover:border-vd-primary hover:text-vd-primary transition-colors">
+              <Save className="w-3.5 h-3.5" /> Save Search
+            </button>
+          )}
         </div>
+
+        {savedSearches.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-xs font-semibold text-vd-text-light flex items-center gap-1">
+              <Bookmark className="w-3.5 h-3.5" /> Saved:
+            </span>
+            {savedSearches.map(s => (
+              <span key={s.id} className="inline-flex items-center gap-1 bg-vd-bg-section border border-vd-border rounded-full pl-3 pr-1 py-1 text-xs">
+                <button onClick={() => loadSavedSearch(s)} className="font-medium text-vd-text-heading hover:text-vd-primary">
+                  {s.name}
+                </button>
+                <button
+                  onClick={() => toggleSearchAlert(s.id, !s.alertEnabled)}
+                  title={s.alertEnabled ? 'Email alerts on' : 'Email alerts off'}
+                  className={`p-1 rounded-full ${s.alertEnabled ? 'text-vd-primary' : 'text-vd-text-light hover:text-vd-primary'}`}
+                >
+                  <Bell className="w-3 h-3" />
+                </button>
+                <button onClick={() => deleteSavedSearch(s.id)} className="p-1 rounded-full hover:bg-red-50 hover:text-red-500 text-vd-text-light">
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {showSaveModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={() => setShowSaveModal(false)}>
+            <div className="bg-vd-bg-section rounded-2xl p-5 w-full max-w-sm border border-vd-border shadow-xl" onClick={e => e.stopPropagation()}>
+              <p className="font-bold text-vd-text-heading mb-3">Save this search</p>
+              <input value={saveName} onChange={e => setSaveName(e.target.value)} placeholder="e.g. Mumbai brides 25-30"
+                className="w-full px-3 py-2.5 border border-vd-border rounded-xl text-sm mb-3 focus:outline-none focus:border-vd-primary" />
+              <label className="flex items-center gap-2 mb-4 cursor-pointer text-sm text-vd-text-sub">
+                <input type="checkbox" checked={saveAlertEnabled} onChange={e => setSaveAlertEnabled(e.target.checked)} className="accent-vd-primary rounded" />
+                Email me when new profiles match (max 1/day)
+              </label>
+              <div className="flex gap-2">
+                <button onClick={saveCurrentSearch} disabled={savingSearch}
+                  className="flex-1 vd-gradient-gold text-white py-2.5 rounded-xl text-sm font-semibold disabled:opacity-60">
+                  {savingSearch ? 'Saving…' : 'Save'}
+                </button>
+                <button onClick={() => setShowSaveModal(false)} className="px-4 py-2.5 border border-vd-border rounded-xl text-sm">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Filter Panel ── */}
         <AnimatePresence>
@@ -260,6 +393,25 @@ function SearchInner() {
                   <RangeInput label="Height (cm)" minVal={filters.heightMin} maxVal={filters.heightMax}
                     onMinChange={v => set('heightMin', v)} onMaxChange={v => set('heightMax', v)}
                     minPlaceholder="150" maxPlaceholder="190" />
+
+                  <div className="col-span-2 sm:col-span-3 lg:col-span-4 border-t border-vd-border pt-4">
+                    <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-3 flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-vd-primary" /> Kundali Filters
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                      <FilterSelect label="Moon Sign (Rashi)" value={filters.rashi} onChange={v => set('rashi', v)} options={RASHIS} />
+                      <FilterSelect label="Nakshatra" value={filters.nakshatra} onChange={v => set('nakshatra', v)} options={NAKSHATRAS} />
+                      <FilterSelect label="Manglik" value={filters.manglik} onChange={v => set('manglik', v)}
+                        options={[{ val: '1', label: 'Manglik only' }, { val: '0', label: 'Non-Manglik' }]} />
+                      <div className="flex items-end">
+                        <label className="flex items-center gap-3 p-3.5 border border-vd-border rounded-2xl bg-vd-bg-section cursor-pointer hover:border-vd-primary transition-colors w-full">
+                          <input type="checkbox" checked={filters.hasKundali === '1'} onChange={e => set('hasKundali', e.target.checked ? '1' : '')}
+                            className="w-4 h-4 rounded accent-vd-primary" />
+                          <span className="text-sm font-medium text-vd-text-heading">Has Kundali only</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="col-span-2 sm:col-span-3 lg:col-span-4">
                     <label className="flex items-center gap-3 p-3.5 border border-vd-border rounded-2xl bg-vd-bg-section cursor-pointer hover:border-vd-primary transition-colors">

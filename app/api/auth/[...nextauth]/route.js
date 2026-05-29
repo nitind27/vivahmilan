@@ -25,6 +25,50 @@ export const authOptions = {
         agent: ipv6Agent, // force IPv6 — server's IPv4 is unreachable but IPv6 works
       },
     }),
+    // ── Family Login Provider ──────────────────────────────────────────
+    CredentialsProvider({
+      id: 'family-login',
+      name: 'Family Login',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+        const { ensureFeatureTables } = await import('@/lib/ensureFeatureTables.js');
+        await ensureFeatureTables();
+        const fa = await queryOne(
+          'SELECT * FROM familyaccess WHERE email = ? AND isActive = 1',
+          [credentials.email.trim().toLowerCase()]
+        );
+        if (!fa) return null;
+        const valid = await bcrypt.compare(credentials.password, fa.password);
+        if (!valid) return null;
+
+        const owner = await queryOne(
+          'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE id = ?',
+          [fa.ownerUserId]
+        );
+        if (!owner?.isActive) return null;
+
+        const trialActive = owner.freeTrialExpiry && new Date(owner.freeTrialExpiry) > new Date();
+        return {
+          id: owner.id,
+          email: fa.email,
+          name: `${fa.memberName} (${fa.relationship || 'Family'})`,
+          role: 'FAMILY',
+          isPremium: !!owner.isPremium,
+          premiumPlan: owner.premiumPlan || null,
+          freeTrialActive: !!trialActive,
+          freeTrialExpiry: owner.freeTrialExpiry ? owner.freeTrialExpiry.toISOString() : null,
+          isVerified: !!owner.isVerified,
+          adminVerified: !!owner.adminVerified,
+          familyAccessId: fa.id,
+          ownerName: owner.name,
+          rememberMe: false,
+        };
+      },
+    }),
     // ── QR Code Login Provider ─────────────────────────────────────────
     CredentialsProvider({
       id: 'qr-login',
@@ -261,6 +305,8 @@ export const authOptions = {
         token.needsPassword = user.needsPassword || false;
         token.isNewUser     = user.isNewUser || false;
         token.rememberMe    = !!user.rememberMe;
+        token.familyAccessId = user.familyAccessId || null;
+        token.ownerName     = user.ownerName || null;
         const maxAgeSec = token.rememberMe ? SESSION_REMEMBER_SEC : SESSION_DEFAULT_SEC;
         token.exp = Math.floor(Date.now() / 1000) + maxAgeSec;
       }
@@ -289,6 +335,9 @@ export const authOptions = {
         session.user.adminVerified  = token.adminVerified;
         session.user.needsPassword  = token.needsPassword || false;
         session.user.isNewUser      = token.isNewUser || false;
+        session.user.familyAccessId = token.familyAccessId || null;
+        session.user.ownerName      = token.ownerName || null;
+        session.user.isFamilyLogin  = token.role === 'FAMILY';
       }
       delete session.user.image;
       return session;
