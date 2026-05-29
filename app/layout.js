@@ -6,7 +6,6 @@ import SetPasswordModal from '@/components/SetPasswordModal';
 import MarketingPopup from '@/components/MarketingPopup';
 import PageTracker from '@/components/PageTracker';
 import CookieConsent from '@/components/CookieConsent';
-import InstallPWA from '@/components/InstallPWA';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
@@ -47,7 +46,6 @@ export default function RootLayout({ children }) {
           <SWRegister />
           <PageTracker />
           {children}
-          <InstallPWA />
           <SetPasswordModal />
           <MarketingPopup />
           <ChatBot />
