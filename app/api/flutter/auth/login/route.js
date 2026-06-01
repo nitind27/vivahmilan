@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { queryOne, execute } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
 import { recordLoginGeo } from '@/lib/geoTracking';
+import { getPortalAccessForUser } from '@/lib/portalAccess';
 
 // Required fields for profile to be considered complete
 const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
@@ -78,6 +79,7 @@ export async function POST(req) {
     }
 
     const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+    const portalAccess = await getPortalAccessForUser({ email: user.email, role: user.role });
 
     recordLoginGeo(user.id, req, body).catch(e =>
       console.error('[flutter login] geo log error:', e.message)
@@ -93,6 +95,10 @@ export async function POST(req) {
     return NextResponse.json({
       success: true,
       token,
+      portalAccess: portalAccess.granted,
+      portalClosed: !portalAccess.granted,
+      launchMessage: portalAccess.granted ? null : portalAccess.message,
+      contact: portalAccess.granted ? null : portalAccess.contact,
       user: {
         id: user.id,
         name: user.name,

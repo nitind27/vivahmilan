@@ -4,6 +4,7 @@ import { queryOne } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 import { recordLoginGeo } from '@/lib/geoTracking';
+import { getPortalAccessForUser } from '@/lib/portalAccess';
 
 /** POST /api/flutter/auth/family-login — read-only browse for family members */
 export async function POST(req) {
@@ -38,6 +39,7 @@ export async function POST(req) {
     }
 
     const trialActive = owner.freeTrialExpiry && new Date(owner.freeTrialExpiry) > new Date();
+    const portalAccess = await getPortalAccessForUser({ email: fa.email, role: 'FAMILY' });
 
     recordLoginGeo(owner.id, req, { email: fa.email }).catch(() => {});
 
@@ -55,6 +57,10 @@ export async function POST(req) {
     return NextResponse.json({
       success: true,
       token,
+      portalAccess: portalAccess.granted,
+      portalClosed: !portalAccess.granted,
+      launchMessage: portalAccess.granted ? null : portalAccess.message,
+      contact: portalAccess.granted ? null : portalAccess.contact,
       user: {
         id: owner.id,
         name: `${fa.memberName} (${fa.relationship || 'Family'})`,

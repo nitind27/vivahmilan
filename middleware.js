@@ -5,7 +5,7 @@ const PUBLIC_PREFIXES = [
   '/login', '/register', '/forgot-password', '/verify-email', '/google-verify',
   '/onboarding', '/register/complete', '/api/auth', '/api/register', '/api/public',
   '/api/stories', '/api/kyc', '/kyc', '/maintenance', '/terms', '/privacy',
-  '/api/plans',
+  '/api/plans', '/profile-launch', '/api/portal-access',
   '/refund', '/cookies', '/safety', '/help', '/contact', '/report-abuse',
   '/stories', '/share-story', '/payment/status', '/api/chatbot',
 ];
@@ -55,11 +55,39 @@ export async function middleware(req) {
     if (token.role === 'FAMILY' && (pathname.startsWith('/profile/edit') || pathname.startsWith('/premium') || pathname.startsWith('/settings') || pathname.startsWith('/refer') || pathname.startsWith('/share-story'))) {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
+    if ((token.role === 'USER' || token.role === 'FAMILY') && token.portalAccessGranted === false) {
+      return NextResponse.redirect(new URL('/profile-launch', req.url));
+    }
+  }
+
+  if (pathname.startsWith('/profile-launch') && token && (token.role === 'USER' || token.role === 'FAMILY') && token.portalAccessGranted === true) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
   if (pathname.startsWith('/api/admin')) {
     if (!token || token.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  }
+
+  const PORTAL_API_BYPASS = [
+    '/api/auth', '/api/register', '/api/onboarding', '/api/portal-access',
+    '/api/public', '/api/admin', '/api/flutter', '/api/plans', '/api/stories',
+    '/api/kyc', '/api/maintenance-status', '/api/welcome-gate-status', '/api/app-links',
+    '/api/chatbot', '/api/track', '/api/location', '/api/profile-options',
+    '/api/coupons/validate', '/api/marketing-popup', '/api/payment/status',
+    '/api/socket',
+  ];
+  if (
+    pathname.startsWith('/api/') &&
+    !PORTAL_API_BYPASS.some(p => pathname === p || pathname.startsWith(p + '/'))
+  ) {
+    if (token && (token.role === 'USER' || token.role === 'FAMILY') && token.portalAccessGranted === false) {
+      return NextResponse.json({
+        error: 'Your profile will be available soon. Please wait for our update.',
+        code: 'PORTAL_CLOSED',
+        portalAccess: false,
+      }, { status: 403 });
     }
   }
 

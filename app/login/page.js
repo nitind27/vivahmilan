@@ -64,7 +64,7 @@ function QRLoginPanel({ onBack }) {
             toast.success('Logged in via QR code!');
             logWebLogin();
             const s = await getSession();
-            router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
+            router.push(s?.user?.role === 'ADMIN' ? '/admin' : s?.user?.portalAccessGranted === false ? '/profile-launch' : '/dashboard');
           } else {
             toast.error('QR login failed. Please try again.');
             setQrStatus('error');
@@ -326,10 +326,15 @@ function LoginInner() {
       logWebLogin();
       const s = await getSession();
       const callbackUrl = searchParams?.get('callbackUrl');
-      if (callbackUrl && callbackUrl.startsWith('/')) {
+      const defaultPath = s?.user?.role === 'ADMIN'
+        ? '/admin'
+        : s?.user?.portalAccessGranted === false
+          ? '/profile-launch'
+          : '/dashboard';
+      if (callbackUrl && callbackUrl.startsWith('/') && s?.user?.portalAccessGranted !== false) {
         router.push(callbackUrl);
       } else {
-        router.push(s?.user?.role === 'ADMIN' ? '/admin' : '/dashboard');
+        router.push(defaultPath);
       }
     }
   };

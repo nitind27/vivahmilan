@@ -4,6 +4,7 @@ import { queryOne, execute } from '@/lib/db';
 import { signToken } from '@/lib/flutter-jwt';
 import { recordRegistrationGeo, recordLoginGeo } from '@/lib/geoTracking';
 import { randomUUID } from 'crypto';
+import { getPortalAccessForUser } from '@/lib/portalAccess';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const REQUIRED_FIELDS = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
@@ -129,6 +130,7 @@ export async function POST(req) {
     }
 
     const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+    const portalAccess = await getPortalAccessForUser({ email: user.email, role: user.role });
 
     if (!isNewSignup) {
       recordLoginGeo(user.id, req, body).catch(e =>
@@ -146,6 +148,10 @@ export async function POST(req) {
     return NextResponse.json({
       success: true,
       token,
+      portalAccess: portalAccess.granted,
+      portalClosed: !portalAccess.granted,
+      launchMessage: portalAccess.granted ? null : portalAccess.message,
+      contact: portalAccess.granted ? null : portalAccess.contact,
       user: {
         id: user.id,
         name: user.name,

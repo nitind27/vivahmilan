@@ -179,6 +179,58 @@ app.prepare().then(() => {
       }
     }
 
+    // ── Flutter portal access gate (verified users blocked until admin opens portal) ──
+    const FLUTTER_PORTAL_BYPASS = [
+      '/api/flutter/auth/',
+      '/api/flutter/portal-access',
+      '/api/flutter/location/',
+    ];
+    if (
+      pathname.startsWith('/api/flutter/') &&
+      !FLUTTER_PORTAL_BYPASS.some(p => pathname.startsWith(p))
+    ) {
+      const authHeader = req.headers.authorization || '';
+      if (authHeader.startsWith('Bearer ')) {
+        try {
+          const token = authHeader.slice(7);
+          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'milan-jwt-secret-2026');
+          if (decoded?.email && decoded.role !== 'ADMIN') {
+            const pool = getDbPool();
+            const [devRows] = await pool.execute(
+              "SELECT value FROM siteconfig WHERE `key` = 'developer_portal_emails' LIMIT 1"
+            );
+            const devEmails = (devRows[0]?.value || '')
+              .split(/[,;\s]+/)
+              .map(e => e.trim().toLowerCase())
+              .filter(Boolean);
+            const isDev = devEmails.includes(String(decoded.email).trim().toLowerCase());
+            if (!isDev) {
+              const [portalRows] = await pool.execute(
+                "SELECT value FROM siteconfig WHERE `key` = 'user_portal_access' LIMIT 1"
+              );
+              const portalOpen = portalRows[0]?.value === '1';
+              if (!portalOpen) {
+                res.writeHead(403, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                  error: 'Your profile will be available soon. Please wait for our update.',
+                  code: 'PORTAL_CLOSED',
+                  portalAccess: false,
+                  contact: {
+                    phone: '8735995467',
+                    phoneDisplay: '+91 87359 95467',
+                    email: 'supportvivahdwar@gmail.com',
+                  },
+                }));
+                return;
+              }
+            }
+          }
+        } catch {
+          // Invalid token — let the route handler respond with 401
+        }
+      }
+    }
+
     handle(req, res, parsedUrl);
   });
 

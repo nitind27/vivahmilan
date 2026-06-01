@@ -88,6 +88,72 @@ export default function SiteConfigPage() {
         </div>
       </div>
 
+      {/* User Portal Access — post-verification launch gate */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.user_portal_access === '1' ? 'bg-green-900/20' : 'bg-amber-900/30'}`}>
+            {config.user_portal_access === '1'
+              ? <Unlock className="w-5 h-5 text-green-400" />
+              : <Lock className="w-5 h-5 text-amber-400" />}
+          </div>
+          <div>
+            <h3 className="font-bold text-white">User Portal Access</h3>
+            <p className="text-xs text-gray-500">
+              OFF = verified users login kar sakte hain par profile-launch page dikhega. ON = full website access.
+            </p>
+          </div>
+        </div>
+        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.user_portal_access === '1' ? 'bg-green-900/10 border-green-800/30' : 'bg-amber-900/10 border-amber-800/40'}`}>
+          <div>
+            <p className="text-sm font-semibold text-white">
+              Portal is{' '}
+              <span className={config.user_portal_access === '1' ? 'text-green-400' : 'text-amber-400'}>
+                {config.user_portal_access === '1' ? '🟢 OPEN — Full Access' : '🔒 CLOSED — Launch Page'}
+              </span>
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {config.user_portal_access === '1'
+                ? 'Verified users dashboard, matches, chat sab use kar sakte hain'
+                : 'Verified users ko "Profile jald available" page dikhega — login allowed'}
+            </p>
+          </div>
+          <Toggle
+            value={config.user_portal_access === '1'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig(p => ({ ...p, user_portal_access: newVal }));
+              const res = await fetch('/api/admin/siteconfig', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'user_portal_access', value: newVal }),
+              });
+              if (res.ok) toast.success(val ? '🟢 Portal OPEN — users can access full site' : '🔒 Portal CLOSED — launch page shown after login');
+              else {
+                toast.error('Failed');
+                setConfig(p => ({ ...p, user_portal_access: val ? '0' : '1' }));
+              }
+            }}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Developer Bypass Emails</label>
+          <p className="text-xs text-gray-600 mb-2">Comma-separated. In emails ko portal closed hone par bhi full access milega (testing ke liye).</p>
+          <input
+            value={config.developer_portal_emails || ''}
+            onChange={e => setConfig(p => ({ ...p, developer_portal_emails: e.target.value }))}
+            placeholder="developer@gmail.com, admin@test.com"
+            className={inp}
+          />
+          <button
+            disabled={saving}
+            onClick={() => save('developer_portal_emails', config.developer_portal_emails || '')}
+            className="mt-3 vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60"
+          >
+            {saving ? 'Saving…' : 'Save Developer Emails'}
+          </button>
+        </div>
+      </div>
+
       {/* Maintenance Mode */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
         <div className="flex items-center gap-3">

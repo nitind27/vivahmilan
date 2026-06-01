@@ -7,6 +7,7 @@ import { queryOne, execute } from '@/lib/db';
 import { recordRegistrationGeo, recordLoginGeo, getClientIPFromHeaders } from '@/lib/geoTracking';
 import { randomUUID } from 'crypto';
 import https from 'https';
+import { getPortalAccessForUser } from '@/lib/portalAccess';
 
 // Force IPv6 for Google OAuth — server has IPv6 connectivity but IPv4 is unreachable
 const ipv6Agent = new https.Agent({ family: 6 });
@@ -52,6 +53,7 @@ export const authOptions = {
         if (!owner?.isActive) return null;
 
         const trialActive = owner.freeTrialExpiry && new Date(owner.freeTrialExpiry) > new Date();
+        const portalAccess = await getPortalAccessForUser({ email: fa.email, role: 'FAMILY' });
         return {
           id: owner.id,
           email: fa.email,
@@ -66,6 +68,7 @@ export const authOptions = {
           familyAccessId: fa.id,
           ownerName: owner.name,
           rememberMe: false,
+          portalAccessGranted: portalAccess.granted,
         };
       },
     }),
@@ -89,6 +92,7 @@ export const authOptions = {
           if (!user || !user.isActive) return null;
 
           const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+          const portalAccess = await getPortalAccessForUser({ email: user.email, role: user.role });
           return {
             id: user.id,
             email: user.email,
@@ -102,6 +106,7 @@ export const authOptions = {
             adminVerified: !!user.adminVerified,
             needsPassword: false,
             isNewUser: false,
+            portalAccessGranted: portalAccess.granted,
           };
         } catch (err) {
           console.error('QR login auth error:', err.message);
@@ -141,6 +146,7 @@ export const authOptions = {
 
           if (user.role !== 'ADMIN' && !user.adminVerified) throw new Error('PENDING_APPROVAL');
           const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
+          const portalAccess = await getPortalAccessForUser({ email: user.email, role: user.role });
           return {
             id: user.id,
             email: user.email,
@@ -155,6 +161,7 @@ export const authOptions = {
             needsPassword: false,
             isNewUser: false,
             rememberMe,
+            portalAccessGranted: portalAccess.granted,
           };
         } catch (err) {
           console.error('Auth error:', err.message);
@@ -313,7 +320,9 @@ export const authOptions = {
           console.error('[google login] geo log error:', e.message)
         );
 
-        return dbUser.role === 'ADMIN' ? '/admin' : true;
+        if (dbUser.role === 'ADMIN') return '/admin';
+        const portalAccess = await getPortalAccessForUser({ email: dbUser.email, role: dbUser.role });
+        return portalAccess.granted ? true : '/profile-launch';
       } catch (err) {
         console.error('Google signIn error:', err.message, err.stack);
         return '/login?error=ServerError';
@@ -335,6 +344,7 @@ export const authOptions = {
         token.rememberMe    = !!user.rememberMe;
         token.familyAccessId = user.familyAccessId || null;
         token.ownerName     = user.ownerName || null;
+        token.portalAccessGranted = user.portalAccessGranted !== undefined ? user.portalAccessGranted : true;
         const maxAgeSec = token.rememberMe ? SESSION_REMEMBER_SEC : SESSION_DEFAULT_SEC;
         token.exp = Math.floor(Date.now() / 1000) + maxAgeSec;
       }
@@ -366,6 +376,7 @@ export const authOptions = {
         session.user.familyAccessId = token.familyAccessId || null;
         session.user.ownerName      = token.ownerName || null;
         session.user.isFamilyLogin  = token.role === 'FAMILY';
+        session.user.portalAccessGranted = token.portalAccessGranted !== false;
       }
       delete session.user.image;
       return session;
