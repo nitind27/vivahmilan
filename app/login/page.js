@@ -254,6 +254,9 @@ function LoginInner() {
     else if (error === 'AccountSuspended') toast.error('Your account has been suspended.');
     else if (error === 'ServerError') toast.error('Something went wrong. Please try again.');
     else if (error === 'AccessDenied') toast.error('Access denied. Please try again or contact support.');
+    else if (error === 'OAuthCallback' || error === 'Callback' || error === 'OAuthSignin') {
+      toast.error('Google sign-in failed. Use the same browser, allow cookies, and open vivahdwar.com (not www).');
+    }
   }, [searchParams]);
 
   useEffect(() => {

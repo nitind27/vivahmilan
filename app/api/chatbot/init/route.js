@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
-import { execute } from '@/lib/db';
+import { execute, query } from '@/lib/db';
+
+async function columnExists(table, column) {
+  const rows = await query(
+    `SELECT 1 AS ok FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ? LIMIT 1`,
+    [table, column]
+  );
+  return rows.length > 0;
+}
 
 export async function POST() {
   try {
@@ -27,10 +36,8 @@ export async function POST() {
         INDEX idx_session (sessionId)
       )
     `);
-    try {
+    if (!(await columnExists('support_session', 'fallbackCount'))) {
       await execute('ALTER TABLE support_session ADD COLUMN fallbackCount INT DEFAULT 0');
-    } catch {
-      /* column exists */
     }
     return NextResponse.json({ ok: true });
   } catch (err) {

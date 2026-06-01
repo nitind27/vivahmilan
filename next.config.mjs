@@ -12,7 +12,19 @@ const nextConfig = {
     localPatterns: [{ pathname: '/uploads/**' }],
     unoptimized: true,
   },
-   // ✅ THIS IS THE MAIN FIX
+
+  // www → apex so NextAuth OAuth state cookies match NEXTAUTH_URL
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.vivahdwar.com' }],
+        destination: 'https://vivahdwar.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   allowedDevOrigins: [
     'http://vivahdwar.com',
     'https://vivahdwar.com',

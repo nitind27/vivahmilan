@@ -170,6 +170,34 @@ export const authOptions = {
     updateAge: SESSION_DEFAULT_SEC,
   },
 
+  // Required behind Hostinger / reverse proxy — fixes "State cookie was missing"
+  trustHost: true,
+
+  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? process.env.NODE_ENV === 'production',
+
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NEXTAUTH_URL?.startsWith('https://') ?? false,
+        maxAge: 60 * 15,
+      },
+    },
+    state: {
+      name: 'next-auth.state',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NEXTAUTH_URL?.startsWith('https://') ?? false,
+        maxAge: 60 * 15,
+      },
+    },
+  },
+
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== 'google') return true;
