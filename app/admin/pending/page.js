@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { UserCheck, CheckCircle, XCircle, Eye, Search, ChevronLeft, ChevronRight, FileText, Calendar, MapPin, Mail, Phone, Hash, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
+import ApprovalChecklist from '@/components/ApprovalChecklist';
 
 // ── Profile Approvals Components ──────────────────────────────────────────────
 
@@ -89,6 +90,7 @@ function ProfilesTab() {
   const [selectedId, setSelectedId] = useState(null);
   const [q, setQ] = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
+  const [blockModal, setBlockModal] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQ(q), 500);
@@ -123,8 +125,13 @@ function ProfilesTab() {
       load();
       window.dispatchEvent(new Event('admin-stats-refresh'));
     } else if (result.checklist) {
-      toast.error(result.error || 'Profile does not meet approval requirements', { duration: 6000 });
-      result.errors?.slice(0, 3).forEach(msg => toast(msg, { icon: '⚠️', duration: 5000 }));
+      const user = users.find(u => u.id === id);
+      setBlockModal({
+        userName: user?.name || 'User',
+        message: result.error,
+        checklist: result.checklist,
+        errors: result.errors || [],
+      });
     } else {
       toast.error(result.error || 'Failed to update user');
     }
@@ -211,6 +218,32 @@ function ProfilesTab() {
       )}
 
       {selectedId && <AdminUserProfileModal userId={selectedId} onClose={() => { setSelectedId(null); load(); }} />}
+
+      {blockModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-white">Cannot approve — {blockModal.userName}</h3>
+                <p className="text-sm text-gray-400 mt-1">{blockModal.message}</p>
+              </div>
+              <button onClick={() => setBlockModal(null)} className="text-gray-500 hover:text-white shrink-0">
+                <XCircle className="w-6 h-6" />
+              </button>
+            </div>
+            <ApprovalChecklist checklist={blockModal.checklist} eligible={false} />
+            <p className="text-xs text-gray-500 mt-4">
+              Ask the user to complete missing items in the app, then try again. Open <strong className="text-gray-400">View</strong> to see full profile details.
+            </p>
+            <button
+              onClick={() => setBlockModal(null)}
+              className="mt-4 w-full py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold"
+            >
+              OK, understood
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,12 @@
 ================================================================================
-  VIVAH DWAR — NEW FEATURES & FLUTTER API INTEGRATION GUIDE
+  VIVAH DWAR — FLUTTER MOBILE APP API INTEGRATION GUIDE
   Last Updated: May 2026
   Base URL: https://vivahdwar.com   (local: http://localhost:3000)
 ================================================================================
+
+NOTE: This document is for the FLUTTER MOBILE APP ONLY.
+      There is NO admin panel in the mobile app.
+      Admin / backend operations happen on the website only — not included here.
 
 All Flutter APIs are under:  /api/flutter/...
 Auth header (where required):
@@ -12,7 +16,7 @@ JWT is returned from login / verify-otp / google auth endpoints.
 
 
 ================================================================================
-SUMMARY — WHAT WAS ADDED (Web + Backend)
+SUMMARY — NEW FEATURES FOR FLUTTER APP
 ================================================================================
 
 1. Anti-fake profile system (strict verification before profile goes live)
@@ -21,12 +25,12 @@ SUMMARY — WHAT WAS ADDED (Web + Backend)
 4. Profile submit checklist (photo + family photo + ID document + fields)
 5. Duplicate photo detection on upload
 6. Search filter: verified profiles only (ID badge)
-7. Report abuse → auto-hide profile after 3 reports
-8. Coupon code fix + Flutter coupon APIs
-9. Subscription receipt email after payment (web + flutter)
-10. Custom branded payment checkout (web)
-11. Video KYC camera switch — Front / Back (admin controls user camera)
-12. Updated Privacy Policy & Terms of Service pages (web URLs)
+7. Report abuse (backend auto-hides suspicious profiles)
+8. Coupon codes — validate, apply, pay with discount
+9. Subscription receipt email after payment (automatic)
+10. Video KYC — user opens link from email in WebView
+11. Member chat (Premium / trial) + Support chatbot (AI help)
+12. Legal pages — open in WebView (Privacy, Terms, Safety, Refund)
 
 
 ================================================================================
@@ -62,7 +66,7 @@ Flutter UI changes:
 
 
 ================================================================================
-FEATURE 2 — PROFILE SUBMIT CHECKLIST (Before admin approval)
+FEATURE 2 — PROFILE SUBMIT CHECKLIST (Before profile verification)
 ================================================================================
 
 Before user can submit profile, ALL items must pass:
@@ -118,9 +122,9 @@ Success 200:
     },
     {
       "id": "submitted",
-      "label": "Submitted for admin review",
+      "label": "Submitted for review",
       "passed": false,
-      "detail": "User has not submitted profile for review"
+      "detail": "Profile not yet submitted for verification"
     },
     {
       "id": "reports",
@@ -140,7 +144,7 @@ Flutter UI:
   - Enable "Submit for Review" button only when eligible === true
 
 
---- POST submit profile for admin review ---
+--- POST submit profile for verification ---
 
 POST /api/flutter/profile/submit
 Headers: Authorization: Bearer <token>
@@ -152,6 +156,9 @@ Success 200:
   "message": "Profile submitted for admin review. You will be notified once approved.",
   "code": "PENDING_APPROVAL"
 }
+
+(User sees: "Profile submitted! We will notify you once verified.")
+Note: API message may say "admin review" — show user-friendly text in Flutter UI.
 
 Error 400 — PROFILE_INCOMPLETE:
 {
@@ -263,15 +270,15 @@ Success 201:
   "reportCount": 1
 }
 
-When target gets 3+ reports:
+When target gets 3+ reports (handled by backend automatically):
 {
   "success": true,
-  "message": "Report submitted. This profile has been temporarily hidden pending admin review due to multiple community reports.",
+  "message": "Report submitted. This profile has been temporarily hidden pending review due to multiple community reports.",
   "autoHidden": true,
   "reportCount": 3
 }
 
-Flutter: Show appropriate toast based on autoHidden flag.
+Flutter: Show toast — "Report submitted". No admin UI needed in app.
 
 
 ================================================================================
@@ -395,12 +402,12 @@ Email sent to user's registered email with plan, amount, dates, receipt ID.
 
 
 ================================================================================
-FEATURE 8 — LOGIN / PENDING APPROVAL
+FEATURE 8 — LOGIN / PENDING VERIFICATION
 ================================================================================
 
 POST /api/flutter/auth/login
 
-If profile not admin-approved yet:
+If profile not yet approved by platform team:
 
 Error 403:
 {
@@ -408,22 +415,29 @@ Error 403:
   "code": "PENDING_APPROVAL"
 }
 
-Flutter: Show waiting screen — do not allow search/match until approved.
+(Show user-friendly message in app — do not display raw "admin" text to user)
+
+Flutter UI:
+  - Show "Profile Under Review" waiting screen
+  - Message: "Your profile is being verified. You'll get an email when approved."
+  - Block search, match, chat until approved
+  - Poll login again or use push notification when approved
 
 
 ================================================================================
-FEATURE 9 — VIDEO KYC (User side)
+FEATURE 9 — VIDEO KYC (User — WebView only)
 ================================================================================
 
-User receives email with link: /kyc/{token}
-(In Flutter app — open WebView or deep link to this URL)
+When platform team schedules Video KYC, user receives email with link.
 
-During call:
-  - Admin switches user camera remotely
-  - User sees "Front camera" or "Document scan mode" banner
-  - User does NOT switch camera manually — admin controls it
+Flutter implementation:
+  - Open WebView: https://vivahdwar.com/kyc/{token}
+  - Allow camera + microphone permissions
+  - User joins call from that page
+  - Camera may switch automatically during document scan (handled on web page)
+  - After call ends, show "Verification complete — we will notify you"
 
-No separate Flutter API for KYC socket — use web KYC page in WebView for now.
+No Flutter API needed — WebView only. Token comes from email deep link.
 
 
 ================================================================================
@@ -470,6 +484,23 @@ COUPONS / PAYMENT
   POST /api/flutter/payment/create-order   ← UPDATED (coupon + duration)
   POST /api/flutter/payment/verify         ← receipt email auto-sent
   GET  /api/flutter/plans
+
+MEMBER CHAT (Premium / Trial required)
+  GET  /api/flutter/chat
+  POST /api/flutter/chat
+  GET  /api/flutter/chat/{roomId}
+  POST /api/flutter/chat/{roomId}
+  GET  /api/flutter/chat/unread
+  GET  /api/flutter/chat/location/{msgId}
+  PATCH /api/flutter/chat/location/{msgId}
+  Socket.IO /api/socket (real-time)
+
+SUPPORT CHATBOT (Free — AI + Live Support)
+  POST /api/chatbot/init
+  GET  /api/chatbot/session
+  POST /api/chatbot/session
+  POST /api/chatbot/message
+  GET  /api/chatbot/message?sessionId=
 
 
 ================================================================================
@@ -540,15 +571,310 @@ if (jsonDecode(res.body)['autoHidden'] == true) {
 
 
 ================================================================================
-DATABASE NOTES (for backend team — already applied on production)
+FEATURE 11 — MEMBER CHAT (User-to-User messaging)
 ================================================================================
 
-  photo.contentHash          — duplicate photo detection
-  subscription.receiptSentAt — receipt email idempotency
+Premium OR active free trial required for chat access.
 
-Migration files:
-  prisma/migrations/add_photo_content_hash.sql
-  prisma/migrations/add_subscription_receipt_sent.sql
+--- Check access (403 response includes reason) ---
+reasons: no_access | premium_expired | trial_expired
+
+--- List all chat rooms ---
+
+GET /api/flutter/chat?page=1&limit=20
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "data": [
+    {
+      "id": "room-uuid",
+      "userAId": "...",
+      "userBId": "...",
+      "createdAt": "...",
+      "userA": { "id", "name", "isPremium", "profile", "photos", ... },
+      "userB": { ... },
+      "lastMessage": {
+        "id", "content", "createdAt", "senderId",
+        "type": "TEXT",          // TEXT | IMAGE | DOCUMENT | LOCATION
+        "isRead": false
+      }
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "limit": 20,
+  "hasMore": false
+}
+
+Error 403 (no premium/trial):
+{
+  "error": "Chat access required",
+  "hasAccess": false,
+  "reason": "no_access"
+}
+
+
+--- Start chat / send first message ---
+
+POST /api/flutter/chat
+Headers: Authorization: Bearer <token>
+
+Body (text):
+{
+  "receiverId": "<other_user_id>",
+  "content": "Hello!",
+  "type": "TEXT"
+}
+
+Body (location):
+{
+  "receiverId": "<other_user_id>",
+  "type": "LOCATION",
+  "latitude": 19.0760,
+  "longitude": 72.8777,
+  "locationType": "static",     // or "live"
+  "locationExpiry": "2026-05-28T12:00:00.000Z"   // required for live
+}
+
+Success 201: message object + roomId
+
+
+--- Get messages in a room ---
+
+GET /api/flutter/chat/{roomId}?page=1&limit=20
+GET /api/flutter/chat/{roomId}?before=2026-05-28T10:00:00.000Z&limit=20  (older msgs)
+
+Success 200:
+{
+  "data": [ { message objects, oldest first } ],
+  "total": 45,
+  "page": 1,
+  "limit": 20,
+  "hasMore": true
+}
+
+Note: Opening a room auto-marks received messages as read.
+
+
+--- Send message in existing room ---
+
+POST /api/flutter/chat/{roomId}
+
+Text (JSON):
+{ "content": "Hi there", "type": "TEXT" }
+
+Image/PDF (multipart/form-data):
+  Fields: file, type ("IMAGE" or "DOCUMENT")
+  IMAGE: JPG/PNG/WEBP/GIF, max 15MB
+  DOCUMENT: PDF only, max 15MB
+
+Location (JSON):
+{
+  "type": "LOCATION",
+  "latitude": 19.07,
+  "longitude": 72.87,
+  "locationType": "live",
+  "locationExpiry": "2026-05-28T12:30:00.000Z"
+}
+
+
+--- Live location update (sender only) ---
+
+GET  /api/flutter/chat/location/{msgId}     — poll current coords
+PATCH /api/flutter/chat/location/{msgId}
+Body: { "latitude": 19.08, "longitude": 72.88 }
+
+
+--- Unread message count (navbar badge) ---
+
+GET /api/flutter/chat/unread
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "total": 3,
+  "perRoom": {
+    "room-uuid-1": 2,
+    "room-uuid-2": 1
+  }
+}
+
+
+--- Real-time chat (Socket.IO) — RECOMMENDED ---
+
+Connect: wss://vivahdwar.com  path: /api/socket
+Auth: { token: "<JWT>" }  in handshake auth OR Authorization header
+
+Events to EMIT:
+  room:join          { roomId }
+  room:leave         { roomId }
+  message:send       { roomId, message }
+  message:read       { roomId, readerId }
+  typing:start       { roomId, userId }
+  typing:stop        { roomId, userId }
+  location:update    { roomId, msgId, latitude, longitude }
+  user:online        { userId }
+
+Events to LISTEN:
+  message:receive    — new message in room
+  message:read       — peer read messages
+  typing:start       — peer typing
+  typing:stop
+  location:update    — live location moved
+  users:online       — online user ids list
+
+Flutter: Use socket_io_client package. REST API for history; socket for live.
+
+
+================================================================================
+FEATURE 12 — SUPPORT CHATBOT (AI Help + Live Support)
+================================================================================
+
+In-app help assistant — FAQ, plans, payment, profile help.
+NOT member-to-member chat. Free for all users.
+
+APIs: /api/chatbot/* (shared with website — no /api/flutter/ prefix)
+No JWT required for guests. Pass userId when user is logged in.
+
+--- Init (call once on app start — creates DB tables if needed) ---
+
+POST /api/chatbot/init
+Body: {}
+
+Success: { "ok": true }
+
+
+--- Start or restore session ---
+
+GET /api/chatbot/session?sessionId={guestSessionId}
+  — restore guest session from local storage
+
+POST /api/chatbot/session
+Body: { "action": "new", "userId": "<optional logged-in user id>" }
+
+Success:
+{
+  "ok": true,
+  "sessionId": "uuid",
+  "status": "bot",          // bot | live | ended
+  "messages": [ { id, sessionId, sender, content, createdAt } ],
+  "storageKey": "vd-support-session"
+}
+
+Other session actions:
+  { "action": "escalate", "sessionId": "...", "userId": "..." }
+    → Connect to live support team (human reply via backend)
+
+  { "action": "attach", "sessionId": "...", "userId": "..." }
+    → Link guest session to logged-in user
+
+  { "action": "end", "sessionId": "..." }
+    → End support chat
+
+
+--- Send message to bot ---
+
+POST /api/chatbot/message
+Body:
+{
+  "sessionId": "uuid-or-null-for-new",
+  "message": "What are premium plans?",
+  "userId": "<optional logged-in user id>"
+}
+
+Success 200:
+{
+  "sessionId": "uuid",
+  "status": "bot",
+  "botReply": "Our premium plans are...",
+  "intent": "premium",
+  "followUps": [
+    { "label": "View Plans", "text": "premium plans" },
+    { "label": "Talk to Agent", "text": "__escalate__" }
+  ],
+  "actions": [],
+  "confidence": 0.85,
+  "suggestLiveAgent": false
+}
+
+When status is "live" — botReply is null; support team will reply.
+Poll GET /api/chatbot/message?sessionId=... every 3-5 seconds for new messages.
+
+Special followUp text "__escalate__" → call POST session action escalate.
+
+
+--- Get chat history ---
+
+GET /api/chatbot/message?sessionId={sessionId}
+
+Success:
+{
+  "messages": [
+    { "sender": "user",    "content": "...", "createdAt": "..." },
+    { "sender": "bot",     "content": "...", "createdAt": "..." },
+    { "sender": "support", "content": "...", "createdAt": "..." }
+  ],
+  "session": { "id", "status", "language", ... }
+}
+
+
+--- Bot capabilities (intents) ---
+  greeting, premium, payment, profile, verification, safety,
+  refund, login, search, agent (live support), fallback
+
+Supports English + Hindi (auto-detected).
+
+Flutter UI tips:
+  - Save sessionId in SharedPreferences (key: vd-support-session)
+  - Show followUp buttons from API response
+  - Poll messages every 3-5 sec when status === "live"
+  - Floating help button → open Support ChatBot screen
+
+
+================================================================================
+CHAT vs CHATBOT — DIFFERENCE
+================================================================================
+
+  MEMBER CHAT (/api/flutter/chat/*)
+    → Message other profiles (matches/interests)
+    → Requires Premium or Free Trial
+    → Socket.IO for real-time
+
+  SUPPORT CHATBOT (/api/chatbot/*)
+    → In-app help: plans, payments, verification, safety
+    → Free for all users (guest + logged in)
+    → AI bot + optional live support team (escalate action)
+
+
+================================================================================
+WHAT IS NOT IN FLUTTER APP (Website only — DO NOT BUILD)
+================================================================================
+
+  ✗ Admin panel (user approval, coupon create, reports review, KYC admin call)
+  ✗ Admin login / admin role screens
+  ✗ Pending users management
+  ✗ Document verification approve/reject UI
+  ✗ Video KYC admin side (website only)
+  ✗ Support chat reply panel (support team uses website)
+
+Flutter app is USER-FACING ONLY.
+
+
+================================================================================
+UPDATED FLUTTER CHECKLIST (Chat section)
+================================================================================
+
+[ ] Chat list screen — GET /api/flutter/chat
+[ ] Chat room — GET /api/flutter/chat/{roomId}
+[ ] Send text/image/pdf/location — POST /api/flutter/chat/{roomId}
+[ ] Unread badge — GET /api/flutter/chat/unread
+[ ] Socket.IO connect with JWT for real-time messages
+[ ] Show "Upgrade to Premium" when chat returns 403
+[ ] Support bot floating button — POST /api/chatbot/session action:new
+[ ] Bot messages — POST /api/chatbot/message
+[ ] Live agent — POST /api/chatbot/session action:escalate
+[ ] Save support sessionId locally
 
 
 ================================================================================

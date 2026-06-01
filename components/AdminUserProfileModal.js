@@ -7,6 +7,7 @@ import {
   Heart, MessageCircle, Eye, CreditCard, Shield, Send, Inbox, ZoomIn,
 } from 'lucide-react';
 import { format } from 'date-fns';
+import ApprovalChecklist from '@/components/ApprovalChecklist';
 
 const TABS = [
   { id: 'profile', label: 'Profile' },
@@ -255,9 +256,18 @@ function ProfileTab({ data }) {
     ['Needs Password', u.needsPassword ? 'Yes' : 'No'],
   ];
 
+  const checklist = data.approvalChecklist;
+
   return (
     <div className="space-y-4">
       <UserHeader data={data} onPhotoClick={openGallery} />
+      {!u.adminVerified && checklist?.checklist?.length > 0 && (
+        <ApprovalChecklist
+          checklist={checklist.checklist}
+          eligible={checklist.eligible}
+          title={checklist.eligible ? 'All verification checks passed — you can approve this profile' : 'Cannot approve yet — user must complete these items first'}
+        />
+      )}
       {lightbox && (
         <ImageLightbox
           images={lightbox.images}
