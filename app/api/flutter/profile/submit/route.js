@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { queryOne, execute } from '@/lib/db';
-import { validateSubmitForReview, REQUIRED_PROFILE_FIELDS } from '@/lib/profileVerification';
+import { validateSubmitForReview, REQUIRED_PROFILE_FIELDS, formatUserSubmitChecklist } from '@/lib/profileVerification';
+import { validateAboutMe } from '@/lib/aboutMeValidation.js';
 
 // POST /api/flutter/profile/submit
 // Called when user finishes filling profile — validates completeness and marks as pending admin review
@@ -22,7 +23,10 @@ export async function POST(req) {
   }
 
   // Check all required fields
-  const missingFields = REQUIRED_PROFILE_FIELDS.filter(f => !profile?.[f]);
+  const missingFields = REQUIRED_PROFILE_FIELDS.filter((f) => {
+    if (f === 'aboutMe') return !validateAboutMe(profile?.aboutMe, { required: true }).ok;
+    return !profile?.[f];
+  });
   if (missingFields.length > 0) {
     return NextResponse.json({
       error: 'Profile incomplete. Fill all required fields before submitting.',
@@ -35,12 +39,12 @@ export async function POST(req) {
 
   const validation = await validateSubmitForReview(decoded.id);
   if (!validation.ok) {
+    const userChecklist = formatUserSubmitChecklist(validation);
     return NextResponse.json({
       error: validation.message,
       code: validation.code,
-      checklist: validation.checklist,
-      errors: validation.errors,
-      missingFields: validation.missingFields,
+      canSubmit: false,
+      ...userChecklist,
     }, { status: 400 });
   }
 

@@ -48,6 +48,13 @@ export async function PATCH(req, { params }) {
 
   const updated = await prisma.user.update({ where: { id }, data: updateData });
 
+  if (data.adminVerified === true && !user?.adminVerified) {
+    try {
+      const { execute } = await import('@/lib/db');
+      await execute('UPDATE profile SET profileComplete = 100, updatedAt = NOW() WHERE userId = ?', [id]);
+    } catch (e) { console.error('profileComplete sync:', e.message); }
+  }
+
   if (data.adminVerified === true && !user?.adminVerified && user?.email) {
     const trialDays = parseInt(await getSiteConfig('freeTrialDays') || '1');
     try { await sendAdminVerificationEmail(user.email, user.name || 'User', trialDays); } catch (e) { console.error('Email error:', e.message); }

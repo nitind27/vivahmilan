@@ -1,0 +1,315 @@
+================================================================================
+  VIVAH DWAR — FLUTTER MOBILE APP API GUIDE (Chat + Full Reference)
+  Last Updated: May 2026
+  Base URL: https://vivahdwar.com   (local: http://localhost:3000)
+================================================================================
+
+NOTE: Flutter mobile app only. No admin panel in the app.
+
+Auth header (where required):
+  Authorization: Bearer <JWT_TOKEN>
+
+Related documents:
+  NEW features (verification, coupons, report, search, etc.)
+    → docs/FLUTTER_NEW_FEATURES.txt
+
+  This file: member chat, support chatbot, full API index
+
+
+================================================================================
+COMPLETE FLUTTER API QUICK REFERENCE
+================================================================================
+
+AUTH
+  POST /api/flutter/auth/register          ← see FLUTTER_NEW_FEATURES.txt
+  POST /api/flutter/auth/verify-otp
+  POST /api/flutter/auth/login
+  POST /api/flutter/auth/google
+
+PROFILE / VERIFICATION
+  GET  /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+
+UPLOADS
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+
+SEARCH
+  GET  /api/flutter/search?verifiedOnly=1
+
+REPORT
+  POST /api/flutter/report
+
+COUPONS / PAYMENT
+  POST /api/flutter/coupons/validate
+  POST /api/flutter/payment/apply-coupon
+  POST /api/flutter/payment/create-order
+  POST /api/flutter/payment/verify
+  GET  /api/flutter/plans
+
+MEMBER CHAT (Premium / Trial required)
+  GET  /api/flutter/chat
+  POST /api/flutter/chat
+  GET  /api/flutter/chat/{roomId}
+  POST /api/flutter/chat/{roomId}
+  GET  /api/flutter/chat/unread
+  GET  /api/flutter/chat/location/{msgId}
+  PATCH /api/flutter/chat/location/{msgId}
+  Socket.IO /api/socket (real-time)
+
+SUPPORT CHATBOT (Free — AI + Live Support)
+  POST /api/chatbot/init
+  GET  /api/chatbot/session
+  POST /api/chatbot/session
+  POST /api/chatbot/message
+  GET  /api/chatbot/message?sessionId=
+
+
+================================================================================
+FEATURE — MEMBER CHAT (User-to-User messaging)
+================================================================================
+
+Premium OR active free trial required for chat access.
+
+403 reasons: no_access | premium_expired | trial_expired
+
+--- List chat rooms ---
+
+GET /api/flutter/chat?page=1&limit=20
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "data": [
+    {
+      "id": "room-uuid",
+      "userAId": "...",
+      "userBId": "...",
+      "createdAt": "...",
+      "userA": { "id", "name", "isPremium", "profile", "photos", ... },
+      "userB": { ... },
+      "lastMessage": {
+        "id", "content", "createdAt", "senderId",
+        "type": "TEXT",
+        "isRead": false
+      }
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "limit": 20,
+  "hasMore": false
+}
+
+Error 403:
+{ "error": "Chat access required", "hasAccess": false, "reason": "no_access" }
+
+
+--- Start chat / first message ---
+
+POST /api/flutter/chat
+Body (text):
+{ "receiverId": "<user_id>", "content": "Hello!", "type": "TEXT" }
+
+Body (location):
+{
+  "receiverId": "<user_id>",
+  "type": "LOCATION",
+  "latitude": 19.0760,
+  "longitude": 72.8777,
+  "locationType": "static",
+  "locationExpiry": "2026-05-28T12:00:00.000Z"
+}
+
+Success 201: message object + roomId
+
+
+--- Get messages ---
+
+GET /api/flutter/chat/{roomId}?page=1&limit=20
+GET /api/flutter/chat/{roomId}?before=2026-05-28T10:00:00.000Z&limit=20
+
+Success 200:
+{ "data": [...], "total": 45, "page": 1, "limit": 20, "hasMore": true }
+
+Opening a room auto-marks received messages as read.
+
+
+--- Send in existing room ---
+
+POST /api/flutter/chat/{roomId}
+
+Text: { "content": "Hi", "type": "TEXT" }
+
+Image/PDF (multipart): file, type ("IMAGE" or "DOCUMENT")
+  IMAGE: JPG/PNG/WEBP/GIF, max 15MB
+  DOCUMENT: PDF, max 15MB
+
+Location:
+{
+  "type": "LOCATION",
+  "latitude": 19.07,
+  "longitude": 72.87,
+  "locationType": "live",
+  "locationExpiry": "2026-05-28T12:30:00.000Z"
+}
+
+
+--- Live location ---
+
+GET  /api/flutter/chat/location/{msgId}
+PATCH /api/flutter/chat/location/{msgId}
+Body: { "latitude": 19.08, "longitude": 72.88 }
+
+
+--- Unread count ---
+
+GET /api/flutter/chat/unread
+
+Success: { "total": 3, "perRoom": { "room-uuid-1": 2 } }
+
+
+--- Real-time (Socket.IO) ---
+
+Connect: wss://vivahdwar.com  path: /api/socket
+Auth: { token: "<JWT>" }
+
+EMIT: room:join, room:leave, message:send, message:read,
+      typing:start, typing:stop, location:update, user:online
+
+LISTEN: message:receive, message:read, typing:start, typing:stop,
+        location:update, users:online
+
+Package: socket_io_client — REST for history, socket for live.
+
+
+================================================================================
+FEATURE — SUPPORT CHATBOT (AI Help + Live Support)
+================================================================================
+
+In-app help — FAQ, plans, payment, profile. Free for all users.
+APIs: /api/chatbot/* (NOT under /api/flutter/)
+
+--- Init ---
+
+POST /api/chatbot/init
+Body: {}
+Success: { "ok": true }
+
+
+--- Session ---
+
+GET /api/chatbot/session?sessionId={guestSessionId}
+
+POST /api/chatbot/session
+Body: { "action": "new", "userId": "<optional>" }
+
+Success:
+{
+  "ok": true,
+  "sessionId": "uuid",
+  "status": "bot",
+  "messages": [...],
+  "storageKey": "vd-support-session"
+}
+
+Actions:
+  { "action": "escalate", "sessionId": "...", "userId": "..." }
+  { "action": "attach", "sessionId": "...", "userId": "..." }
+  { "action": "end", "sessionId": "..." }
+
+
+--- Send message ---
+
+POST /api/chatbot/message
+Body:
+{
+  "sessionId": "uuid-or-null",
+  "message": "What are premium plans?",
+  "userId": "<optional>"
+}
+
+Success:
+{
+  "sessionId": "uuid",
+  "status": "bot",
+  "botReply": "...",
+  "intent": "premium",
+  "followUps": [
+    { "label": "View Plans", "text": "premium plans" },
+    { "label": "Talk to Agent", "text": "__escalate__" }
+  ],
+  "confidence": 0.85,
+  "suggestLiveAgent": false
+}
+
+When status is "live" — poll GET /api/chatbot/message?sessionId= every 3-5 sec.
+"__escalate__" followUp → POST session action escalate.
+
+
+--- History ---
+
+GET /api/chatbot/message?sessionId={sessionId}
+
+Intents: greeting, premium, payment, profile, verification, safety,
+         refund, login, search, agent, fallback
+Languages: English + Hindi
+
+
+================================================================================
+CHAT vs CHATBOT
+================================================================================
+
+  MEMBER CHAT (/api/flutter/chat/*)
+    → Message other profiles
+    → Premium or Free Trial required
+    → Socket.IO real-time
+
+  SUPPORT CHATBOT (/api/chatbot/*)
+    → App help: plans, payments, verification
+    → Free for all users
+    → AI bot + live support (escalate)
+
+
+================================================================================
+WHAT IS NOT IN FLUTTER APP (Website only)
+================================================================================
+
+  ✗ Admin panel, pending approval UI, coupon create, KYC admin
+  ✗ Document verify UI, support team reply panel
+
+
+================================================================================
+FULL IMPLEMENTATION CHECKLIST
+================================================================================
+
+New features → see FLUTTER_NEW_FEATURES.txt
+
+Chat:
+[ ] Chat list — GET /api/flutter/chat
+[ ] Chat room — GET /api/flutter/chat/{roomId}
+[ ] Send text/image/pdf/location
+[ ] Unread badge — GET /api/flutter/chat/unread
+[ ] Socket.IO with JWT
+[ ] "Upgrade to Premium" on 403
+
+Chatbot:
+[ ] Floating help button — POST /api/chatbot/session action:new
+[ ] Bot messages — POST /api/chatbot/message
+[ ] Live agent — action:escalate
+[ ] Save sessionId in SharedPreferences (vd-support-session)
+
+
+================================================================================
+SUPPORT
+================================================================================
+
+Backend repo: matrimonial-app
+New features doc: docs/FLUTTER_NEW_FEATURES.txt
+
+================================================================================
+END OF DOCUMENT
+================================================================================

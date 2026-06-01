@@ -92,7 +92,7 @@ export async function GET(req) {
     ? { ...profile, age: calcAge(profile.dob), bio: profile.aboutMe, occupation: profile.profession }
     : null;
 
-  const approvalChecklist = await getApprovalChecklist(userId);
+  const approvalChecklist = await getApprovalChecklist(userId, { mode: 'admin' });
 
   return NextResponse.json({
     user: {

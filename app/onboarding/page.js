@@ -18,6 +18,7 @@ import {
 import { getCastesByReligion } from '@/lib/casteData';
 import SiteLoader from '@/components/SiteLoader';
 import AboutMeField from '@/components/AboutMeField';
+import ApprovalChecklist from '@/components/ApprovalChecklist';
 import { validateAboutMe } from '@/lib/aboutMeValidation';
 
 const inputCls = "w-full px-4 py-3 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all";
@@ -107,6 +108,7 @@ function OnboardingInner() {
   const [familyUploading, setFamilyUploading] = useState(false);
   const [familyCaption, setFamilyCaption] = useState('');
   const [familyMemberCount, setFamilyMemberCount] = useState('');
+  const [serverChecklist, setServerChecklist] = useState(null);
   const photoRef = useRef(null);
   const docRef = useRef(null);
   const familyPhotoRef = useRef(null);
@@ -156,7 +158,62 @@ function OnboardingInner() {
   const isProfileComplete = missingRequired.length === 0;
   const hasPhone = !!form.phone?.trim() && /^[+]?[\d\s\-()]{7,15}$/.test(form.phone);
   const hasVisualProof = !!photoPreview && familyPhotos.length >= 1;
-  const canSubmit = isProfileComplete && hasPhone && hasVisualProof && !!docStatus;
+
+  const submitChecklist = [
+    {
+      id: 'profileComplete',
+      label: 'Mandatory profile fields complete',
+      passed: isProfileComplete,
+      detail: missingRequired.length
+        ? (missingRequired.includes('aboutMe') && form.aboutMe
+          ? `About Me needs at least 50 words`
+          : `Missing: ${missingRequired.join(', ')}`)
+        : 'All mandatory fields filled',
+    },
+    {
+      id: 'phone',
+      label: 'Valid phone number on file',
+      passed: hasPhone,
+      detail: hasPhone ? form.phone : 'Enter a valid phone number',
+    },
+    {
+      id: 'photos',
+      label: 'Profile photo uploaded',
+      passed: !!photoPreview,
+      detail: photoPreview ? 'Profile photo added' : 'Upload your profile photo',
+    },
+    {
+      id: 'visualProof',
+      label: 'Family / lifestyle photo uploaded',
+      passed: familyPhotos.length >= 1,
+      detail: familyPhotos.length >= 1
+        ? `${familyPhotos.length + (photoPreview ? 1 : 0)} photo(s) total`
+        : 'Upload at least one family or lifestyle photo',
+    },
+    {
+      id: 'document',
+      label: 'Identity document uploaded',
+      passed: !!docStatus,
+      detail: docStatus
+        ? `${docStatus.type || 'Document'} (${docStatus.status || 'uploaded'})`
+        : 'Upload Aadhaar, PAN, Passport, or another valid ID',
+    },
+  ];
+
+  const refreshServerChecklist = async () => {
+    if (!email) return;
+    try {
+      const res = await fetch(`/api/onboarding/verification-checklist?email=${encodeURIComponent(email)}`);
+      if (res.ok) setServerChecklist(await res.json());
+    } catch { /* ignore */ }
+  };
+
+  useEffect(() => {
+    if (step === STEPS.length - 1 && email) refreshServerChecklist();
+  }, [step, email, photoPreview, familyPhotos.length, docStatus, form.phone, isProfileComplete]);
+
+  const displayChecklist = serverChecklist?.checklist?.length ? serverChecklist.checklist : submitChecklist;
+  const canSubmit = serverChecklist ? serverChecklist.canSubmit : (isProfileComplete && hasPhone && hasVisualProof && !!docStatus);
 
   // ── Validation ────────────────────────────────────────────────────────────
   const validateStep = (s) => {
@@ -171,6 +228,7 @@ function OnboardingInner() {
         if (age < 18) errs.push('You must be at least 18 years old');
         if (age > 80) errs.push('Please enter a valid date of birth');
       }
+      if (!form.height) errs.push('Height is required');
       if (form.phone && !/^[+]?[\d\s\-()]{7,15}$/.test(form.phone)) errs.push('Enter a valid phone number');
       else if (!form.phone?.trim()) errs.push('Phone number is required for profile verification');
       if (form.weight && (isNaN(form.weight) || form.weight < 30 || form.weight > 200)) errs.push('Enter a valid weight (30–200 kg)');
@@ -326,6 +384,7 @@ function OnboardingInner() {
       if (!res.ok) {
         toast.error(data.error || 'Could not submit profile for review', { duration: 5000 });
         data.errors?.slice(0, 3).forEach(msg => toast(msg, { icon: '⚠️' }));
+        if (data.checklist) setServerChecklist(data);
         return;
       }
       setSubmitted(true);
@@ -419,7 +478,7 @@ function OnboardingInner() {
                   <div className="col-span-2"><Inp label="Full Name *" value={form.name} onChange={v => set('name', v)} placeholder="Your full name" /></div>
                   <Sel label="Gender *" value={form.gender} onChange={v => set('gender', v)} options={[{ val: 'MALE', label: 'Male' },{ val: 'FEMALE', label: 'Female' },{ val: 'OTHER', label: 'Other' }]} />
                   <Inp label="Date of Birth *" value={form.dob} onChange={v => set('dob', v)} type="date" />
-                  <SearchableSelect label="Height" value={form.height} onChange={v => set('height', v)} options={HEIGHTS} placeholder="Select height" />
+                  <SearchableSelect label="Height *" value={form.height} onChange={v => set('height', v)} options={HEIGHTS} placeholder="Select height" />
                   <Inp label="Weight (kg)" value={form.weight} onChange={v => set('weight', v)} type="number" placeholder="65" />
                   <Sel label="Marital Status" value={form.maritalStatus} onChange={v => set('maritalStatus', v)} options={MARITAL} />
                   <Inp label="Phone Number" value={form.phone} onChange={v => set('phone', v)} placeholder="+91 9999999999" />
@@ -658,6 +717,16 @@ function OnboardingInner() {
             )}
           </motion.div>
         </AnimatePresence>
+
+        {step === STEPS.length - 1 && (
+          <div className="mt-5">
+            <ApprovalChecklist
+              checklist={displayChecklist}
+              eligible={canSubmit}
+              title={canSubmit ? 'All checks passed — you can submit for review' : 'Complete all items below before submitting'}
+            />
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex items-center justify-between mt-5">

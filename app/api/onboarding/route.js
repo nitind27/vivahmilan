@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
-import { validateSubmitForReview } from '@/lib/profileVerification';
+import { validateSubmitForReview, formatUserSubmitChecklist } from '@/lib/profileVerification';
 import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 
 export async function POST(req) {
@@ -84,8 +84,8 @@ export async function POST(req) {
         return NextResponse.json({
           error: validation.message,
           code: validation.code,
-          checklist: validation.checklist,
-          errors: validation.errors,
+          canSubmit: false,
+          ...formatUserSubmitChecklist(validation),
           missingFields: validation.missingFields,
         }, { status: 400 });
       }

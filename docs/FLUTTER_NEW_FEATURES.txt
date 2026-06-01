@@ -1,0 +1,492 @@
+================================================================================
+  VIVAH DWAR — FLUTTER NEW FEATURES (May 2026)
+  Base URL: https://vivahdwar.com   (local: http://localhost:3000)
+================================================================================
+
+This file covers ONLY newly added / updated features for the Flutter mobile app.
+
+For full API reference (chat, chatbot, all endpoints):
+  → See: docs/FLUTTER_API_GUIDE.txt
+
+Auth header (where required):
+  Authorization: Bearer <JWT_TOKEN>
+
+
+================================================================================
+SUMMARY — NEW FEATURES
+================================================================================
+
+1. Anti-fake profile system (strict verification before profile goes live)
+2. Disposable email blocking at registration
+3. Mandatory phone number at registration
+4. Profile submit checklist (photo + family photo + ID document + fields)
+5. Duplicate photo detection on upload
+6. Search filter: verified profiles only (ID badge)
+7. Report abuse (backend auto-hides suspicious profiles)
+8. Coupon codes — validate, apply, pay with discount
+9. Subscription receipt email after payment (automatic)
+10. Video KYC — user opens link from email in WebView
+11. Legal pages — open in WebView (Privacy, Terms, Safety, Refund)
+12. Login blocked until platform verification (PENDING_APPROVAL)
+
+
+================================================================================
+FEATURE 1 — REGISTRATION (Phone mandatory + disposable email block)
+================================================================================
+
+POST /api/flutter/auth/register
+
+Body (JSON):
+{
+  "name": "Rahul Sharma",
+  "email": "rahul@gmail.com",
+  "phone": "+919876543210",      // REQUIRED
+  "password": "MyPass123"
+}
+
+Success 201:
+{
+  "success": true,
+  "message": "Registration initiated. OTP sent to your email.",
+  "email": "rahul@gmail.com"
+}
+
+Errors:
+  400 — phone missing/invalid
+  400 — disposable email (temp-mail blocked)
+  409 — email or phone already registered
+
+Flutter UI:
+  - Phone field mandatory (not optional)
+  - Show error if temp email used
+  - Continue to OTP screen after success
+
+
+================================================================================
+FEATURE 2 — PROFILE SUBMIT CHECKLIST (Before profile verification)
+================================================================================
+
+Before user can submit profile, ALL items must pass:
+
+  ✓ All required fields filled (including About Me 50+ words)
+  ✓ Valid phone on account
+  ✓ At least 1 profile photo
+  ✓ At least 1 family/lifestyle photo (in addition to profile photo)
+  ✓ ID document uploaded (Aadhaar/PAN/Passport etc.)
+
+Required profile fields:
+  gender, dob, height, religion, education, profession, country, city, aboutMe
+
+--- GET verification checklist ---
+
+GET /api/flutter/profile/verification-checklist
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "eligible": false,
+  "canSubmit": false,
+  "checklist": [
+    {
+      "id": "profileComplete",
+      "label": "Mandatory profile fields complete",
+      "passed": true,
+      "detail": "All mandatory fields filled"
+    },
+    {
+      "id": "phone",
+      "label": "Valid phone number on file",
+      "passed": true,
+      "detail": "+919876543210"
+    },
+    {
+      "id": "photos",
+      "label": "Profile photo uploaded",
+      "passed": true,
+      "detail": "1 profile photo(s)"
+    },
+    {
+      "id": "visualProof",
+      "label": "Family / lifestyle photo uploaded",
+      "passed": false,
+      "detail": "Add at least one family or lifestyle photo in addition to your profile photo"
+    },
+    {
+      "id": "document",
+      "label": "Identity document uploaded",
+      "passed": false,
+      "detail": "Upload Aadhaar, PAN, Passport, or another valid ID"
+    }
+  ],
+  "errors": ["..."],
+  "missingFields": [],
+  "requiredFields": ["gender","dob","height","religion","education","profession","country","city","aboutMe"]
+}
+
+IMPORTANT — Flutter UI rules:
+  1. Call GET verification-checklist on final onboarding / review screen
+  2. Show checklist with green check / red X for each item
+  3. Keep "Submit for Review" button DISABLED until canSubmit === true
+  4. Do NOT navigate to submit screen until canSubmit === true
+  5. Do NOT rely on profileComplete % alone (can show 96% while mandatory fields are done)
+  6. Re-fetch checklist after every photo / document upload
+  7. On POST submit failure (400), show result.checklist — block retry until canSubmit is true
+
+Example (Dart):
+  final ready = data['canSubmit'] == true;
+  ElevatedButton(
+    onPressed: ready ? _submit : null,
+    child: Text(ready ? 'Submit for Review' : 'Complete requirements above'),
+  );
+
+
+--- POST submit profile for verification ---
+
+POST /api/flutter/profile/submit
+Headers: Authorization: Bearer <token>
+Body: {} (empty)
+
+Success 200:
+{
+  "success": true,
+  "message": "Profile submitted for admin review. You will be notified once approved.",
+  "code": "PENDING_APPROVAL"
+}
+
+Show user-friendly text: "Profile submitted! We will notify you once verified."
+
+Error 400 — PROFILE_INCOMPLETE:
+{
+  "error": "Profile incomplete. Fill all required fields before submitting.",
+  "code": "PROFILE_INCOMPLETE",
+  "missingFields": ["aboutMe"],
+  "requiredFields": [...]
+}
+
+Error 400 — SUBMIT_REQUIREMENTS_NOT_MET:
+{
+  "error": "Your profile does not meet the verification requirements yet...",
+  "code": "SUBMIT_REQUIREMENTS_NOT_MET",
+  "canSubmit": false,
+  "checklist": [...],
+  "errors": [...]
+}
+
+
+--- Upload APIs (checklist items) ---
+
+POST /api/flutter/upload/photo
+  multipart: photo (file), isMain ("true" / "false")
+
+POST /api/flutter/upload/family-photo
+  multipart: photo (file), caption (optional), memberCount (optional)
+
+POST /api/flutter/upload/document
+  multipart: document (file), type ("Aadhaar Card" | "PAN Card" | etc.)
+
+
+================================================================================
+FEATURE 3 — DUPLICATE PHOTO DETECTION
+================================================================================
+
+POST /api/flutter/upload/photo
+
+Error 409:
+{
+  "error": "This photo appears to be already used on another account. Please upload your own original photo.",
+  "code": "DUPLICATE_PHOTO"
+}
+
+Flutter: Show message and ask user to upload a different photo.
+
+
+================================================================================
+FEATURE 4 — SEARCH: VERIFIED PROFILES ONLY
+================================================================================
+
+GET /api/flutter/search?verifiedOnly=1&page=1&limit=12
+
+New query param:
+  verifiedOnly=1 or verifiedOnly=true   → only ID-verified badge profiles
+
+Other params: q, gender, religion, country, state, city, education, profession,
+  maritalStatus, ageMin, ageMax, heightMin, heightMax, page, limit
+
+Response includes verificationBadge on each user.
+
+Flutter UI:
+  - Toggle "Show verified profiles only"
+  - Pass verifiedOnly=1 when ON
+  - Show badge when verificationBadge === true
+
+
+================================================================================
+FEATURE 5 — REPORT ABUSE + AUTO-HIDE
+================================================================================
+
+POST /api/flutter/report
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "targetId": "<reported_user_id>",
+  "reason": "Fake profile",
+  "details": "Optional description"
+}
+
+Success 201:
+{
+  "success": true,
+  "id": "report-uuid",
+  "message": "Report submitted successfully. Our team will review it shortly.",
+  "autoHidden": false,
+  "reportCount": 1
+}
+
+When target gets 3+ reports:
+{
+  "success": true,
+  "message": "Report submitted. This profile has been temporarily hidden...",
+  "autoHidden": true,
+  "reportCount": 3
+}
+
+Flutter: Toast only. No admin UI in app.
+
+
+================================================================================
+FEATURE 6 — COUPON CODES
+================================================================================
+
+--- Validate (no auth — homepage / premium screen) ---
+
+POST /api/flutter/coupons/validate
+Body: { "code": "SAVE20" }
+
+Success 200:
+{ "valid": true, "discountPct": 30, "code": "SAVE20" }
+
+Errors: 404 invalid, 410 expired or usage limit reached
+
+
+--- Apply with plan price (auth required) ---
+
+POST /api/flutter/payment/apply-coupon
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "code": "SAVE20",
+  "planId": "GOLD",
+  "months": 3,
+  "durationDays": 90
+}
+
+Success 200:
+{
+  "code": "SAVE20",
+  "discountPct": 30,
+  "originalPrice": 4497,
+  "finalPrice": 3148,
+  "durationDays": 90,
+  "isAgentRef": false,
+  "plan": "GOLD"
+}
+
+
+--- Create order with coupon ---
+
+POST /api/flutter/payment/create-order
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "plan": "GOLD",
+  "couponCode": "SAVE20",
+  "months": 3,
+  "durationDays": 90
+}
+
+Success (paid):
+{
+  "orderId": "MILAN_XXXXXXXX_1234567890",
+  "paymentSessionId": "session_...",
+  "orderAmount": 3148,
+  "plan": "GOLD",
+  "durationDays": 90,
+  "couponApplied": "SAVE20"
+}
+
+Success (100% discount):
+{
+  "instantActivation": true,
+  "plan": "GOLD",
+  "orderAmount": 0,
+  "premiumExpiry": "2026-08-28T..."
+}
+
+Flutter flow:
+  1. Enter coupon → apply-coupon → show discounted price
+  2. Pay → create-order with same couponCode
+  3. Open Cashfree SDK with paymentSessionId
+  4. After payment → verify endpoint
+
+
+--- Verify payment ---
+
+POST /api/flutter/payment/verify
+Body: { "orderId": "...", "plan": "GOLD" }
+
+Success: { "status": "PAID", "isPremium": true, "premiumExpiry": "..." }
+
+Receipt email sent automatically by backend.
+
+
+================================================================================
+FEATURE 7 — SUBSCRIPTION RECEIPT EMAIL
+================================================================================
+
+No Flutter API call — automatic when payment succeeds (verify, webhook, or 100% coupon).
+
+
+================================================================================
+FEATURE 8 — LOGIN / PENDING VERIFICATION
+================================================================================
+
+POST /api/flutter/auth/login
+
+If profile not yet approved:
+
+Error 403:
+{
+  "error": "Your profile is pending admin approval. You will be notified via email.",
+  "code": "PENDING_APPROVAL"
+}
+
+Flutter UI:
+  - "Profile Under Review" waiting screen
+  - User-friendly message (do not show "admin" text)
+  - Block search, match, chat until approved
+  - Poll login or use push when approved
+
+
+================================================================================
+FEATURE 9 — VIDEO KYC (WebView only)
+================================================================================
+
+User receives email with link when Video KYC is scheduled.
+
+Flutter:
+  - Open WebView: https://vivahdwar.com/kyc/{token}
+  - Allow camera + microphone
+  - Token from email deep link
+  - No Flutter API needed
+
+
+================================================================================
+FEATURE 10 — LEGAL PAGES (WebView)
+================================================================================
+
+Privacy Policy:   /privacy
+Terms of Service: /terms
+Safety Guidelines: /safety
+Refund Policy:    /refund
+Contact:          /contact
+
+
+================================================================================
+NEW ENDPOINTS QUICK LIST
+================================================================================
+
+  GET  /api/flutter/profile/verification-checklist   ← NEW
+  POST /api/flutter/profile/submit                   ← UPDATED
+  POST /api/flutter/auth/register                    ← phone required, disposable email blocked
+  POST /api/flutter/upload/photo                     ← duplicate photo check
+  GET  /api/flutter/search?verifiedOnly=1            ← NEW param
+  POST /api/flutter/report                           ← autoHidden, reportCount
+  POST /api/flutter/coupons/validate                 ← NEW
+  POST /api/flutter/payment/apply-coupon             ← NEW
+  POST /api/flutter/payment/create-order             ← coupon + duration
+  POST /api/flutter/auth/login                       ← PENDING_APPROVAL error
+
+
+================================================================================
+IMPLEMENTATION CHECKLIST (NEW FEATURES ONLY)
+================================================================================
+
+[ ] Registration — phone mandatory
+[ ] Registration — disposable email error
+[ ] Onboarding — profile + family photo + ID document upload
+[ ] Onboarding — GET verification-checklist, show checklist UI
+[ ] Submit button DISABLED until canSubmit === true
+[ ] Photo upload — handle DUPLICATE_PHOTO (409)
+[ ] Search — "Verified only" toggle (verifiedOnly=1)
+[ ] Profile card — verification badge
+[ ] Report — show autoHidden toast if applicable
+[ ] Checkout — coupon input + apply-coupon
+[ ] Payment — couponCode in create-order
+[ ] Payment — instantActivation (100% discount)
+[ ] Login — PENDING_APPROVAL waiting screen
+[ ] Settings — Privacy / Terms WebView links
+[ ] Video KYC — WebView from email link
+
+
+================================================================================
+DART SNIPPETS (NEW FEATURES)
+================================================================================
+
+--- Auth header ---
+final headers = {
+  'Authorization': 'Bearer $token',
+  'Content-Type': 'application/json',
+};
+
+--- Verification checklist ---
+final res = await http.get(
+  Uri.parse('$baseUrl/api/flutter/profile/verification-checklist'),
+  headers: headers,
+);
+final data = jsonDecode(res.body);
+final canSubmit = data['canSubmit'] == true;
+
+--- Submit profile ---
+if (!canSubmit) return;
+await http.post(
+  Uri.parse('$baseUrl/api/flutter/profile/submit'),
+  headers: headers,
+  body: '{}',
+);
+
+--- Apply coupon ---
+await http.post(
+  Uri.parse('$baseUrl/api/flutter/payment/apply-coupon'),
+  headers: headers,
+  body: jsonEncode({'code': coupon, 'planId': 'GOLD', 'months': 3}),
+);
+
+--- Search verified only ---
+final uri = Uri.parse('$baseUrl/api/flutter/search').replace(queryParameters: {
+  'verifiedOnly': '1', 'page': '1', 'limit': '12',
+});
+
+--- Report profile ---
+final res = await http.post(
+  Uri.parse('$baseUrl/api/flutter/report'),
+  headers: headers,
+  body: jsonEncode({'targetId': userId, 'reason': 'Fake profile'}),
+);
+if (jsonDecode(res.body)['autoHidden'] == true) {
+  // profile hidden pending review
+}
+
+
+================================================================================
+NOT IN FLUTTER APP (website only)
+================================================================================
+
+  ✗ Admin panel, user approval UI, coupon create, KYC admin call
+  ✗ Support team reply panel
+
+================================================================================
+END — NEW FEATURES DOCUMENT
+================================================================================
