@@ -1,0 +1,556 @@
+================================================================================
+  VIVAH DWAR — FLUTTER: FAMILY LOGIN + SETTINGS PAGE
+  Last Updated: May 2026
+  Base URL: https://vivahdwar.com   (local: http://localhost:3000)
+================================================================================
+
+Mobile app only. No admin panel.
+
+Related docs:
+  → docs/FLUTTER_NEW_FEATURES.txt     (verification, coupons, etc.)
+  → docs/FLUTTER_API_GUIDE.txt        (chat, chatbot, full API list)
+
+Auth header:
+  Authorization: Bearer <JWT_TOKEN>
+
+
+================================================================================
+OVERVIEW
+================================================================================
+
+FAMILY LOGIN
+  Profile owner (member) can add up to 3 family members (parent/sibling).
+  Family logs in with their OWN email + password.
+  They browse profiles on behalf of the member — READ ONLY.
+
+  ✓ Allowed: search, view profiles, shortlist browse, dashboard
+  ✗ Blocked: send interest, chat, edit profile, change settings, payment, upload
+
+SETTINGS PAGE (Owner only)
+  Privacy toggles, notifications, family login management,
+  change password, premium renewal reminders, deactivate account.
+
+
+================================================================================
+PART 1 — FAMILY LOGIN
+================================================================================
+
+--- How it works ---
+
+1. Member (owner) → Settings → Add family login (name, email, password, relationship)
+2. Family member → Login screen → "Family Login" tab
+3. Family enters THEIR email + password (not member's email)
+4. JWT token issued with role = "FAMILY"
+5. App shows banner: "Family Login — browsing {ownerName}'s profile"
+6. All browse APIs use owner user id from token
+
+
+--- POST Family Login ---
+
+POST /api/flutter/auth/family-login
+Body:
+{
+  "email": "father@gmail.com",
+  "password": "family123"
+}
+
+Success 200:
+{
+  "success": true,
+  "token": "<JWT>",
+  "user": {
+    "id": "<owner_user_id>",
+    "name": "Ramesh (Parent)",
+    "email": "father@gmail.com",
+    "role": "FAMILY",
+    "isFamilyLogin": true,
+    "familyAccessId": "uuid",
+    "memberName": "Ramesh",
+    "relationship": "Parent",
+    "ownerName": "Rahul Sharma",
+    "ownerId": "<owner_user_id>",
+    "isPremium": true,
+    "premiumPlan": "GOLD",
+    "adminVerified": true,
+    "verificationBadge": false,
+    "freeTrialActive": false,
+    "freeTrialExpiry": null
+  }
+}
+
+Errors:
+  400 — email/password missing
+  401 — invalid family credentials
+  403 — owner account inactive
+
+
+--- JWT payload (store in app state) ---
+
+After family login, save:
+  token
+  user.role === "FAMILY"
+  user.isFamilyLogin === true
+  user.ownerName
+  user.id === owner's user id (used for all API calls)
+
+
+--- Flutter Login Screen UI ---
+
+Two tabs on login page:
+  [ Member Login ]  [ Family Login ]
+
+Member tab → POST /api/flutter/auth/login
+Family tab → POST /api/flutter/auth/family-login
+
+After family login success:
+  - Navigate to Dashboard (not onboarding)
+  - Show persistent banner at top:
+    "👨‍👩‍👧 Family mode — browsing Rahul's profile (read-only)"
+  - Hide bottom nav items: Chat, Interests send, Premium purchase, Settings edit
+
+
+--- What family CAN do ---
+
+GET  /api/flutter/search
+GET  /api/flutter/matches
+GET  /api/flutter/profile/{id}
+GET  /api/flutter/dashboard
+GET  /api/flutter/shortlist        (view only)
+GET  /api/flutter/profile-views
+GET  /api/flutter/recently-viewed
+GET  /api/flutter/settings         (read-only — readOnly: true in response)
+
+
+--- What family CANNOT do (403 FAMILY_READONLY) ---
+
+POST /api/flutter/interest              → send interest
+POST /api/flutter/chat                  → chat
+GET  /api/flutter/chat                  → chat list
+PUT  /api/flutter/profile               → edit profile
+PATCH /api/flutter/settings             → change settings
+POST /api/flutter/payment/*             → payment
+POST /api/flutter/upload/*              → uploads
+POST /api/flutter/auth/change-password  → password
+
+Error response:
+{
+  "error": "Family login cannot send interests",
+  "code": "FAMILY_READONLY"
+}
+
+
+--- Flutter UI rules for family mode ---
+
+On profile detail screen:
+  - Hide "Send Interest" button
+  - Hide "Chat" button
+  - Show info card:
+    "Family browse mode — only the profile owner can send interests."
+
+On dashboard:
+  - Show family banner (blue)
+  - Hide "Edit Profile" CTA
+
+On settings:
+  - Either hide Settings tab entirely for family
+  - OR show read-only message: "Settings can only be changed by profile owner"
+
+Detect family mode globally:
+  if (auth.user.isFamilyLogin == true) { ... disable actions ... }
+
+
+================================================================================
+PART 2 — SETTINGS PAGE (Profile owner only)
+================================================================================
+
+Family login users must NOT see editable settings.
+Only role USER (member/owner) manages settings.
+
+
+--- GET all settings ---
+
+GET /api/flutter/settings
+Headers: Authorization: Bearer <token>
+
+Success 200 (owner):
+{
+  "user": {
+    "name": "Rahul Sharma",
+    "email": "rahul@gmail.com",
+    "phone": "+919876543210",
+    "phoneVerified": false,
+    "isPremium": true,
+    "premiumPlan": "GOLD",
+    "profileBoost": false,
+    "boostExpiry": null,
+    "role": "USER",
+    "isFamilyLogin": false,
+    "memberName": null,
+    "relationship": null,
+    "ownerName": null
+  },
+  "privacy": {
+    "hidePhone": false,
+    "hidePhoto": false,
+    "profileVisible": true,
+    "showOnlineStatus": true
+  },
+  "notifications": {
+    "notifyInterest": true,
+    "notifyMessage": true,
+    "notifyProfileView": true,
+    "notifyMarketing": false
+  },
+  "profileComplete": 96,
+  "subscription": {
+    "autoRenew": true
+  },
+  "familyAccessCount": 1,
+  "readOnly": false,
+  "access": { ... plan permissions ... }
+}
+
+Success 200 (family — read only, for optional view):
+{
+  "user": { "role": "FAMILY", "isFamilyLogin": true, "ownerName": "Rahul Sharma", ... },
+  "readOnly": true,
+  ...
+}
+
+
+--- PATCH save settings (owner only) ---
+
+PATCH /api/flutter/settings
+Headers: Authorization: Bearer <token>
+
+Body (send only changed sections):
+{
+  "privacy": {
+    "hidePhone": true,
+    "hidePhoto": false,
+    "profileVisible": true,
+    "showOnlineStatus": false
+  },
+  "notifications": {
+    "notifyInterest": true,
+    "notifyMessage": true,
+    "notifyProfileView": false,
+    "notifyMarketing": false
+  },
+  "subscription": {
+    "autoRenew": true
+  }
+}
+
+Success: { "success": true }
+
+Error 403 (family):
+{
+  "error": "Family login cannot change settings",
+  "code": "FAMILY_READONLY"
+}
+
+Deactivate account:
+{
+  "deactivate": true
+}
+→ { "success": true, "deactivated": true } — then logout user
+
+
+--- Privacy toggles (Flutter UI) ---
+
+| Key               | Label                                      |
+|-------------------|--------------------------------------------|
+| hidePhone         | Hide phone number on profile               |
+| hidePhoto         | Hide photos until interest accepted        |
+| profileVisible    | Show my profile in search & matches        |
+| showOnlineStatus  | Show online status in chat                 |
+
+
+--- Notification toggles ---
+
+| Key               | Label                                      |
+|-------------------|--------------------------------------------|
+| notifyInterest    | Interest received / accepted               |
+| notifyMessage     | New messages                               |
+| notifyProfileView | Profile views                              |
+| notifyMarketing   | Offers & updates                           |
+
+
+--- Premium renewal reminders (premium users only) ---
+
+Toggle: subscription.autoRenew
+Label: "Email renewal reminders"
+Subtitle: "Reminders at 7, 3 & 1 days before premium expires"
+
+Backend sends emails automatically via cron — no extra Flutter API.
+
+
+================================================================================
+PART 3 — FAMILY ACCESS MANAGEMENT (Settings section)
+================================================================================
+
+Owner adds/removes family logins from Settings screen.
+Max 3 family members per account.
+
+
+--- GET list ---
+
+GET /api/flutter/family-access
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "members": [
+    {
+      "id": "uuid",
+      "memberName": "Ramesh",
+      "email": "father@gmail.com",
+      "relationship": "Parent",
+      "isActive": 1,
+      "createdAt": "2026-05-01T..."
+    }
+  ],
+  "maxAllowed": 3
+}
+
+Error 403 — family member cannot call this API
+
+
+--- POST add family login ---
+
+POST /api/flutter/family-access
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "memberName": "Ramesh",
+  "email": "father@gmail.com",
+  "password": "family123",
+  "relationship": "Parent"
+}
+
+relationship options: Parent | Sibling | Guardian | Other
+password: minimum 6 characters
+
+Success 201:
+{
+  "id": "uuid",
+  "success": true,
+  "member": {
+    "id": "uuid",
+    "memberName": "Ramesh",
+    "email": "father@gmail.com",
+    "relationship": "Parent",
+    "isActive": true
+  }
+}
+
+Errors:
+  400 — missing fields / password too short
+  400 — maximum 3 family logins (code: FAMILY_LIMIT)
+  409 — email already used for family access
+
+
+--- DELETE remove family login ---
+
+DELETE /api/flutter/family-access?id={member_id}
+Headers: Authorization: Bearer <token>
+
+Success: { "success": true }
+
+
+--- Flutter Settings UI — Family Login section ---
+
+Title: "Family Login"
+Subtitle: "Let parents browse profiles on your behalf (read-only, max 3)"
+
+For each member in list:
+  - Show: name, email, relationship
+  - Delete button → confirm dialog → DELETE API
+
+If members.length < 3, show form:
+  - Name (e.g. Father)
+  - Email (family login email — unique, not member email)
+  - Password (min 6 chars)
+  - Relationship dropdown
+  - [Add Family Login] button
+
+After add success → refresh list → toast "Family login created"
+
+
+================================================================================
+PART 4 — CHANGE PASSWORD (Settings → Change Password)
+================================================================================
+
+--- GET has password? ---
+
+GET /api/flutter/auth/change-password
+Headers: Authorization: Bearer <token>
+
+Success: { "hasPassword": true }
+
+Google-only users: hasPassword = false (skip current password field)
+
+
+--- POST change password ---
+
+POST /api/flutter/auth/change-password
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "currentPassword": "oldpass123",
+  "newPassword": "newpass456"
+}
+
+If hasPassword is false (Google user setting first password):
+{
+  "newPassword": "newpass456"
+}
+
+Success: { "success": true, "message": "Password updated successfully" }
+
+Errors:
+  400 — validation errors
+  403 — family login blocked
+
+
+================================================================================
+PART 5 — SETTINGS SCREEN LAYOUT (Flutter)
+================================================================================
+
+Recommended screen structure:
+
+┌─────────────────────────────────────┐
+│ Settings                    [Save]  │
+├─────────────────────────────────────┤
+│ ACCOUNT                             │
+│  Name, email, phone                 │
+│  [Change Password]                  │
+│  [Refer & Earn]  [Share Story]      │
+│  Profile 96% complete → link        │
+├─────────────────────────────────────┤
+│ SUBSCRIPTION (if premium)           │
+│  Email renewal reminders    [toggle]│
+│  Manage plan →                      │
+├─────────────────────────────────────┤
+│ FAMILY LOGIN (owner only)           │
+│  List of members + add form         │
+├─────────────────────────────────────┤
+│ PRIVACY                             │
+│  4 toggles                          │
+├─────────────────────────────────────┤
+│ NOTIFICATIONS                       │
+│  4 toggles                          │
+├─────────────────────────────────────┤
+│ DANGER ZONE                         │
+│  [Deactivate Account]               │
+└─────────────────────────────────────┘
+
+Save button → PATCH /api/flutter/settings with current toggle values
+
+Legal links (WebView):
+  /privacy  /terms  /safety  /refund  /contact
+
+
+================================================================================
+PART 6 — IMPLEMENTATION CHECKLIST
+================================================================================
+
+Login:
+[ ] Login screen — Member / Family tabs
+[ ] Family login → POST /api/flutter/auth/family-login
+[ ] Store isFamilyLogin + ownerName in auth state
+[ ] Family banner on dashboard
+
+Family mode restrictions:
+[ ] Hide Send Interest on profile detail when isFamilyLogin
+[ ] Hide Chat tab / disable chat navigation
+[ ] Hide Settings edit OR block with message
+[ ] Handle 403 FAMILY_READONLY gracefully
+
+Settings (owner):
+[ ] GET /api/flutter/settings on screen load
+[ ] Privacy + notification toggles
+[ ] Premium autoRenew toggle (if isPremium)
+[ ] Save → PATCH /api/flutter/settings
+[ ] Change password screen → GET/POST change-password
+[ ] Deactivate → PATCH { deactivate: true } → logout
+
+Family access (owner):
+[ ] GET /api/flutter/family-access — list members
+[ ] POST add family member form
+[ ] DELETE remove member with confirm
+[ ] Show max 3 limit message
+
+Refer & Earn:
+[ ] GET /api/flutter/referral — show code + link
+
+
+================================================================================
+DART SNIPPETS
+================================================================================
+
+--- Family login ---
+final res = await http.post(
+  Uri.parse('$baseUrl/api/flutter/auth/family-login'),
+  headers: {'Content-Type': 'application/json'},
+  body: jsonEncode({'email': email, 'password': password}),
+);
+final data = jsonDecode(res.body);
+if (data['success'] == true) {
+  final isFamily = data['user']['isFamilyLogin'] == true;
+  await storage.saveToken(data['token']);
+  await storage.saveUser(data['user']);
+}
+
+--- Load settings ---
+final res = await http.get(
+  Uri.parse('$baseUrl/api/flutter/settings'),
+  headers: {'Authorization': 'Bearer $token'},
+);
+final settings = jsonDecode(res.body);
+if (settings['readOnly'] == true) {
+  // family user — show read-only or redirect
+}
+
+--- Save settings ---
+await http.patch(
+  Uri.parse('$baseUrl/api/flutter/settings'),
+  headers: headers,
+  body: jsonEncode({
+    'privacy': privacyMap,
+    'notifications': notificationsMap,
+    'subscription': {'autoRenew': autoRenew},
+  }),
+);
+
+--- Add family member ---
+await http.post(
+  Uri.parse('$baseUrl/api/flutter/family-access'),
+  headers: headers,
+  body: jsonEncode({
+    'memberName': name,
+    'email': email,
+    'password': password,
+    'relationship': 'Parent',
+  }),
+);
+
+--- Global family guard (example) ---
+bool get isFamilyBrowse => auth.user?['isFamilyLogin'] == true;
+
+Widget interestButton() {
+  if (isFamilyBrowse) {
+    return InfoCard(
+      text: 'Family browse mode — only owner can send interest.',
+    );
+  }
+  return ElevatedButton(onPressed: sendInterest, child: Text('Send Interest'));
+}
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

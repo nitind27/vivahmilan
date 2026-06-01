@@ -6,6 +6,7 @@ import { parseLocationBody } from '@/lib/chatLocation';
 import { resolveChatAccess } from '@/lib/chatAccess';
 import { getBlockBetween } from '@/lib/blockHelper';
 import { randomUUID } from 'crypto';
+import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 
 async function requireChatAccess(userId) {
   const dbUser = await queryOne(
@@ -27,6 +28,7 @@ export async function GET(req, { params }) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return familyForbiddenResponse('access chat');
 
   const gate = await requireChatAccess(decoded.id);
   if (!gate.ok) {
@@ -82,6 +84,7 @@ export async function POST(req, { params }) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return familyForbiddenResponse('access chat');
 
   const gate = await requireChatAccess(decoded.id);
   if (!gate.ok) {

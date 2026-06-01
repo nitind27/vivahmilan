@@ -3,6 +3,7 @@ import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { query, queryOne, execute } from '@/lib/db';
 import { getInteractionMaps, attachInteractionFlags } from '@/lib/flutter-interactions';
 import { randomUUID } from 'crypto';
+import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 
 export async function POST(req) {
   try {
@@ -10,6 +11,7 @@ export async function POST(req) {
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const decoded = verifyToken(token);
     if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+    if (isFamilyRole(decoded)) return familyForbiddenResponse('send interests');
 
     const { receiverId, message } = await req.json();
     if (!receiverId) return NextResponse.json({ error: 'receiverId required' }, { status: 400 });

@@ -7,6 +7,7 @@ import { parseLocationBody } from '@/lib/chatLocation';
 import { resolveChatAccess } from '@/lib/chatAccess';
 import { getBlockBetween } from '@/lib/blockHelper';
 import { randomUUID } from 'crypto';
+import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 
 // GET - all chat rooms with pagination
 export async function GET(req) {
@@ -14,6 +15,7 @@ export async function GET(req) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return familyForbiddenResponse('access chat');
 
   const dbUser = await queryOne(
     'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',
@@ -98,6 +100,7 @@ export async function POST(req) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return familyForbiddenResponse('send messages');
 
   const dbUser = await queryOne(
     'SELECT isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE id = ?',

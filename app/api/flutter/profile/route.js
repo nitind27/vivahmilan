@@ -5,6 +5,7 @@ import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
 import { assertProfileViewAccess } from '@/lib/profileMatchRules';
 import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 import { randomUUID } from 'crypto';
+import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 
 const ALLOWED_PROFILE_COLS = new Set([
   'gender','dob','height','weight','religion','caste','subCaste','sect','gotra','motherTongue',
@@ -152,6 +153,7 @@ export async function PUT(req) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return familyForbiddenResponse('edit profile');
 
   const data = await req.json();
   const { name, phone, ...profileData } = data;

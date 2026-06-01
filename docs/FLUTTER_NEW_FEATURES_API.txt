@@ -3,13 +3,16 @@
   Last Updated: May 2026
 ================================================================================
 
-Flutter developer ke liye 2 alag files hain:
+Flutter developer ke liye alag-alag files:
 
-1) NEW FEATURES (verification, coupons, report, search, registration, etc.)
-   File: docs/FLUTTER_NEW_FEATURES.txt
+1) NEW FEATURES (verification, coupons, report, search, registration)
+   → docs/FLUTTER_NEW_FEATURES.txt
 
-2) FULL API GUIDE (member chat, support chatbot, complete endpoint list)
-   File: docs/FLUTTER_API_GUIDE.txt
+2) FAMILY LOGIN + SETTINGS PAGE
+   → docs/FLUTTER_FAMILY_LOGIN_AND_SETTINGS.txt
+
+3) FULL API GUIDE (member chat, support chatbot, endpoint list)
+   → docs/FLUTTER_API_GUIDE.txt
 
 Base URL: https://vivahdwar.com
 Auth: Authorization: Bearer <JWT_TOKEN>

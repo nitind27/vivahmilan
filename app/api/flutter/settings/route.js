@@ -4,6 +4,7 @@ import { queryOne, execute } from '@/lib/db';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 import { getUserAccessSummary } from '@/lib/planPermissions.js';
 import { applyReferralCode } from '@/lib/referral.js';
+import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 
 async function getPrefs(userId) {
   await ensureFeatureTables();
@@ -22,16 +23,29 @@ export async function GET(req) {
     const decoded = verifyToken(token);
     if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
 
+    await ensureFeatureTables();
     const uid = decoded.id;
-    const [user, profile, prefs, access] = await Promise.all([
+    const isFamily = isFamilyRole(decoded);
+    const [user, profile, prefs, access, familyMembers] = await Promise.all([
       queryOne('SELECT name, email, phone, phoneVerified, isPremium, premiumPlan, profileBoost, boostExpiry FROM `user` WHERE id = ?', [uid]),
       queryOne('SELECT hidePhone, hidePhoto, profileComplete FROM profile WHERE userId = ?', [uid]),
       getPrefs(uid),
       getUserAccessSummary(uid),
+      isFamily ? Promise.resolve([]) : (async () => {
+        const rows = await queryOne('SELECT COUNT(*) AS cnt FROM familyaccess WHERE ownerUserId = ?', [uid]).catch(() => null);
+        return Number(rows?.cnt ?? 0);
+      })(),
     ]);
 
     return NextResponse.json({
-      user,
+      user: {
+        ...user,
+        role: decoded.role || 'USER',
+        isFamilyLogin: isFamily,
+        memberName: decoded.memberName || null,
+        relationship: decoded.relationship || null,
+        ownerName: decoded.ownerName || null,
+      },
       privacy: {
         hidePhone: !!profile?.hidePhone,
         hidePhoto: !!profile?.hidePhoto,
@@ -45,7 +59,12 @@ export async function GET(req) {
         notifyMarketing: !!prefs?.notifyMarketing,
       },
       profileComplete: profile?.profileComplete ?? 0,
+      subscription: {
+        autoRenew: !!prefs?.autoRenew,
+      },
+      familyAccessCount: isFamily ? 0 : (typeof familyMembers === 'number' ? familyMembers : 0),
       access,
+      readOnly: isFamily,
     });
   } catch (err) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
@@ -58,6 +77,7 @@ export async function PATCH(req) {
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const decoded = verifyToken(token);
     if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+    if (isFamilyRole(decoded)) return familyForbiddenResponse('change settings');
 
     const uid = decoded.id;
     const body = await req.json();
@@ -88,6 +108,10 @@ export async function PATCH(req) {
         if (n[key] != null) { sets.push(`${key} = ?`); vals.push(n[key] ? 1 : 0); }
       }
       if (sets.length) await execute(`UPDATE userpreference SET ${sets.join(', ')}, updatedAt = NOW() WHERE userId = ?`, [...vals, uid]);
+    }
+
+    if (body.subscription && body.subscription.autoRenew != null) {
+      await execute('UPDATE userpreference SET autoRenew = ?, updatedAt = NOW() WHERE userId = ?', [body.subscription.autoRenew ? 1 : 0, uid]);
     }
 
     if (body.referralCode) await applyReferralCode(uid, body.referralCode);
