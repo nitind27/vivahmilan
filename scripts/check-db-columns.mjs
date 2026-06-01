@@ -20,13 +20,19 @@ async function applyPhotoHashMigration() {
   return 'applied';
 }
 
-const photoHash = await columnExists('photo', 'contentHash');
-const receipt = await columnExists('subscription', 'receiptSentAt');
+const checks = [
+  ['photo', 'contentHash'],
+  ['subscription', 'receiptSentAt'],
+  ['profile', 'introVideoUrl'],
+  ['userpreference', 'autoRenew'],
+  ['savedsearch', 'lastAlertAt'],
+];
 
-console.log(JSON.stringify({
-  photo_contentHash: photoHash ? 'EXISTS' : 'MISSING',
-  subscription_receiptSentAt: receipt ? 'EXISTS' : 'MISSING',
-}, null, 2));
+const result = {};
+for (const [table, col] of checks) {
+  result[`${table}.${col}`] = (await columnExists(table, col)) ? 'EXISTS' : 'MISSING';
+}
+console.log(JSON.stringify(result, null, 2));
 
 if (process.argv.includes('--apply-photo-hash') && !photoHash) {
   const result = await applyPhotoHashMigration();

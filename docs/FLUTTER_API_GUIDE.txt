@@ -48,7 +48,8 @@ COUPONS / PAYMENT
   POST /api/flutter/payment/apply-coupon
   POST /api/flutter/payment/create-order
   POST /api/flutter/payment/verify
-  GET  /api/flutter/plans
+  GET  /api/flutter/subscription   ← Premium screen (plans + user status)
+  GET  /api/flutter/plans          ← public plans only
 
 MEMBER CHAT (Premium / Trial required)
   GET  /api/flutter/chat

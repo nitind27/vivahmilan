@@ -5,12 +5,22 @@ import { queryOne, execute } from '@/lib/db';
 import { createOrder } from '@/lib/cashfree';
 import { dispatchSubscriptionReceipt } from '@/lib/subscriptionReceipt';
 import { v4 as uuidv4 } from 'uuid';
+import { isFamilyRole, subscriptionOwnerOnlyResponse } from '@/lib/flutterFamilyGuard';
 
 export async function POST(req) {
   const token = getTokenFromRequest(req);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return subscriptionOwnerOnlyResponse();
+
+  const owner = await queryOne('SELECT adminVerified FROM `user` WHERE id = ?', [decoded.id]);
+  if (owner && !owner.adminVerified) {
+    return NextResponse.json({
+      error: 'Your profile must be verified before purchasing premium.',
+      code: 'PROFILE_NOT_VERIFIED',
+    }, { status: 403 });
+  }
 
   const { plan, couponCode, durationDays, months } = await req.json();
   const planKey = plan?.toUpperCase();

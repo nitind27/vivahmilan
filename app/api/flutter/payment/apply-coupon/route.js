@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import prisma from '@/lib/prisma';
 import { queryOne } from '@/lib/db';
+import { isFamilyRole, subscriptionOwnerOnlyResponse } from '@/lib/flutterFamilyGuard';
 
 /**
  * POST /api/flutter/payment/apply-coupon
@@ -12,6 +13,7 @@ export async function POST(req) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);
   if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  if (isFamilyRole(decoded)) return subscriptionOwnerOnlyResponse();
 
   const { code, planId, durationDays, months } = await req.json();
   if (!code || !planId) return NextResponse.json({ error: 'code and planId required' }, { status: 400 });

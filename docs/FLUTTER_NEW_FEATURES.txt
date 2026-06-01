@@ -255,8 +255,76 @@ Flutter: Toast only. No admin UI in app.
 
 
 ================================================================================
-FEATURE 6 — COUPON CODES
+FEATURE 6 — COUPON CODES & SUBSCRIPTION / PREMIUM SCREEN
 ================================================================================
+
+--- Premium screen (RECOMMENDED — single API) ---
+
+GET /api/flutter/subscription
+Headers: Authorization: Bearer <token>   (optional — works without login too)
+
+Always returns 200 with plans. NEVER show generic "Access Denied" on this screen.
+
+Success 200 (logged in, can purchase):
+{
+  "success": true,
+  "plans": [
+    {
+      "plan": "GOLD",
+      "displayName": "Gold",
+      "price": 1499,
+      "durationDays": 30,
+      "description": "...",
+      "permissions": { "canChat": true, "interestLimit": -1, ... },
+      "features": ["Unlimited Chat", "Unlimited Interests", ...]
+    }
+  ],
+  "durationOptions": [
+    { "label": "3 Months", "months": 3, "durationDays": 90 },
+    { "label": "6 Months", "months": 6, "durationDays": 180 },
+    { "label": "12 Months", "months": 12, "durationDays": 365 },
+    { "label": "Lifetime", "months": 0, "durationDays": 36500 }
+  ],
+  "canPurchase": true,
+  "purchaseBlockedReason": null,
+  "code": null,
+  "user": { "isPremium": false, "adminVerified": true, "isFamilyLogin": false, ... },
+  "subscription": null,
+  "access": { ... },
+  "message": "Ready to subscribe"
+}
+
+Blocked purchase (still 200 — show banner, disable Pay button):
+
+| code                      | When                          | Flutter UI                                      |
+|---------------------------|-------------------------------|-------------------------------------------------|
+| LOGIN_REQUIRED            | No token                      | Show plans + "Login to subscribe" button        |
+| SUBSCRIPTION_OWNER_ONLY   | Family login (role FAMILY)    | Show plans + banner: owner must login to buy    |
+| PROFILE_NOT_VERIFIED      | adminVerified = false         | Show plans + "Verify profile first" message     |
+
+Example (family login):
+{
+  "canPurchase": false,
+  "code": "SUBSCRIPTION_OWNER_ONLY",
+  "purchaseBlockedReason": "Only the profile owner can purchase...",
+  "user": { "isFamilyLogin": true, ... }
+}
+
+Flutter UI rules:
+  1. Load GET /api/flutter/subscription on Premium screen open
+  2. Always render plans from response — even when canPurchase is false
+  3. Map `code` to user-friendly banner (NOT "Access Denied")
+  4. Disable "Pay / Subscribe" when canPurchase === false
+  5. On Pay → create-order (see below)
+
+
+--- Public plans only (no user context) ---
+
+GET /api/flutter/plans
+No auth required.
+
+Success: { "success": true, "plans": [...] }
+
 
 --- Validate (no auth — homepage / premium screen) ---
 
@@ -269,10 +337,13 @@ Success 200:
 Errors: 404 invalid, 410 expired or usage limit reached
 
 
---- Apply with plan price (auth required) ---
+--- Apply with plan price (auth required — owner only) ---
 
 POST /api/flutter/payment/apply-coupon
 Headers: Authorization: Bearer <token>
+
+403 code SUBSCRIPTION_OWNER_ONLY — family login cannot apply coupon / pay
+  → Show: "Only the profile owner can purchase. Login with member account."
 
 Body:
 {

@@ -469,6 +469,15 @@ Family mode restrictions:
 [ ] Hide Chat tab / disable chat navigation
 [ ] Hide Settings edit OR block with message
 [ ] Handle 403 FAMILY_READONLY gracefully
+[ ] Premium screen: GET /api/flutter/subscription — show plans always
+[ ] If code=SUBSCRIPTION_OWNER_ONLY → banner, disable Pay (NOT "Access Denied")
+
+Premium / Subscription screen (owner + family):
+[ ] GET /api/flutter/subscription on screen load
+[ ] Render plans even when canPurchase=false
+[ ] Map codes: LOGIN_REQUIRED | SUBSCRIPTION_OWNER_ONLY | PROFILE_NOT_VERIFIED
+[ ] Pay flow: apply-coupon → create-order → Cashfree SDK → verify
+[ ] Family login: browse plans OK, purchase blocked with clear message
 
 Settings (owner):
 [ ] GET /api/flutter/settings on screen load

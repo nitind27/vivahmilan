@@ -4,7 +4,7 @@ import { query, queryOne, execute } from '@/lib/db';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
+import { randomUUID } from 'crypto';
 
 /** GET /api/flutter/family-access — list family logins (owner only) */
 export async function GET(req) {
@@ -53,7 +53,7 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Maximum 3 family logins allowed', code: 'FAMILY_LIMIT' }, { status: 400 });
   }
 
-  const id = crypto.randomUUID();
+  const id = randomUUID();
   const hash = await bcrypt.hash(password, 10);
   await execute(
     `INSERT INTO familyaccess (id, ownerUserId, memberName, email, password, relationship)
