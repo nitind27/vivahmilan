@@ -7,7 +7,7 @@ const PUBLIC_PREFIXES = [
   '/api/stories', '/api/kyc', '/kyc', '/maintenance', '/terms', '/privacy',
   '/api/plans',
   '/refund', '/cookies', '/safety', '/help', '/contact', '/report-abuse',
-  '/stories', '/share-story', '/payment/status',
+  '/stories', '/share-story', '/payment/status', '/api/chatbot',
 ];
 
 const USER_PREFIXES = [

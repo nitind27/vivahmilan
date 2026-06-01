@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { execute } from '@/lib/db';
 
-// Creates support_session and support_message tables if not exist
 export async function POST() {
   try {
     await execute(`
@@ -11,6 +10,7 @@ export async function POST() {
         guestName VARCHAR(100) NULL,
         status ENUM('bot','live','ended') DEFAULT 'bot',
         language VARCHAR(10) DEFAULT 'en',
+        fallbackCount INT DEFAULT 0,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         INDEX idx_status (status),
@@ -27,6 +27,11 @@ export async function POST() {
         INDEX idx_session (sessionId)
       )
     `);
+    try {
+      await execute('ALTER TABLE support_session ADD COLUMN fallbackCount INT DEFAULT 0');
+    } catch {
+      /* column exists */
+    }
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('Init error:', err);
