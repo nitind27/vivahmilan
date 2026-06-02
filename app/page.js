@@ -102,7 +102,6 @@ const DURATION_OPTIONS = [
   { label: '3 Months', months: 3 },
   { label: '6 Months', months: 6 },
   { label: '12 Months', months: 12 },
-  { label: 'Lifetime', months: 0 },  // 0 = lifetime
 ];
 
 const ICON_MAP = { Search, Shield, Globe, Heart, Users, Award, TrendingUp, Star };
@@ -626,9 +625,6 @@ export default function Home() {
                   }`}
                 >
                   {opt.label}
-                  {opt.months === 0 && selectedMonths !== 0 && (
-                    <span className="ml-1.5 text-[10px] text-green-600 dark:text-green-400 font-bold">Save</span>
-                  )}
                 </button>
               ))}
             </div>

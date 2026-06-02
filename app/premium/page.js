@@ -18,7 +18,6 @@ const DURATION_OPTIONS = [
   { label: '3 Months', months: 3 },
   { label: '6 Months', months: 6 },
   { label: '12 Months', months: 12 },
-  { label: 'Lifetime', months: 0 },
 ];
 
 const PERKS = [
@@ -62,14 +61,13 @@ export default function PremiumPage() {
 
   const handleFreeActivate = (plan) => {
     setLoadingPlan(plan.plan);
-    const isLifetime = selectedMonths === 0;
     fetch('/api/payment/create-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         plan: plan.plan,
         couponCode: discountPct ? couponCode : null,
-        durationDays: isLifetime ? 36500 : selectedMonths * 30,
+        durationDays: selectedMonths * 30,
       }),
     })
       .then(r => r.json())
@@ -170,9 +168,6 @@ export default function PremiumPage() {
                   }`}
                 >
                   {opt.label}
-                  {opt.months === 0 && selectedMonths !== 0 && (
-                    <span className="ml-1 text-[10px] text-green-600 font-bold">Save</span>
-                  )}
                 </button>
               ))}
             </div>

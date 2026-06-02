@@ -140,11 +140,6 @@ export default function PricingPlanGrid({
                   <Crown className="w-3 h-3" /> Most Popular
                 </span>
               )}
-              {!isActive && isLifetime && !isFree && !isHighlight && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-500 text-white text-[10px] font-bold">
-                  Best Value
-                </span>
-              )}
             </div>
 
             <div className="p-5 sm:p-6 flex flex-col flex-1">
@@ -190,8 +185,7 @@ export default function PricingPlanGrid({
                 </div>
                 <p className={`text-xs mt-2 leading-relaxed ${isHighlight ? 'text-white/60' : 'text-vd-text-sub'}`}>
                   {isFree && 'Forever · no payment required'}
-                  {!isFree && isLifetime && 'One-time · lifetime access'}
-                  {!isFree && !isLifetime && (
+                  {!isFree && (
                     <>
                       Billed for {selectedMonths} month{selectedMonths > 1 ? 's' : ''}
                       {monthlyEquiv != null && (

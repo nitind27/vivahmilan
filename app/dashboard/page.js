@@ -337,23 +337,32 @@ function BirthdayCard({ name }) {
   );
 }
 
-// ── Quick Action Card ─────────────────────────────────────────────────────────
-function QuickAction({ icon: Icon, label, href, color, bg, delay = 0 }) {
+// ── Quick Actions (bento tiles) ───────────────────────────────────────────────
+function QuickActionTile({ icon: Icon, label, sub, href, gradient, tileClass = '', delay = 0 }) {
   return (
-    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay, type: 'spring', stiffness: 200 }}
-      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-      <Link href={href} className={`flex flex-col items-center gap-2 p-4 rounded-2xl ${bg} border border-vd-border hover:shadow-md transition-all`}>
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
-          <Icon className="w-5 h-5" />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.92 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, type: 'spring', stiffness: 260, damping: 22 }}
+      className={tileClass}
+    >
+      <Link
+        href={href}
+        className={`group relative flex flex-col justify-between h-full min-h-[5.25rem] rounded-2xl p-3.5 sm:p-4 overflow-hidden bg-gradient-to-br ${gradient} text-white shadow-lg hover:shadow-xl hover:-translate-y-1 active:scale-[0.98] transition-all duration-200`}
+      >
+        <div className="absolute -bottom-5 -right-5 w-24 h-24 rounded-full bg-white/15 pointer-events-none group-hover:scale-110 transition-transform" />
+        <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-full blur-xl pointer-events-none" />
+        <Icon className="w-6 h-6 sm:w-7 sm:h-7 relative z-10 opacity-95" strokeWidth={2.25} />
+        <div className="relative z-10 mt-3">
+          <p className="text-sm font-bold leading-tight drop-shadow-sm">{label}</p>
+          {sub ? <p className="text-[10px] text-white/80 mt-0.5 line-clamp-1">{sub}</p> : null}
         </div>
-        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center">{label}</span>
       </Link>
     </motion.div>
   );
 }
 
-function ShareMyProfileAction({ userId, userName, color, bg, delay = 0 }) {
+function ShareProfileTile({ userId, userName, tileClass = '', delay = 0 }) {
   const [sharing, setSharing] = useState(false);
   const handleShare = async () => {
     if (!userId) return;
@@ -367,17 +376,24 @@ function ShareMyProfileAction({ userId, userName, color, bg, delay = 0 }) {
     }
   };
   return (
-    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay, type: 'spring', stiffness: 200 }}
-      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-      <button type="button" onClick={handleShare} disabled={sharing}
-        className={`w-full flex flex-col items-center gap-2 p-4 rounded-2xl ${bg} border border-vd-border hover:shadow-md transition-all disabled:opacity-60`}>
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
-          <Share2 className="w-5 h-5" />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.92 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, type: 'spring', stiffness: 260, damping: 22 }}
+      className={tileClass}
+    >
+      <button
+        type="button"
+        onClick={handleShare}
+        disabled={sharing}
+        className="group relative flex flex-col justify-between w-full h-full min-h-[5.25rem] rounded-2xl p-3.5 sm:p-4 overflow-hidden bg-gradient-to-br from-teal-500 to-emerald-700 text-white shadow-lg hover:shadow-xl hover:-translate-y-1 active:scale-[0.98] transition-all duration-200 disabled:opacity-60 text-left"
+      >
+        <div className="absolute -bottom-5 -right-5 w-24 h-24 rounded-full bg-white/15 pointer-events-none" />
+        <Share2 className="w-6 h-6 sm:w-7 sm:h-7 relative z-10" strokeWidth={2.25} />
+        <div className="relative z-10 mt-3">
+          <p className="text-sm font-bold leading-tight drop-shadow-sm">{sharing ? 'Sharing…' : 'Share Profile'}</p>
+          <p className="text-[10px] text-white/80 mt-0.5">Send your link</p>
         </div>
-        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center">
-          {sharing ? 'Sharing…' : 'Share My Profile'}
-        </span>
       </button>
     </motion.div>
   );
@@ -504,16 +520,18 @@ export default function Dashboard() {
     { icon: Users,         label: 'Matches',        value: matches.length > 0 ? matches.length : '—',       color: 'text-blue-500',   bg: 'bg-blue-50 dark:bg-blue-900/20',    href: '/matches' },
   ];
 
-  const quickActions = [
-    { icon: Heart,    label: 'Find Matches',  href: '/matches',      color: 'text-vd-primary',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Eye,      label: 'Who Viewed Me', href: '/views',        color: 'text-teal-500',     bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Search,   label: 'Search',        href: '/search',       color: 'text-vd-primary', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Star,     label: 'Premium',       href: '/premium',      color: 'text-yellow-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Settings, label: 'Settings',      href: '/settings',     color: 'text-purple-500', bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: HandCoins,label: 'Refer & Earn',  href: '/refer',        color: 'text-green-500',  bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Heart,    label: 'Share Story',   href: '/share-story',  color: 'text-pink-500',   bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Bell,     label: 'Notifications', href: '/notifications',color: 'text-green-500',  bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
-    { icon: Shield,   label: 'Safety',        href: '/safety',       color: 'text-red-500',    bg: 'bg-vd-bg-section dark:bg-vd-bg-card' },
+  const quickActionsBento = [
+    { icon: Heart, label: 'Find Matches', sub: 'Curated for you', href: '/matches', gradient: 'from-rose-500 via-rose-600 to-pink-700', tileClass: 'col-span-2 row-span-2 min-h-[10.5rem] sm:min-h-[11.5rem]' },
+    { icon: Search, label: 'Search', sub: 'Filters & kundali', href: '/search', gradient: 'from-amber-500 to-orange-600', tileClass: 'col-span-2 min-h-[5.5rem]' },
+    { icon: Crown, label: 'Premium', sub: 'Upgrade plan', href: '/premium', gradient: 'from-yellow-500 to-amber-700', tileClass: 'col-span-1' },
+    { icon: Eye, label: 'Views', sub: 'Who saw you', href: '/views', gradient: 'from-teal-500 to-cyan-700', tileClass: 'col-span-1' },
+    { icon: MessageCircle, label: 'Messages', sub: 'Your chats', href: '/chat', gradient: 'from-indigo-500 to-violet-700', tileClass: 'col-span-1' },
+    { icon: Bookmark, label: 'Shortlist', sub: 'Saved profiles', href: '/shortlist', gradient: 'from-sky-500 to-blue-700', tileClass: 'col-span-1' },
+    { icon: Bell, label: 'Alerts', sub: 'Notifications', href: '/notifications', gradient: 'from-emerald-500 to-green-700', tileClass: 'col-span-1' },
+    { icon: Settings, label: 'Settings', sub: 'Account', href: '/settings', gradient: 'from-slate-500 to-slate-700', tileClass: 'col-span-1' },
+    { icon: HandCoins, label: 'Refer', sub: 'Earn rewards', href: '/refer', gradient: 'from-lime-600 to-green-800', tileClass: 'col-span-1' },
+    { icon: Sparkles, label: 'Story', sub: 'Share yours', href: '/share-story', gradient: 'from-fuchsia-500 to-pink-700', tileClass: 'col-span-1' },
+    { icon: Shield, label: 'Safety', sub: 'Privacy help', href: '/safety', gradient: 'from-red-500 to-rose-800', tileClass: 'col-span-1' },
   ];
 
   return (
@@ -555,21 +573,30 @@ export default function Dashboard() {
           {stats.map((s, i) => <StatCard key={s.label} {...s} delay={i * 0.08} />)}
         </div>
 
-        {/* Quick Actions */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="mb-6">
-          <h2 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">Quick Actions</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-            {quickActions.map((a, i) => <QuickAction key={a.label} {...a} delay={0.4 + i * 0.05} />)}
-            <ShareMyProfileAction
+        {/* Quick Actions — bento grid */}
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-6"
+        >
+          <div className="flex items-end justify-between gap-3 mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</h2>
+            <span className="text-[11px] font-medium text-gray-400 dark:text-gray-500 hidden sm:inline">Tap any tile</span>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-min">
+            {quickActionsBento.map((a, i) => (
+              <QuickActionTile key={a.label} {...a} delay={0.4 + i * 0.035} />
+            ))}
+            <ShareProfileTile
               userId={session?.user?.id}
               userName={session?.user?.name}
-              color="text-teal-600"
-              bg="bg-vd-bg-section dark:bg-vd-bg-card"
-              delay={0.4 + quickActions.length * 0.05}
+              tileClass="col-span-1"
+              delay={0.75}
             />
           </div>
-        </motion.div>
+        </motion.section>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Matches */}
@@ -688,26 +715,56 @@ export default function Dashboard() {
 
             {/* Premium upsell */}
             {!session?.user?.isPremium && !session?.user?.freeTrialActive && (
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}
-                className="relative rounded-2xl p-5 text-white overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, #C8A45C, #E5C88B)' }}>
-                <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full" />
-                <div className="relative">
-                  <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                    <Star className="w-8 h-8 mb-2 fill-white" />
-                  </motion.div>
-                  <h3 className="font-black text-lg mb-1">Go Premium ✨</h3>
-                  <p className="text-white/80 text-xs mb-4">Unlock unlimited chat, contacts & profile boost</p>
-                  <div className="space-y-1.5 mb-4">
-                    {['Unlimited interests','Chat with matches','See contact details','Profile boost'].map(f => (
-                      <div key={f} className="flex items-center gap-1.5 text-xs">
-                        <CheckCircle className="w-3.5 h-3.5 fill-white/30" />
-                        <span className="text-white/90">{f}</span>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className="group relative overflow-hidden rounded-2xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="absolute inset-x-0 top-0 h-1 vd-gradient-gold" />
+                <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-vd-primary/10 blur-2xl pointer-events-none" />
+
+                <div className="relative p-5">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-11 h-11 rounded-xl vd-gradient-gold flex items-center justify-center shadow-md shadow-vd-primary/25 shrink-0">
+                      <Crown className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-vd-primary mb-0.5">Premium</p>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-base leading-snug">
+                        Find your match faster
+                      </h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Chat freely, see contacts & rise in search
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {[
+                      { icon: Heart, label: 'Unlimited interests' },
+                      { icon: MessageCircle, label: 'Direct chat' },
+                      { icon: Eye, label: 'View contacts' },
+                      { icon: TrendingUp, label: 'Profile boost' },
+                    ].map(({ icon: Icon, label }) => (
+                      <div
+                        key={label}
+                        className="flex items-center gap-2 rounded-xl bg-vd-bg-alt/80 dark:bg-vd-bg/60 border border-vd-border/60 px-2.5 py-2"
+                      >
+                        <span className="w-7 h-7 rounded-lg bg-vd-primary/15 flex items-center justify-center shrink-0">
+                          <Icon className="w-3.5 h-3.5 text-vd-primary" />
+                        </span>
+                        <span className="text-[11px] font-medium text-gray-700 dark:text-gray-300 leading-tight">{label}</span>
                       </div>
                     ))}
                   </div>
-                  <Link href="/premium" className="block bg-white text-orange-600 text-center py-2.5 rounded-xl font-bold text-sm hover:bg-gray-50 transition-colors">
-                    Upgrade Now →
+
+                  <Link
+                    href="/premium"
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl vd-gradient-gold text-white text-sm font-bold hover:opacity-90 transition-opacity shadow-md shadow-vd-primary/20"
+                  >
+                    Explore plans
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 </div>
               </motion.div>
