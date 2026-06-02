@@ -42,6 +42,7 @@ function useCountdown(expiryISO) {
 
 // ── Unified Welcome + Membership Card ───────────────────────────────────────────
 function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeTrialExpiry, isPremium, freeTrialActive }) {
+  const isEarlyBird = premiumInfo?.isEarlyBird;
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
   const greetEmoji = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
@@ -54,8 +55,11 @@ function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeT
   const plan = premiumInfo?.plan || 'GOLD';
   const daysLeft = premiumInfo?.daysLeft ?? 0;
   const expiry = premiumInfo?.expiry;
-  const isUrgent = showPremium && daysLeft <= 2;
-  const premiumPct = showPremium ? Math.max(0, Math.min(100, Math.round((daysLeft / 30) * 100))) : 0;
+  const isUrgent = showPremium && !isEarlyBird && daysLeft <= 2;
+  const totalPlanDays = premiumInfo?.totalDays || 30;
+  const premiumPct = showPremium
+    ? (premiumInfo?.premiumPctLeft ?? Math.max(0, Math.min(100, Math.round((daysLeft / totalPlanDays) * 100))))
+    : 0;
   const trialPct = showTrial && countdown ? Math.min(100, Math.round((countdown.totalMs / (24 * 3600000)) * 100)) : 0;
 
   const expiryLabel = expiry
@@ -68,11 +72,13 @@ function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeT
       ? 'Almost done! Complete remaining details for better matches.'
       : 'Add more details to your profile to get better match suggestions.';
 
-  const premiumMsg = isUrgent
-    ? `Your ${plan} plan expires in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew now to keep access.`
-    : expiryLabel
-      ? `Your ${plan} plan is active until ${expiryLabel}.`
-      : `Your ${plan} premium plan is active.`;
+  const premiumMsg = isEarlyBird
+    ? `🎉 Early Bird Offer — ${plan} full access FREE until ${expiryLabel || 'expiry'}. (${daysLeft} days left)`
+    : isUrgent
+      ? `Your ${plan} plan expires in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew now to keep access.`
+      : expiryLabel
+        ? `Your ${plan} plan is active until ${expiryLabel}.`
+        : `Your ${plan} premium plan is active.`;
 
   const trialMsg = countdown
     ? `Trial ends in ${pad(countdown.h)}h ${pad(countdown.m)}m — upgrade to keep premium features.`
@@ -118,9 +124,11 @@ function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeT
 
           {showPremium && (
             <div className="shrink-0 text-right">
-              <p className="text-[10px] text-white/65 leading-none mb-0.5">Plan expires in</p>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-violet-600/50 border border-white/20">
-                <Crown className="w-3 h-3" /> {plan}
+              <p className="text-[10px] text-white/65 leading-none mb-0.5">
+                {isEarlyBird ? 'Early Bird FREE' : 'Plan expires in'}
+              </p>
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white border border-white/20 ${isEarlyBird ? 'bg-emerald-600/50' : 'bg-violet-600/50'}`}>
+                <Crown className="w-3 h-3" /> {isEarlyBird ? 'FREE' : plan}
               </span>
               <p className="text-2xl font-black text-white leading-none mt-1">
                 {daysLeft}<span className="text-xs font-semibold text-white/70 ml-0.5">days left</span>
@@ -150,7 +158,9 @@ function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeT
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-0.5">
-                  <p className="text-xs font-bold text-white">Premium Plan Validity</p>
+                  <p className="text-xs font-bold text-white">
+                    {isEarlyBird ? '🎉 Early Bird — Full Free Access' : 'Premium Plan Validity'}
+                  </p>
                   <span className="text-xs font-bold text-white tabular-nums shrink-0">{premiumPct}% left</span>
                 </div>
                 <p className="text-[10px] text-white/70 leading-snug mb-2">{premiumMsg}</p>
@@ -172,7 +182,7 @@ function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeT
               </div>
               <Link href="/premium"
                 className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/20 text-white border border-white/25 hover:bg-white/30 transition-colors whitespace-nowrap self-center">
-                {isUrgent ? 'Renew Plan' : 'Manage Plan'}
+                {isEarlyBird ? 'View Benefits' : isUrgent ? 'Renew Plan' : 'Manage Plan'}
               </Link>
             </div>
           </div>

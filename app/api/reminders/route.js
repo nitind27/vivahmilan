@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import { getUserEarlyBirdStatus } from '@/lib/earlyBird';
 
 // Called on dashboard load — creates notifications if needed
 export async function POST(req) {
@@ -78,12 +79,23 @@ export async function POST(req) {
   }
 
   // ── Return current premium status + birthday info ─────────────────────────
-  const premiumInfo = user?.isPremium && user?.premiumExpiry ? {
-    isPremium: true,
-    plan: user.premiumPlan,
-    expiry: user.premiumExpiry,
-    daysLeft: Math.max(0, Math.ceil((new Date(user.premiumExpiry) - now) / 86400000)),
-  } : { isPremium: false };
+  const earlyBird = await getUserEarlyBirdStatus(userId);
+  let premiumInfo = { isPremium: false };
+
+  if (user?.isPremium && user?.premiumExpiry && new Date(user.premiumExpiry) > now) {
+    const daysLeft = Math.max(0, Math.ceil((new Date(user.premiumExpiry) - now) / 86400000));
+    const totalDays = earlyBird?.totalDays || 30;
+    premiumInfo = {
+      isPremium: true,
+      plan: user.premiumPlan,
+      expiry: user.premiumExpiry,
+      daysLeft,
+      totalDays,
+      isEarlyBird: !!earlyBird,
+      earlyBirdLabel: earlyBird?.label || null,
+      premiumPctLeft: Math.min(100, Math.round((daysLeft / totalDays) * 100)),
+    };
+  }
 
   let birthdayInfo = null;
   if (profile?.dob) {

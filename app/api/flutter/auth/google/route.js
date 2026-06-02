@@ -85,6 +85,19 @@ export async function POST(req) {
       recordRegistrationGeo(newUserId, req, body).catch(e =>
         console.error('[flutter google signup] geo log error:', e.message)
       );
+
+      const { tryAssignEarlyBirdToUser } = await import('@/lib/earlyBird');
+      try {
+        await tryAssignEarlyBirdToUser(newUserId);
+        user = await queryOne(
+          `SELECT id, name, email, phone, password, role, isActive, isPremium, premiumPlan,
+                  adminVerified, emailVerified, freeTrialExpiry, verificationBadge, premiumExpiry
+           FROM \`user\` WHERE id = ?`,
+          [newUserId]
+        );
+      } catch (e) {
+        console.error('[flutter google] early bird error:', e.message);
+      }
     } else {
       if (!user.isActive) {
         return NextResponse.json({ error: 'Your account has been suspended. Contact support.' }, { status: 403 });

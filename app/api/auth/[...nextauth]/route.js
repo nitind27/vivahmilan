@@ -274,34 +274,20 @@ export const authOptions = {
             [profileId, userId, now, now]
           );
 
-          // Early Bird Auto-Assignment
+          const { tryAssignEarlyBirdToUser } = await import('@/lib/earlyBird');
+          let earlyBird = { assigned: false };
           try {
-            const ebConfigRow = await queryOne("SELECT value FROM siteconfig WHERE `key` = 'early_bird_settings'");
-            if (ebConfigRow && ebConfigRow.value) {
-              const ebConfig = JSON.parse(ebConfigRow.value);
-              if (ebConfig.enabled && ebConfig.claimed < ebConfig.limit) {
-                const endDate = new Date(Date.now() + (ebConfig.durationDays || 30) * 86400000);
-                await execute(
-                  "INSERT INTO subscription (id, userId, plan, status, amount, currency, paymentId, startDate, endDate, createdAt) VALUES (?, ?, ?, 'ACTIVE', 0, 'INR', 'EARLY_BIRD', NOW(), ?, NOW())",
-                  [randomUUID(), userId, ebConfig.planId, endDate]
-                );
-                await execute(
-                  "UPDATE \`user\` SET isPremium = 1, premiumPlan = ?, premiumExpiry = ? WHERE id = ?",
-                  [ebConfig.planId, endDate, userId]
-                );
-                ebConfig.claimed += 1;
-                await execute("UPDATE siteconfig SET value = ? WHERE `key` = 'early_bird_settings'", [JSON.stringify(ebConfig)]);
-              }
-            }
+            earlyBird = await tryAssignEarlyBirdToUser(userId);
           } catch (e) {
-            console.error('Early bird assign error:', e);
+            console.error('Early bird assign error:', e.message);
           }
 
           user.id = userId;
           user.role = 'USER';
           user.isVerified = true;
           user.adminVerified = false;
-          user.isPremium = false;
+          user.isPremium = !!earlyBird.assigned;
+          user.premiumPlan = earlyBird.assigned ? earlyBird.planId : null;
           user.isNewUser = true;
           const portalAccessNew = await getPortalAccessForUser({ email: user.email, role: 'USER' });
           user.portalAccessGranted = portalAccessNew.granted;

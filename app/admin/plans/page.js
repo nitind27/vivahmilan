@@ -26,11 +26,31 @@ export default function PlansPage() {
   const [plans, setPlans] = useState([]);
   const [editPlan, setEditPlan] = useState(null);
   
-  const [earlyBird, setEarlyBird] = useState({ enabled: false, limit: 50, claimed: 0, planId: 'FREE', durationDays: 365 });
+  const [earlyBird, setEarlyBird] = useState({ enabled: true, limit: 1000, claimed: 0, planId: 'GOLD', durationDays: 365 });
   const [loadingEarlyBird, setLoadingEarlyBird] = useState(true);
+  const [seeding, setSeeding] = useState(false);
+
+  const loadPlans = () => {
+    fetch('/api/admin/plans').then(r => r.json()).then(d => setPlans(Array.isArray(d) ? d : [])).catch(() => {});
+  };
+
+  const restoreDefaultPlans = async () => {
+    setSeeding(true);
+    try {
+      const res = await fetch('/api/admin/plans/seed', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || 'Plans restored');
+        loadPlans();
+        if (data.earlyBird) setEarlyBird(prev => ({ ...prev, ...data.earlyBird }));
+      } else toast.error(data.error || 'Restore failed');
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   useEffect(() => {
-    fetch('/api/admin/plans').then(r => r.json()).then(d => setPlans(Array.isArray(d) ? d : [])).catch(() => {});
+    loadPlans();
     fetch('/api/admin/siteconfig').then(r => r.json()).then(d => {
       if (d.early_bird_settings) {
         try {
@@ -49,7 +69,7 @@ export default function PlansPage() {
     });
     if (res.ok) {
       toast.success('Plan saved'); setEditPlan(null);
-      fetch('/api/admin/plans').then(r => r.json()).then(d => setPlans(Array.isArray(d) ? d : []));
+      loadPlans();
     } else toast.error('Failed to save plan');
   };
 
@@ -97,7 +117,9 @@ export default function PlansPage() {
           </div>
           <div>
             <h3 className="font-bold text-lg text-white">Early Bird Offer (Free Tier)</h3>
-            <p className="text-xs text-gray-400">Automatically assign a plan for free to the first X users.</p>
+            <p className="text-xs text-gray-400">
+              Pehle {earlyBird.limit} users ko free full access — plan + duration select karein. Dashboard par &quot;Early Bird FREE&quot; dikhega.
+            </p>
           </div>
           <div className="ml-auto">
             <Toggle value={earlyBird.enabled} onChange={v => setEarlyBird(prev => ({...prev, enabled: v}))} />
@@ -113,18 +135,20 @@ export default function PlansPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">User Limit (Max Free)</label>
-              <input type="number" value={earlyBird.limit} onChange={e => setEarlyBird(p => ({...p, limit: parseInt(e.target.value)}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+              <label className="text-xs text-gray-400 mb-1 block">User Limit (e.g. 1000)</label>
+              <input type="number" min={1} value={earlyBird.limit} onChange={e => setEarlyBird(p => ({...p, limit: parseInt(e.target.value, 10) || 0}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Duration (Days)</label>
-              <input type="number" value={earlyBird.durationDays} onChange={e => setEarlyBird(p => ({...p, durationDays: parseInt(e.target.value)}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+              <label className="text-xs text-gray-400 mb-1 block">Free Duration (Days)</label>
+              <input type="number" min={1} value={earlyBird.durationDays} onChange={e => setEarlyBird(p => ({...p, durationDays: parseInt(e.target.value, 10) || 365}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+              <p className="text-[10px] text-gray-600 mt-1">365 = 1 year free</p>
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Total Claimed</label>
-              <div className="flex items-center gap-3">
-                <span className="text-xl font-bold text-pink-400">{earlyBird.claimed}</span>
-                <button onClick={() => setEarlyBird(p => ({...p, claimed: 0}))} className="text-xs text-gray-500 hover:text-white border border-gray-700 px-2 py-1 rounded">Reset</button>
+              <label className="text-xs text-gray-400 mb-1 block">Claimed / Remaining</label>
+              <div className="flex flex-col gap-1">
+                <span className="text-xl font-bold text-pink-400">{earlyBird.claimed} / {earlyBird.limit}</span>
+                <span className="text-xs text-green-400">{Math.max(0, (earlyBird.limit || 0) - (earlyBird.claimed || 0))} slots left</span>
+                <button type="button" onClick={() => setEarlyBird(p => ({...p, claimed: 0}))} className="text-xs text-gray-500 hover:text-white border border-gray-700 px-2 py-1 rounded w-fit">Reset count</button>
               </div>
             </div>
           </div>
@@ -137,11 +161,21 @@ export default function PlansPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-bold">Subscription Plans</h2>
-        <button onClick={openNewPlan} className="flex items-center gap-2 px-4 py-2 vd-gradient-gold text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
-          <Plus className="w-4 h-4" /> Add New Plan
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            disabled={seeding}
+            onClick={restoreDefaultPlans}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-sm font-semibold disabled:opacity-60"
+          >
+            {seeding ? 'Restoring…' : 'Restore Default Plans'}
+          </button>
+          <button onClick={openNewPlan} className="flex items-center gap-2 px-4 py-2 vd-gradient-gold text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
+            <Plus className="w-4 h-4" /> Add New Plan
+          </button>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -174,8 +208,16 @@ export default function PlansPage() {
           );
         })}
         {plans.length === 0 && (
-          <div className="col-span-full text-center py-12 text-gray-500 border border-dashed border-gray-700 rounded-2xl">
-            No plans found. Create one to get started.
+          <div className="col-span-full text-center py-12 text-gray-500 border border-dashed border-gray-700 rounded-2xl space-y-4">
+            <p>No plans found. Restore defaults (FREE, SILVER, GOLD, PLATINUM, EARLY_BIRD).</p>
+            <button
+              type="button"
+              disabled={seeding}
+              onClick={restoreDefaultPlans}
+              className="px-6 py-2.5 vd-gradient-gold text-white rounded-xl text-sm font-semibold disabled:opacity-60"
+            >
+              {seeding ? 'Restoring…' : 'Restore Default Plans'}
+            </button>
           </div>
         )}
       </div>
