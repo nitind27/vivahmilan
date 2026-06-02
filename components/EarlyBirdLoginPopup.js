@@ -16,6 +16,10 @@ const SKIP_PATHS = [
   '/admin',
 ];
 
+function sessionKey(userId) {
+  return `vd_eb_popup_sess_${userId}`;
+}
+
 function shouldSkipPath(pathname) {
   return SKIP_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'));
 }
@@ -26,21 +30,32 @@ export default function EarlyBirdLoginPopup() {
   const [open, setOpen] = useState(false);
   const [offer, setOffer] = useState(null);
   const [claiming, setClaiming] = useState(false);
-  const checkedForUser = useRef(null);
+  const fetchStarted = useRef(false);
+  const lastUserId = useRef(null);
 
-  const markSeen = async () => {
+  /** Hide for current browser tab session only (refresh / navigation) */
+  const markDismissedThisSession = () => {
     const uid = session?.user?.id;
-    if (uid) {
-      try {
-        localStorage.setItem(`vd_eb_popup_${uid}`, '1');
-        await fetch('/api/early-bird/popup-seen', { method: 'POST' });
-      } catch { /* ignore */ }
+    if (uid && typeof window !== 'undefined') {
+      sessionStorage.setItem(sessionKey(uid), 'dismissed');
     }
     setOpen(false);
   };
 
+  /** Permanent — after successful claim */
+  const markClaimedPermanent = async () => {
+    const uid = session?.user?.id;
+    if (uid && typeof window !== 'undefined') {
+      sessionStorage.setItem(sessionKey(uid), 'claimed');
+    }
+    try {
+      await fetch('/api/early-bird/popup-seen', { method: 'POST' });
+    } catch { /* ignore */ }
+    setOpen(false);
+  };
+
   const handleDismiss = () => {
-    markSeen();
+    markDismissedThisSession();
   };
 
   const handleClaim = async () => {
@@ -50,11 +65,12 @@ export default function EarlyBirdLoginPopup() {
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.error || 'Could not claim offer');
-        if (data.code === 'SOLD_OUT' || data.code === 'ALREADY_ACTIVE') await markSeen();
+        if (data.code === 'ALREADY_ACTIVE') await markClaimedPermanent();
+        if (data.code === 'SOLD_OUT') markDismissedThisSession();
         return;
       }
       toast.success(data.message || 'Free access activated!');
-      await markSeen();
+      await markClaimedPermanent();
       await update?.();
     } catch {
       toast.error('Something went wrong');
@@ -69,24 +85,40 @@ export default function EarlyBirdLoginPopup() {
     if (session.user.role === 'ADMIN') return;
 
     const uid = session.user.id;
-    if (checkedForUser.current === uid) return;
-    if (typeof window !== 'undefined' && localStorage.getItem(`vd_eb_popup_${uid}`) === '1') {
-      checkedForUser.current = uid;
-      return;
+    const key = sessionKey(uid);
+
+    if (lastUserId.current !== uid) {
+      fetchStarted.current = false;
+      lastUserId.current = uid;
     }
 
-    checkedForUser.current = uid;
+    if (typeof window !== 'undefined') {
+      const sess = sessionStorage.getItem(key);
+      if (sess === 'dismissed' || sess === 'claimed' || sess === 'shown') return;
+    }
+
+    if (fetchStarted.current) return;
+    fetchStarted.current = true;
 
     fetch('/api/early-bird/status')
       .then(r => r.json())
       .then(d => {
         if (d.showPopup && d.offer?.status === 'eligible') {
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem(key, 'shown');
+          }
           setOffer(d.offer);
           setOpen(true);
         }
       })
       .catch(() => {});
   }, [status, session?.user?.id, session?.user?.role, pathname]);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      fetchStarted.current = false;
+    }
+  }, [status]);
 
   return (
     <AnimatePresence>
@@ -150,7 +182,7 @@ export default function EarlyBirdLoginPopup() {
               </div>
 
               <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                Claim now — chat, unlimited interests, contact details &amp; more. This popup won&apos;t show again.
+                Claim once — offer won&apos;t show again. &quot;Maybe later&quot; hides until you open the browser again.
               </p>
 
               <button
