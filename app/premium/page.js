@@ -40,17 +40,36 @@ export default function PremiumPage() {
   const [couponCode, setCouponCode] = useState('');
   const [discountPct, setDiscountPct] = useState(0);
   const [verifyingCoupon, setVerifyingCoupon] = useState(false);
+  const [showPricingSection, setShowPricingSection] = useState(true);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
   }, [status, router]);
 
   useEffect(() => {
-    fetch('/api/plans')
-      .then(r => (r.ok ? r.json() : Promise.reject()))
-      .then(d => setPlans(normalizePlans(d)))
-      .catch(() => setPlans([]))
-      .finally(() => setLoadingPlans(false));
+    fetch('/api/site/display-settings')
+      .then((r) => r.json())
+      .then((d) => {
+        const show = d.showPricingSection !== false;
+        setShowPricingSection(show);
+        if (!show) {
+          setLoadingPlans(false);
+          return;
+        }
+        fetch('/api/plans')
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data) => setPlans(normalizePlans(data)))
+          .catch(() => setPlans([]))
+          .finally(() => setLoadingPlans(false));
+      })
+      .catch(() => {
+        setShowPricingSection(true);
+        fetch('/api/plans')
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data) => setPlans(normalizePlans(data)))
+          .catch(() => setPlans([]))
+          .finally(() => setLoadingPlans(false));
+      });
   }, []);
 
   const goToCheckout = (plan) => {
@@ -141,6 +160,16 @@ export default function PremiumPage() {
         <div className="max-w-7xl mx-auto">
           <EarlyBirdOfferCard className="mb-12 max-w-3xl mx-auto" />
 
+          {!showPricingSection && (
+            <div className="text-center py-16 px-6 rounded-3xl border border-dashed border-vd-border bg-vd-bg-section max-w-2xl mx-auto">
+              <p className="text-vd-text-sub text-sm">
+                Paid subscription plans are temporarily hidden. Early Bird offer above may still be available if slots remain.
+              </p>
+            </div>
+          )}
+
+          {showPricingSection && (
+          <>
           {/* Section header + controls */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -219,6 +248,8 @@ export default function PremiumPage() {
               onFreeActivate={handleFreeActivate}
               onLoginRequired={() => router.push('/login?callbackUrl=/premium')}
             />
+          )}
+          </>
           )}
 
           {/* Trust perks */}

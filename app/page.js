@@ -155,6 +155,7 @@ export default function Home() {
   const [hpFeatures, setHpFeatures] = useState([]);
   const [siteConfig, setSiteConfig] = useState({});
   const [contentLoaded, setContentLoaded] = useState(false);
+  const [showPricingSection, setShowPricingSection] = useState(true);
 
   // Derived — fall back to defaults if DB is empty
   const SLIDES = hpSlides.length > 0 ? hpSlides : DEFAULT_SLIDES;
@@ -192,11 +193,29 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/plans')
-      .then(r => (r.ok ? r.json() : Promise.reject()))
-      .then(data => setPricingPlans(normalizePlans(data)))
-      .catch(() => setPricingPlans([]))
-      .finally(() => setPricingPlansLoading(false));
+    fetch('/api/site/display-settings')
+      .then((r) => r.json())
+      .then((d) => {
+        const show = d.showPricingSection !== false;
+        setShowPricingSection(show);
+        if (!show) {
+          setPricingPlansLoading(false);
+          return;
+        }
+        fetch('/api/plans')
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data) => setPricingPlans(normalizePlans(data)))
+          .catch(() => setPricingPlans([]))
+          .finally(() => setPricingPlansLoading(false));
+      })
+      .catch(() => {
+        setShowPricingSection(true);
+        fetch('/api/plans')
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data) => setPricingPlans(normalizePlans(data)))
+          .catch(() => setPricingPlans([]))
+          .finally(() => setPricingPlansLoading(false));
+      });
   }, []);
 
   useEffect(() => {
@@ -584,7 +603,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* Pricing — admin can hide entire section */}
+      {showPricingSection && (
       <section className="relative py-16 sm:py-24 overflow-hidden bg-vd-bg">
         {/* Decorative background */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -693,6 +713,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* CTA — image slider + glass panel (cinematic text in all themes) */}
       <section className="relative min-h-[32rem] sm:min-h-[36rem] overflow-hidden isolate" data-cta-cinematic>

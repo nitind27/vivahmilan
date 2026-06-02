@@ -44,6 +44,7 @@ export async function POST(req) {
       durationUnit: body.durationUnit || current.durationUnit,
       durationValue: body.durationValue !== undefined ? body.durationValue : current.durationValue,
       autoAssignOnSignup: body.autoAssignOnSignup !== undefined ? body.autoAssignOnSignup : current.autoAssignOnSignup,
+      guestPopupEnabled: body.guestPopupEnabled !== undefined ? body.guestPopupEnabled : current.guestPopupEnabled,
       title: body.title ?? current.title,
       subtitle: body.subtitle ?? current.subtitle,
       claimed: body.resetClaimed ? 0 : current.claimed,

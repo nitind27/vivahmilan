@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Edit2, Plus, Users, Gift, Save } from 'lucide-react';
+import { Edit2, Plus, Users, Gift, Save, LayoutGrid, Megaphone } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const DEFAULT_PERMISSIONS = {
@@ -28,6 +28,7 @@ export default function PlansPage() {
   
   const [earlyBird, setEarlyBird] = useState({
     enabled: true,
+    guestPopupEnabled: true,
     limit: 1000,
     claimed: 0,
     planId: 'GOLD',
@@ -37,6 +38,8 @@ export default function PlansPage() {
     title: 'Early Bird Offer — Free Full Access',
     subtitle: 'First registered members get premium features free. Limited slots!',
   });
+  const [showPricingSection, setShowPricingSection] = useState(true);
+  const [savingDisplay, setSavingDisplay] = useState(false);
   const [slotsLeft, setSlotsLeft] = useState(1000);
   const [durationLabel, setDurationLabel] = useState('1 Year');
   const [savingEb, setSavingEb] = useState(false);
@@ -72,9 +75,32 @@ export default function PlansPage() {
       .catch(() => {});
   };
 
+  const loadDisplaySettings = () => {
+    fetch('/api/site/display-settings')
+      .then((r) => r.json())
+      .then((d) => setShowPricingSection(d.showPricingSection !== false))
+      .catch(() => {});
+  };
+
+  const saveDisplaySettings = async () => {
+    setSavingDisplay(true);
+    try {
+      const res = await fetch('/api/admin/siteconfig', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'show_pricing_section', value: showPricingSection ? '1' : '0' }),
+      });
+      if (res.ok) toast.success(showPricingSection ? 'Pricing section visible on site' : 'Pricing section hidden on site');
+      else toast.error('Failed to save display setting');
+    } finally {
+      setSavingDisplay(false);
+    }
+  };
+
   useEffect(() => {
     loadPlans();
     loadEarlyBird();
+    loadDisplaySettings();
   }, []);
 
   const savePlan = async () => {
@@ -154,6 +180,33 @@ export default function PlansPage() {
   return (
     <div className="space-y-6">
       <p className="text-gray-400 text-sm">Configure subscription plans, pricing, permissions, and early bird offers.</p>
+
+      {/* Homepage pricing visibility */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-vd-primary/20 text-vd-primary flex items-center justify-center">
+            <LayoutGrid className="w-5 h-5" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-bold text-lg text-white">Show pricing on website</h3>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Controls the homepage section <strong className="text-gray-300">&quot;Find Love with the Right Plan&quot;</strong> and paid plan cards on Premium page.
+              When OFF, no subscription plans are shown to visitors.
+            </p>
+          </div>
+          <Toggle value={showPricingSection} onChange={setShowPricingSection} />
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            onClick={saveDisplaySettings}
+            disabled={savingDisplay}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-xl text-sm text-white disabled:opacity-60"
+          >
+            <Save className="w-4 h-4" /> {savingDisplay ? 'Saving…' : 'Save visibility'}
+          </button>
+        </div>
+      </div>
       
       {/* Early Bird Settings */}
       <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 shadow-lg">
@@ -177,6 +230,22 @@ export default function PlansPage() {
             <div className="p-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-sm text-pink-200">
               Preview: First <strong>{earlyBird.limit}</strong> users receive <strong>{earlyBird.planId}</strong> plan free for{' '}
               <strong>{durationLabel}</strong> · <strong>{slotsLeft}</strong> slots remaining
+            </div>
+
+            <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-gray-900/80 border border-amber-500/30">
+              <div className="flex items-start gap-3">
+                <Megaphone className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-white text-sm">Guest popup (no login)</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Attractive popup for visitors who are not logged in. Shown once per browser session (refresh won&apos;t repeat; new browser session shows again).
+                  </p>
+                </div>
+              </div>
+              <Toggle
+                value={earlyBird.guestPopupEnabled !== false}
+                onChange={(v) => setEarlyBird((p) => ({ ...p, guestPopupEnabled: v }))}
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
