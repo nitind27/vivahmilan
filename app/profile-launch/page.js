@@ -84,6 +84,7 @@ export default function ProfileLaunchPage() {
   }, []);
 
   useEffect(() => {
+    if (status === 'loading') return;
     if (status === 'unauthenticated') {
       router.replace('/login');
       return;

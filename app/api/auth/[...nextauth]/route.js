@@ -263,6 +263,8 @@ export const authOptions = {
           user.adminVerified = false;
           user.isPremium = false;
           user.isNewUser = true;
+          const portalAccessNew = await getPortalAccessForUser({ email: user.email, role: 'USER' });
+          user.portalAccessGranted = portalAccessNew.granted;
 
           const ip = await getClientIPFromHeaders();
           recordRegistrationGeo(userId, null, { platform: 'web-google' }, { ipOverride: ip }).catch(e =>
@@ -296,6 +298,8 @@ export const authOptions = {
           user.adminVerified = !!dbUser.adminVerified;
           user.isPremium = false;
           user.isNewUser = true;
+          const portalAccessIncomplete = await getPortalAccessForUser({ email: dbUser.email, role: dbUser.role });
+          user.portalAccessGranted = portalAccessIncomplete.granted;
           return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 
@@ -322,6 +326,7 @@ export const authOptions = {
 
         if (dbUser.role === 'ADMIN') return '/admin';
         const portalAccess = await getPortalAccessForUser({ email: dbUser.email, role: dbUser.role });
+        user.portalAccessGranted = portalAccess.granted;
         return portalAccess.granted ? true : '/profile-launch';
       } catch (err) {
         console.error('Google signIn error:', err.message, err.stack);
