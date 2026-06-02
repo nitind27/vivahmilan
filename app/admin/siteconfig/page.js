@@ -194,14 +194,38 @@ export default function SiteConfigPage() {
             </p>
           </div>
         </div>
-        <div className="p-4 rounded-xl border bg-green-900/10 border-green-800/30 text-xs text-gray-400 space-y-2">
-          <p className="text-green-400 font-semibold text-sm">Active mode: Veriphone only (recommended)</p>
-          <ul className="list-disc pl-4 space-y-1">
-            <li>Register &amp; profile: user taps <strong className="text-gray-300">Check mobile number</strong></li>
-            <li>Invalid / landline numbers are rejected</li>
-            <li><strong className="text-gray-300">Free:</strong> 1,000 validations on signup at veriphone.io — then paid credits</li>
-            <li><strong className="text-gray-300">No SMS OTP</strong> — MSG91 not required</li>
-          </ul>
+        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.require_phone_validation !== '0' ? 'bg-green-900/10 border-green-800/30' : 'bg-gray-900/50 border-gray-700'}`}>
+          <div>
+            <p className="text-sm font-semibold text-white">
+              Require Verify button (Veriphone){' '}
+              <span className={config.require_phone_validation !== '0' ? 'text-green-400' : 'text-gray-400'}>
+                {config.require_phone_validation !== '0' ? 'ON' : 'OFF'}
+              </span>
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {config.require_phone_validation !== '0'
+                ? 'Register: user must tap Verify before Next. Invalid numbers are rejected.'
+                : 'Register: only enter mobile number — Next enabled without Verify (no Veriphone check).'}
+            </p>
+          </div>
+          <Toggle
+            value={config.require_phone_validation !== '0'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig((p) => ({ ...p, require_phone_validation: newVal }));
+              const res = await fetch('/api/admin/siteconfig', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'require_phone_validation', value: newVal }),
+              });
+              if (res.ok) {
+                toast.success(val ? 'Phone validation required (Verify button)' : 'Phone validation optional — no Verify needed');
+              } else {
+                toast.error('Failed');
+                setConfig((p) => ({ ...p, require_phone_validation: val ? '0' : '1' }));
+              }
+            }}
+          />
         </div>
         <div className={`flex items-center justify-between p-4 rounded-xl border ${config.phone_verification_required === '1' ? 'bg-amber-900/10 border-amber-800/40' : 'bg-gray-900/50 border-gray-700'}`}>
           <div>

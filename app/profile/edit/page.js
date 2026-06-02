@@ -126,6 +126,7 @@ function EditProfilePage() {
   const [phoneValidated, setPhoneValidated] = useState(false);
   const [checkingPhone, setCheckingPhone] = useState(false);
   const [initialPhone, setInitialPhone] = useState('');
+  const [requirePhoneValidation, setRequirePhoneValidation] = useState(true);
 
   const [form, setForm] = useState({
     // Basic
@@ -197,10 +198,18 @@ function EditProfilePage() {
   };
 
   const phoneNeedsValidation = () => {
+    if (!requirePhoneValidation) return false;
     if (!form.phone?.trim()) return true;
     if (form.phone !== initialPhone) return true;
     return !phoneValidated;
   };
+
+  useEffect(() => {
+    fetch('/api/site/registration-settings')
+      .then((r) => r.json())
+      .then((d) => setRequirePhoneValidation(d.requirePhoneValidation !== false))
+      .catch(() => setRequirePhoneValidation(true));
+  }, []);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -413,18 +422,24 @@ function EditProfilePage() {
                         <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Validated with Veriphone — checks valid mobile only (no SMS OTP). Required for all accounts.
-                    </p>
-                    {!phoneValidated && form.phone?.trim() && (
-                      <button
-                        type="button"
-                        onClick={checkPhoneNumber}
-                        disabled={checkingPhone}
-                        className="mt-2 w-full py-2 rounded-xl text-sm font-semibold border border-vd-primary text-vd-primary hover:bg-vd-accent-soft disabled:opacity-50 flex items-center justify-center gap-2"
-                      >
-                        {checkingPhone ? <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</> : 'Check mobile number'}
-                      </button>
+                    {requirePhoneValidation ? (
+                      <>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Tap Verify to check this is a valid mobile number (no SMS OTP).
+                        </p>
+                        {!phoneValidated && form.phone?.trim() && (
+                          <button
+                            type="button"
+                            onClick={checkPhoneNumber}
+                            disabled={checkingPhone}
+                            className="mt-2 w-full py-2 rounded-xl text-sm font-semibold border border-vd-primary text-vd-primary hover:bg-vd-accent-soft disabled:opacity-50 flex items-center justify-center gap-2"
+                          >
+                            {checkingPhone ? <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</> : 'Verify mobile number'}
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-xs text-gray-500 mt-1">Enter a valid mobile number format.</p>
                     )}
                   </div>
                   <div className="col-span-2">

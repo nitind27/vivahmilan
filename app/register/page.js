@@ -45,6 +45,7 @@ export default function RegisterPage() {
   const [phoneOtpSent, setPhoneOtpSent] = useState(false);
   const [phoneCountdown, setPhoneCountdown] = useState(0);
   const [phoneSmsOtpRequired, setPhoneSmsOtpRequired] = useState(false);
+  const [requirePhoneValidation, setRequirePhoneValidation] = useState(true);
   const [phoneValidated, setPhoneValidated] = useState(false);
   const [checkingPhone, setCheckingPhone] = useState(false);
   const verifiedPhoneDigitsRef = useRef('');
@@ -52,8 +53,14 @@ export default function RegisterPage() {
   useEffect(() => {
     fetch('/api/site/registration-settings')
       .then((r) => r.json())
-      .then((d) => setPhoneSmsOtpRequired(d.phoneSmsOtpRequired === true || d.phoneVerificationRequired === true))
-      .catch(() => setPhoneSmsOtpRequired(false));
+      .then((d) => {
+        setPhoneSmsOtpRequired(d.phoneSmsOtpRequired === true || d.phoneVerificationRequired === true);
+        setRequirePhoneValidation(d.requirePhoneValidation !== false);
+      })
+      .catch(() => {
+        setPhoneSmsOtpRequired(false);
+        setRequirePhoneValidation(true);
+      });
   }, []);
 
   useEffect(() => {
@@ -166,8 +173,8 @@ export default function RegisterPage() {
     if (phoneSmsOtpRequired && !phoneVerified) {
       e.phone = e.phone || 'Verify your mobile number with the SMS code';
     }
-    if (!phoneSmsOtpRequired && !phoneValidated) {
-      e.phone = e.phone || 'Please check your mobile number is valid';
+    if (requirePhoneValidation && !phoneSmsOtpRequired && !phoneValidated) {
+      e.phone = e.phone || 'Please verify your mobile number';
     }
     setTouched(p => ({ ...p, gender: true, phone: true }));
     setErrors(e);
@@ -243,19 +250,20 @@ export default function RegisterPage() {
     if (val && i < 5) document.getElementById(`reg-phone-otp-${i + 1}`)?.focus();
   };
 
-  const phoneReady = phoneSmsOtpRequired ? phoneVerified : phoneValidated;
+  const phoneFormatOk = !!form.phone?.trim() && phoneRegex.test(form.phone);
+  const phoneReady = phoneSmsOtpRequired
+    ? phoneVerified
+    : requirePhoneValidation
+      ? phoneValidated
+      : phoneFormatOk;
   const step1NextDisabled =
     step === 1 &&
-    (!form.gender ||
-      !form.phone?.trim() ||
-      !phoneRegex.test(form.phone) ||
-      !phoneReady ||
-      checkingPhone);
+    (!form.gender || !phoneFormatOk || !phoneReady || checkingPhone);
 
   const next = async () => {
     if (step === 0 && !validateStep0()) return;
     if (step === 1) {
-      if (!phoneSmsOtpRequired && !phoneValidated) {
+      if (requirePhoneValidation && !phoneSmsOtpRequired && !phoneValidated) {
         const ok = await checkPhoneNumber();
         if (!ok) return;
       }
@@ -464,7 +472,7 @@ export default function RegisterPage() {
                           <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
                         )}
                       </div>
-                      {!phoneSmsOtpRequired && (
+                      {requirePhoneValidation && !phoneSmsOtpRequired && (
                         <button
                           type="button"
                           onClick={checkPhoneNumber}

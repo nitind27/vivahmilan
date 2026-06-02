@@ -1,15 +1,24 @@
 import { NextResponse } from 'next/server';
-import { isPhoneVerificationRequired } from '@/lib/phoneVerificationSettings';
+import {
+  isPhoneVerificationRequired,
+  isRequirePhoneValidation,
+} from '@/lib/phoneVerificationSettings';
 
 export async function GET() {
   try {
-    const phoneSmsOtpRequired = await isPhoneVerificationRequired();
+    const [phoneSmsOtpRequired, requirePhoneValidation] = await Promise.all([
+      isPhoneVerificationRequired(),
+      isRequirePhoneValidation(),
+    ]);
     return NextResponse.json({
-      /** @deprecated use phoneSmsOtpRequired */
       phoneVerificationRequired: phoneSmsOtpRequired,
       phoneSmsOtpRequired,
-      /** Always on: number valid/invalid via Veriphone (no SMS) */
-      phoneValidationMethod: phoneSmsOtpRequired ? 'veriphone_and_sms' : 'veriphone',
+      requirePhoneValidation,
+      phoneValidationMethod: phoneSmsOtpRequired
+        ? 'sms_otp'
+        : requirePhoneValidation
+          ? 'veriphone'
+          : 'none',
       veriphoneEnabled: !!process.env.VERIPHONE_API_KEY?.trim(),
     });
   } catch (e) {
@@ -17,6 +26,7 @@ export async function GET() {
     return NextResponse.json({
       phoneVerificationRequired: false,
       phoneSmsOtpRequired: false,
+      requirePhoneValidation: true,
       phoneValidationMethod: 'veriphone',
       veriphoneEnabled: false,
     });
