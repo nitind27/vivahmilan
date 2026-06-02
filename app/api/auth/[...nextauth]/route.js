@@ -16,6 +16,43 @@ const ipv6Agent = new https.Agent({ family: 6 });
 const SESSION_REMEMBER_SEC = 60 * 60 * 24 * 30; // 30 days
 const SESSION_DEFAULT_SEC = 60 * 60 * 24; // 1 day
 
+const PROFILE_REQUIRED = ['gender', 'dob', 'height', 'religion', 'education', 'profession', 'country', 'city', 'aboutMe'];
+
+/** Load DB user into JWT after Google OAuth (OAuth profile alone lacks role/portal flags). */
+async function applyDbUserToToken(token, email) {
+  const dbUser = await queryOne(
+    'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, needsPassword, freeTrialExpiry FROM `user` WHERE email = ?',
+    [String(email).trim().toLowerCase()]
+  );
+  if (!dbUser) return token;
+
+  let profileIncomplete = false;
+  if (dbUser.role !== 'ADMIN') {
+    const profile = await queryOne(
+      'SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?',
+      [dbUser.id]
+    );
+    profileIncomplete = PROFILE_REQUIRED.some(f => !profile?.[f]);
+  }
+
+  const portalAccess = await getPortalAccessForUser({ email: dbUser.email, role: dbUser.role });
+  const trialActive = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
+
+  token.id = dbUser.id;
+  token.sub = dbUser.id;
+  token.role = dbUser.role;
+  token.isPremium = !!dbUser.isPremium;
+  token.premiumPlan = dbUser.premiumPlan || null;
+  token.freeTrialActive = !!trialActive;
+  token.freeTrialExpiry = dbUser.freeTrialExpiry ? dbUser.freeTrialExpiry.toISOString() : null;
+  token.isVerified = !!dbUser.isVerified;
+  token.adminVerified = !!dbUser.adminVerified;
+  token.needsPassword = !!dbUser.needsPassword;
+  token.isNewUser = profileIncomplete;
+  token.portalAccessGranted = portalAccess.granted;
+  return token;
+}
+
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -327,29 +364,41 @@ export const authOptions = {
         if (dbUser.role === 'ADMIN') return '/admin';
         const portalAccess = await getPortalAccessForUser({ email: dbUser.email, role: dbUser.role });
         user.portalAccessGranted = portalAccess.granted;
-        return portalAccess.granted ? true : '/profile-launch';
+        // Let callbackUrl (/profile-launch) handle redirect; return true so JWT is always created
+        return true;
       } catch (err) {
         console.error('Google signIn error:', err.message, err.stack);
         return '/login?error=ServerError';
       }
     },
 
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, account, trigger, session }) {
+      if (user?.email && account?.provider === 'google') {
+        try {
+          token = await applyDbUserToToken(token, user.email);
+        } catch (e) {
+          console.error('jwt google hydrate error:', e.message);
+        }
+      }
       if (user) {
-        token.id            = user.id;
-        token.role          = user.role;
-        token.isPremium     = user.isPremium;
-        token.premiumPlan   = user.premiumPlan;
-        token.freeTrialActive = user.freeTrialActive;
-        token.freeTrialExpiry = user.freeTrialExpiry || null;
-        token.isVerified    = user.isVerified;
-        token.adminVerified = user.adminVerified;
-        token.needsPassword = user.needsPassword || false;
-        token.isNewUser     = user.isNewUser || false;
-        token.rememberMe    = !!user.rememberMe;
-        token.familyAccessId = user.familyAccessId || null;
-        token.ownerName     = user.ownerName || null;
-        token.portalAccessGranted = user.portalAccessGranted !== undefined ? user.portalAccessGranted : true;
+        if (user.id) token.id = user.id;
+        if (user.role) token.role = user.role;
+        if (user.isPremium !== undefined) token.isPremium = user.isPremium;
+        if (user.premiumPlan !== undefined) token.premiumPlan = user.premiumPlan;
+        if (user.freeTrialActive !== undefined) token.freeTrialActive = user.freeTrialActive;
+        if (user.freeTrialExpiry !== undefined) token.freeTrialExpiry = user.freeTrialExpiry || null;
+        if (user.isVerified !== undefined) token.isVerified = user.isVerified;
+        if (user.adminVerified !== undefined) token.adminVerified = user.adminVerified;
+        if (user.needsPassword !== undefined) token.needsPassword = user.needsPassword;
+        if (user.isNewUser !== undefined) token.isNewUser = user.isNewUser;
+        token.rememberMe = !!user.rememberMe;
+        if (user.familyAccessId) token.familyAccessId = user.familyAccessId;
+        if (user.ownerName) token.ownerName = user.ownerName;
+        if (user.portalAccessGranted !== undefined) {
+          token.portalAccessGranted = user.portalAccessGranted;
+        } else if (token.portalAccessGranted === undefined) {
+          token.portalAccessGranted = true;
+        }
         const maxAgeSec = token.rememberMe ? SESSION_REMEMBER_SEC : SESSION_DEFAULT_SEC;
         token.exp = Math.floor(Date.now() / 1000) + maxAgeSec;
       }
@@ -381,7 +430,7 @@ export const authOptions = {
         session.user.familyAccessId = token.familyAccessId || null;
         session.user.ownerName      = token.ownerName || null;
         session.user.isFamilyLogin  = token.role === 'FAMILY';
-        session.user.portalAccessGranted = token.portalAccessGranted !== false;
+        session.user.portalAccessGranted = token.portalAccessGranted === true;
       }
       delete session.user.image;
       return session;

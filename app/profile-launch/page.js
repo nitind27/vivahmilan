@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, getSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
   Bell, Phone, Mail, LogOut, Heart, ShieldCheck, Loader2, CheckCircle2, Clock
@@ -49,6 +49,8 @@ export default function ProfileLaunchPage() {
   const router = useRouter();
   const [data, setData] = useState(null);
   const [checking, setChecking] = useState(true);
+  const [authResolved, setAuthResolved] = useState(false);
+  const [sessionFound, setSessionFound] = useState(false);
 
   const loadStatus = useCallback(async () => {
     try {
@@ -83,13 +85,42 @@ export default function ProfileLaunchPage() {
     };
   }, []);
 
+  // OAuth redirect: session cookie may arrive before useSession updates — poll getSession
   useEffect(() => {
+    if (status === 'authenticated') {
+      setSessionFound(true);
+      setAuthResolved(true);
+      return;
+    }
     if (status === 'loading') return;
-    if (status === 'unauthenticated') {
+
+    let cancelled = false;
+    (async () => {
+      for (let i = 0; i < 30; i++) {
+        const s = await getSession();
+        if (s?.user?.id) {
+          if (!cancelled) {
+            setSessionFound(true);
+            setAuthResolved(true);
+            router.refresh();
+          }
+          return;
+        }
+        await new Promise(r => setTimeout(r, 200));
+      }
+      if (!cancelled) setAuthResolved(true);
+    })();
+
+    return () => { cancelled = true; };
+  }, [status]);
+
+  useEffect(() => {
+    if (!authResolved) return;
+    if (!sessionFound && status !== 'authenticated') {
       router.replace('/login');
       return;
     }
-    if (status === 'authenticated') {
+    if (status === 'authenticated' || sessionFound) {
       if (session?.user?.role === 'ADMIN') {
         router.replace('/admin');
         return;
@@ -98,9 +129,9 @@ export default function ProfileLaunchPage() {
       const id = setInterval(loadStatus, 30000);
       return () => clearInterval(id);
     }
-  }, [status, session, router, loadStatus]);
+  }, [authResolved, sessionFound, status, session, router, loadStatus]);
 
-  if (status === 'loading' || checking) {
+  if (!authResolved || status === 'loading' || checking) {
     return <SiteLoader message="Loading…" />;
   }
 

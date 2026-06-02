@@ -270,11 +270,15 @@ function LoginInner() {
     const defaultPath =
       session.user.role === 'ADMIN'
         ? '/admin'
-        : session.user.portalAccessGranted === false
+        : session.user.adminVerified && session.user.portalAccessGranted === false
           ? '/profile-launch'
           : '/dashboard';
     const callbackUrl = searchParams?.get('callbackUrl');
-    if (callbackUrl && callbackUrl.startsWith('/') && session.user.portalAccessGranted !== false) {
+    if (
+      callbackUrl &&
+      callbackUrl.startsWith('/') &&
+      !(session.user.adminVerified && session.user.portalAccessGranted === false)
+    ) {
       router.replace(callbackUrl);
     } else {
       router.replace(defaultPath);
@@ -333,10 +337,10 @@ function LoginInner() {
       const callbackUrl = searchParams?.get('callbackUrl');
       const defaultPath = s?.user?.role === 'ADMIN'
         ? '/admin'
-        : s?.user?.portalAccessGranted === false
+        : s?.user?.adminVerified && s?.user?.portalAccessGranted === false
           ? '/profile-launch'
           : '/dashboard';
-      if (callbackUrl && callbackUrl.startsWith('/') && s?.user?.portalAccessGranted !== false) {
+      if (callbackUrl && callbackUrl.startsWith('/') && !(s?.user?.adminVerified && s?.user?.portalAccessGranted === false)) {
         router.push(callbackUrl);
       } else {
         router.push(defaultPath);
@@ -348,6 +352,10 @@ function LoginInner() {
     `w-full pl-11 pr-4 py-3 border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light input-focus transition-all ${
       touched[field] && errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-vd-border'
     }`;
+
+  if (status === 'loading' || status === 'authenticated') {
+    return <SiteLoader message="Signing you in…" size="lg" />;
+  }
 
   if (pendingEmail) {
     return (

@@ -60,8 +60,24 @@ export async function middleware(req) {
     }
   }
 
-  if (pathname.startsWith('/profile-launch') && token && (token.role === 'USER' || token.role === 'FAMILY') && token.portalAccessGranted === true) {
+  if (
+    pathname.startsWith('/profile-launch') &&
+    token &&
+    (token.role === 'USER' || token.role === 'FAMILY') &&
+    token.portalAccessGranted === true
+  ) {
     return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+
+  // After Google OAuth: logged-in verified user should not stay stuck on /login
+  if (
+    pathname.startsWith('/login') &&
+    token &&
+    (token.role === 'USER' || token.role === 'FAMILY') &&
+    token.adminVerified === true &&
+    token.portalAccessGranted === false
+  ) {
+    return NextResponse.redirect(new URL('/profile-launch', req.url));
   }
 
   if (pathname.startsWith('/api/admin')) {
