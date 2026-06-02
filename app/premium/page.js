@@ -11,6 +11,7 @@ import {
   Eye, TrendingUp, Lock, Crown, Sparkles, ChevronDown,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import EarlyBirdOfferCard from '@/components/EarlyBirdOfferCard';
 
 const PERKS = [
   { icon: MessageCircle, title: 'Unlimited Chat', desc: 'Chat freely with all your matches.' },
@@ -133,6 +134,8 @@ export default function PremiumPage() {
       {/* Plans */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
+          <EarlyBirdOfferCard className="mb-10 max-w-4xl mx-auto" />
+
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
             <h2 className="text-4xl font-bold mb-4">Simple <span className="vd-gradient-text">Pricing</span></h2>
             <p className="text-vd-text-sub mb-6">Choose the plan that works for you.</p>

@@ -86,9 +86,9 @@ export async function POST(req) {
         console.error('[flutter google signup] geo log error:', e.message)
       );
 
-      const { tryAssignEarlyBirdToUser } = await import('@/lib/earlyBird');
+      const { tryAutoAssignEarlyBirdOnSignup } = await import('@/lib/earlyBird');
       try {
-        await tryAssignEarlyBirdToUser(newUserId);
+        await tryAutoAssignEarlyBirdOnSignup(newUserId);
         user = await queryOne(
           `SELECT id, name, email, phone, password, role, isActive, isPremium, premiumPlan,
                   adminVerified, emailVerified, freeTrialExpiry, verificationBadge, premiumExpiry

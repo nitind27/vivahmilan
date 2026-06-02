@@ -67,9 +67,9 @@ export async function POST(req) {
 
         let isPremiumUser = false;
         let assignedPlan = null;
-        const { tryAssignEarlyBirdToUser } = await import('@/lib/earlyBird');
+        const { tryAutoAssignEarlyBirdOnSignup } = await import('@/lib/earlyBird');
         try {
-          const earlyBird = await tryAssignEarlyBirdToUser(userId);
+          const earlyBird = await tryAutoAssignEarlyBirdOnSignup(userId);
           if (earlyBird.assigned) {
             isPremiumUser = true;
             assignedPlan = earlyBird.planId;

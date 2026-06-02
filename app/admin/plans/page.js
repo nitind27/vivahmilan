@@ -26,8 +26,20 @@ export default function PlansPage() {
   const [plans, setPlans] = useState([]);
   const [editPlan, setEditPlan] = useState(null);
   
-  const [earlyBird, setEarlyBird] = useState({ enabled: true, limit: 1000, claimed: 0, planId: 'GOLD', durationDays: 365 });
-  const [loadingEarlyBird, setLoadingEarlyBird] = useState(true);
+  const [earlyBird, setEarlyBird] = useState({
+    enabled: true,
+    limit: 1000,
+    claimed: 0,
+    planId: 'GOLD',
+    durationUnit: 'years',
+    durationValue: 1,
+    autoAssignOnSignup: true,
+    title: 'Early Bird Offer — Free Full Access',
+    subtitle: 'First registered members get premium features free. Limited slots!',
+  });
+  const [slotsLeft, setSlotsLeft] = useState(1000);
+  const [durationLabel, setDurationLabel] = useState('1 Year');
+  const [savingEb, setSavingEb] = useState(false);
   const [seeding, setSeeding] = useState(false);
 
   const loadPlans = () => {
@@ -49,16 +61,20 @@ export default function PlansPage() {
     }
   };
 
+  const loadEarlyBird = () => {
+    fetch('/api/admin/early-bird')
+      .then(r => r.json())
+      .then(d => {
+        if (d.settings) setEarlyBird(d.settings);
+        if (d.slotsLeft != null) setSlotsLeft(d.slotsLeft);
+        if (d.durationLabel) setDurationLabel(d.durationLabel);
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     loadPlans();
-    fetch('/api/admin/siteconfig').then(r => r.json()).then(d => {
-      if (d.early_bird_settings) {
-        try {
-          setEarlyBird(JSON.parse(d.early_bird_settings));
-        } catch(e) {}
-      }
-      setLoadingEarlyBird(false);
-    });
+    loadEarlyBird();
   }, []);
 
   const savePlan = async () => {
@@ -83,12 +99,42 @@ export default function PlansPage() {
   };
 
   const saveEarlyBird = async () => {
-    const res = await fetch('/api/admin/siteconfig', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: 'early_bird_settings', value: JSON.stringify(earlyBird) })
-    });
-    if (res.ok) toast.success('Early Bird settings saved');
-    else toast.error('Failed to save Early Bird settings');
+    setSavingEb(true);
+    try {
+      const res = await fetch('/api/admin/early-bird', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(earlyBird),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || 'Early Bird settings saved');
+        if (data.settings) setEarlyBird(data.settings);
+        if (data.slotsLeft != null) setSlotsLeft(data.slotsLeft);
+        if (data.durationLabel) setDurationLabel(data.durationLabel);
+      } else toast.error(data.error || 'Failed to save');
+    } finally {
+      setSavingEb(false);
+    }
+  };
+
+  const resetEarlyBirdCount = async () => {
+    if (!confirm('Reset claimed count to match database? Use only if count is wrong.')) return;
+    setSavingEb(true);
+    try {
+      const res = await fetch('/api/admin/early-bird', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...earlyBird, resetClaimed: false }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        loadEarlyBird();
+        toast.success('Count synced from database');
+      }
+    } finally {
+      setSavingEb(false);
+    }
   };
 
   const openNewPlan = () => {
@@ -127,36 +173,80 @@ export default function PlansPage() {
         </div>
 
         {earlyBird.enabled && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 bg-gray-950/30 p-4 rounded-xl border border-gray-800">
-            <div>
-              <label className="text-xs text-gray-400 mb-1 block">Plan to Assign</label>
-              <select value={earlyBird.planId} onChange={e => setEarlyBird(p => ({...p, planId: e.target.value}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500">
-                {plans.map(p => <option key={p.plan} value={p.plan}>{p.displayName} ({p.plan})</option>)}
-              </select>
+          <div className="mt-4 space-y-4 bg-gray-950/30 p-4 rounded-xl border border-gray-800">
+            <div className="p-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-sm text-pink-200">
+              Preview: Pehle <strong>{earlyBird.limit}</strong> users ko <strong>{earlyBird.planId}</strong> plan{' '}
+              <strong>{durationLabel}</strong> ke liye FREE milega · <strong>{slotsLeft}</strong> slots bache
             </div>
-            <div>
-              <label className="text-xs text-gray-400 mb-1 block">User Limit (e.g. 1000)</label>
-              <input type="number" min={1} value={earlyBird.limit} onChange={e => setEarlyBird(p => ({...p, limit: parseInt(e.target.value, 10) || 0}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
-            </div>
-            <div>
-              <label className="text-xs text-gray-400 mb-1 block">Free Duration (Days)</label>
-              <input type="number" min={1} value={earlyBird.durationDays} onChange={e => setEarlyBird(p => ({...p, durationDays: parseInt(e.target.value, 10) || 365}))} className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
-              <p className="text-[10px] text-gray-600 mt-1">365 = 1 year free</p>
-            </div>
-            <div>
-              <label className="text-xs text-gray-400 mb-1 block">Claimed / Remaining</label>
-              <div className="flex flex-col gap-1">
-                <span className="text-xl font-bold text-pink-400">{earlyBird.claimed} / {earlyBird.limit}</span>
-                <span className="text-xs text-green-400">{Math.max(0, (earlyBird.limit || 0) - (earlyBird.claimed || 0))} slots left</span>
-                <button type="button" onClick={() => setEarlyBird(p => ({...p, claimed: 0}))} className="text-xs text-gray-500 hover:text-white border border-gray-700 px-2 py-1 rounded w-fit">Reset count</button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Kitne users? (e.g. 1000)</label>
+                <input type="number" min={1} value={earlyBird.limit}
+                  onChange={e => setEarlyBird(p => ({ ...p, limit: parseInt(e.target.value, 10) || 1 }))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
               </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Free duration type</label>
+                <select value={earlyBird.durationUnit || 'years'}
+                  onChange={e => setEarlyBird(p => ({ ...p, durationUnit: e.target.value }))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500">
+                  <option value="years">Years (Saal)</option>
+                  <option value="days">Days (Din)</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">
+                  {earlyBird.durationUnit === 'days' ? 'Kitne din?' : 'Kitne saal?'}
+                </label>
+                <input type="number" min={1} value={earlyBird.durationValue ?? 1}
+                  onChange={e => setEarlyBird(p => ({ ...p, durationValue: parseInt(e.target.value, 10) || 1 }))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Plan (full access)</label>
+                <select value={earlyBird.planId} onChange={e => setEarlyBird(p => ({ ...p, planId: e.target.value }))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500">
+                  {plans.length === 0 && <option value="GOLD">GOLD</option>}
+                  {plans.map(p => <option key={p.plan} value={p.plan}>{p.displayName} ({p.plan})</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Claimed / Limit</label>
+                <p className="text-2xl font-bold text-pink-400">{earlyBird.claimed} / {earlyBird.limit}</p>
+                <p className="text-xs text-green-400">{slotsLeft} slots left</p>
+                <button type="button" onClick={resetEarlyBirdCount}
+                  className="mt-2 text-xs text-gray-500 hover:text-white border border-gray-700 px-2 py-1 rounded">
+                  Sync count from DB
+                </button>
+              </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                  <input type="checkbox" checked={earlyBird.autoAssignOnSignup !== false}
+                    onChange={e => setEarlyBird(p => ({ ...p, autoAssignOnSignup: e.target.checked }))}
+                    className="rounded" />
+                  Auto-assign on new registration
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-gray-400 mb-1 block">Offer title (Premium page)</label>
+              <input value={earlyBird.title || ''} onChange={e => setEarlyBird(p => ({ ...p, title: e.target.value }))}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 mb-1 block">Offer subtitle</label>
+              <textarea rows={2} value={earlyBird.subtitle || ''} onChange={e => setEarlyBird(p => ({ ...p, subtitle: e.target.value }))}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500 resize-none" />
             </div>
           </div>
         )}
-        
+
         <div className="flex justify-end mt-4">
-          <button onClick={saveEarlyBird} className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl text-sm transition-colors text-white">
-            <Save className="w-4 h-4" /> Save Settings
+          <button onClick={saveEarlyBird} disabled={savingEb}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl text-sm transition-colors text-white disabled:opacity-60">
+            <Save className="w-4 h-4" /> {savingEb ? 'Saving…' : 'Save Early Bird Settings'}
           </button>
         </div>
       </div>

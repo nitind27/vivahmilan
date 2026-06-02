@@ -5,7 +5,7 @@ const PUBLIC_PREFIXES = [
   '/login', '/register', '/forgot-password', '/verify-email', '/google-verify',
   '/onboarding', '/register/complete', '/api/auth', '/api/register', '/api/public',
   '/api/stories', '/api/kyc', '/kyc', '/maintenance', '/terms', '/privacy',
-  '/api/plans', '/profile-launch', '/api/portal-access',
+  '/api/plans', '/profile-launch', '/api/portal-access', '/api/early-bird',
   '/refund', '/cookies', '/safety', '/help', '/contact', '/report-abuse',
   '/stories', '/share-story', '/payment/status', '/api/chatbot',
 ];

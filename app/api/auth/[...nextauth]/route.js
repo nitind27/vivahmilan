@@ -274,10 +274,10 @@ export const authOptions = {
             [profileId, userId, now, now]
           );
 
-          const { tryAssignEarlyBirdToUser } = await import('@/lib/earlyBird');
+          const { tryAutoAssignEarlyBirdOnSignup } = await import('@/lib/earlyBird');
           let earlyBird = { assigned: false };
           try {
-            earlyBird = await tryAssignEarlyBirdToUser(userId);
+            earlyBird = await tryAutoAssignEarlyBirdOnSignup(userId);
           } catch (e) {
             console.error('Early bird assign error:', e.message);
           }

@@ -15,6 +15,7 @@ import {
   TrendingUp, Sparkles, ArrowRight, CheckCircle, Percent, HandCoins, Share2, Bookmark
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import EarlyBirdOfferCard from '@/components/EarlyBirdOfferCard';
 
 // ── Countdown hook ────────────────────────────────────────────────────────────
 function useCountdown(expiryISO) {
@@ -543,6 +544,8 @@ export default function Dashboard() {
           isPremium={session?.user?.isPremium}
           freeTrialActive={session?.user?.freeTrialActive}
         />
+
+        <EarlyBirdOfferCard className="mb-6" />
 
         {/* Affiliate Dashboard */}
         <AffiliateCard agent={profile?.agent} />

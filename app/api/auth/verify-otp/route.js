@@ -83,8 +83,8 @@ export async function POST(req) {
           });
         } catch {}
 
-        const { tryAssignEarlyBirdToUser } = await import('@/lib/earlyBird');
-        tryAssignEarlyBirdToUser(userId).catch(e => console.error('Early bird assign error:', e.message));
+        const { tryAutoAssignEarlyBirdOnSignup } = await import('@/lib/earlyBird');
+        tryAutoAssignEarlyBirdOnSignup(userId).catch(e => console.error('Early bird assign error:', e.message));
 
         return NextResponse.json({
           success: true,
