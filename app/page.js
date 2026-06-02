@@ -5,14 +5,13 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/components/Navbar';
 import SiteLoader, { SiteLoaderInline } from '@/components/SiteLoader';
-import { normalizePlans, parsePlanPermissions } from '@/lib/plans.js';
+import { normalizePlans } from '@/lib/plans.js';
+import PricingPlanGrid from '@/components/PricingPlanGrid';
 import CookieManageButton from '@/components/CookieManageButton';
 import {
   Heart, Search, Shield, Star, Globe, CheckCircle, Users, Award, TrendingUp,
   Sparkles, Crown, Ticket, ArrowRight, Zap,
 } from 'lucide-react';
-
-const PLAN_ICONS = { FREE: Heart, SILVER: Star, GOLD: Crown, PLATINUM: Award, BRONZE: Zap };
 
 // ── Default Data (fallback) ──────────────────────────────────────────────────
 const DEFAULT_SLIDES = [
@@ -105,10 +104,6 @@ const DURATION_OPTIONS = [
   { label: '12 Months', months: 12 },
   { label: 'Lifetime', months: 0 },  // 0 = lifetime
 ];
-
-function formatINR(amount) {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
-}
 
 const ICON_MAP = { Search, Shield, Globe, Heart, Users, Award, TrendingUp, Star };
 
@@ -678,193 +673,14 @@ export default function Home() {
 
           {pricingPlansLoading ? (
             <SiteLoaderInline message="Loading plans…" className="py-16" />
-          ) : pricingPlans.length === 0 ? (
-            <div className="text-center text-vd-text-sub py-16">
-              <Sparkles className="w-8 h-8 mx-auto mb-3 text-vd-primary/50" />
-              <p className="font-medium">Plans coming soon</p>
-              <Link href="/premium" className="text-vd-primary text-sm underline mt-2 inline-block">View Premium page</Link>
-            </div>
           ) : (
-            <div className={`grid gap-5 sm:gap-6 max-w-6xl mx-auto items-stretch ${
-              pricingPlans.length <= 2 ? 'md:grid-cols-2' : pricingPlans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'
-            }`}>
-              {pricingPlans.map((p, i) => {
-                const basePrice = Number(p.price || 0);
-                const baseDays = Number(p.durationDays || 30);
-                const pricePerDay = baseDays > 0 ? basePrice / baseDays : 0;
-                const isLifetime = selectedMonths === 0;
-                const isFree = basePrice === 0;
-                const totalDays = isLifetime ? 0 : selectedMonths * 30;
-                let totalPrice = isFree ? 0 : isLifetime ? 4999 : Math.round(pricePerDay * totalDays);
-                const discount = couponStatus?.valid ? couponStatus.discountPct : 0;
-                const discountedPrice = isFree ? 0 : Math.round(totalPrice * (1 - discount / 100));
-                const isHighlight = p.plan === 'GOLD';
-                const PlanIcon = PLAN_ICONS[p.plan] || Star;
-                const perms = parsePlanPermissions(p.permissions);
-                const features = [
-                  perms.canChat && 'Unlimited Chat',
-                  perms.canSeeContact && 'See Contact Details',
-                  perms.canBoostProfile && 'Profile Boost',
-                  perms.canSeeWhoViewed && 'See Who Viewed You',
-                  perms.unlimitedInterests && 'Unlimited Interests',
-                  perms.aiMatchScore && 'AI Match Score',
-                  !perms.unlimitedInterests && perms.interestLimit > 0 && `Send ${perms.interestLimit} Interests`,
-                  'Browse Matches',
-                  'Create Profile',
-                ].filter(Boolean);
-                const monthlyEquiv = !isFree && !isLifetime && selectedMonths > 0
-                  ? Math.round(discountedPrice / selectedMonths)
-                  : null;
-
-                return (
-                  <motion.div
-                    key={p.plan}
-                    initial={{ opacity: 0, y: 32 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1, duration: 0.5 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -8 }}
-                    className={`group relative flex flex-col rounded-3xl overflow-hidden transition-shadow duration-300 ${
-                      isHighlight
-                        ? 'md:-mt-2 md:mb-2 ring-2 ring-vd-primary/60 shadow-2xl shadow-vd-primary/20 bg-gradient-to-b from-[#3d3220] via-[#2a2318] to-[#1c1812] text-white z-10'
-                        : 'bg-vd-bg-section border border-vd-border shadow-lg hover:shadow-xl hover:border-vd-primary/30'
-                    }`}
-                  >
-                    {/* Top accent strip */}
-                    {!isHighlight && (
-                      <div className="h-1 w-full vd-gradient-gold opacity-70 group-hover:opacity-100 transition-opacity" />
-                    )}
-                    {isHighlight && (
-                      <div className="h-1.5 w-full bg-gradient-to-r from-yellow-300 via-vd-primary-light to-yellow-300" />
-                    )}
-
-                    {/* Badges */}
-                    {isHighlight && (
-                      <div className="absolute top-4 right-4 z-10">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-yellow-400 text-yellow-950 text-[10px] sm:text-xs font-bold shadow-md">
-                          <Crown className="w-3 h-3" /> Popular
-                        </span>
-                      </div>
-                    )}
-                    {isLifetime && !isFree && !isHighlight && (
-                      <div className="absolute top-4 right-4 z-10">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-500 text-white text-[10px] sm:text-xs font-bold">
-                          Best Value
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="p-5 sm:p-6 flex flex-col flex-1">
-                      {/* Plan header */}
-                      <div className="flex items-start gap-3 mb-5">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md ${
-                          isHighlight ? 'bg-white/15 ring-1 ring-white/20' : 'vd-gradient-gold'
-                        }`}>
-                          <PlanIcon className={`w-5 h-5 ${isHighlight ? 'text-yellow-300' : 'text-white'}`} />
-                        </div>
-                        <div className="min-w-0 pt-0.5">
-                          <h3 className={`text-lg sm:text-xl font-bold leading-tight ${isHighlight ? 'text-white' : 'text-vd-text-heading'}`}>
-                            {p.displayName || p.plan}
-                          </h3>
-                          {p.description && (
-                            <p className={`text-xs mt-1 leading-relaxed ${isHighlight ? 'text-white/65' : 'text-vd-text-sub'}`}>
-                              {p.description}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Price block */}
-                      <div className={`rounded-2xl p-4 mb-5 ${isHighlight ? 'bg-white/10 ring-1 ring-white/10' : 'bg-vd-bg-alt dark:bg-vd-bg/50'}`}>
-                        <div className="flex items-end gap-2 flex-wrap">
-                          {isFree ? (
-                            <span className={`text-3xl sm:text-4xl font-bold ${isHighlight ? 'text-white' : 'vd-gradient-text'}`}>Free</span>
-                          ) : (
-                            <>
-                              {discount > 0 && (
-                                <span className={`text-sm line-through mb-1 ${isHighlight ? 'text-white/45' : 'text-vd-text-light'}`}>
-                                  {formatINR(totalPrice)}
-                                </span>
-                              )}
-                              <span className={`text-3xl sm:text-4xl font-bold tracking-tight ${isHighlight ? 'text-white' : 'text-vd-text-heading'}`}>
-                                {formatINR(discountedPrice)}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                        <p className={`text-xs mt-1.5 ${isHighlight ? 'text-white/60' : 'text-vd-text-sub'}`}>
-                          {isFree && 'forever · no credit card'}
-                          {!isFree && isLifetime && 'one-time · lifetime access'}
-                          {!isFree && !isLifetime && (
-                            <>
-                              for {selectedMonths} month{selectedMonths > 1 ? 's' : ''}
-                              {monthlyEquiv && (
-                                <span className={`ml-1.5 font-semibold ${isHighlight ? 'text-vd-primary-light' : 'text-vd-primary'}`}>
-                                  (~{formatINR(monthlyEquiv)}/mo)
-                                </span>
-                              )}
-                            </>
-                          )}
-                          {discount > 0 && !isFree && (
-                            <span className="ml-1.5 text-green-400 font-semibold">({discount}% off)</span>
-                          )}
-                        </p>
-                      </div>
-
-                      {/* Features */}
-                      <div className={`flex-1 border-t pt-5 mb-5 ${isHighlight ? 'border-white/10' : 'border-vd-border'}`}>
-                        <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighlight ? 'text-white/50' : 'text-vd-text-light'}`}>
-                          What&apos;s included
-                        </p>
-                        <ul className="space-y-2.5">
-                          {features.map(f => (
-                            <li key={f} className="flex items-start gap-2.5 text-sm">
-                              <span className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                isHighlight ? 'bg-white/15' : 'bg-vd-primary/10'
-                              }`}>
-                                <CheckCircle className={`w-3 h-3 ${isHighlight ? 'text-yellow-300' : 'text-vd-primary'}`} />
-                              </span>
-                              <span className={isHighlight ? 'text-white/85' : 'text-vd-text-sub'}>{f}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* CTA */}
-                      {(() => {
-                        const userPlan = session?.user?.premiumPlan;
-                        const hasAnyPlan = session?.user?.isPremium;
-                        const isActive = p.plan === userPlan && hasAnyPlan;
-                        const userPlanObj = pricingPlans.find(pl => pl.plan === userPlan);
-                        const userBasePrice = userPlanObj ? Number(userPlanObj.price || 0) : 0;
-                        const currentBasePrice = Number(p.price || 0);
-
-                        let btnText = `Get ${p.displayName || p.plan}`;
-                        if (hasAnyPlan) {
-                          if (isActive) btnText = 'Extend Plan';
-                          else if (currentBasePrice > userBasePrice) btnText = `Upgrade to ${p.displayName || p.plan}`;
-                          else btnText = `Switch to ${p.displayName || p.plan}`;
-                        }
-
-                        return (
-                          <Link
-                            href={isFree ? '/register' : '/premium'}
-                            className={`group/btn flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 ${
-                              isHighlight
-                                ? 'bg-white text-vd-primary-dark hover:bg-vd-primary-light hover:shadow-lg hover:shadow-white/20'
-                                : 'vd-gradient-gold text-white hover:opacity-90 hover:shadow-lg hover:shadow-vd-primary/25'
-                            }`}
-                          >
-                            {isFree ? 'Get Started Free' : btnText}
-                            <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
-                          </Link>
-                        );
-                      })()}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+            <PricingPlanGrid
+              plans={pricingPlans}
+              selectedMonths={selectedMonths}
+              discountPct={couponStatus?.valid ? couponStatus.discountPct : 0}
+              session={session}
+              mode="link"
+            />
           )}
 
           {/* Trust strip */}
