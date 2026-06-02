@@ -23,6 +23,7 @@ const TYPE_META = {
   PROFILE_VIEWED: { icon: Eye, gradient: 'from-teal-500 to-cyan-600', label: 'Profile view' },
   SUBSCRIPTION_EXPIRY: { icon: Crown, gradient: 'from-amber-500 to-orange-600', label: 'Subscription' },
   VERIFICATION_APPROVED: { icon: Shield, gradient: 'from-blue-500 to-indigo-600', label: 'Verified' },
+  VERIFICATION_REJECTED: { icon: Shield, gradient: 'from-red-500 to-rose-600', label: 'Not approved' },
   NEW_MATCH: { icon: Sparkles, gradient: 'from-vd-primary to-amber-600', label: 'New match' },
   SYSTEM: { icon: Bell, gradient: 'from-slate-500 to-slate-700', label: 'Update' },
 };

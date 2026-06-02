@@ -2245,6 +2245,8 @@ export const UserScalarFieldEnum = {
   freeTrialUsed: 'freeTrialUsed',
   freeTrialExpiry: 'freeTrialExpiry',
   needsPassword: 'needsPassword',
+  profileRejectionReason: 'profileRejectionReason',
+  profileRejectedAt: 'profileRejectedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2651,7 +2653,8 @@ export const userOrderByRelevanceFieldEnum = {
   image: 'image',
   password: 'password',
   phone: 'phone',
-  premiumPlan: 'premiumPlan'
+  premiumPlan: 'premiumPlan',
+  profileRejectionReason: 'profileRejectionReason'
 } as const
 
 export type userOrderByRelevanceFieldEnum = (typeof userOrderByRelevanceFieldEnum)[keyof typeof userOrderByRelevanceFieldEnum]

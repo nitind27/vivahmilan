@@ -48,6 +48,8 @@ export type UserMinAggregateOutputType = {
   freeTrialUsed: boolean | null
   freeTrialExpiry: Date | null
   needsPassword: boolean | null
+  profileRejectionReason: string | null
+  profileRejectedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -76,6 +78,8 @@ export type UserMaxAggregateOutputType = {
   freeTrialUsed: boolean | null
   freeTrialExpiry: Date | null
   needsPassword: boolean | null
+  profileRejectionReason: string | null
+  profileRejectedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -104,6 +108,8 @@ export type UserCountAggregateOutputType = {
   freeTrialUsed: number
   freeTrialExpiry: number
   needsPassword: number
+  profileRejectionReason: number
+  profileRejectedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -134,6 +140,8 @@ export type UserMinAggregateInputType = {
   freeTrialUsed?: true
   freeTrialExpiry?: true
   needsPassword?: true
+  profileRejectionReason?: true
+  profileRejectedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -162,6 +170,8 @@ export type UserMaxAggregateInputType = {
   freeTrialUsed?: true
   freeTrialExpiry?: true
   needsPassword?: true
+  profileRejectionReason?: true
+  profileRejectedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -190,6 +200,8 @@ export type UserCountAggregateInputType = {
   freeTrialUsed?: true
   freeTrialExpiry?: true
   needsPassword?: true
+  profileRejectionReason?: true
+  profileRejectedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -291,6 +303,8 @@ export type UserGroupByOutputType = {
   freeTrialUsed: boolean
   freeTrialExpiry: Date | null
   needsPassword: boolean
+  profileRejectionReason: string | null
+  profileRejectedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -340,6 +354,8 @@ export type userWhereInput = {
   freeTrialUsed?: Prisma.BoolFilter<"user"> | boolean
   freeTrialExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   needsPassword?: Prisma.BoolFilter<"user"> | boolean
+  profileRejectionReason?: Prisma.StringNullableFilter<"user"> | string | null
+  profileRejectedAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -393,6 +409,8 @@ export type userOrderByWithRelationInput = {
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   needsPassword?: Prisma.SortOrder
+  profileRejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileRejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.accountOrderByRelationAggregateInput
@@ -450,6 +468,8 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   freeTrialUsed?: Prisma.BoolFilter<"user"> | boolean
   freeTrialExpiry?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   needsPassword?: Prisma.BoolFilter<"user"> | boolean
+  profileRejectionReason?: Prisma.StringNullableFilter<"user"> | string | null
+  profileRejectedAt?: Prisma.DateTimeNullableFilter<"user"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -503,6 +523,8 @@ export type userOrderByWithAggregationInput = {
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   needsPassword?: Prisma.SortOrder
+  profileRejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileRejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.userCountOrderByAggregateInput
@@ -537,6 +559,8 @@ export type userScalarWhereWithAggregatesInput = {
   freeTrialUsed?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
   freeTrialExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
   needsPassword?: Prisma.BoolWithAggregatesFilter<"user"> | boolean
+  profileRejectionReason?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
+  profileRejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"user"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
 }
@@ -565,6 +589,8 @@ export type userCreateInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -618,6 +644,8 @@ export type userUncheckedCreateInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -671,6 +699,8 @@ export type userUpdateInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -724,6 +754,8 @@ export type userUncheckedUpdateInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -777,6 +809,8 @@ export type userCreateManyInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -805,6 +839,8 @@ export type userUpdateManyMutationInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -833,6 +869,8 @@ export type userUncheckedUpdateManyInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -872,6 +910,8 @@ export type userCountOrderByAggregateInput = {
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrder
   needsPassword?: Prisma.SortOrder
+  profileRejectionReason?: Prisma.SortOrder
+  profileRejectedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -900,6 +940,8 @@ export type userMaxOrderByAggregateInput = {
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrder
   needsPassword?: Prisma.SortOrder
+  profileRejectionReason?: Prisma.SortOrder
+  profileRejectedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -928,6 +970,8 @@ export type userMinOrderByAggregateInput = {
   freeTrialUsed?: Prisma.SortOrder
   freeTrialExpiry?: Prisma.SortOrder
   needsPassword?: Prisma.SortOrder
+  profileRejectionReason?: Prisma.SortOrder
+  profileRejectedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1318,6 +1362,8 @@ export type userCreateWithoutAccountsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.sessionCreateNestedManyWithoutUserInput
@@ -1370,6 +1416,8 @@ export type userUncheckedCreateWithoutAccountsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
@@ -1438,6 +1486,8 @@ export type userUpdateWithoutAccountsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUpdateManyWithoutUserNestedInput
@@ -1490,6 +1540,8 @@ export type userUncheckedUpdateWithoutAccountsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1542,6 +1594,8 @@ export type userCreateWithoutSessionsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1594,6 +1648,8 @@ export type userUncheckedCreateWithoutSessionsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1662,6 +1718,8 @@ export type userUpdateWithoutSessionsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1714,6 +1772,8 @@ export type userUncheckedUpdateWithoutSessionsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1766,6 +1826,8 @@ export type userCreateWithoutProfileInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -1818,6 +1880,8 @@ export type userUncheckedCreateWithoutProfileInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -1886,6 +1950,8 @@ export type userUpdateWithoutProfileInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -1938,6 +2004,8 @@ export type userUncheckedUpdateWithoutProfileInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -1990,6 +2058,8 @@ export type userCreateWithoutPhotosInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2042,6 +2112,8 @@ export type userUncheckedCreateWithoutPhotosInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2110,6 +2182,8 @@ export type userUpdateWithoutPhotosInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2162,6 +2236,8 @@ export type userUncheckedUpdateWithoutPhotosInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2214,6 +2290,8 @@ export type userCreateWithoutSentInterestsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2266,6 +2344,8 @@ export type userUncheckedCreateWithoutSentInterestsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2323,6 +2403,8 @@ export type userCreateWithoutReceivedInterestsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2375,6 +2457,8 @@ export type userUncheckedCreateWithoutReceivedInterestsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2443,6 +2527,8 @@ export type userUpdateWithoutSentInterestsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2495,6 +2581,8 @@ export type userUncheckedUpdateWithoutSentInterestsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2558,6 +2646,8 @@ export type userUpdateWithoutReceivedInterestsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2610,6 +2700,8 @@ export type userUncheckedUpdateWithoutReceivedInterestsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -2662,6 +2754,8 @@ export type userCreateWithoutChatRoomsAInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2714,6 +2808,8 @@ export type userUncheckedCreateWithoutChatRoomsAInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2771,6 +2867,8 @@ export type userCreateWithoutChatRoomsBInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -2823,6 +2921,8 @@ export type userUncheckedCreateWithoutChatRoomsBInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -2891,6 +2991,8 @@ export type userUpdateWithoutChatRoomsAInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -2943,6 +3045,8 @@ export type userUncheckedUpdateWithoutChatRoomsAInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3006,6 +3110,8 @@ export type userUpdateWithoutChatRoomsBInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3058,6 +3164,8 @@ export type userUncheckedUpdateWithoutChatRoomsBInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3110,6 +3218,8 @@ export type userCreateWithoutSentMessagesInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3162,6 +3272,8 @@ export type userUncheckedCreateWithoutSentMessagesInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3219,6 +3331,8 @@ export type userCreateWithoutReceivedMessagesInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3271,6 +3385,8 @@ export type userUncheckedCreateWithoutReceivedMessagesInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3339,6 +3455,8 @@ export type userUpdateWithoutSentMessagesInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3391,6 +3509,8 @@ export type userUncheckedUpdateWithoutSentMessagesInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3454,6 +3574,8 @@ export type userUpdateWithoutReceivedMessagesInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3506,6 +3628,8 @@ export type userUncheckedUpdateWithoutReceivedMessagesInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3558,6 +3682,8 @@ export type userCreateWithoutShortlistedInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3610,6 +3736,8 @@ export type userUncheckedCreateWithoutShortlistedInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3667,6 +3795,8 @@ export type userCreateWithoutShortlistedByInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -3719,6 +3849,8 @@ export type userUncheckedCreateWithoutShortlistedByInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -3787,6 +3919,8 @@ export type userUpdateWithoutShortlistedInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3839,6 +3973,8 @@ export type userUncheckedUpdateWithoutShortlistedInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -3902,6 +4038,8 @@ export type userUpdateWithoutShortlistedByInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -3954,6 +4092,8 @@ export type userUncheckedUpdateWithoutShortlistedByInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4006,6 +4146,8 @@ export type userCreateWithoutViewedProfilesInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4058,6 +4200,8 @@ export type userUncheckedCreateWithoutViewedProfilesInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4115,6 +4259,8 @@ export type userCreateWithoutProfileViewsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4167,6 +4313,8 @@ export type userUncheckedCreateWithoutProfileViewsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4235,6 +4383,8 @@ export type userUpdateWithoutViewedProfilesInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4287,6 +4437,8 @@ export type userUncheckedUpdateWithoutViewedProfilesInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4350,6 +4502,8 @@ export type userUpdateWithoutProfileViewsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4402,6 +4556,8 @@ export type userUncheckedUpdateWithoutProfileViewsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4454,6 +4610,8 @@ export type userCreateWithoutNotificationsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4506,6 +4664,8 @@ export type userUncheckedCreateWithoutNotificationsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4574,6 +4734,8 @@ export type userUpdateWithoutNotificationsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4626,6 +4788,8 @@ export type userUncheckedUpdateWithoutNotificationsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4678,6 +4842,8 @@ export type userCreateWithoutPushSubscriptionsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4730,6 +4896,8 @@ export type userUncheckedCreateWithoutPushSubscriptionsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -4798,6 +4966,8 @@ export type userUpdateWithoutPushSubscriptionsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -4850,6 +5020,8 @@ export type userUncheckedUpdateWithoutPushSubscriptionsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -4902,6 +5074,8 @@ export type userCreateWithoutSubscriptionsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -4954,6 +5128,8 @@ export type userUncheckedCreateWithoutSubscriptionsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5022,6 +5198,8 @@ export type userUpdateWithoutSubscriptionsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5074,6 +5252,8 @@ export type userUncheckedUpdateWithoutSubscriptionsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5126,6 +5306,8 @@ export type userCreateWithoutDocumentsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5178,6 +5360,8 @@ export type userUncheckedCreateWithoutDocumentsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5246,6 +5430,8 @@ export type userUpdateWithoutDocumentsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5298,6 +5484,8 @@ export type userUncheckedUpdateWithoutDocumentsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5350,6 +5538,8 @@ export type userCreateWithoutReportsMadeInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5402,6 +5592,8 @@ export type userUncheckedCreateWithoutReportsMadeInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5459,6 +5651,8 @@ export type userCreateWithoutReportsReceivedInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5511,6 +5705,8 @@ export type userUncheckedCreateWithoutReportsReceivedInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5579,6 +5775,8 @@ export type userUpdateWithoutReportsMadeInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5631,6 +5829,8 @@ export type userUncheckedUpdateWithoutReportsMadeInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5694,6 +5894,8 @@ export type userUpdateWithoutReportsReceivedInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -5746,6 +5948,8 @@ export type userUncheckedUpdateWithoutReportsReceivedInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -5798,6 +6002,8 @@ export type userCreateWithoutBlockedUsersInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5850,6 +6056,8 @@ export type userUncheckedCreateWithoutBlockedUsersInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -5907,6 +6115,8 @@ export type userCreateWithoutBlockedByInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -5959,6 +6169,8 @@ export type userUncheckedCreateWithoutBlockedByInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -6027,6 +6239,8 @@ export type userUpdateWithoutBlockedUsersInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6079,6 +6293,8 @@ export type userUncheckedUpdateWithoutBlockedUsersInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -6142,6 +6358,8 @@ export type userUpdateWithoutBlockedByInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6194,6 +6412,8 @@ export type userUncheckedUpdateWithoutBlockedByInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -6246,6 +6466,8 @@ export type userCreateWithoutOtpsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -6298,6 +6520,8 @@ export type userUncheckedCreateWithoutOtpsInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -6366,6 +6590,8 @@ export type userUpdateWithoutOtpsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6418,6 +6644,8 @@ export type userUncheckedUpdateWithoutOtpsInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -6470,6 +6698,8 @@ export type userCreateWithoutKundaliInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -6522,6 +6752,8 @@ export type userUncheckedCreateWithoutKundaliInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -6590,6 +6822,8 @@ export type userUpdateWithoutKundaliInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6642,6 +6876,8 @@ export type userUncheckedUpdateWithoutKundaliInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -6694,6 +6930,8 @@ export type userCreateWithoutAgentInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountCreateNestedManyWithoutUserInput
@@ -6746,6 +6984,8 @@ export type userUncheckedCreateWithoutAgentInput = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: Date | string | null
   needsPassword?: boolean
+  profileRejectionReason?: string | null
+  profileRejectedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
@@ -6814,6 +7054,8 @@ export type userUpdateWithoutAgentInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUpdateManyWithoutUserNestedInput
@@ -6866,6 +7108,8 @@ export type userUncheckedUpdateWithoutAgentInput = {
   freeTrialUsed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   freeTrialExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   needsPassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileRejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileRejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
@@ -7138,6 +7382,8 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   freeTrialUsed?: boolean
   freeTrialExpiry?: boolean
   needsPassword?: boolean
+  profileRejectionReason?: boolean
+  profileRejectedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
@@ -7194,11 +7440,13 @@ export type userSelectScalar = {
   freeTrialUsed?: boolean
   freeTrialExpiry?: boolean
   needsPassword?: boolean
+  profileRejectionReason?: boolean
+  profileRejectedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "freeTrialUsed" | "freeTrialExpiry" | "needsPassword" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "phone" | "phoneVerified" | "role" | "isActive" | "isVerified" | "adminVerified" | "verificationBadge" | "isPremium" | "premiumExpiry" | "premiumPlan" | "profileBoost" | "boostExpiry" | "loginOtpEnabled" | "lastLoginAt" | "freeTrialUsed" | "freeTrialExpiry" | "needsPassword" | "profileRejectionReason" | "profileRejectedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.user$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.user$sessionsArgs<ExtArgs>
@@ -7281,6 +7529,8 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     freeTrialUsed: boolean
     freeTrialExpiry: Date | null
     needsPassword: boolean
+    profileRejectionReason: string | null
+    profileRejectedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -7700,6 +7950,8 @@ export interface userFieldRefs {
   readonly freeTrialUsed: Prisma.FieldRef<"user", 'Boolean'>
   readonly freeTrialExpiry: Prisma.FieldRef<"user", 'DateTime'>
   readonly needsPassword: Prisma.FieldRef<"user", 'Boolean'>
+  readonly profileRejectionReason: Prisma.FieldRef<"user", 'String'>
+  readonly profileRejectedAt: Prisma.FieldRef<"user", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"user", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"user", 'DateTime'>
 }

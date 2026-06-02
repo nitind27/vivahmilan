@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
-import { sendAdminVerificationEmail } from '@/lib/email';
+import { sendAdminVerificationEmail, sendProfileRejectionEmail } from '@/lib/email';
 import { getSiteConfig } from '@/lib/siteconfig';
 import { hash } from 'bcryptjs';
 import { validateAdminApproval } from '@/lib/profileVerification';
+import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 
 export async function PATCH(req, { params }) {
   const session = await getServerSession(authOptions);
@@ -13,6 +14,70 @@ export async function PATCH(req, { params }) {
 
   const { id } = await params;
   const data = await req.json();
+
+  if (data.profileRejection) {
+    const reason = (data.profileRejection.reason || '').trim();
+    const sendEmail = data.profileRejection.sendEmail !== false;
+    if (reason.length < 10) {
+      return NextResponse.json(
+        { error: 'Please provide a rejection reason (at least 10 characters).' },
+        { status: 400 }
+      );
+    }
+
+    await ensureFeatureTables();
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: { name: true, email: true, adminVerified: true, isActive: true },
+    });
+    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (user.adminVerified) {
+      return NextResponse.json({ error: 'Cannot reject an already approved profile.' }, { status: 400 });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id },
+      data: {
+        isActive: false,
+        profileRejectionReason: reason,
+        profileRejectedAt: new Date(),
+      },
+    });
+
+    let emailSent = false;
+    if (sendEmail && user.email) {
+      try {
+        await sendProfileRejectionEmail(user.email, user.name || 'User', reason);
+        emailSent = true;
+      } catch (e) {
+        console.error('Rejection email error:', e.message);
+      }
+    }
+
+    await prisma.notification.create({
+      data: {
+        userId: id,
+        type: 'VERIFICATION_REJECTED',
+        title: 'Profile not approved',
+        message: reason.length > 200 ? `${reason.slice(0, 197)}…` : reason,
+        link: '/contact',
+      },
+    });
+
+    try {
+      const { sendPushToUser } = await import('@/lib/webpush');
+      await sendPushToUser(id, {
+        title: 'Profile not approved',
+        body: reason.length > 120 ? `${reason.slice(0, 117)}…` : reason,
+        url: '/contact',
+      });
+    } catch (e) {
+      console.error('Rejection push error:', e.message);
+    }
+
+    return NextResponse.json({ ...updated, emailSent });
+  }
 
   const user = await prisma.user.findUnique({
     where: { id },

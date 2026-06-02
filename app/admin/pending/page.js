@@ -17,6 +17,15 @@ const REMINDER_TEMPLATE_OPTIONS = [
   { key: 'upload_photos', label: 'Add profile & family photos' },
 ];
 
+const REJECTION_PRESET_OPTIONS = [
+  { key: 'photos', label: 'Profile photos unclear, inappropriate, or missing' },
+  { key: 'documents', label: 'Identity document missing, expired, or does not match profile' },
+  { key: 'details', label: 'Profile information incomplete or inconsistent with documents' },
+  { key: 'guidelines', label: 'Profile does not meet our community guidelines' },
+  { key: 'duplicate', label: 'Duplicate or suspicious account detected' },
+  { key: 'custom', label: 'Other — write custom reason below' },
+];
+
 // ── Profile Approvals Components ──────────────────────────────────────────────
 
 function ReminderModal({ targets, onClose, onSent }) {
@@ -193,6 +202,148 @@ function ReminderModal({ targets, onClose, onSent }) {
   );
 }
 
+function RejectModal({ target, onClose, onRejected }) {
+  const [preset, setPreset] = useState('photos');
+  const [customReason, setCustomReason] = useState('');
+  const [sendEmail, setSendEmail] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  const presetText = REJECTION_PRESET_OPTIONS.find((p) => p.key === preset)?.label || '';
+  const reason = preset === 'custom' ? customReason.trim() : presetText;
+  const reasonValid = reason.length >= 10;
+
+  const submit = async () => {
+    if (!reasonValid) {
+      toast.error('Please enter a rejection reason (at least 10 characters)');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin/users/${target.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profileRejection: { reason, sendEmail },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Failed to reject profile');
+        return;
+      }
+      toast.success(
+        sendEmail && data.emailSent
+          ? 'Profile rejected — user notified by email, notification & push'
+          : sendEmail && !data.emailSent
+            ? 'Profile rejected — notification sent (email failed or no email)'
+            : 'Profile rejected'
+      );
+      onRejected?.();
+      onClose();
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+      <div className="bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-800">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <XCircle className="w-5 h-5 text-red-400" />
+                Reject profile
+              </h3>
+              <p className="text-sm text-gray-400 mt-1">
+                {target.name} — reason is required and can be emailed to the user
+              </p>
+            </div>
+            <button type="button" onClick={onClose} className="text-gray-500 hover:text-white">
+              <XCircle className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-5">
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
+              Rejection reason
+            </label>
+            <select
+              value={preset}
+              onChange={(e) => setPreset(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500/50 outline-none"
+            >
+              {REJECTION_PRESET_OPTIONS.map((p) => (
+                <option key={p.key} value={p.key}>{p.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {preset === 'custom' && (
+            <div>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
+                Custom reason
+              </label>
+              <textarea
+                value={customReason}
+                onChange={(e) => setCustomReason(e.target.value)}
+                rows={4}
+                placeholder="Explain clearly why this profile cannot be approved…"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-red-500/50 outline-none resize-none"
+              />
+            </div>
+          )}
+
+          {preset !== 'custom' && (
+            <div className="rounded-xl bg-red-500/10 border border-red-500/25 p-4">
+              <p className="text-xs font-bold text-red-300/90 uppercase tracking-wider mb-2">Will be sent to user</p>
+              <p className="text-sm text-gray-200 leading-relaxed">{presetText}</p>
+            </div>
+          )}
+
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={sendEmail}
+              onChange={(e) => setSendEmail(e.target.checked)}
+              className="mt-1 rounded border-gray-600"
+            />
+            <span className="text-sm text-gray-300">
+              <strong className="text-white">Send formatted email</strong> to {target.email || 'user'}
+              <span className="block text-xs text-gray-500 mt-1">
+                Also creates in-app notification and web push (if subscribed)
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <div className="p-6 border-t border-gray-800 flex gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={submitting || !reasonValid}
+            className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
+            Reject profile
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function UserCard({ u, onView, onApprove, onReject, onRemind, statusBadge, selected, onToggleSelect, showReminder }) {
   const rs = u.reminderStats;
   const lastReminded = rs?.lastReminderAt
@@ -267,6 +418,11 @@ function UserCard({ u, onView, onApprove, onReject, onRemind, statusBadge, selec
             {rs?.reminderCount > 1 ? ` (${rs.reminderCount}×)` : ''}
           </span>
         )}
+        {statusBadge === 'rejected' && u.profileRejectionReason && (
+          <p className="text-xs text-red-300/90 bg-red-500/10 border border-red-500/20 rounded-lg px-2 py-2 line-clamp-3 w-full" title={u.profileRejectionReason}>
+            {u.profileRejectionReason}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2 mt-auto">
@@ -311,6 +467,7 @@ function ProfilesTab() {
   const [debouncedQ, setDebouncedQ] = useState('');
   const [blockModal, setBlockModal] = useState(null);
   const [reminderTargets, setReminderTargets] = useState(null);
+  const [rejectTarget, setRejectTarget] = useState(null);
   const [selectedIds, setSelectedIds] = useState(new Set());
 
   useEffect(() => {
@@ -451,7 +608,7 @@ function ProfilesTab() {
               u={u}
               onView={() => setSelectedId(u.id)}
               onApprove={() => updateUser(u.id, { adminVerified: true })}
-              onReject={() => updateUser(u.id, { isActive: false })}
+              onReject={() => setRejectTarget(u)}
               onRemind={(user) => setReminderTargets([user])}
               statusBadge={activeTab}
               showReminder={activeTab === 'pending'}
@@ -502,6 +659,17 @@ function ProfilesTab() {
           onSent={() => {
             setSelectedIds(new Set());
             load();
+          }}
+        />
+      )}
+
+      {rejectTarget && (
+        <RejectModal
+          target={rejectTarget}
+          onClose={() => setRejectTarget(null)}
+          onRejected={() => {
+            load();
+            window.dispatchEvent(new Event('admin-stats-refresh'));
           }}
         />
       )}

@@ -65,6 +65,8 @@ model user {
   freeTrialUsed     Boolean   @default(false)
   freeTrialExpiry   DateTime?
   needsPassword     Boolean   @default(false)
+  profileRejectionReason String? @db.Text
+  profileRejectedAt      DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -289,6 +291,7 @@ enum NotificationType {
   PROFILE_VIEWED
   SUBSCRIPTION_EXPIRY
   VERIFICATION_APPROVED
+  VERIFICATION_REJECTED
   SYSTEM
   NEW_MATCH
 }
