@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { tryAssignEarlyBirdToUser, getEarlyBirdOfferForUser } from '@/lib/earlyBird';
+import { tryAssignEarlyBirdToUser, getEarlyBirdOfferForUser, markEarlyBirdPopupSeen } from '@/lib/earlyBird';
 
 export async function POST() {
   const session = await getServerSession(authOptions);
@@ -12,11 +12,13 @@ export async function POST() {
   try {
     const before = await getEarlyBirdOfferForUser(session.user.id);
     if (before.status === 'active') {
+      await markEarlyBirdPopupSeen(session.user.id);
       return NextResponse.json({
         success: true,
         alreadyActive: true,
         message: 'You already have Early Bird access active.',
         offer: before,
+        showPopup: false,
       });
     }
     if (before.status === 'sold_out') {
@@ -44,12 +46,14 @@ export async function POST() {
       }, { status: 403 });
     }
 
+    await markEarlyBirdPopupSeen(session.user.id);
     const offer = await getEarlyBirdOfferForUser(session.user.id);
     return NextResponse.json({
       success: true,
       message: `🎉 Free ${result.planDisplayName || result.planId} access activated for ${result.durationLabel}!`,
       result,
       offer,
+      showPopup: false,
     });
   } catch (err) {
     console.error('[early-bird/claim]', err);
