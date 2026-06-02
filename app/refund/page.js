@@ -58,7 +58,7 @@ const sections = [
         <p>To request a refund, follow these steps:</p>
         <div className="space-y-3">
           {[
-            { step: '1', title: 'Contact Support', desc: 'Email us at refunds@vivahmilan.com within 7 days of your purchase', icon: '📧' },
+            { step: '1', title: 'Contact Support', desc: 'Email us at supportvivahdwar@gmail.com within 7 days of your purchase', icon: '📧' },
             { step: '2', title: 'Provide Details', desc: 'Include your registered email, order ID, payment date, and reason for refund', icon: '📋' },
             { step: '3', title: 'Review Process', desc: 'Our team will review your request within 2-3 business days', icon: '🔍' },
             { step: '4', title: 'Refund Issued', desc: 'If approved, refund will be credited within 5-7 business days', icon: '✅' },
@@ -76,7 +76,7 @@ const sections = [
         </div>
         <div className="p-4 bg-vd-accent-soft dark:bg-vd-accent/10 border border-vd-border rounded-xl">
           <p className="text-xs text-vd-primary dark:text-vd-primary">
-            <strong>Refund Email:</strong> <a href="mailto:refunds@vivahmilan.com" className="underline">refunds@vivahmilan.com</a><br />
+            <strong>Refund Email:</strong> <a href="mailto:supportvivahdwar@gmail.com" className="underline">supportvivahdwar@gmail.com</a><br />
             <strong>Subject line:</strong> Refund Request — [Your Order ID]
           </p>
         </div>
@@ -128,7 +128,7 @@ const sections = [
       <div className="space-y-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
         <p>If you are not satisfied with our refund decision, you may:</p>
         <ul className="space-y-2 ml-4">
-          {['Escalate to our senior support team at escalations@vivahmilan.com', 'File a dispute with your bank or card issuer (chargeback)', 'Contact the National Consumer Helpline (India): 1800-11-4000', 'Approach the Consumer Forum in your jurisdiction'].map((item, i) => (
+          {['Escalate to our senior support team at supportvivahdwar@gmail.com', 'File a dispute with your bank or card issuer (chargeback)', 'Contact the National Consumer Helpline (India): 1800-11-4000', 'Approach the Consumer Forum in your jurisdiction'].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-vd-primary flex-shrink-0 mt-2" />
               {item}

@@ -189,10 +189,21 @@ export function AllMembersTab() {
     if (res.ok) { toast.success('Updated'); reload(); } else toast.error('Failed');
   };
 
-  const deleteUser = async (id, name) => {
-    if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
-    await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
-    toast.success('Deleted'); reload();
+  const deleteUser = async (id, name, email) => {
+    if (!email) return toast.error('User has no email — cannot confirm delete');
+    const typed = prompt(`Permanently delete ${name}?\n\nType their email to confirm:\n${email}`);
+    if (!typed || typed.trim().toLowerCase() !== email.trim().toLowerCase()) {
+      if (typed !== null) toast.error('Email did not match — delete cancelled');
+      return;
+    }
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirmEmail: typed.trim() }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return toast.error(data.error || 'Delete failed');
+    toast.success('Account permanently deleted'); reload();
   };
 
   const handlePasswordChange = async () => {
@@ -318,7 +329,7 @@ export function AllMembersTab() {
                       <button onClick={() => setPasswordUser({ id: m.id, name: m.name })} className="p-1.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Change Password">
                         <Key className="w-4 h-4" />
                       </button>
-                      <button onClick={() => deleteUser(m.id, m.name)} className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Delete Account">
+                      <button onClick={() => deleteUser(m.id, m.name, m.email)} className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Delete Account">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

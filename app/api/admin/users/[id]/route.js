@@ -7,6 +7,7 @@ import { getSiteConfig } from '@/lib/siteconfig';
 import { hash } from 'bcryptjs';
 import { validateAdminApproval } from '@/lib/profileVerification';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
+import { permanentlyDeleteUserAccount } from '@/lib/deleteUserAccount.js';
 
 export async function PATCH(req, { params }) {
   const session = await getServerSession(authOptions);
@@ -161,6 +162,36 @@ export async function DELETE(req, { params }) {
   if (!session || session.user.role !== 'ADMIN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const { id } = await params;
-  await prisma.user.delete({ where: { id } });
-  return NextResponse.json({ success: true });
+  let body = {};
+  try {
+    body = await req.json();
+  } catch {
+    // no body
+  }
+
+  const confirmEmail = (body.confirmEmail || '').trim().toLowerCase();
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: { email: true, isActive: true, role: true },
+  });
+  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+  const expectedEmail = (user.email || '').trim().toLowerCase();
+  if (!expectedEmail || confirmEmail !== expectedEmail) {
+    return NextResponse.json(
+      { error: 'Type the user\'s email exactly to confirm permanent deletion.' },
+      { status: 400 }
+    );
+  }
+
+  const result = await permanentlyDeleteUserAccount(id);
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: result.status || 400 });
+  }
+
+  return NextResponse.json({
+    success: true,
+    deletedUserId: result.deletedUserId,
+    message: 'Account and all related data permanently removed from the database.',
+  });
 }

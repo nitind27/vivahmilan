@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { SUPPORT_EMAIL, SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_TEL, SUPPORT_HOURS } from '@/lib/siteContact';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import { Heart, Search, ChevronDown, MessageCircle, Shield, User, CreditCard, Settings, Bell } from 'lucide-react';
@@ -12,7 +13,7 @@ const CATEGORIES = [
       { q: 'How do I create my profile?', a: "After registering, complete the onboarding steps — fill in your basic info, religion, location, career details, family info, and upload your photo & ID. Your profile will be reviewed by our admin team within 24 hours." },
       { q: 'How do I edit my profile?', a: 'Go to Dashboard → Edit Profile. You can update any section and save changes anytime.' },
       { q: 'Why is my profile pending approval?', a: "All new profiles are reviewed by our team to ensure authenticity. This usually takes up to 24 hours. You'll receive an email once approved." },
-      { q: 'How do I delete my account?', a: 'Contact our support team at support@vivahmilan.com with your registered email. Account deletion is permanent and cannot be undone.' },
+      { q: 'How do I delete my account?', a: 'Contact our support team at supportvivahdwar@gmail.com with your registered email. Account deletion is permanent and cannot be undone.' },
     ],
   },
   {
@@ -144,7 +145,12 @@ export default function HelpPage() {
           {/* Still need help */}
           <div className="mt-12 vd-gradient-gold rounded-2xl p-6 text-white text-center">
             <h3 className="font-bold text-lg mb-1">Still need help?</h3>
-            <p className="text-white/80 text-sm mb-4">Our support team is here for you</p>
+            <p className="text-white/80 text-sm mb-2">Our support team is here for you — {SUPPORT_HOURS}</p>
+            <p className="text-white/90 text-sm mb-4">
+              <a href={`tel:${SUPPORT_PHONE_TEL}`} className="underline hover:no-underline">{SUPPORT_PHONE_DISPLAY}</a>
+              {' · '}
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="underline hover:no-underline">{SUPPORT_EMAIL}</a>
+            </p>
             <Link href="/contact" className="inline-block bg-white text-vd-primary px-6 py-2.5 rounded-xl font-semibold text-sm hover:bg-vd-accent-soft transition-colors">
               Contact Us
             </Link>

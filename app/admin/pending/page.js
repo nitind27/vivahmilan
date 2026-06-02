@@ -4,7 +4,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import {
   UserCheck, CheckCircle, XCircle, Eye, Search, ChevronLeft, ChevronRight,
   FileText, Calendar, MapPin, Mail, Phone, Hash, Shield, Bell, Send,
-  Smartphone, Loader2,
+  Smartphone, Loader2, Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
@@ -344,7 +344,89 @@ function RejectModal({ target, onClose, onRejected }) {
   );
 }
 
-function UserCard({ u, onView, onApprove, onReject, onRemind, statusBadge, selected, onToggleSelect, showReminder }) {
+function DeleteAccountModal({ target, onClose, onDeleted }) {
+  const [confirmEmail, setConfirmEmail] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const expected = (target.email || '').trim().toLowerCase();
+  const matches = confirmEmail.trim().toLowerCase() === expected && expected.length > 0;
+
+  const submit = async () => {
+    if (!matches) {
+      toast.error('Enter the user\'s email exactly to confirm');
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/users/${target.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmEmail: confirmEmail.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Failed to delete account');
+        return;
+      }
+      toast.success('Account permanently deleted from database');
+      onDeleted?.();
+      onClose();
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4">
+      <div className="bg-gray-900 rounded-2xl border border-red-900/50 shadow-2xl w-full max-w-lg">
+        <div className="p-6 border-b border-gray-800">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <Trash2 className="w-5 h-5 text-red-500" />
+            Permanently delete account
+          </h3>
+          <p className="text-sm text-gray-400 mt-2">
+            <strong className="text-red-400">{target.name}</strong> — profile, photos, documents, messages,
+            interests, subscriptions, and all related records will be removed. This cannot be undone.
+          </p>
+        </div>
+        <div className="p-6 space-y-4">
+          <p className="text-sm text-gray-300">
+            Type <span className="font-mono text-amber-300 bg-gray-800 px-2 py-0.5 rounded">{target.email}</span> to confirm:
+          </p>
+          <input
+            type="email"
+            value={confirmEmail}
+            onChange={(e) => setConfirmEmail(e.target.value)}
+            placeholder="user@email.com"
+            className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 outline-none"
+            autoComplete="off"
+          />
+        </div>
+        <div className="p-6 border-t border-gray-800 flex gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={deleting || !matches}
+            className="flex-1 py-2.5 bg-red-700 hover:bg-red-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            Delete forever
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserCard({ u, onView, onApprove, onReject, onRemind, onDeleteAccount, statusBadge, selected, onToggleSelect, showReminder }) {
   const rs = u.reminderStats;
   const lastReminded = rs?.lastReminderAt
     ? formatDistanceToNow(new Date(rs.lastReminderAt), { addSuffix: true })
@@ -450,6 +532,15 @@ function UserCard({ u, onView, onApprove, onReject, onRemind, statusBadge, selec
             </>
           )}
         </div>
+        {statusBadge === 'rejected' && onDeleteAccount && (
+          <button
+            type="button"
+            onClick={() => onDeleteAccount(u)}
+            className="w-full py-2.5 bg-red-950/60 hover:bg-red-900/80 text-red-300 border border-red-800/60 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <Trash2 className="w-4 h-4" /> Delete account permanently
+          </button>
+        )}
       </div>
     </div>
   );
@@ -468,6 +559,7 @@ function ProfilesTab() {
   const [blockModal, setBlockModal] = useState(null);
   const [reminderTargets, setReminderTargets] = useState(null);
   const [rejectTarget, setRejectTarget] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [selectedIds, setSelectedIds] = useState(new Set());
 
   useEffect(() => {
@@ -581,6 +673,16 @@ function ProfilesTab() {
         )}
       </div>
 
+      {activeTab === 'rejected' && (
+        <div className="rounded-2xl border border-red-500/25 bg-red-500/5 px-4 py-3 text-sm text-red-200/90 flex items-start gap-3">
+          <Trash2 className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <p>
+            <strong className="text-red-300">Permanent delete</strong> removes the user and all related data
+            from the database (profile, photos, chats, documents, etc.). You must type their email to confirm.
+          </p>
+        </div>
+      )}
+
       {activeTab === 'pending' && (
         <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 px-4 py-3 text-sm text-amber-200/90 flex items-start gap-3">
           <Bell className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
@@ -610,6 +712,7 @@ function ProfilesTab() {
               onApprove={() => updateUser(u.id, { adminVerified: true })}
               onReject={() => setRejectTarget(u)}
               onRemind={(user) => setReminderTargets([user])}
+              onDeleteAccount={activeTab === 'rejected' ? (user) => setDeleteTarget(user) : undefined}
               statusBadge={activeTab}
               showReminder={activeTab === 'pending'}
               selected={selectedIds.has(u.id)}
@@ -650,7 +753,17 @@ function ProfilesTab() {
         </div>
       )}
 
-      {selectedId && <AdminUserProfileModal userId={selectedId} onClose={() => { setSelectedId(null); load(); }} />}
+      {selectedId && (
+        <AdminUserProfileModal
+          userId={selectedId}
+          allowPermanentDelete={activeTab === 'rejected'}
+          onRequestDelete={() => {
+            const u = users.find((x) => x.id === selectedId);
+            if (u) setDeleteTarget(u);
+          }}
+          onClose={() => { setSelectedId(null); load(); }}
+        />
+      )}
 
       {reminderTargets && (
         <ReminderModal
@@ -668,6 +781,19 @@ function ProfilesTab() {
           target={rejectTarget}
           onClose={() => setRejectTarget(null)}
           onRejected={() => {
+            load();
+            window.dispatchEvent(new Event('admin-stats-refresh'));
+          }}
+        />
+      )}
+
+      {deleteTarget && (
+        <DeleteAccountModal
+          target={deleteTarget}
+          onClose={() => setDeleteTarget(null)}
+          onDeleted={() => {
+            if (selectedId === deleteTarget.id) setSelectedId(null);
+            setDeleteTarget(null);
             load();
             window.dispatchEvent(new Event('admin-stats-refresh'));
           }}

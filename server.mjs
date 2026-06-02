@@ -11,6 +11,7 @@ import next from 'next';
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import { pool as dbPool } from './lib/db.js';
+import { SITE_CONTACT } from './lib/siteContact.js';
 
 function getDbPool() {
   return dbPool;
@@ -219,11 +220,7 @@ app.prepare().then(() => {
                   error: 'Your profile will be available soon. Please wait for our update.',
                   code: 'PORTAL_CLOSED',
                   portalAccess: false,
-                  contact: {
-                    phone: '8735995467',
-                    phoneDisplay: '+91 87359 95467',
-                    email: 'supportvivahdwar@gmail.com',
-                  },
+                  contact: SITE_CONTACT,
                 }));
                 return;
               }

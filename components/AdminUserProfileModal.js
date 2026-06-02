@@ -4,7 +4,7 @@ import ImageLightbox, { PhotoPreviewButton, resolveImageUrl } from '@/components
 import { useEffect, useState } from 'react';
 import {
   X, CheckCircle, Star, Ban, User, Mail, Phone, Clock, FileText, MapPin, Globe, Monitor,
-  Heart, MessageCircle, Eye, CreditCard, Shield, Send, Inbox, ZoomIn,
+  Heart, MessageCircle, Eye, CreditCard, Shield, Send, Inbox, ZoomIn, Trash2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import ApprovalChecklist from '@/components/ApprovalChecklist';
@@ -48,7 +48,7 @@ function StatBox({ icon: Icon, label, value, color = 'text-pink-600', bg = 'bg-p
   );
 }
 
-export default function AdminUserProfileModal({ userId, onClose }) {
+export default function AdminUserProfileModal({ userId, onClose, allowPermanentDelete, onRequestDelete }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('profile');
@@ -111,6 +111,24 @@ export default function AdminUserProfileModal({ userId, onClose }) {
             <GeoTab data={data} />
           )}
         </div>
+
+        {allowPermanentDelete && data?.user && !data.user.isActive && (
+          <div className="px-5 pb-5 border-t border-gray-100 pt-4">
+            <p className="text-xs text-gray-500 mb-3">
+              This account is rejected/deactivated. Permanent delete removes all data from the database.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                onClose?.();
+                onRequestDelete?.();
+              }}
+              className="w-full py-2.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
+            >
+              <Trash2 size={16} /> Delete account permanently…
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,14 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, MessageCircle, HelpCircle, Flag, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE_DISPLAY,
+  SUPPORT_PHONE_TEL,
+  OFFICE_ADDRESS,
+  SUPPORT_HOURS,
+  SUPPORT_HOURS_SUB,
+} from '@/lib/siteContact';
 
 const TOPICS = [
   { value: 'general', label: 'General Inquiry' },
@@ -17,10 +25,34 @@ const TOPICS = [
 ];
 
 const CONTACT_INFO = [
-  { icon: Mail, label: 'Email Support', value: 'support@vivahmilan.com', sub: 'We reply within 24 hours', href: 'mailto:support@vivahmilan.com' },
-  { icon: Phone, label: 'Phone Support', value: '+91 98765 43210', sub: 'Mon–Sat, 10am–6pm IST', href: 'tel:+919876543210' },
-  { icon: MapPin, label: 'Office Address', value: 'Mumbai, Maharashtra, India', sub: 'Registered office', href: null },
-  { icon: Clock, label: 'Support Hours', value: 'Mon–Sat: 10am–6pm', sub: 'IST (UTC+5:30)', href: null },
+  {
+    icon: Mail,
+    label: 'Email Support',
+    value: SUPPORT_EMAIL,
+    sub: 'We typically reply within 24 hours',
+    href: `mailto:${SUPPORT_EMAIL}`,
+  },
+  {
+    icon: Phone,
+    label: 'Phone Support',
+    value: SUPPORT_PHONE_DISPLAY,
+    sub: SUPPORT_HOURS,
+    href: `tel:${SUPPORT_PHONE_TEL}`,
+  },
+  {
+    icon: MapPin,
+    label: 'Office Address',
+    value: OFFICE_ADDRESS.line1,
+    sub: OFFICE_ADDRESS.line2,
+    href: null,
+  },
+  {
+    icon: Clock,
+    label: 'Support Hours',
+    value: SUPPORT_HOURS,
+    sub: SUPPORT_HOURS_SUB,
+    href: null,
+  },
 ];
 
 const QUICK_LINKS = [
@@ -39,7 +71,6 @@ export default function ContactPage() {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) { toast.error('Please fill all required fields'); return; }
     setLoading(true);
-    // Simulate submission
     await new Promise(r => setTimeout(r, 1000));
     setSubmitted(true);
     setLoading(false);
@@ -57,7 +88,7 @@ export default function ContactPage() {
             </div>
             <h2 className="text-2xl font-bold mb-2">Message Sent!</h2>
             <p className="text-gray-500 text-sm mb-2">Thank you for reaching out, <strong>{form.name}</strong>.</p>
-            <p className="text-gray-400 text-sm mb-6">We've received your message and will reply to <strong className="text-vd-primary">{form.email}</strong> within 24 hours.</p>
+            <p className="text-gray-400 text-sm mb-6">We&apos;ve received your message and will reply to <strong className="text-vd-primary">{form.email}</strong> within 24 hours.</p>
             <button onClick={() => { setSubmitted(false); setForm({ name: '', email: '', topic: '', message: '' }); }}
               className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity">
               Send Another Message
@@ -72,18 +103,15 @@ export default function ContactPage() {
     <div className="min-h-screen bg-vd-bg">
       <Navbar />
       <div className="pt-16">
-        {/* Hero */}
         <div className="vd-gradient-gold py-14 px-4 text-center">
           <h1 className="text-3xl font-bold text-white mb-2">Contact Us</h1>
-          <p className="text-white/80 text-sm max-w-md mx-auto">Have a question or need help? We're here for you. Reach out and we'll get back to you as soon as possible.</p>
+          <p className="text-white/80 text-sm max-w-md mx-auto">Have a question or need help? We are here for you. Reach out and we will get back to you as soon as possible.</p>
         </div>
 
         <div className="max-w-5xl mx-auto px-4 py-12">
           <div className="grid lg:grid-cols-3 gap-8">
 
-            {/* Left — Contact Info */}
             <div className="space-y-6">
-              {/* Contact cards */}
               <div className="space-y-3">
                 {CONTACT_INFO.map((c, i) => (
                   <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
@@ -94,7 +122,7 @@ export default function ContactPage() {
                         </div>
                         <div>
                           <p className="text-xs text-gray-400">{c.label}</p>
-                          <p className="font-semibold text-sm group-hover:text-vd-primary transition-colors">{c.value}</p>
+                          <p className="font-semibold text-sm group-hover:text-vd-primary transition-colors break-all">{c.value}</p>
                           <p className="text-xs text-gray-400 mt-0.5">{c.sub}</p>
                         </div>
                       </a>
@@ -114,7 +142,6 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              {/* Quick links */}
               <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-5">
                 <h3 className="font-bold text-sm mb-3 text-gray-500 uppercase tracking-wide">Quick Links</h3>
                 <div className="space-y-2">
@@ -131,7 +158,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Right — Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border p-6">
                 <h2 className="font-bold text-xl mb-5">Send us a Message</h2>

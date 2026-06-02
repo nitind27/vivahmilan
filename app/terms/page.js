@@ -254,7 +254,7 @@ const sections = [
       <div className="space-y-4">
         <P>Either party may terminate this agreement as follows:</P>
         <UL items={[
-          'You may delete your account at any time through account settings or by contacting support@vivahdwar.com',
+          'You may delete your account at any time through account settings or by contacting supportvivahdwar@gmail.com',
           'We may suspend or permanently terminate your account for violation of these Terms, fraudulent activity, or multiple abuse reports — with or without notice',
           'Upon termination, your right to access the Platform ceases immediately',
           'Premium subscriptions terminated for Terms violations are non-refundable',

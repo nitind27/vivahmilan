@@ -6,6 +6,7 @@ import {
   Bell, Phone, Mail, LogOut, Heart, ShieldCheck, Loader2, CheckCircle2, Clock
 } from 'lucide-react';
 import SiteLoader from '@/components/SiteLoader';
+import { SITE_CONTACT } from '@/lib/siteContact';
 
 const FALLBACK = {
   titleHi: 'Aapki Profile Jald Hi Tayyar Hogi!',
@@ -28,11 +29,7 @@ const FALLBACK = {
   ],
 };
 
-const FALLBACK_CONTACT = {
-  phone: '8735995467',
-  phoneDisplay: '+91 87359 95467',
-  email: 'supportvivahdwar@gmail.com',
-};
+const FALLBACK_CONTACT = SITE_CONTACT;
 
 function formatPhone(contact) {
   const raw = String(contact?.phone || '8735995467').replace(/\D/g, '');
@@ -418,26 +415,23 @@ export default function ProfileLaunchPage() {
           </section>
 
           <section className="pl-section pl-contact-wrap">
-            <p className="pl-section-label">Sampark · Contact Support</p>
-            <p className="pl-contact-intro-hi">{msg.supportNoteHi || msg.supportNote}</p>
-            <p className="pl-contact-intro-en">{msg.supportNoteEn}</p>
+            <p className="pl-section-label">Contact Support</p>
+            <p className="pl-contact-intro-en">{msg.supportNoteEn || 'If you face any issue, please contact us using the phone number or email below.'}</p>
 
             <div className="pl-phone-block">
-              <p className="pl-phone-label-hi">Phone par call karein</p>
-              <p className="pl-phone-label-en">Call us on phone</p>
+              <p className="pl-phone-label-en">Phone support — {SITE_CONTACT.supportHours || '24 hours'}</p>
               <a href={`tel:${phone.tel}`} className="pl-phone-number">
                 {phone.display}
               </a>
               <p className="pl-phone-sub">{phone.plain} · India (+91)</p>
               <a href={`tel:${phone.tel}`} className="pl-call-btn">
                 <Phone size={20} strokeWidth={2.5} />
-                Abhi Call Karein · Call Now
+                Call Now
               </a>
             </div>
 
             <div className="pl-email-block">
-              <p className="pl-email-label-hi">Email par likhein</p>
-              <p className="pl-email-label-en">Write to us on email</p>
+              <p className="pl-email-label-en">Email support</p>
               <a href={`mailto:${contact.email}`} className="pl-email-link">
                 {contact.email}
               </a>
