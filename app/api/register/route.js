@@ -4,7 +4,7 @@ import { execute, queryOne } from '@/lib/db';
 import { sendOTPEmail, sendWelcomeEmail } from '@/lib/email';
 import { capturePendingRegistrationGeo } from '@/lib/geoTracking';
 import { isDisposableEmail, DISPOSABLE_EMAIL_MESSAGE } from '@/lib/disposableEmails';
-import { assertPhoneVerifiedForRegister } from '@/lib/phoneVerification';
+import { resolvePhoneForRegistration } from '@/lib/phoneVerification';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 import { randomUUID } from 'crypto';
 
@@ -26,11 +26,16 @@ export async function POST(req) {
     if (isDisposableEmail(email))
       return NextResponse.json({ error: DISPOSABLE_EMAIL_MESSAGE }, { status: 400 });
 
-    const phoneCheck = assertPhoneVerifiedForRegister(phone, phoneVerificationToken);
+    if (!phone?.trim()) {
+      return NextResponse.json({ error: 'Phone number is required' }, { status: 400 });
+    }
+
+    const phoneCheck = await resolvePhoneForRegistration(phone, phoneVerificationToken);
     if (!phoneCheck.ok) {
       return NextResponse.json({ error: phoneCheck.error }, { status: 400 });
     }
     const phoneE164 = phoneCheck.e164;
+    const phoneVerifiedFlag = phoneCheck.phoneVerified ? 1 : 0;
 
     // Check if email already exists in user table
     const existing = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
@@ -60,9 +65,9 @@ export async function POST(req) {
       `INSERT INTO pending_registration
         (id, name, email, phone, phoneE164, phoneVerified, password, gender, otp, otpExpiresAt,
          registrationIp, registrationCountry, registrationCity, registrationLat, registrationLon, createdAt)
-       VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
       [
-        pendingId, name, email, phoneE164, phoneE164, hashed, gender || null, otp, otpExpiry,
+        pendingId, name, email, phoneE164, phoneE164, phoneVerifiedFlag, hashed, gender || null, otp, otpExpiry,
         geo.ip, geo.country, geo.city, geo.latitude, geo.longitude,
       ]
     );
@@ -76,10 +81,12 @@ export async function POST(req) {
     }
 
     return NextResponse.json({
-      message: 'Registration initiated. Your mobile is verified. Please verify your email with the OTP sent.',
+      message: phoneCheck.phoneVerified
+        ? 'Registration initiated. Your mobile is verified. Please verify your email with the OTP sent.'
+        : 'Registration initiated. Please verify your email with the OTP sent.',
       email,
       requiresOTP: true,
-      phoneVerified: true,
+      phoneVerified: !!phoneCheck.phoneVerified,
     }, { status: 201 });
 
   } catch (err) {

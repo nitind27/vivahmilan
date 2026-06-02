@@ -39,6 +39,14 @@ export default function RegisterPage() {
   const [verifyingPhoneOtp, setVerifyingPhoneOtp] = useState(false);
   const [phoneOtpSent, setPhoneOtpSent] = useState(false);
   const [phoneCountdown, setPhoneCountdown] = useState(0);
+  const [phoneVerificationRequired, setPhoneVerificationRequired] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/site/registration-settings')
+      .then((r) => r.json())
+      .then((d) => setPhoneVerificationRequired(d.phoneVerificationRequired !== false))
+      .catch(() => setPhoneVerificationRequired(true));
+  }, []);
 
   useEffect(() => {
     if (status === 'authenticated') router.replace('/dashboard');
@@ -106,7 +114,9 @@ export default function RegisterPage() {
     };
     if (!form.gender) e.gender = 'Please select what you are looking for';
     if (!form.phone?.trim()) e.phone = 'Phone number is required for account verification';
-    if (!phoneVerified) e.phone = e.phone || 'Verify your mobile number with the SMS OTP';
+    if (phoneVerificationRequired && !phoneVerified) {
+      e.phone = e.phone || 'Verify your mobile number with the SMS OTP';
+    }
     setTouched(p => ({ ...p, gender: true, phone: true }));
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -133,8 +143,11 @@ export default function RegisterPage() {
       }
       setPhoneOtpSent(true);
       setPhoneCountdown(60);
-      toast.success(data.message || 'OTP sent to your mobile');
-      if (data.devOtp) toast(`Dev OTP: ${data.devOtp}`, { icon: '📱' });
+      if (data.consoleMode && data.devOtp) {
+        toast.success(`Test OTP: ${data.devOtp}`, { duration: 12000, icon: '📱' });
+      } else {
+        toast.success(data.message || 'OTP sent to your mobile');
+      }
     } catch {
       toast.error('Network error');
     } finally {
@@ -376,20 +389,22 @@ export default function RegisterPage() {
                         value={form.phone}
                         onChange={(e) => update('phone', e.target.value)}
                         onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
-                        disabled={phoneVerified}
+                        disabled={phoneVerificationRequired && phoneVerified}
                         className={inpCls('phone')}
                         placeholder="+91 87359 95467"
                       />
-                      {phoneVerified && (
+                      {phoneVerificationRequired && phoneVerified && (
                         <CheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
                       )}
                     </div>
                     <p className="text-xs text-vd-text-light mt-1">
-                      We validate your number and send a one-time code via SMS (powered by Veriphone).
+                      {phoneVerificationRequired
+                        ? 'We validate your number and send a one-time code via SMS.'
+                        : 'Enter your mobile number. SMS verification is currently optional.'}
                     </p>
                     <ErrMsg msg={touched.phone && errors.phone} />
 
-                    {!phoneVerified && (
+                    {phoneVerificationRequired && !phoneVerified && (
                       <div className="mt-3 space-y-3 rounded-2xl border border-vd-border bg-vd-bg-alt/50 p-4">
                         <button
                           type="button"

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Lock, Unlock, DoorOpen } from 'lucide-react';
+import { Lock, Unlock, DoorOpen, Phone } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function Toggle({ value, onChange }) {
@@ -178,6 +178,54 @@ export default function SiteConfigPage() {
           >
             {saving ? 'Saving…' : 'Save & Create Login Accounts'}
           </button>
+        </div>
+      </div>
+
+      {/* Mobile SMS verification at registration */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.phone_verification_required !== '0' ? 'bg-green-900/20' : 'bg-amber-900/30'}`}>
+            <Phone className={`w-5 h-5 ${config.phone_verification_required !== '0' ? 'text-green-400' : 'text-amber-400'}`} />
+          </div>
+          <div>
+            <h3 className="font-bold text-white">Registration — Mobile SMS OTP</h3>
+            <p className="text-xs text-gray-500">
+              ON = users must verify mobile via SMS before register. OFF = phone number only, no SMS OTP.
+            </p>
+          </div>
+        </div>
+        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.phone_verification_required !== '0' ? 'bg-green-900/10 border-green-800/30' : 'bg-amber-900/10 border-amber-800/40'}`}>
+          <div>
+            <p className="text-sm font-semibold text-white">
+              SMS verification is{' '}
+              <span className={config.phone_verification_required !== '0' ? 'text-green-400' : 'text-amber-400'}>
+                {config.phone_verification_required !== '0' ? '📱 ON (required)' : '⏸ OFF (skip SMS)'}
+              </span>
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {config.phone_verification_required !== '0'
+                ? 'Register page shows Send SMS OTP + verify step'
+                : 'Users enter mobile and continue — email OTP still required'}
+            </p>
+          </div>
+          <Toggle
+            value={config.phone_verification_required !== '0'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig((p) => ({ ...p, phone_verification_required: newVal }));
+              const res = await fetch('/api/admin/siteconfig', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'phone_verification_required', value: newVal }),
+              });
+              if (res.ok) {
+                toast.success(val ? 'Mobile SMS verification enabled' : 'Mobile SMS verification disabled');
+              } else {
+                toast.error('Failed');
+                setConfig((p) => ({ ...p, phone_verification_required: val ? '0' : '1' }));
+              }
+            }}
+          />
         </div>
       </div>
 
