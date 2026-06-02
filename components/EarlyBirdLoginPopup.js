@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,7 @@ function sessionKey(userId) {
 }
 
 function shouldSkipPath(pathname) {
+  if (!pathname) return true;
   return SKIP_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'));
 }
 
@@ -30,20 +31,16 @@ export default function EarlyBirdLoginPopup() {
   const [open, setOpen] = useState(false);
   const [offer, setOffer] = useState(null);
   const [claiming, setClaiming] = useState(false);
-  const fetchStarted = useRef(false);
-  const lastUserId = useRef(null);
 
-  /** Hide for current browser tab session only (refresh / navigation) */
-  const markDismissedThisSession = () => {
+  const markDismissedThisSession = useCallback(() => {
     const uid = session?.user?.id;
     if (uid && typeof window !== 'undefined') {
       sessionStorage.setItem(sessionKey(uid), 'dismissed');
     }
     setOpen(false);
-  };
+  }, [session?.user?.id]);
 
-  /** Permanent — after successful claim */
-  const markClaimedPermanent = async () => {
+  const markClaimedPermanent = useCallback(async () => {
     const uid = session?.user?.id;
     if (uid && typeof window !== 'undefined') {
       sessionStorage.setItem(sessionKey(uid), 'claimed');
@@ -52,11 +49,48 @@ export default function EarlyBirdLoginPopup() {
       await fetch('/api/early-bird/popup-seen', { method: 'POST' });
     } catch { /* ignore */ }
     setOpen(false);
-  };
+  }, [session?.user?.id]);
 
-  const handleDismiss = () => {
-    markDismissedThisSession();
-  };
+  const checkAndShowPopup = useCallback(() => {
+    if (status !== 'authenticated' || !session?.user?.id) return;
+    if (session.user.role === 'ADMIN') return;
+    if (shouldSkipPath(pathname || '')) return;
+
+    const uid = session.user.id;
+    const key = sessionKey(uid);
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(`vd_eb_popup_${uid}`);
+      const sess = sessionStorage.getItem(key);
+      if (sess === 'dismissed' || sess === 'claimed' || sess === 'shown') return;
+    }
+
+    fetch('/api/early-bird/status', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => {
+        const eligible = d.offer?.status === 'eligible' || (d.showPopup && d.offer?.canClaim);
+        if (!eligible) return;
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(key, 'shown');
+        }
+        setOffer(d.offer);
+        setOpen(true);
+      })
+      .catch(() => {});
+  }, [status, session?.user?.id, session?.user?.role, pathname]);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+
+    checkAndShowPopup();
+    const t1 = setTimeout(checkAndShowPopup, 800);
+    const t2 = setTimeout(checkAndShowPopup, 2000);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [status, session?.user?.id, session?.user?.role, pathname, checkAndShowPopup]);
 
   const handleClaim = async () => {
     setClaiming(true);
@@ -79,47 +113,6 @@ export default function EarlyBirdLoginPopup() {
     }
   };
 
-  useEffect(() => {
-    if (status !== 'authenticated' || !session?.user?.id) return;
-    if (shouldSkipPath(pathname || '')) return;
-    if (session.user.role === 'ADMIN') return;
-
-    const uid = session.user.id;
-    const key = sessionKey(uid);
-
-    if (lastUserId.current !== uid) {
-      fetchStarted.current = false;
-      lastUserId.current = uid;
-    }
-
-    if (typeof window !== 'undefined') {
-      const sess = sessionStorage.getItem(key);
-      if (sess === 'dismissed' || sess === 'claimed' || sess === 'shown') return;
-    }
-
-    if (fetchStarted.current) return;
-    fetchStarted.current = true;
-
-    fetch('/api/early-bird/status')
-      .then(r => r.json())
-      .then(d => {
-        if (d.showPopup && d.offer?.status === 'eligible') {
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem(key, 'shown');
-          }
-          setOffer(d.offer);
-          setOpen(true);
-        }
-      })
-      .catch(() => {});
-  }, [status, session?.user?.id, session?.user?.role, pathname]);
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      fetchStarted.current = false;
-    }
-  }, [status]);
-
   return (
     <AnimatePresence>
       {open && offer && (
@@ -128,7 +121,7 @@ export default function EarlyBirdLoginPopup() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={handleDismiss}
+          onClick={markDismissedThisSession}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -141,7 +134,7 @@ export default function EarlyBirdLoginPopup() {
             <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 px-6 pt-8 pb-6 text-center text-white relative">
               <button
                 type="button"
-                onClick={handleDismiss}
+                onClick={markDismissedThisSession}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-colors"
                 aria-label="Close"
               >
@@ -182,7 +175,8 @@ export default function EarlyBirdLoginPopup() {
               </div>
 
               <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                Claim once — offer won&apos;t show again. &quot;Maybe later&quot; hides until you open the browser again.
+                Tap below to activate free access. After claiming, this popup will not appear again.
+                &quot;Maybe later&quot; hides it until you open a new browser session.
               </p>
 
               <button
@@ -205,7 +199,7 @@ export default function EarlyBirdLoginPopup() {
 
               <button
                 type="button"
-                onClick={handleDismiss}
+                onClick={markDismissedThisSession}
                 className="w-full py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
               >
                 Maybe later

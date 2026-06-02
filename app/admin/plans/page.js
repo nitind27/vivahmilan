@@ -33,7 +33,7 @@ export default function PlansPage() {
     planId: 'GOLD',
     durationUnit: 'years',
     durationValue: 1,
-    autoAssignOnSignup: true,
+    autoAssignOnSignup: false,
     title: 'Early Bird Offer — Free Full Access',
     subtitle: 'First registered members get premium features free. Limited slots!',
   });
@@ -164,7 +164,7 @@ export default function PlansPage() {
           <div>
             <h3 className="font-bold text-lg text-white">Early Bird Offer (Free Tier)</h3>
             <p className="text-xs text-gray-400">
-              Pehle {earlyBird.limit} users ko free full access — plan + duration select karein. Dashboard par &quot;Early Bird FREE&quot; dikhega.
+              First {earlyBird.limit} users get free premium access. Users see a login popup to claim until they activate it.
             </p>
           </div>
           <div className="ml-auto">
@@ -175,36 +175,38 @@ export default function PlansPage() {
         {earlyBird.enabled && (
           <div className="mt-4 space-y-4 bg-gray-950/30 p-4 rounded-xl border border-gray-800">
             <div className="p-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-sm text-pink-200">
-              Preview: Pehle <strong>{earlyBird.limit}</strong> users ko <strong>{earlyBird.planId}</strong> plan{' '}
-              <strong>{durationLabel}</strong> ke liye FREE milega · <strong>{slotsLeft}</strong> slots bache
+              Preview: First <strong>{earlyBird.limit}</strong> users receive <strong>{earlyBird.planId}</strong> plan free for{' '}
+              <strong>{durationLabel}</strong> · <strong>{slotsLeft}</strong> slots remaining
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Kitne users? (e.g. 1000)</label>
+                <label className="text-xs text-gray-400 mb-1 block">Maximum Users (e.g. 1000)</label>
                 <input type="number" min={1} value={earlyBird.limit}
                   onChange={e => setEarlyBird(p => ({ ...p, limit: parseInt(e.target.value, 10) || 1 }))}
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+                <p className="text-[10px] text-gray-600 mt-1">How many users can claim this offer</p>
               </div>
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Free duration type</label>
+                <label className="text-xs text-gray-400 mb-1 block">Free Access Duration</label>
                 <select value={earlyBird.durationUnit || 'years'}
                   onChange={e => setEarlyBird(p => ({ ...p, durationUnit: e.target.value }))}
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500">
-                  <option value="years">Years (Saal)</option>
-                  <option value="days">Days (Din)</option>
+                  <option value="years">Years</option>
+                  <option value="days">Days</option>
                 </select>
               </div>
               <div>
                 <label className="text-xs text-gray-400 mb-1 block">
-                  {earlyBird.durationUnit === 'days' ? 'Kitne din?' : 'Kitne saal?'}
+                  {earlyBird.durationUnit === 'days' ? 'Number of Days' : 'Number of Years'}
                 </label>
                 <input type="number" min={1} value={earlyBird.durationValue ?? 1}
                   onChange={e => setEarlyBird(p => ({ ...p, durationValue: parseInt(e.target.value, 10) || 1 }))}
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
+                <p className="text-[10px] text-gray-600 mt-1">Example: 1 year = 365 days free</p>
               </div>
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Plan (full access)</label>
+                <label className="text-xs text-gray-400 mb-1 block">Premium Plan to Grant</label>
                 <select value={earlyBird.planId} onChange={e => setEarlyBird(p => ({ ...p, planId: e.target.value }))}
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500">
                   {plans.length === 0 && <option value="GOLD">GOLD</option>}
@@ -220,23 +222,31 @@ export default function PlansPage() {
                   Sync count from DB
                 </button>
               </div>
-              <div className="flex items-end">
-                <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
-                  <input type="checkbox" checked={earlyBird.autoAssignOnSignup !== false}
+              <div className="flex items-end md:col-span-2">
+                <label className="flex items-start gap-2 text-sm text-gray-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={earlyBird.autoAssignOnSignup === true}
                     onChange={e => setEarlyBird(p => ({ ...p, autoAssignOnSignup: e.target.checked }))}
-                    className="rounded" />
-                  Auto-assign on new registration
+                    className="rounded mt-0.5"
+                  />
+                  <span>
+                    <span className="font-medium text-white block">Auto-assign on registration</span>
+                    <span className="text-xs text-gray-500 block mt-0.5">
+                      Off (recommended): user must claim via login popup. On: free access without popup.
+                    </span>
+                  </span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Offer title (Premium page)</label>
+              <label className="text-xs text-gray-400 mb-1 block">Popup &amp; Premium Page Title</label>
               <input value={earlyBird.title || ''} onChange={e => setEarlyBird(p => ({ ...p, title: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Offer subtitle</label>
+              <label className="text-xs text-gray-400 mb-1 block">Popup &amp; Premium Page Subtitle</label>
               <textarea rows={2} value={earlyBird.subtitle || ''} onChange={e => setEarlyBird(p => ({ ...p, subtitle: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500 resize-none" />
             </div>
