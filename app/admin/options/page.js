@@ -1,24 +1,39 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Database, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const CATEGORIES = [
-  { key: 'religion', label: 'Religion' }, { key: 'caste_Hindu', label: 'Caste - Hindu' },
-  { key: 'caste_Muslim', label: 'Caste - Muslim' }, { key: 'caste_Christian', label: 'Caste - Christian' },
-  { key: 'caste_Sikh', label: 'Caste - Sikh' }, { key: 'caste_Jain', label: 'Caste - Jain' },
-  { key: 'gotra', label: 'Gotra' }, { key: 'motherTongue', label: 'Mother Tongue' },
-  { key: 'education', label: 'Education' }, { key: 'profession', label: 'Profession' },
-  { key: 'income', label: 'Income' }, { key: 'diet', label: 'Diet' },
-  { key: 'bodyType', label: 'Body Type' }, { key: 'complexion', label: 'Complexion' },
-  { key: 'familyType', label: 'Family Type' }, { key: 'familyStatus', label: 'Family Status' },
-  { key: 'horoscopeSign', label: 'Horoscope Sign' }, { key: 'nakshatra', label: 'Nakshatra' },
+  { key: 'religion', label: 'Religion' },
+  { key: 'caste_Hindu', label: 'Community — Hindu' },
+  { key: 'caste_Muslim', label: 'Community — Muslim' },
+  { key: 'caste_Christian', label: 'Community — Christian' },
+  { key: 'caste_Sikh', label: 'Community — Sikh' },
+  { key: 'caste_Jain', label: 'Community — Jain' },
+  { key: 'caste_Buddhist', label: 'Community — Buddhist' },
+  { key: 'caste_Parsi', label: 'Community — Parsi' },
+  { key: 'caste_Jewish', label: 'Community — Jewish' },
+  { key: 'caste_NoReligion', label: 'Community — No Religion' },
+  { key: 'caste_Other', label: 'Community — Other' },
+  { key: 'gotra', label: 'Gotra' },
+  { key: 'motherTongue', label: 'Mother Tongue' },
+  { key: 'education', label: 'Education' },
+  { key: 'profession', label: 'Profession' },
+  { key: 'income', label: 'Income' },
+  { key: 'diet', label: 'Diet' },
+  { key: 'bodyType', label: 'Body Type' },
+  { key: 'complexion', label: 'Complexion' },
+  { key: 'familyType', label: 'Family Type' },
+  { key: 'familyStatus', label: 'Family Status' },
+  { key: 'horoscopeSign', label: 'Horoscope Sign' },
+  { key: 'nakshatra', label: 'Nakshatra' },
 ];
 
 export default function OptionsPage() {
   const [options, setOptions] = useState([]);
   const [category, setCategory] = useState('religion');
   const [newOpt, setNewOpt] = useState({ value: '', label: '', group: '' });
+  const [seeding, setSeeding] = useState(false);
 
   const load = () => fetch('/api/profile-options').then(r => r.json()).then(setOptions).catch(() => {});
   useEffect(() => { load(); }, []);
@@ -41,6 +56,22 @@ export default function OptionsPage() {
     toast.success('Deleted'); load();
   };
 
+  const seedDefaults = async () => {
+    if (!confirm('Create table (if missing) and insert all default options from caste/religion data? Existing rows are kept.')) return;
+    setSeeding(true);
+    try {
+      const res = await fetch('/api/admin/profile-options/seed', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Seed failed');
+      toast.success(data.message || `Inserted ${data.inserted} options`);
+      load();
+    } catch (e) {
+      toast.error(e.message || 'Seed failed');
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const filtered = options.filter(o => o.category === category);
   const groups = [...new Set(filtered.map(o => o.group).filter(Boolean))];
   const ungrouped = filtered.filter(o => !o.group);
@@ -49,12 +80,29 @@ export default function OptionsPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold">Profile Options Manager</h2>
           <p className="text-gray-400 text-sm mt-0.5">Add, edit, or disable options in user profile forms</p>
         </div>
-        <span className="text-xs bg-gray-700 text-gray-300 px-3 py-1.5 rounded-full">{filtered.length} in {catLabel}</span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={seedDefaults}
+            disabled={seeding}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-60"
+          >
+            {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+            Restore default options
+          </button>
+          <span className="text-xs bg-gray-700 text-gray-300 px-3 py-1.5 rounded-full">{filtered.length} in {catLabel}</span>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-gray-700 bg-gray-800/80 px-4 py-3 text-xs text-gray-400">
+        <strong className="text-gray-300">Database:</strong> Run{' '}
+        <code className="text-emerald-400">migrations/profileoption_setup.sql</code> then{' '}
+        <code className="text-emerald-400">node prisma/seed-options.js</code> — or use the green button above.
       </div>
 
       <div className="flex flex-wrap gap-2">
