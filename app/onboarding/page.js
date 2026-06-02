@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SearchableSelect from '@/components/SearchableSelect';
+import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 import LocationPicker from '@/components/LocationPicker';
 import {
   ALL_RELIGIONS, getHoroscopeConfig, getMotherTongues,
@@ -481,7 +482,7 @@ function OnboardingInner() {
                   <SearchableSelect label="Height *" value={form.height} onChange={v => set('height', v)} options={HEIGHTS} placeholder="Select height" />
                   <Inp label="Weight (kg)" value={form.weight} onChange={v => set('weight', v)} type="number" placeholder="65" />
                   <Sel label="Marital Status" value={form.maritalStatus} onChange={v => set('maritalStatus', v)} options={MARITAL} />
-                  <Inp label="Phone Number" value={form.phone} onChange={v => set('phone', v)} placeholder="+91 9999999999" />
+                  <Inp label="Phone Number" value={form.phone} onChange={v => set('phone', v)} placeholder={PHONE_PLACEHOLDER} />
                   <div className="col-span-2">
                     <AboutMeField
                       value={form.aboutMe}

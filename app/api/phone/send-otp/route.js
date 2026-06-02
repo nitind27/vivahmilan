@@ -1,8 +1,19 @@
 import { NextResponse } from 'next/server';
 import { sendPhoneVerificationOtp } from '@/lib/phoneVerification';
+import { isPhoneVerificationRequired } from '@/lib/phoneVerificationSettings';
 
 export async function POST(req) {
   try {
+    if (!(await isPhoneVerificationRequired())) {
+      return NextResponse.json(
+        {
+          error:
+            'SMS OTP is disabled. Use Check mobile number (Veriphone validation) instead.',
+          useVeriphone: true,
+        },
+        { status: 400 }
+      );
+    }
     const { phone } = await req.json();
     if (!phone) {
       return NextResponse.json({ error: 'Phone number is required' }, { status: 400 });

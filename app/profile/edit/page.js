@@ -8,8 +8,9 @@ import SearchableSelect from '@/components/SearchableSelect';
 import LocationPicker from '@/components/LocationPicker';
 import { PhotoUploadSection, DocumentUploadSection, FamilyPhotoUploadSection } from '@/components/PhotoUpload';
 import IntroVideoSection from '@/components/IntroVideoSection';
-import { Save, ChevronRight, ChevronLeft, Check, User, MapPin, Heart, Briefcase, Users, Star } from 'lucide-react';
+import { Save, ChevronRight, ChevronLeft, Check, User, MapPin, Heart, Briefcase, Users, Star, Loader2, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 import {
   ALL_RELIGIONS, getHoroscopeConfig,
   getExtraFields, getMotherTongues, getSects, getGotra, RELIGION_DATA
@@ -122,6 +123,9 @@ function EditProfilePage() {
   const [savedSteps, setSavedSteps] = useState([]);
   const [kundali, setKundali] = useState(null);
   const [kundaliLoading, setKundaliLoading] = useState(false);
+  const [phoneValidated, setPhoneValidated] = useState(false);
+  const [checkingPhone, setCheckingPhone] = useState(false);
+  const [initialPhone, setInitialPhone] = useState('');
 
   const [form, setForm] = useState({
     // Basic
@@ -153,7 +157,50 @@ function EditProfilePage() {
     partnerManglik: '',
   });
 
-  const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const set = (k, v) => {
+    setForm(p => ({ ...p, [k]: v }));
+    if (k === 'phone') {
+      setPhoneValidated(false);
+    }
+  };
+
+  const checkPhoneNumber = async () => {
+    if (!form.phone?.trim()) {
+      toast.error('Enter your mobile number');
+      return false;
+    }
+    setCheckingPhone(true);
+    try {
+      const res = await fetch('/api/phone/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPhoneValidated(false);
+        toast.error(data.error || 'Invalid phone number');
+        return false;
+      }
+      setPhoneValidated(true);
+      if (data.international_number) {
+        setForm((f) => ({ ...f, phone: data.international_number }));
+      }
+      toast.success('Mobile number verified');
+      return true;
+    } catch {
+      toast.error('Could not validate phone number');
+      return false;
+    } finally {
+      setCheckingPhone(false);
+    }
+  };
+
+  const phoneNeedsValidation = () => {
+    if (!form.phone?.trim()) return true;
+    if (form.phone !== initialPhone) return true;
+    return !phoneValidated;
+  };
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -163,6 +210,8 @@ function EditProfilePage() {
     if (status !== 'authenticated') return;
     fetch('/api/profile').then(r => r.json()).then(data => {
       const p = data.profile || {};
+      setInitialPhone(data.phone || '');
+      setPhoneValidated(!!data.phoneVerified && !!data.phone);
       setForm(prev => ({
         ...prev,
         name: data.name || '',
@@ -228,6 +277,14 @@ function EditProfilePage() {
         toast.error(aboutCheck.error);
         return;
       }
+    }
+    if (form.phone?.trim() && phoneNeedsValidation()) {
+      const ok = await checkPhoneNumber();
+      if (!ok) return;
+    }
+    if (!form.phone?.trim()) {
+      toast.error('Phone number is required');
+      return;
     }
     setSaving(true);
     try {
@@ -341,7 +398,35 @@ function EditProfilePage() {
                   <Select label="Marital Status" value={form.maritalStatus} onChange={v => set('maritalStatus', v)} options={MARITAL_STATUS} />
                   <Select label="Body Type" value={form.bodyType} onChange={v => set('bodyType', v)} options={BODY_TYPES} />
                   <Select label="Complexion" value={form.complexion} onChange={v => set('complexion', v)} options={COMPLEXIONS} />
-                  <Input label="Phone Number" value={form.phone} onChange={v => set('phone', v)} placeholder="+91 9999999999" />
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number <span className="text-red-500">*</span></label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        value={form.phone}
+                        onChange={(e) => set('phone', e.target.value)}
+                        onBlur={() => { if (form.phone?.trim() && phoneNeedsValidation()) checkPhoneNumber(); }}
+                        placeholder={PHONE_PLACEHOLDER}
+                        className={inputCls}
+                      />
+                      {phoneValidated && (
+                        <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Validated with Veriphone — checks valid mobile only (no SMS OTP). Required for all accounts.
+                    </p>
+                    {!phoneValidated && form.phone?.trim() && (
+                      <button
+                        type="button"
+                        onClick={checkPhoneNumber}
+                        disabled={checkingPhone}
+                        className="mt-2 w-full py-2 rounded-xl text-sm font-semibold border border-vd-primary text-vd-primary hover:bg-vd-accent-soft disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                        {checkingPhone ? <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</> : 'Check mobile number'}
+                      </button>
+                    )}
+                  </div>
                   <div className="col-span-2">
                     <AboutMeField
                       value={form.aboutMe}

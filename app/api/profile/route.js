@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
 import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
+import { validateUserPhoneForSave, phoneNumberChanged } from '@/lib/validateUserPhone';
 
 // Auto-migrate: add missing columns if they don't exist
 async function ensureColumns() {
@@ -83,11 +84,38 @@ export async function PUT(req) {
     }
   }
 
-  if (name || phone) {
-    await execute(
-      'UPDATE `user` SET name = COALESCE(?, name), phone = COALESCE(?, phone), updatedAt = NOW() WHERE id = ?',
-      [name || null, phone || null, session.user.id]
-    );
+  if (name || phone !== undefined) {
+    let phoneToSave = null;
+    let phoneVerifiedFlag = null;
+
+    if (phone !== undefined && phone !== null && String(phone).trim()) {
+      const current = await queryOne('SELECT phone, phoneVerified FROM `user` WHERE id = ?', [session.user.id]);
+      const changed = phoneNumberChanged(current?.phone, phone);
+      if (changed || !current?.phoneVerified) {
+        const check = await validateUserPhoneForSave(phone, session.user.id, { required: true });
+        if (!check.ok) {
+          return NextResponse.json({ error: check.error }, { status: 400 });
+        }
+        phoneToSave = check.e164;
+        phoneVerifiedFlag = 1;
+      } else {
+        phoneToSave = current?.phone || phone;
+      }
+    } else if (phone !== undefined) {
+      return NextResponse.json({ error: 'Phone number is required.' }, { status: 400 });
+    }
+
+    if (phoneVerifiedFlag === 1) {
+      await execute(
+        'UPDATE `user` SET name = COALESCE(?, name), phone = ?, phoneVerified = 1, updatedAt = NOW() WHERE id = ?',
+        [name || null, phoneToSave, session.user.id]
+      );
+    } else {
+      await execute(
+        'UPDATE `user` SET name = COALESCE(?, name), updatedAt = NOW() WHERE id = ?',
+        [name || null, session.user.id]
+      );
+    }
   }
 
   const existing = await queryOne('SELECT id FROM profile WHERE userId = ?', [session.user.id]);

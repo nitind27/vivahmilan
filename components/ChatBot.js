@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
   MessageCircle, X, Send, Bot, User, Headphones, ChevronDown, Loader2, PhoneOff,
-  Search, Sparkles, HelpCircle, ChevronUp, Languages,
+  Search, Sparkles, HelpCircle, ChevronUp,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { acceptsFunctional, hasConsentChoice } from '@/lib/cookieConsent';
@@ -395,13 +395,9 @@ export default function ChatBot() {
                 {status === 'live' ? 'Live Support Agent' : 'Vivah Dwar Support Agent'}
               </p>
               <p className="text-vd-text-sub text-xs truncate">
-                {status === 'live' ? '🟢 Agent connected' : status === 'ended' ? '⚫ Chat ended' : '🤖 Smart help · English & Hindi · Ask anything'}
+                {status === 'live' ? '🟢 Agent connected' : status === 'ended' ? '⚫ Chat ended' : '🤖 Smart help · Ask anything'}
               </p>
             </div>
-            <button type="button" onClick={() => setLang(lang === 'en' ? 'hi' : 'en')} title="Toggle language"
-              className="p-1.5 bg-vd-bg-alt hover:bg-vd-accent-soft rounded-full border border-vd-border text-vd-text-sub">
-              <Languages className="w-3.5 h-3.5" />
-            </button>
             {status === 'bot' && (
               <button type="button" onClick={resetChat} className="text-[10px] bg-vd-bg-alt hover:bg-vd-accent-soft text-vd-text-sub px-2 py-1 rounded-full border border-vd-border">
                 New

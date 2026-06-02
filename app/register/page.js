@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,10 +8,15 @@ import { signIn, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import SiteLoader from '@/components/SiteLoader';
 import { getClientGeo, getClientPublicIP } from '@/lib/clientGeo';
+import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 
 const steps = ['Account', 'Personal', 'Done'];
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[+]?[\d\s\-()]{7,15}$/;
+
+function phoneDigits(v) {
+  return (v || '').replace(/\D/g, '');
+}
 
 function ErrMsg({ msg }) {
   if (!msg) return null;
@@ -39,13 +44,16 @@ export default function RegisterPage() {
   const [verifyingPhoneOtp, setVerifyingPhoneOtp] = useState(false);
   const [phoneOtpSent, setPhoneOtpSent] = useState(false);
   const [phoneCountdown, setPhoneCountdown] = useState(0);
-  const [phoneVerificationRequired, setPhoneVerificationRequired] = useState(true);
+  const [phoneSmsOtpRequired, setPhoneSmsOtpRequired] = useState(false);
+  const [phoneValidated, setPhoneValidated] = useState(false);
+  const [checkingPhone, setCheckingPhone] = useState(false);
+  const verifiedPhoneDigitsRef = useRef('');
 
   useEffect(() => {
     fetch('/api/site/registration-settings')
       .then((r) => r.json())
-      .then((d) => setPhoneVerificationRequired(d.phoneVerificationRequired !== false))
-      .catch(() => setPhoneVerificationRequired(true));
+      .then((d) => setPhoneSmsOtpRequired(d.phoneSmsOtpRequired === true || d.phoneVerificationRequired === true))
+      .catch(() => setPhoneSmsOtpRequired(false));
   }, []);
 
   useEffect(() => {
@@ -59,11 +67,52 @@ export default function RegisterPage() {
   }, [phoneCountdown]);
 
   useEffect(() => {
+    const digits = phoneDigits(form.phone);
+    if (verifiedPhoneDigitsRef.current && digits === verifiedPhoneDigitsRef.current) {
+      return;
+    }
+    verifiedPhoneDigitsRef.current = '';
     setPhoneVerified(false);
+    setPhoneValidated(false);
     setPhoneVerificationToken('');
     setPhoneOtpSent(false);
     setPhoneOtp(['', '', '', '', '', '']);
   }, [form.phone]);
+
+  const checkPhoneNumber = async () => {
+    const e = validateField('phone', form.phone);
+    if (Object.keys(e).length) {
+      setTouched((p) => ({ ...p, phone: true }));
+      setErrors((p) => ({ ...p, ...e }));
+      return false;
+    }
+    setCheckingPhone(true);
+    try {
+      const res = await fetch('/api/phone/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPhoneValidated(false);
+        setErrors((p) => ({ ...p, phone: data.error || 'Invalid phone number' }));
+        setTouched((p) => ({ ...p, phone: true }));
+        return false;
+      }
+      const formatted = data.international_number || data.e164 || form.phone;
+      verifiedPhoneDigitsRef.current = phoneDigits(formatted);
+      setForm((f) => ({ ...f, phone: formatted }));
+      setPhoneValidated(true);
+      setErrors((p) => ({ ...p, phone: undefined }));
+      return true;
+    } catch {
+      toast.error('Could not validate phone number');
+      return false;
+    } finally {
+      setCheckingPhone(false);
+    }
+  };
 
   if (status === 'loading') {
     return <SiteLoader message="Loading…" size="lg" />;
@@ -114,8 +163,11 @@ export default function RegisterPage() {
     };
     if (!form.gender) e.gender = 'Please select what you are looking for';
     if (!form.phone?.trim()) e.phone = 'Phone number is required for account verification';
-    if (phoneVerificationRequired && !phoneVerified) {
-      e.phone = e.phone || 'Verify your mobile number with the SMS OTP';
+    if (phoneSmsOtpRequired && !phoneVerified) {
+      e.phone = e.phone || 'Verify your mobile number with the SMS code';
+    }
+    if (!phoneSmsOtpRequired && !phoneValidated) {
+      e.phone = e.phone || 'Please check your mobile number is valid';
     }
     setTouched(p => ({ ...p, gender: true, phone: true }));
     setErrors(e);
@@ -191,9 +243,24 @@ export default function RegisterPage() {
     if (val && i < 5) document.getElementById(`reg-phone-otp-${i + 1}`)?.focus();
   };
 
-  const next = () => {
+  const phoneReady = phoneSmsOtpRequired ? phoneVerified : phoneValidated;
+  const step1NextDisabled =
+    step === 1 &&
+    (!form.gender ||
+      !form.phone?.trim() ||
+      !phoneRegex.test(form.phone) ||
+      !phoneReady ||
+      checkingPhone);
+
+  const next = async () => {
     if (step === 0 && !validateStep0()) return;
-    if (step === 1 && !validateStep1()) return;
+    if (step === 1) {
+      if (!phoneSmsOtpRequired && !phoneValidated) {
+        const ok = await checkPhoneNumber();
+        if (!ok) return;
+      }
+      if (!validateStep1()) return;
+    }
     setStep(s => s + 1);
   };
 
@@ -382,29 +449,41 @@ export default function RegisterPage() {
                     <label className="block text-sm font-semibold text-vd-text-sub mb-1.5">
                       Mobile number <span className="text-red-500 font-normal">*</span>
                     </label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />
-                      <input
-                        type="tel"
-                        value={form.phone}
-                        onChange={(e) => update('phone', e.target.value)}
-                        onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
-                        disabled={phoneVerificationRequired && phoneVerified}
-                        className={inpCls('phone')}
-                        placeholder="+91 87359 95467"
-                      />
-                      {phoneVerificationRequired && phoneVerified && (
-                        <CheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
+                    <div className="flex gap-2">
+                      <div className="relative flex-1 min-w-0">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />
+                        <input
+                          type="tel"
+                          value={form.phone}
+                          onChange={(e) => update('phone', e.target.value)}
+                          onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
+                          className={inpCls('phone')}
+                          placeholder={PHONE_PLACEHOLDER}
+                        />
+                        {((phoneSmsOtpRequired && phoneVerified) || (!phoneSmsOtpRequired && phoneValidated)) && (
+                          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
+                        )}
+                      </div>
+                      {!phoneSmsOtpRequired && (
+                        <button
+                          type="button"
+                          onClick={checkPhoneNumber}
+                          disabled={checkingPhone || !form.phone?.trim() || phoneValidated}
+                          className="flex-shrink-0 px-4 py-3 rounded-2xl text-sm font-semibold border border-vd-primary text-vd-primary hover:bg-vd-accent-soft disabled:opacity-50 min-w-[88px] flex items-center justify-center"
+                        >
+                          {checkingPhone ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : phoneValidated ? (
+                            'Done'
+                          ) : (
+                            'Verify'
+                          )}
+                        </button>
                       )}
                     </div>
-                    <p className="text-xs text-vd-text-light mt-1">
-                      {phoneVerificationRequired
-                        ? 'We validate your number and send a one-time code via SMS.'
-                        : 'Enter your mobile number. SMS verification is currently optional.'}
-                    </p>
                     <ErrMsg msg={touched.phone && errors.phone} />
 
-                    {phoneVerificationRequired && !phoneVerified && (
+                    {phoneSmsOtpRequired && !phoneVerified && (
                       <div className="mt-3 space-y-3 rounded-2xl border border-vd-border bg-vd-bg-alt/50 p-4">
                         <button
                           type="button"
@@ -490,10 +569,17 @@ export default function RegisterPage() {
                     <ChevronLeft className="w-4 h-4" /> Back
                   </button>
                 )}
-                <button onClick={next}
-                  className="flex-1 vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all"
-                  style={{ boxShadow: '0 4px 20px rgba(200,164,92,0.35)' }}>
-                  Next <ChevronRight className="w-4 h-4" />
+                <button
+                  onClick={next}
+                  disabled={step1NextDisabled}
+                  className="flex-1 vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ boxShadow: step1NextDisabled ? undefined : '0 4px 20px rgba(200,164,92,0.35)' }}
+                >
+                  {step === 1 && checkingPhone ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</>
+                  ) : (
+                    <>Next <ChevronRight className="w-4 h-4" /></>
+                  )}
                 </button>
               </div>
             )}

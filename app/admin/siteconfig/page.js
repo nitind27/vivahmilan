@@ -99,7 +99,7 @@ export default function SiteConfigPage() {
           <div>
             <h3 className="font-bold text-white">User Portal Access</h3>
             <p className="text-xs text-gray-500">
-              OFF = verified users login kar sakte hain par profile-launch page dikhega. ON = full website access.
+              OFF = verified users can log in but see the profile launch page. ON = full website access.
             </p>
           </div>
         </div>
@@ -113,8 +113,8 @@ export default function SiteConfigPage() {
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
               {config.user_portal_access === '1'
-                ? 'Verified users dashboard, matches, chat sab use kar sakte hain'
-                : 'Verified users ko "Profile jald available" page dikhega — login allowed'}
+                ? 'Verified users can use dashboard, matches, and chat'
+                : 'Verified users see the profile launch page — login still allowed'}
             </p>
           </div>
           <Toggle
@@ -139,7 +139,7 @@ export default function SiteConfigPage() {
           <label className="text-xs text-gray-400 mb-1 block">Developer Test Accounts</label>
           <p className="text-xs text-gray-600 mb-2">
             Har line: <code className="text-amber-300/90">email:password</code> (password min 6 chars).
-            Portal band hone par bhi full access + <strong className="text-gray-400">/login</strong> par email/password se login.
+            When the portal is closed, these accounts still get full access and can sign in at <strong className="text-gray-400">/login</strong> with email and password.
           </p>
           <textarea
             rows={4}
@@ -181,35 +181,44 @@ export default function SiteConfigPage() {
         </div>
       </div>
 
-      {/* Mobile SMS verification at registration */}
+      {/* Phone validation — Veriphone (default) vs optional SMS OTP */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.phone_verification_required !== '0' ? 'bg-green-900/20' : 'bg-amber-900/30'}`}>
-            <Phone className={`w-5 h-5 ${config.phone_verification_required !== '0' ? 'text-green-400' : 'text-amber-400'}`} />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-green-900/20">
+            <Phone className="w-5 h-5 text-green-400" />
           </div>
           <div>
-            <h3 className="font-bold text-white">Registration — Mobile SMS OTP</h3>
+            <h3 className="font-bold text-white">Mobile Number Validation</h3>
             <p className="text-xs text-gray-500">
-              ON = users must verify mobile via SMS before register. OFF = phone number only, no SMS OTP.
+              Default: <a href="https://veriphone.io" target="_blank" rel="noopener noreferrer" className="text-amber-300/90 underline">Veriphone</a> checks if the number is valid (no SMS OTP). Set <code className="text-amber-300/90">VERIPHONE_API_KEY</code> in .env.production.
             </p>
           </div>
         </div>
-        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.phone_verification_required !== '0' ? 'bg-green-900/10 border-green-800/30' : 'bg-amber-900/10 border-amber-800/40'}`}>
+        <div className="p-4 rounded-xl border bg-green-900/10 border-green-800/30 text-xs text-gray-400 space-y-2">
+          <p className="text-green-400 font-semibold text-sm">Active mode: Veriphone only (recommended)</p>
+          <ul className="list-disc pl-4 space-y-1">
+            <li>Register &amp; profile: user taps <strong className="text-gray-300">Check mobile number</strong></li>
+            <li>Invalid / landline numbers are rejected</li>
+            <li><strong className="text-gray-300">Free:</strong> 1,000 validations on signup at veriphone.io — then paid credits</li>
+            <li><strong className="text-gray-300">No SMS OTP</strong> — MSG91 not required</li>
+          </ul>
+        </div>
+        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.phone_verification_required === '1' ? 'bg-amber-900/10 border-amber-800/40' : 'bg-gray-900/50 border-gray-700'}`}>
           <div>
             <p className="text-sm font-semibold text-white">
-              SMS verification is{' '}
-              <span className={config.phone_verification_required !== '0' ? 'text-green-400' : 'text-amber-400'}>
-                {config.phone_verification_required !== '0' ? '📱 ON (required)' : '⏸ OFF (skip SMS)'}
+              Optional SMS OTP (MSG91){' '}
+              <span className={config.phone_verification_required === '1' ? 'text-amber-400' : 'text-gray-400'}>
+                {config.phone_verification_required === '1' ? 'ON — paid SMS' : 'OFF'}
               </span>
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              {config.phone_verification_required !== '0'
-                ? 'Register page shows Send SMS OTP + verify step'
-                : 'Users enter mobile and continue — email OTP still required'}
+              {config.phone_verification_required === '1'
+                ? 'Users must receive an SMS code (requires MSG91_AUTH_KEY + wallet balance).'
+                : 'Leave OFF. Veriphone validation only — no text message sent to the user.'}
             </p>
           </div>
           <Toggle
-            value={config.phone_verification_required !== '0'}
+            value={config.phone_verification_required === '1'}
             onChange={async (val) => {
               const newVal = val ? '1' : '0';
               setConfig((p) => ({ ...p, phone_verification_required: newVal }));
@@ -219,7 +228,7 @@ export default function SiteConfigPage() {
                 body: JSON.stringify({ key: 'phone_verification_required', value: newVal }),
               });
               if (res.ok) {
-                toast.success(val ? 'Mobile SMS verification enabled' : 'Mobile SMS verification disabled');
+                toast.success(val ? 'SMS OTP enabled (MSG91 required)' : 'SMS OTP disabled — Veriphone only');
               } else {
                 toast.error('Failed');
                 setConfig((p) => ({ ...p, phone_verification_required: val ? '0' : '1' }));
@@ -273,7 +282,7 @@ export default function SiteConfigPage() {
       {/* Mobile App Links */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
         <h3 className="font-bold text-lg text-white">Mobile App (Navbar)</h3>
-        <p className="text-xs text-gray-500">Navbar icon Play Store / App Store par le jata hai. URL khali ho to icon hide rahega.</p>
+        <p className="text-xs text-gray-500">Navbar icon links to Play Store / App Store. If the URL is empty, the icon is hidden.</p>
         <div className="flex items-center justify-between p-4 rounded-xl border bg-gray-900/50 border-gray-700">
           <div>
             <p className="text-sm font-semibold text-white">Show app icon in navbar</p>

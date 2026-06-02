@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon, Ban, Unlock, Star, Trash2, CheckCircle, Key, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
+import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 
 // ── Admin Direct Chat Modal ───────────────────────────────────────────────────
 export function AdminDirectChatModal({ user, onClose }) {
@@ -421,7 +422,7 @@ export function MatchMakerTab() {
           <div className="relative flex-1">
             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input value={phone} onChange={e => setPhone(e.target.value)} onKeyDown={e => e.key === 'Enter' && lookupUser()}
-              placeholder="+91 98765 43210" className="w-full pl-9 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary" />
+              placeholder={PHONE_PLACEHOLDER} className="w-full pl-9 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary" />
           </div>
           <button onClick={lookupUser} disabled={loadingUser || !phone.trim()}
             className="px-6 py-3 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 flex items-center gap-2">

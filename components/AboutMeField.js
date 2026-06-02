@@ -11,7 +11,7 @@ export default function AboutMeField({
   rows = 4,
   inputClassName = '',
   label = 'About Me *',
-  placeholder = 'Apne bare mein likhein — parivar, shiksha, career, hobbies, partner mein kya dhundh rahe hain… (kam se kam 50 shabd)',
+  placeholder = 'Write about yourself — family, education, career, hobbies, and what you are looking for in a partner (minimum 50 words)',
 }) {
   const wordCount = countWords(value);
   const hasText = wordCount > 0;

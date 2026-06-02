@@ -3,6 +3,7 @@ import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
 import { validateSubmitForReview, formatUserSubmitChecklist } from '@/lib/profileVerification';
 import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
+import { validateUserPhoneForSave } from '@/lib/validateUserPhone';
 
 export async function POST(req) {
   try {
@@ -11,9 +12,15 @@ export async function POST(req) {
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
-    const user = await queryOne('SELECT id, emailVerified, name, phone, freeTrialUsed FROM `user` WHERE email = ?', [email]);
+    const user = await queryOne(
+      'SELECT id, emailVerified, name, phone, phoneVerified, password, freeTrialUsed FROM `user` WHERE email = ?',
+      [email]
+    );
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    if (!user.emailVerified) return NextResponse.json({ error: 'Email not verified' }, { status: 403 });
+    const isGoogleAccount = user.password == null || user.password === '';
+    if (!user.emailVerified && !isGoogleAccount) {
+      return NextResponse.json({ error: 'Email not verified' }, { status: 403 });
+    }
 
     const { name, phone, ...profileData } = data;
 
@@ -43,11 +50,24 @@ export async function POST(req) {
       }
     }
 
-    // Update user name/phone
-    if (name || phone) {
+    if (name || phone !== undefined) {
+      let phoneToSave = user.phone;
+      let phoneVerified = user.phoneVerified ? 1 : 0;
+
+      if (phone !== undefined && String(phone).trim()) {
+        const check = await validateUserPhoneForSave(phone, user.id, { required: true });
+        if (!check.ok) {
+          return NextResponse.json({ error: check.error }, { status: 400 });
+        }
+        phoneToSave = check.e164;
+        phoneVerified = 1;
+      } else if (phone !== undefined && !String(phone).trim()) {
+        return NextResponse.json({ error: 'Phone number is required.' }, { status: 400 });
+      }
+
       await execute(
-        'UPDATE `user` SET name = ?, phone = ?, updatedAt = NOW() WHERE id = ?',
-        [name || user.name, phone || user.phone, user.id]
+        'UPDATE `user` SET name = ?, phone = ?, phoneVerified = ?, updatedAt = NOW() WHERE id = ?',
+        [name || user.name, phoneToSave, phoneVerified, user.id]
       );
     }
 

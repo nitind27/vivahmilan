@@ -10,6 +10,7 @@ import AboutMeField from '@/components/AboutMeField';
 import { validateAboutMe } from '@/lib/aboutMeValidation';
 import { ALL_RELIGIONS } from '@/lib/religionData';
 import CasteCommunitySelect from '@/components/CasteCommunitySelect';
+import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 
 const RELIGIONS = ALL_RELIGIONS;
 const GENDERS   = ['MALE','FEMALE','OTHER'];
@@ -197,7 +198,7 @@ function CompleteInner() {
                 </div>
               </div>
               {inp('Date of Birth *', form.dob, set('dob'), 'date')}
-              {inp('Phone Number', form.phone, set('phone'), 'tel', '+91 9999999999')}
+              {inp('Phone Number', form.phone, set('phone'), 'tel', PHONE_PLACEHOLDER)}
               {sel('Marital Status', form.maritalStatus, set('maritalStatus'), MARITAL)}
               <AboutMeField
                 value={form.aboutMe}

@@ -9,25 +9,37 @@ import SiteLoader from '@/components/SiteLoader';
 import { SITE_CONTACT } from '@/lib/siteContact';
 
 const FALLBACK = {
-  titleHi: 'Aapki Profile Jald Hi Tayyar Hogi!',
-  titleEn: 'Your Profile Will Be Live Soon',
-  subtitleHi: 'Badhai ho! Aapka registration verify ho chuka hai.',
-  subtitleEn: 'Congratulations! Your registration has been verified.',
-  bodyHi:
-    'Hum aapki profile ko final touches de rahe hain. Jald hi aap apna complete profile dekh payenge, matches explore kar payenge, aur saari features use kar payenge.',
-  bodyEn:
+  title: 'Your Profile Will Be Live Soon',
+  subtitle: 'Congratulations! Your registration has been verified.',
+  body:
     'We are putting the final touches on your profile. Very soon you will be able to view your complete profile, explore matches, and use all features.',
-  updateNoteHi: 'Jab aapka access khul jayega, aapko email ya SMS ke through update mil jayegi.',
-  updateNoteEn: 'When your access is enabled, you will receive an update via email or SMS.',
-  supportNoteHi: 'Koi samasya ho to neeche diye gaye number ya email par sampark karein.',
-  supportNoteEn: 'If you face any issue, please contact us using the phone number or email below.',
+  updateNote: 'When your access is enabled, you will receive an update via email or SMS.',
+  supportNote: 'If you face any issue, please contact us using the phone number or email below.',
   steps: [
-    { hi: 'Registration poora ho gaya', en: 'Registration complete', done: true },
-    { hi: 'Admin ne verify kar diya', en: 'Verified by admin', done: true },
-    { hi: 'Profile jald launch hogi', en: 'Profile launching very soon', done: false, active: true },
-    { hi: 'Aapko update notification milegi', en: 'You will receive an update', done: false },
+    { label: 'Registration complete', done: true },
+    { label: 'Verified by admin', done: true },
+    { label: 'Profile launching very soon', done: false, active: true },
+    { label: 'You will receive an update', done: false },
   ],
 };
+
+function normalizeLaunchMessage(raw) {
+  if (!raw || typeof raw !== 'object') return FALLBACK;
+  return {
+    title: raw.title || raw.titleEn || raw.titleHi || FALLBACK.title,
+    subtitle: raw.subtitle || raw.subtitleEn || raw.subtitleHi || FALLBACK.subtitle,
+    body: raw.body || raw.bodyEn || raw.bodyHi || FALLBACK.body,
+    updateNote: raw.updateNote || raw.updateNoteEn || raw.updateNoteHi || FALLBACK.updateNote,
+    supportNote: raw.supportNote || raw.supportNoteEn || raw.supportNoteHi || FALLBACK.supportNote,
+    steps: Array.isArray(raw.steps)
+      ? raw.steps.map((s) => ({
+          label: s.label || s.en || s.hi || '',
+          done: !!s.done,
+          active: !!s.active,
+        }))
+      : FALLBACK.steps,
+  };
+}
 
 const FALLBACK_CONTACT = SITE_CONTACT;
 
@@ -132,7 +144,7 @@ export default function ProfileLaunchPage() {
     return <SiteLoader message="Loading…" />;
   }
 
-  const msg = { ...FALLBACK, ...(data?.message || {}) };
+  const msg = normalizeLaunchMessage({ ...FALLBACK, ...(data?.message || {}) });
   const contact = data?.contact || FALLBACK_CONTACT;
   const phone = formatPhone(contact);
   const firstName = (session?.user?.name || 'Member').split(' ')[0];
@@ -350,12 +362,12 @@ export default function ProfileLaunchPage() {
             </div>
             <div>
               <div className="pl-logo-text">Vivah Dwar</div>
-              <div className="pl-logo-sub">विवाह द्वार · Matrimonial Platform</div>
+              <div className="pl-logo-sub">Vivah Dwar · Matrimonial Platform</div>
             </div>
           </div>
           <button type="button" className="pl-logout" onClick={() => signOut({ callbackUrl: '/login' })}>
             <LogOut size={16} />
-            <span>Logout / बाहर निकलें</span>
+            <span>Logout</span>
           </button>
         </header>
 
@@ -363,25 +375,21 @@ export default function ProfileLaunchPage() {
           <div className="pl-badge-row">
             <span className="pl-badge">
               <ShieldCheck size={16} />
-              Verified Member · सत्यापित सदस्य
+              Verified Member
             </span>
           </div>
 
           <section className="pl-hero">
-            <h1 className="pl-title-hi">{msg.titleHi}</h1>
-            <p className="pl-title-en">{msg.titleEn}</p>
+            <h1 className="pl-title-hi">{msg.title}</h1>
             <div className="pl-greet">
-              <p className="pl-greet-hi">
-                नमस्ते <span className="pl-name">{firstName}</span>! {msg.subtitleHi || msg.subtitle}
-              </p>
               <p className="pl-greet-en">
-                Hello <span className="pl-name">{firstName}</span>! {msg.subtitleEn || msg.subtitle}
+                Hello <span className="pl-name">{firstName}</span>! {msg.subtitle}
               </p>
             </div>
           </section>
 
           <section className="pl-section">
-            <p className="pl-section-label">Aapki Progress · Your Progress</p>
+            <p className="pl-section-label">Your Progress</p>
             <div className="pl-steps">
               {steps.map((step, i) => {
                 const Icon = step.done ? CheckCircle2 : step.active ? Loader2 : Bell;
@@ -392,8 +400,7 @@ export default function ProfileLaunchPage() {
                       <Icon size={22} className={step.active && !step.done ? 'animate-spin' : ''} />
                     </div>
                     <div>
-                      <p className={`pl-step-hi ${step.active ? 'active' : ''}`}>{step.hi}</p>
-                      <p className="pl-step-en">{step.en}</p>
+                      <p className="pl-step-en">{step.label}</p>
                     </div>
                   </div>
                 );
@@ -402,21 +409,19 @@ export default function ProfileLaunchPage() {
           </section>
 
           <section className="pl-section">
-            <p className="pl-section-label">Sandesh · Message</p>
+            <p className="pl-section-label">Message</p>
             <div className="pl-message-block">
-              <p className="pl-msg-hi">{msg.bodyHi || msg.body}</p>
-              <p className="pl-msg-en">{msg.bodyEn}</p>
+              <p className="pl-msg-en">{msg.body}</p>
             </div>
             <div className="pl-divider" />
             <div className="pl-message-block">
-              <p className="pl-msg-hi">{msg.updateNoteHi || msg.updateNote}</p>
-              <p className="pl-msg-en">{msg.updateNoteEn}</p>
+              <p className="pl-msg-en">{msg.updateNote}</p>
             </div>
           </section>
 
           <section className="pl-section pl-contact-wrap">
             <p className="pl-section-label">Contact Support</p>
-            <p className="pl-contact-intro-en">{msg.supportNoteEn || 'If you face any issue, please contact us using the phone number or email below.'}</p>
+            <p className="pl-contact-intro-en">{msg.supportNote}</p>
 
             <div className="pl-phone-block">
               <p className="pl-phone-label-en">Phone support — {SITE_CONTACT.supportHours || '24 hours'}</p>
@@ -440,11 +445,8 @@ export default function ProfileLaunchPage() {
         </main>
 
         <footer className="pl-footer">
-          <p className="pl-footer-hi">
-            Jab aapka access khulega, yeh page apne aap dashboard par le jayega
-          </p>
           <p className="pl-footer-en">
-            This page will automatically redirect when your access is enabled
+            This page will automatically redirect to your dashboard when your access is enabled.
           </p>
         </footer>
       </div>

@@ -264,7 +264,7 @@ export const authOptions = {
 
           await execute(
             `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified, adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified, loginOtpEnabled, emailVerified, createdAt, updatedAt, needsPassword)
-             VALUES (?, ?, ?, NULL, NULL, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?, 0)`,
+             VALUES (?, ?, ?, NULL, NULL, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, 1, NOW(), ?, ?, 0)`,
             [userId, user.name || '', user.email, now, now]
           );
 

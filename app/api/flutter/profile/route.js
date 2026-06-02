@@ -4,6 +4,7 @@ import { query, queryOne, execute } from '@/lib/db';
 import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
 import { assertProfileViewAccess } from '@/lib/profileMatchRules';
 import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
+import { validateUserPhoneForSave, phoneNumberChanged } from '@/lib/validateUserPhone';
 import { randomUUID } from 'crypto';
 import { isFamilyRole, familyForbiddenResponse } from '@/lib/flutterFamilyGuard';
 
@@ -181,11 +182,38 @@ export async function PUT(req) {
     }
   }
 
-  if (name || phone) {
-    await execute(
-      'UPDATE `user` SET name = COALESCE(?, name), phone = COALESCE(?, phone), updatedAt = NOW() WHERE id = ?',
-      [name || null, phone || null, decoded.id]
-    );
+  if (name || phone !== undefined) {
+    let phoneToSave = null;
+    let phoneVerifiedFlag = null;
+
+    if (phone !== undefined && phone !== null && String(phone).trim()) {
+      const current = await queryOne('SELECT phone, phoneVerified FROM `user` WHERE id = ?', [decoded.id]);
+      const changed = phoneNumberChanged(current?.phone, phone);
+      if (changed || !current?.phoneVerified) {
+        const check = await validateUserPhoneForSave(phone, decoded.id, { required: true });
+        if (!check.ok) {
+          return NextResponse.json({ error: check.error }, { status: 400 });
+        }
+        phoneToSave = check.e164;
+        phoneVerifiedFlag = 1;
+      } else {
+        phoneToSave = current?.phone || phone;
+      }
+    } else if (phone !== undefined) {
+      return NextResponse.json({ error: 'Phone number is required.' }, { status: 400 });
+    }
+
+    if (phoneVerifiedFlag === 1) {
+      await execute(
+        'UPDATE `user` SET name = COALESCE(?, name), phone = ?, phoneVerified = 1, updatedAt = NOW() WHERE id = ?',
+        [name || null, phoneToSave, decoded.id]
+      );
+    } else if (name) {
+      await execute(
+        'UPDATE `user` SET name = COALESCE(?, name), updatedAt = NOW() WHERE id = ?',
+        [name || null, decoded.id]
+      );
+    }
   }
 
   const existing = await queryOne('SELECT id FROM profile WHERE userId = ?', [decoded.id]);

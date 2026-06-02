@@ -7,6 +7,7 @@ import {
   MessageSquare, UserPlus, Zap, Gift, Clock, ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 import { format } from 'date-fns';
 
 const inp = "w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary placeholder:text-gray-500";
@@ -123,7 +124,7 @@ export function AdminCreateProfileTab() {
               <option value="userId">🆔 User ID</option>
             </select>
             <input value={searchVal} onChange={e => setSearchVal(e.target.value)} onKeyDown={e => e.key === 'Enter' && lookup()}
-              placeholder={searchType === 'phone' ? '+91 98765 43210' : searchType === 'email' ? 'user@email.com' : 'User ID'}
+              placeholder={searchType === 'phone' ? PHONE_PLACEHOLDER : searchType === 'email' ? 'user@email.com' : 'User ID'}
               className="flex-1 px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary" />
             <button onClick={lookup} disabled={loading} className="px-5 py-2.5 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
               {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Search className="w-4 h-4" />} Find
@@ -163,7 +164,7 @@ export function AdminCreateProfileTab() {
               <div className="grid grid-cols-2 gap-3">
                 <F label="Full Name *" k="name" placeholder="Rahul Sharma" />
                 <F label="Email *" k="email" type="email" placeholder="rahul@email.com" />
-                <F label="Phone" k="phone" placeholder="+91 9876543210" />
+                <F label="Phone" k="phone" placeholder={PHONE_PLACEHOLDER} />
                 {mode === 'create' && <F label="Password (default: Vivah@1234)" k="password" type="password" placeholder="Leave blank for default" />}
               </div>
             </div>

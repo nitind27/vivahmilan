@@ -16,7 +16,7 @@ export async function POST(req) {
       e164: result.e164,
       phone_type: result.phone_type,
       carrier: result.carrier,
-      international_number: result.international_number,
+      international_number: result.international_number || result.e164,
     });
   } catch (e) {
     console.error('[phone/validate]', e.message);

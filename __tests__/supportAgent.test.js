@@ -5,8 +5,8 @@
 import { processSupportQuery, detectLang } from '@/lib/supportAgent';
 
 describe('supportAgent', () => {
-  test('detectLang returns hi for Devanagari', () => {
-    expect(detectLang('प्रीमियम प्लान')).toBe('hi');
+  test('detectLang always returns English', () => {
+    expect(detectLang('प्रीमियम प्लान')).toBe('en');
     expect(detectLang('hello premium')).toBe('en');
   });
 
@@ -20,7 +20,7 @@ describe('supportAgent', () => {
   test('matches kundali from custom search', () => {
     const r = processSupportQuery('kundali match kaise dekhe pdf download');
     expect(r.intent).toBe('kundali');
-    expect(r.reply).toMatch(/Kundali|कुंडली/i);
+    expect(r.reply).toMatch(/Kundali/i);
   });
 
   test('matches premium without hardcoded old prices', () => {
