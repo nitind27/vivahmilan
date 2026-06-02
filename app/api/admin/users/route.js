@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
+import { getReminderStatsForUsers } from '@/lib/profilePendingReminder.js';
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
@@ -56,5 +57,14 @@ export async function GET(req) {
     prisma.user.count({ where }),
   ]);
 
-  return NextResponse.json({ users, total, totalPages: Math.ceil(total / limit) });
+  let enriched = users;
+  if (status === 'pending' && users.length > 0) {
+    const stats = await getReminderStatsForUsers(users.map((u) => u.id));
+    enriched = users.map((u) => ({
+      ...u,
+      reminderStats: stats[u.id] || { reminderCount: 0, lastReminderAt: null },
+    }));
+  }
+
+  return NextResponse.json({ users: enriched, total, totalPages: Math.ceil(total / limit) });
 }

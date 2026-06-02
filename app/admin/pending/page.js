@@ -1,16 +1,218 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
-import { UserCheck, CheckCircle, XCircle, Eye, Search, ChevronLeft, ChevronRight, FileText, Calendar, MapPin, Mail, Phone, Hash, Shield } from 'lucide-react';
+import { format, formatDistanceToNow } from 'date-fns';
+import {
+  UserCheck, CheckCircle, XCircle, Eye, Search, ChevronLeft, ChevronRight,
+  FileText, Calendar, MapPin, Mail, Phone, Hash, Shield, Bell, Send,
+  Smartphone, Loader2,
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 import ApprovalChecklist from '@/components/ApprovalChecklist';
 
+const REMINDER_TEMPLATE_OPTIONS = [
+  { key: 'pending_review', label: 'Under review (general)' },
+  { key: 'complete_profile', label: 'Complete missing details' },
+  { key: 'upload_documents', label: 'Upload identity document' },
+  { key: 'upload_photos', label: 'Add profile & family photos' },
+];
+
 // ── Profile Approvals Components ──────────────────────────────────────────────
 
-function UserCard({ u, onView, onApprove, onReject, statusBadge }) {
+function ReminderModal({ targets, onClose, onSent }) {
+  const [templateKey, setTemplateKey] = useState('pending_review');
+  const [customMessage, setCustomMessage] = useState('');
+  const [force, setForce] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [preview, setPreview] = useState(null);
+
+  const userIds = targets.map((t) => t.id);
+
+  useEffect(() => {
+    if (targets.length === 1) {
+      fetch(`/api/admin/pending-reminders?userId=${targets[0].id}`)
+        .then((r) => r.json())
+        .then(setPreview)
+        .catch(() => {});
+    }
+  }, [targets]);
+
+  const send = async () => {
+    setSending(true);
+    try {
+      const res = await fetch('/api/admin/pending-reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userIds,
+          templateKey,
+          customMessage: customMessage.trim() || undefined,
+          force,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Failed to send');
+        return;
+      }
+      if (data.sent > 0) {
+        toast.success(
+          `Reminder sent to ${data.sent} user${data.sent > 1 ? 's' : ''} (email + notification${data.sent > 1 ? 's' : ''})`
+        );
+      }
+      if (data.failed > 0) {
+        const reasons = data.results
+          .filter((r) => !r.ok)
+          .map((r) => r.error)
+          .slice(0, 2)
+          .join('; ');
+        toast.error(`${data.failed} skipped: ${reasons}`);
+      }
+      onSent?.();
+      onClose();
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
-    <div className="bg-gray-800 rounded-3xl p-5 border border-gray-700 hover:border-gray-600 transition-colors shadow-lg flex flex-col h-full relative group">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+      <div className="bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-800">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Bell className="w-5 h-5 text-amber-400" />
+                Send profile reminder
+              </h3>
+              <p className="text-sm text-gray-400 mt-1">
+                {targets.length === 1
+                  ? `To ${targets[0].name} — email, in-app notification & web push`
+                  : `To ${targets.length} users — email, in-app notification & web push`}
+              </p>
+            </div>
+            <button type="button" onClick={onClose} className="text-gray-500 hover:text-white">
+              <XCircle className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-5">
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
+              Message template
+            </label>
+            <select
+              value={templateKey}
+              onChange={(e) => setTemplateKey(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:border-vd-primary outline-none"
+            >
+              {REMINDER_TEMPLATE_OPTIONS.map((t) => (
+                <option key={t.key} value={t.key}>{t.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
+              Extra note (optional)
+            </label>
+            <textarea
+              value={customMessage}
+              onChange={(e) => setCustomMessage(e.target.value)}
+              rows={3}
+              placeholder="Add a personal note — included in email and notification…"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-vd-primary outline-none resize-none"
+            />
+          </div>
+
+          <div className="rounded-xl bg-gray-800/80 border border-gray-700 p-4 space-y-2">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Will be delivered via</p>
+            <div className="flex flex-wrap gap-3 text-sm text-gray-300">
+              <span className="inline-flex items-center gap-1.5"><Mail className="w-4 h-4 text-blue-400" /> Email</span>
+              <span className="inline-flex items-center gap-1.5"><Bell className="w-4 h-4 text-amber-400" /> In-app</span>
+              <span className="inline-flex items-center gap-1.5"><Smartphone className="w-4 h-4 text-green-400" /> Web push</span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Email lists missing profile items. Web push works if the user enabled notifications in browser settings.
+            </p>
+          </div>
+
+          {preview && targets.length === 1 && (
+            <div className="text-xs text-gray-500 rounded-xl border border-gray-800 p-3">
+              {preview.canSend ? (
+                <span className="text-green-400">Ready to send</span>
+              ) : (
+                <span className="text-amber-400">{preview.blockReason || 'Cannot send yet'}</span>
+              )}
+              {preview.history?.length > 0 && (
+                <p className="mt-1 text-gray-500">
+                  Last sent {formatDistanceToNow(new Date(preview.history[0].createdAt), { addSuffix: true })}
+                  {preview.history[0].emailSent ? ' · email ✓' : ''}
+                  {preview.history[0].pushSent ? ' · push ✓' : ''}
+                </p>
+              )}
+            </div>
+          )}
+
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={force}
+              onChange={(e) => setForce(e.target.checked)}
+              className="mt-1 rounded border-gray-600"
+            />
+            <span className="text-sm text-gray-400">
+              Send even if reminded in the last 24 hours
+            </span>
+          </label>
+        </div>
+
+        <div className="p-6 border-t border-gray-800 flex gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={send}
+            disabled={sending}
+            className="flex-1 py-2.5 vd-gradient-gold text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            Send reminder
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserCard({ u, onView, onApprove, onReject, onRemind, statusBadge, selected, onToggleSelect, showReminder }) {
+  const rs = u.reminderStats;
+  const lastReminded = rs?.lastReminderAt
+    ? formatDistanceToNow(new Date(rs.lastReminderAt), { addSuffix: true })
+    : null;
+
+  return (
+    <div className={`bg-gray-800 rounded-3xl p-5 border transition-colors shadow-lg flex flex-col h-full relative group ${
+      selected ? 'border-vd-primary ring-1 ring-vd-primary/40' : 'border-gray-700 hover:border-gray-600'
+    }`}>
+      {showReminder && onToggleSelect && (
+        <label className="absolute top-4 left-4 z-10 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={!!selected}
+            onChange={() => onToggleSelect(u.id)}
+            className="w-4 h-4 rounded border-gray-600 bg-gray-900 text-vd-primary focus:ring-vd-primary"
+          />
+        </label>
+      )}
       <div className="flex items-start gap-4 mb-4">
         <div className="w-16 h-16 rounded-2xl overflow-hidden vd-gradient-gold flex items-center justify-center flex-shrink-0 shadow-md">
           {u.image ? <img src={u.image} alt="" className="w-full h-full object-cover" /> : <span className="text-white font-bold text-2xl">{u.name?.[0]}</span>}
@@ -59,22 +261,39 @@ function UserCard({ u, onView, onApprove, onReject, statusBadge }) {
         )}
         {u.profile?.gender && <span className="text-xs font-medium bg-gray-700/80 text-gray-300 px-2 py-1 rounded-lg capitalize">{u.profile.gender.toLowerCase()}</span>}
         {u.profile?.religion && <span className="text-xs font-medium bg-gray-700/80 text-gray-300 px-2 py-1 rounded-lg truncate max-w-[100px]">{u.profile.religion}</span>}
+        {showReminder && lastReminded && (
+          <span className="text-xs font-medium bg-amber-500/15 text-amber-400 px-2 py-1 rounded-lg w-full truncate">
+            Reminded {lastReminded}
+            {rs?.reminderCount > 1 ? ` (${rs.reminderCount}×)` : ''}
+          </span>
+        )}
       </div>
 
-      <div className="flex gap-2 mt-auto">
-        <button onClick={onView} className="flex-1 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors">
-          <Eye className="w-4 h-4" /> View
-        </button>
-        {statusBadge === 'pending' && (
-          <>
-            <button onClick={onApprove} className="w-10 flex-shrink-0 bg-green-500/20 hover:bg-green-500 hover:text-white text-green-500 rounded-xl flex items-center justify-center transition-colors">
-              <CheckCircle className="w-5 h-5" />
-            </button>
-            <button onClick={onReject} className="w-10 flex-shrink-0 bg-red-500/20 hover:bg-red-500 hover:text-white text-red-500 rounded-xl flex items-center justify-center transition-colors">
-              <XCircle className="w-5 h-5" />
-            </button>
-          </>
+      <div className="flex flex-col gap-2 mt-auto">
+        {statusBadge === 'pending' && showReminder && onRemind && (
+          <button
+            type="button"
+            onClick={() => onRemind(u)}
+            className="w-full py-2.5 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <Bell className="w-4 h-4" /> Send Reminder
+          </button>
         )}
+        <div className="flex gap-2">
+          <button onClick={onView} className="flex-1 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors">
+            <Eye className="w-4 h-4" /> View
+          </button>
+          {statusBadge === 'pending' && (
+            <>
+              <button onClick={onApprove} className="w-10 flex-shrink-0 bg-green-500/20 hover:bg-green-500 hover:text-white text-green-500 rounded-xl flex items-center justify-center transition-colors">
+                <CheckCircle className="w-5 h-5" />
+              </button>
+              <button onClick={onReject} className="w-10 flex-shrink-0 bg-red-500/20 hover:bg-red-500 hover:text-white text-red-500 rounded-xl flex items-center justify-center transition-colors">
+                <XCircle className="w-5 h-5" />
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -91,6 +310,8 @@ function ProfilesTab() {
   const [q, setQ] = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
   const [blockModal, setBlockModal] = useState(null);
+  const [reminderTargets, setReminderTargets] = useState(null);
+  const [selectedIds, setSelectedIds] = useState(new Set());
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQ(q), 500);
@@ -113,7 +334,21 @@ function ProfilesTab() {
   };
 
   useEffect(() => { load(); }, [activeTab, page, debouncedQ]);
-  useEffect(() => { setPage(1); }, [activeTab, debouncedQ]);
+  useEffect(() => { setPage(1); setSelectedIds(new Set()); }, [activeTab, debouncedQ]);
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAllOnPage = () => {
+    if (selectedIds.size === users.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(users.map((u) => u.id)));
+  };
 
   const updateUser = async (id, data) => {
     const res = await fetch(`/api/admin/users/${id}`, {
@@ -160,9 +395,44 @@ function ProfilesTab() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-gray-400">Total <span className="text-white">{total}</span> records found</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <p className="text-sm font-medium text-gray-400">
+          Total <span className="text-white">{total}</span> records found
+        </p>
+        {activeTab === 'pending' && users.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={selectAllOnPage}
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white border border-gray-700"
+            >
+              {selectedIds.size === users.length ? 'Deselect all' : 'Select all on page'}
+            </button>
+            {selectedIds.size > 0 && (
+              <button
+                type="button"
+                onClick={() =>
+                  setReminderTargets(users.filter((u) => selectedIds.has(u.id)))
+                }
+                className="px-4 py-2 rounded-xl text-xs font-bold vd-gradient-gold text-white flex items-center gap-1.5 shadow-lg shadow-vd-primary/20"
+              >
+                <Send className="w-3.5 h-3.5" />
+                Remind selected ({selectedIds.size})
+              </button>
+            )}
+          </div>
+        )}
       </div>
+
+      {activeTab === 'pending' && (
+        <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 px-4 py-3 text-sm text-amber-200/90 flex items-start gap-3">
+          <Bell className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+          <p>
+            <strong className="text-amber-300">Profile reminders</strong> send an email, in-app notification,
+            and web push (if the user subscribed). Users are limited to one reminder per 24 hours unless you force resend.
+          </p>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center py-32">
@@ -176,11 +446,17 @@ function ProfilesTab() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {users.map(u => (
-            <UserCard key={u.id} u={u} 
-              onView={() => setSelectedId(u.id)} 
-              onApprove={() => updateUser(u.id, { adminVerified: true })} 
-              onReject={() => updateUser(u.id, { isActive: false })} 
-              statusBadge={activeTab} 
+            <UserCard
+              key={u.id}
+              u={u}
+              onView={() => setSelectedId(u.id)}
+              onApprove={() => updateUser(u.id, { adminVerified: true })}
+              onReject={() => updateUser(u.id, { isActive: false })}
+              onRemind={(user) => setReminderTargets([user])}
+              statusBadge={activeTab}
+              showReminder={activeTab === 'pending'}
+              selected={selectedIds.has(u.id)}
+              onToggleSelect={activeTab === 'pending' ? toggleSelect : undefined}
             />
           ))}
         </div>
@@ -218,6 +494,17 @@ function ProfilesTab() {
       )}
 
       {selectedId && <AdminUserProfileModal userId={selectedId} onClose={() => { setSelectedId(null); load(); }} />}
+
+      {reminderTargets && (
+        <ReminderModal
+          targets={reminderTargets}
+          onClose={() => setReminderTargets(null)}
+          onSent={() => {
+            setSelectedIds(new Set());
+            load();
+          }}
+        />
+      )}
 
       {blockModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
