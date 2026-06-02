@@ -15,7 +15,7 @@ import {
   ALL_RELIGIONS, getHoroscopeConfig, getMotherTongues,
   getSects, getGotra, RELIGION_DATA
 } from '@/lib/religionData';
-import { getCastesByReligion } from '@/lib/casteData';
+import CasteCommunitySelect from '@/components/CasteCommunitySelect';
 import SiteLoader from '@/components/SiteLoader';
 import AboutMeField from '@/components/AboutMeField';
 import ApprovalChecklist from '@/components/ApprovalChecklist';
@@ -501,7 +501,14 @@ function OnboardingInner() {
                 <div className="grid grid-cols-2 gap-4">
                   <Sel label="Religion *" value={form.religion} onChange={v => { set('religion', v); set('caste', ''); set('sect', ''); set('gotra', ''); }} options={ALL_RELIGIONS} />
                   {form.religion && (
-                    <SearchableSelect label={form.religion === 'Muslim' ? 'Community' : form.religion === 'Christian' ? 'Denomination' : 'Caste *'} value={form.caste} onChange={v => set('caste', v)} options={getCastesByReligion(form.religion)} placeholder="Search caste…" />
+                    <div className="col-span-2">
+                      <CasteCommunitySelect
+                        religion={form.religion}
+                        value={form.caste}
+                        onChange={v => set('caste', v)}
+                        required={form.religion === 'Hindu'}
+                      />
+                    </div>
                   )}
                   {sects.length > 0 && <Sel label="Sect" value={form.sect} onChange={v => set('sect', v)} options={sects} />}
                   {gotraList.length > 0 && <SearchableSelect label="Gotra" value={form.gotra} onChange={v => set('gotra', v)} options={gotraList} placeholder="Search gotra…" />}

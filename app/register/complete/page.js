@@ -8,8 +8,10 @@ import toast from 'react-hot-toast';
 import SiteLoader from '@/components/SiteLoader';
 import AboutMeField from '@/components/AboutMeField';
 import { validateAboutMe } from '@/lib/aboutMeValidation';
+import { ALL_RELIGIONS } from '@/lib/religionData';
+import CasteCommunitySelect from '@/components/CasteCommunitySelect';
 
-const RELIGIONS = ['Hindu','Muslim','Christian','Sikh','Buddhist','Jain','Jewish','Parsi','Other'];
+const RELIGIONS = ALL_RELIGIONS;
 const GENDERS   = ['MALE','FEMALE','OTHER'];
 const MARITAL   = ['NEVER_MARRIED','DIVORCED','WIDOWED','SEPARATED'];
 const EDUCATIONS = ["High School","Diploma","Bachelor's","Master's","PhD","MBBS","CA","Other"];
@@ -207,9 +209,16 @@ function CompleteInner() {
 
             {/* Step 1: Religion */}
             {step === 1 && <>
-              {sel('Religion *', form.religion, set('religion'), RELIGIONS)}
-              {inp('Caste', form.caste, set('caste'), 'text', 'e.g. Brahmin, Rajput')}
-              {inp('Gotra', form.gotra, set('gotra'), 'text', 'e.g. Kashyap')}
+              {sel('Religion *', form.religion, (v) => { set('religion')(v); set('caste')(''); }, RELIGIONS)}
+              {form.religion && (
+                <CasteCommunitySelect
+                  religion={form.religion}
+                  value={form.caste}
+                  onChange={set('caste')}
+                  required={form.religion === 'Hindu'}
+                />
+              )}
+              {form.religion === 'Hindu' && inp('Gotra', form.gotra, set('gotra'), 'text', 'e.g. Kashyap')}
               {inp('Mother Tongue', form.motherTongue, set('motherTongue'), 'text', 'e.g. Hindi, Marathi')}
             </>}
 

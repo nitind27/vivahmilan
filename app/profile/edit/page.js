@@ -15,6 +15,7 @@ import {
   getExtraFields, getMotherTongues, getSects, getGotra, RELIGION_DATA
 } from '@/lib/religionData';
 import { getCastesByReligion } from '@/lib/casteData';
+import CasteCommunitySelect from '@/components/CasteCommunitySelect';
 import BirthDetailsForm from '@/components/BirthDetailsForm';
 import KundaliChart from '@/components/KundaliChart';
 import SiteLoader from '@/components/SiteLoader';
@@ -360,13 +361,13 @@ function EditProfilePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <Select label="Religion" value={form.religion} onChange={v => { set('religion', v); set('caste', ''); set('sect', ''); set('gotra', ''); }} options={ALL_RELIGIONS} disabled={!!form.religion} />
                   {form.religion && (
-                    <SearchableSelect
-                      label={form.religion === 'Muslim' ? 'Community / Biradari' : form.religion === 'Christian' ? 'Denomination' : 'Caste / Community'}
-                      value={form.caste}
-                      onChange={v => { set('caste', v); set('subCaste', ''); }}
-                      options={getCastesByReligion(form.religion)}
-                      placeholder="Search caste…"
-                    />
+                    <div className="col-span-2">
+                      <CasteCommunitySelect
+                        religion={form.religion}
+                        value={form.caste}
+                        onChange={v => { set('caste', v); set('subCaste', ''); }}
+                      />
+                    </div>
                   )}
                   {subCastes.length > 0 && (
                     <SearchableSelect label="Sub-Caste" value={form.subCaste} onChange={v => set('subCaste', v)} options={subCastes} placeholder="Search sub-caste…" />
@@ -523,7 +524,21 @@ function EditProfilePage() {
                   <Select label="Max Height" value={form.partnerHeightMax} onChange={v => set('partnerHeightMax', v)} options={HEIGHTS} placeholder="Any" />
                   <Select label="Preferred Religion" value={form.partnerReligion} onChange={v => set('partnerReligion', v)} options={['Any', ...ALL_RELIGIONS]} />
                   {form.partnerReligion && form.partnerReligion !== 'Any' && (
-                    <SearchableSelect label="Preferred Caste" value={form.partnerCaste} onChange={v => set('partnerCaste', v)} options={[{ val: "Any / Doesn't Matter", label: "Any / Doesn't Matter", group: '' }, ...getCastesByReligion(form.partnerReligion)]} placeholder="Search caste…" />
+                    {form.partnerReligion ? (
+                      <CasteCommunitySelect
+                        religion={form.partnerReligion}
+                        value={form.partnerCaste === "Any / Doesn't Matter" ? '' : form.partnerCaste}
+                        onChange={v => set('partnerCaste', v || "Any / Doesn't Matter")}
+                      />
+                    ) : (
+                      <SearchableSelect
+                        label="Preferred Community"
+                        value={form.partnerCaste}
+                        onChange={v => set('partnerCaste', v)}
+                        options={[{ val: "Any / Doesn't Matter", label: "Any / Doesn't Matter", group: '' }]}
+                        placeholder="Select partner religion first"
+                      />
+                    )}
                   )}
                   <Select label="Preferred Education" value={form.partnerEducation} onChange={v => set('partnerEducation', v)} options={['Any', ...EDUCATIONS]} />
                   <Select label="Preferred Profession" value={form.partnerProfession} onChange={v => set('partnerProfession', v)} options={['Any', ...PROFESSIONS]} />
