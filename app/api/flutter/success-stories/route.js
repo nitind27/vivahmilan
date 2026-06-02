@@ -1,9 +1,18 @@
 import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
-import { queryOne, execute } from '@/lib/db';
+import { query, queryOne, execute } from '@/lib/db';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 
 export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  if (searchParams.get('published') === '1') {
+    const stories = await query(
+      `SELECT id, coupleName, location, story, imageUrl, sortOrder
+       FROM successstory WHERE isActive = 1 ORDER BY sortOrder ASC, createdAt DESC`
+    );
+    return NextResponse.json({ stories });
+  }
+
   const token = getTokenFromRequest(req);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const decoded = verifyToken(token);

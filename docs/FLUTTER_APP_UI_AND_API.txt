@@ -1,0 +1,660 @@
+================================================================================
+  VIVAH DWAR — FLUTTER APP: COMPLETE UI + API GUIDE
+  Web vs Mobile parity audit — June 2026
+  Base URL: https://vivahdwar.com  (local: http://localhost:3006)
+================================================================================
+
+AUTH (all protected routes):
+  Header: Authorization: Bearer <JWT>
+  JWT from: login, verify-otp, google auth, family-login
+
+PUBLIC (no token):
+  GET  /api/flutter/home
+  GET  /api/flutter/plans
+  GET  /api/flutter/profile-options?grouped=1
+  GET  /api/flutter/success-stories?published=1
+  GET  /api/flutter/early-bird/status  (optional token for personalized offer)
+
+WEB-ONLY (use WebView or skip in v1 app):
+  Admin panel (all /api/admin/*)
+  Welcome gate login page (/welcome.html)
+  QR desktop login flow (/api/auth/qr-session) — optional v2
+  KYC agent session (/kyc/[token]) — open in WebView if needed
+  Legal static pages: /privacy, /terms, /refund, /cookies, /help, /contact
+  Maintenance page UI (use GET /api/flutter/home → maintenance flag)
+  Chatbot: /api/chatbot/* (same as web, not under /api/flutter/)
+
+================================================================================
+QUICK STATUS — NEW APIS ADDED THIS AUDIT
+================================================================================
+  NEW  GET  /api/flutter/home
+  NEW  GET  /api/flutter/profile-options
+  NEW  GET  /api/flutter/early-bird/status
+  NEW  POST /api/flutter/early-bird/claim
+  NEW  POST /api/flutter/early-bird/popup-seen
+  NEW  POST /api/flutter/reminders
+  NEW  POST /api/flutter/upload/intro-video
+  NEW  DELETE /api/flutter/upload/intro-video
+  NEW  PATCH /api/flutter/saved-searches
+  NEW  GET  /api/flutter/success-stories?published=1
+
+All other user features below already had Flutter APIs — use as-is.
+
+
+================================================================================
+APP FLOW (recommended navigation)
+================================================================================
+
+[Splash]
+  → GET /api/flutter/home (maintenance? → maintenance screen)
+  → if no token → [Welcome / Login / Register]
+  → if token → [Dashboard]
+
+[Auth stack]
+  Login → Register → Verify OTP → Onboarding → Dashboard
+
+[Main tabs]
+  1. Home (Dashboard)
+  2. Matches
+  3. Search
+  4. Interests
+  5. Chat (premium gate)
+  6. Profile (own)
+
+[Drawer / More]
+  Notifications, Shortlist, Compare, Views, Premium, Refer, Settings,
+  Blocked users, Success stories, Safety (WebView)
+
+
+================================================================================
+SCREEN 1 — SPLASH / APP START
+================================================================================
+Web: homepage loads stats, slides, maintenance
+Flutter UI:
+  - Logo + loading
+  - If maintenance === true → full screen “Under maintenance”
+  - Else → Login or Dashboard
+
+API:
+  GET /api/flutter/home
+  Response: { maintenance, appLinks, slides, features, stats }
+
+SKIP: separate calls to /api/public/stats, /api/maintenance-status, /api/app-links
+
+
+================================================================================
+SCREEN 2 — LOGIN
+================================================================================
+Web: /login (email/password, Google, Family login, OTP login)
+Flutter UI:
+  - Email + password
+  - Forgot password link
+  - Google Sign-In button
+  - Family login section (owner email + family credentials)
+  - Register link
+
+API (EXISTS):
+  POST /api/flutter/auth/login
+  POST /api/flutter/auth/google
+  POST /api/flutter/auth/family-login
+  POST /api/flutter/auth/forgot-password
+  POST /api/flutter/auth/verify-otp        (LOGIN_OTP type)
+  POST /api/flutter/auth/resend-otp
+
+Store JWT in secure storage.
+
+
+================================================================================
+SCREEN 3 — REGISTER
+================================================================================
+Web: /register
+Flutter UI:
+  - Name, email, phone (required), password
+  - Referral code optional (?ref=)
+  - Terms checkbox → WebView /terms
+  - Submit → OTP screen
+
+API (EXISTS):
+  POST /api/flutter/auth/register
+  POST /api/flutter/auth/verify-otp          (EMAIL_VERIFY)
+  POST /api/flutter/auth/resend-otp
+
+
+================================================================================
+SCREEN 4 — FORGOT / RESET PASSWORD
+================================================================================
+Flutter UI:
+  - Enter email → OTP → new password
+
+API (EXISTS):
+  POST /api/flutter/auth/forgot-password
+  POST /api/flutter/auth/verify-otp          (PASSWORD_RESET)
+  POST /api/flutter/auth/reset-password
+
+
+================================================================================
+SCREEN 5 — ONBOARDING (multi-step profile)
+================================================================================
+Web: /onboarding
+Flutter UI (match web steps):
+  Step 1: Basic — gender, DOB, height, marital status
+  Step 2: Religion, community/caste (use CasteCommunitySelect logic)
+  Step 3: Location — country/state/city
+  Step 4: Education, profession, income
+  Step 5: Family, partner preferences
+  Step 6: About me
+  Step 7: Photos — main photo + family photos
+  Step 8: ID document upload
+  Step 9: Review checklist → Submit for verification
+  Optional: Intro video upload
+
+Dropdown data:
+  GET /api/flutter/profile-options?grouped=1
+  → options.religion, options.caste_Hindu, options.education, etc.
+  Hindu community: filter by category + region in UI (see web CasteCommunitySelect)
+  “Other” caste: allow custom text value
+
+API (EXISTS):
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+  GET  /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+
+API (NEW):
+  POST /api/flutter/upload/intro-video     multipart field: video
+  DELETE /api/flutter/upload/intro-video
+
+Location helpers (EXISTS):
+  GET /api/flutter/location/countries
+  GET /api/flutter/location/states?countryCode=
+  GET /api/flutter/location/cities?countryCode=&stateCode=
+
+
+================================================================================
+SCREEN 6 — DASHBOARD (Home)
+================================================================================
+Web: /dashboard — stats, matches, pending interests, activity, quick actions
+Flutter UI:
+  - Welcome card (name, photo, profile %)
+  - Premium / trial / early bird banner
+  - Stats row: Interests, Views, Messages, Matches (tap → screen)
+  - Quick actions grid (matches, search, chat, premium, etc.)
+  - Recommended matches horizontal list
+  - Pending interests
+  - Recent notifications preview
+
+API (EXISTS):
+  GET /api/flutter/dashboard
+
+API (NEW) — call once when dashboard opens:
+  POST /api/flutter/reminders
+  → { premiumInfo, birthdayInfo, created }
+  Use premiumInfo for expiry banner; birthdayInfo for birthday UI
+
+Early bird popup (if enabled):
+  GET  /api/flutter/early-bird/status
+  POST /api/flutter/early-bird/claim
+  POST /api/flutter/early-bird/popup-seen
+
+Permissions / interest templates:
+  GET /api/flutter/features
+  → { access, interestTemplates }
+
+
+================================================================================
+SCREEN 7 — MATCHES
+================================================================================
+Web: /matches
+Flutter UI:
+  - Filter chips (religion, age, city, kundali filters…)
+  - Profile cards grid
+  - Tap → profile detail
+  - Actions: interest, shortlist, chat (if allowed)
+
+API (EXISTS):
+  GET /api/flutter/matches?page=&limit=
+  GET /api/flutter/profile/{userId}
+  POST /api/flutter/interest
+  GET/POST /api/flutter/shortlist
+  GET /api/flutter/match-score?targetUserId=
+
+
+================================================================================
+SCREEN 8 — SEARCH
+================================================================================
+Web: /search — advanced filters, save search, alerts
+Flutter UI:
+  - Filter form (age, religion, caste, city, education, verified only…)
+  - Results list
+  - Save search modal (name + alert toggle)
+  - Saved searches list
+
+API (EXISTS):
+  GET  /api/flutter/search?...params
+  GET  /api/flutter/saved-searches
+  POST /api/flutter/saved-searches
+  DELETE /api/flutter/saved-searches?id=
+
+API (NEW):
+  PATCH /api/flutter/saved-searches
+  Body: { id, name?, filters?, alertEnabled? }
+
+
+================================================================================
+SCREEN 9 — PROFILE DETAIL (other user)
+================================================================================
+Web: /profile/[id]
+Flutter UI:
+  - Photo gallery, badges (verified, premium)
+  - Bio, horoscope/kundali section
+  - Intro video player if introVideoUrl
+  - Contact locked until premium
+  - Buttons: Send Interest, Chat, Shortlist, Compare, Block, Report, Share
+
+API (EXISTS):
+  GET  /api/flutter/profile/{id}
+  POST /api/flutter/interest
+  GET  /api/flutter/features          (canSeeContact, canChat…)
+  POST /api/flutter/block
+  GET  /api/flutter/block?userId=      (is blocked?)
+  POST /api/flutter/report
+  GET  /api/flutter/kundali/{userId}
+  GET  /api/flutter/kundali/match?userA=&userB=
+  GET  /api/flutter/profile/{id}/share  (share link payload)
+
+
+================================================================================
+SCREEN 10 — OWN PROFILE / EDIT
+================================================================================
+Web: /profile/edit
+Flutter UI: same fields as onboarding + manage photos/docs/video
+
+API (EXISTS):
+  GET/PUT /api/flutter/profile
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+  GET /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+  POST/DELETE /api/flutter/upload/intro-video  (NEW)
+
+
+================================================================================
+SCREEN 11 — INTERESTS
+================================================================================
+Web: /interests — tabs: Received, Sent, Accepted
+Flutter UI:
+  - Tabs with counts
+  - Cards with Accept / Decline / Withdraw
+  - Interest message templates from GET /api/flutter/features
+
+API (EXISTS):
+  GET   /api/flutter/interest?type=received|sent|accepted
+  PATCH /api/flutter/interest/{id}   body: { status: ACCEPTED|REJECTED }
+  DELETE /api/flutter/interest/{id}  (withdraw)
+
+
+================================================================================
+SCREEN 12 — CHAT (member chat)
+================================================================================
+Web: /chat — premium required, Socket.IO realtime
+Flutter UI:
+  - Room list with unread badges
+  - Chat thread: text, image, PDF, location, live location
+  - Typing indicators via socket
+
+API (EXISTS):
+  GET  /api/flutter/chat
+  POST /api/flutter/chat
+  GET  /api/flutter/chat/{roomId}
+  POST /api/flutter/chat/{roomId}
+  GET  /api/flutter/chat/unread
+  GET/PATCH /api/flutter/chat/location/{msgId}
+
+Socket.IO: path /api/socket, auth: { token: JWT }
+See docs/FLUTTER_API_GUIDE.txt for events.
+
+403 if not premium: { reason: no_access | premium_expired | trial_expired }
+
+
+================================================================================
+SCREEN 13 — SHORTLIST
+================================================================================
+Web: /shortlist
+Flutter UI: saved profiles list, remove, open profile
+
+API (EXISTS):
+  GET  /api/flutter/shortlist
+  POST /api/flutter/shortlist   body: { profileId }
+  DELETE /api/flutter/shortlist?id=
+
+
+================================================================================
+SCREEN 14 — COMPARE PROFILES
+================================================================================
+Web: /compare (up to 4 from shortlist)
+Flutter UI: side-by-side table
+
+API (EXISTS):
+  POST /api/flutter/compare
+  Body: { userIds: ["id1","id2",...] }
+
+
+================================================================================
+SCREEN 15 — WHO VIEWED ME
+================================================================================
+Web: /views
+Flutter UI: list of viewers
+
+API (EXISTS):
+  GET /api/flutter/profile-views
+
+
+================================================================================
+SCREEN 16 — RECENTLY VIEWED
+================================================================================
+API (EXISTS):
+  GET /api/flutter/recently-viewed
+
+
+================================================================================
+SCREEN 17 — NOTIFICATIONS
+================================================================================
+Web: /notifications
+Flutter UI:
+  - Group by Today / Yesterday / Week
+  - Tabs All / Unread
+  - Tap → deep link (profile, premium, interests…)
+  - Mark all read
+
+API (EXISTS):
+  GET   /api/flutter/notifications?limit=&skip=
+  PATCH /api/flutter/notifications   body: { id } or {} for all
+
+Note: NEW_MATCH may redirect free users to premium (same as web).
+
+
+================================================================================
+SCREEN 18 — PREMIUM / PLANS / PAYMENT
+================================================================================
+Web: /premium, /payment/checkout, /payment/status
+Flutter UI:
+  - Plan cards (3/6/12 months — no lifetime on web now)
+  - Coupon field
+  - Razorpay / Cashfree SDK checkout
+  - Success / failure screen
+
+API (EXISTS):
+  GET  /api/flutter/plans
+  GET  /api/flutter/subscription       (user status + duration options)
+  POST /api/flutter/coupons/validate
+  POST /api/flutter/payment/apply-coupon
+  POST /api/flutter/payment/create-order
+  POST /api/flutter/payment/verify
+
+Early bird free claim:
+  POST /api/flutter/early-bird/claim
+
+
+================================================================================
+SCREEN 19 — REFER & EARN
+================================================================================
+Web: /refer
+Flutter UI:
+  - Referral code + share link
+  - List of referred users
+
+API (EXISTS):
+  GET  /api/flutter/referral
+  POST /api/flutter/referral   (generate code if missing)
+
+
+================================================================================
+SCREEN 20 — SETTINGS
+================================================================================
+Web: /settings — privacy toggles, notifications, auto-renew, change password
+Flutter UI:
+  - Toggle switches
+  - Change password → separate screen
+  - Family portal access section
+  - Delete account (if web has)
+
+API (EXISTS):
+  GET  /api/flutter/settings
+  PATCH /api/flutter/settings
+  POST /api/flutter/auth/change-password
+  GET/POST /api/flutter/family-access
+  GET/POST /api/flutter/portal-access
+
+Push notifications:
+  POST /api/flutter/push/token   body: { token, platform }
+
+
+================================================================================
+SCREEN 21 — BLOCKED USERS
+================================================================================
+Web: /blocked (or settings)
+Flutter UI: list blocked users, unblock
+
+API (EXISTS):
+  GET    /api/flutter/block              (list all)
+  GET    /api/flutter/block?userId=      (check one)
+  POST   /api/flutter/block              toggle block
+  DELETE /api/flutter/block              body: { blockedId }
+
+
+================================================================================
+SCREEN 22 — SUCCESS STORIES
+================================================================================
+Web: /stories (public list), /share-story (submit)
+Flutter UI:
+  - Carousel of published stories on home/marketing
+  - Submit form: couple name, location, story, photo, wedding date
+
+API (EXISTS):
+  GET  /api/flutter/success-stories              (my submission status)
+  POST /api/flutter/success-stories
+  POST /api/flutter/upload/photo                   (then pass imageUrl in story)
+
+API (NEW):
+  GET  /api/flutter/success-stories?published=1  (public list)
+
+
+================================================================================
+SCREEN 23 — REPORT ABUSE
+================================================================================
+Web: /report-abuse
+Flutter UI: reason + details form (also on profile menu)
+
+API (EXISTS):
+  POST /api/flutter/report
+  Body: { reportedUserId, reason, details }
+
+
+================================================================================
+SCREEN 24 — FAMILY LOGIN (member account)
+================================================================================
+Web: family login at /login
+Flutter UI: read-only banner on dashboard; hide interest/chat actions
+
+API (EXISTS):
+  POST /api/flutter/auth/family-login
+  Portal: /api/flutter/portal-access
+
+
+================================================================================
+SCREEN 25 — SUPPORT / HELP
+================================================================================
+Web: ChatBot widget + /help page
+Flutter UI:
+  - In-app support chat screen
+  - FAQ accordion from static copy OR chatbot
+
+API (use web endpoints):
+  POST /api/chatbot/init
+  GET  /api/chatbot/session
+  POST /api/chatbot/message
+  GET  /api/chatbot/message?sessionId=
+
+Legal / help WebView URLs:
+  /privacy  /terms  /safety  /refund  /help  /contact
+
+
+================================================================================
+SCREEN 26 — KUNDALI
+================================================================================
+Flutter UI:
+  - Edit own kundali in profile
+  - View match kundali on profile detail
+  - PDF download (premium)
+
+API (EXISTS):
+  GET/PUT /api/flutter/kundali
+  GET /api/flutter/kundali/{userId}
+  GET /api/flutter/kundali/match
+  GET /api/flutter/kundali/match/pdf
+
+
+================================================================================
+COMPLETE FLUTTER API INDEX (user app)
+================================================================================
+
+AUTH
+  POST /api/flutter/auth/register
+  POST /api/flutter/auth/verify-otp
+  POST /api/flutter/auth/resend-otp
+  POST /api/flutter/auth/login
+  POST /api/flutter/auth/google
+  POST /api/flutter/auth/family-login
+  POST /api/flutter/auth/forgot-password
+  POST /api/flutter/auth/reset-password
+  POST /api/flutter/auth/change-password
+
+HOME / CONFIG
+  GET  /api/flutter/home                    ★ NEW
+  GET  /api/flutter/plans
+  GET  /api/flutter/profile-options         ★ NEW
+
+PROFILE
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+  GET  /api/flutter/profile/{id}
+  GET  /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+  GET  /api/flutter/profile/{id}/share
+
+UPLOADS
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+  POST /api/flutter/upload/intro-video      ★ NEW
+  DELETE /api/flutter/upload/intro-video    ★ NEW
+
+LOCATION
+  GET /api/flutter/location/countries
+  GET /api/flutter/location/states
+  GET /api/flutter/location/cities
+
+DISCOVERY
+  GET  /api/flutter/dashboard
+  POST /api/flutter/reminders               ★ NEW
+  GET  /api/flutter/matches
+  GET  /api/flutter/search
+  GET  /api/flutter/match-score
+  GET  /api/flutter/recently-viewed
+  GET  /api/flutter/profile-views
+
+SAVED SEARCH
+  GET    /api/flutter/saved-searches
+  POST   /api/flutter/saved-searches
+  PATCH  /api/flutter/saved-searches          ★ NEW
+  DELETE /api/flutter/saved-searches?id=
+
+INTERESTS
+  GET   /api/flutter/interest
+  PATCH /api/flutter/interest/{id}
+  DELETE /api/flutter/interest/{id}
+
+SHORTLIST / COMPARE
+  GET/POST/DELETE /api/flutter/shortlist
+  POST /api/flutter/compare
+
+CHAT
+  GET/POST /api/flutter/chat
+  GET/POST /api/flutter/chat/{roomId}
+  GET /api/flutter/chat/unread
+  GET/PATCH /api/flutter/chat/location/{msgId}
+
+NOTIFICATIONS
+  GET/PATCH /api/flutter/notifications
+
+PREMIUM / PAYMENT
+  GET  /api/flutter/subscription
+  GET  /api/flutter/early-bird/status       ★ NEW
+  POST /api/flutter/early-bird/claim          ★ NEW
+  POST /api/flutter/early-bird/popup-seen     ★ NEW
+  POST /api/flutter/coupons/validate
+  POST /api/flutter/payment/apply-coupon
+  POST /api/flutter/payment/create-order
+  POST /api/flutter/payment/verify
+
+SOCIAL
+  GET  /api/flutter/referral
+  POST /api/flutter/referral
+  GET  /api/flutter/success-stories
+  GET  /api/flutter/success-stories?published=1  ★ NEW
+  POST /api/flutter/success-stories
+
+SETTINGS / ACCESS
+  GET/PATCH /api/flutter/settings
+  GET/POST /api/flutter/family-access
+  GET/POST /api/flutter/portal-access
+  GET/POST/DELETE /api/flutter/block
+  POST /api/flutter/report
+  POST /api/flutter/push/token
+  GET  /api/flutter/features
+
+KUNDALI
+  GET/PUT /api/flutter/kundali
+  GET /api/flutter/kundali/{userId}
+  GET /api/flutter/kundali/match
+  GET /api/flutter/kundali/match/pdf
+
+
+================================================================================
+FLUTTER UI CHECKLIST (per feature)
+================================================================================
+
+[ ] Splash + maintenance check → /api/flutter/home
+[ ] Login / Register / OTP / Google / Family login
+[ ] Onboarding 9 steps + profile-options dropdowns
+[ ] Caste: religion → category → region filter → list + Other custom
+[ ] Dashboard stats + matches + POST reminders + early bird popup
+[ ] Matches + Search + Save search + alert toggle (PATCH)
+[ ] Profile view: interest, chat, shortlist, block, report, share, kundali
+[ ] Interests received/sent with templates
+[ ] Chat list + room + socket + premium gate
+[ ] Notifications list + mark read + deep links
+[ ] Premium plans + coupon + payment SDK
+[ ] Settings toggles + change password + push token
+[ ] Refer & earn
+[ ] Success stories list + submit
+[ ] Blocked users list
+[ ] Intro video upload on profile edit
+[ ] Support chatbot (/api/chatbot/*)
+[ ] WebView: Privacy, Terms, Safety, Refund, Help
+
+================================================================================
+RELATED DOCS
+================================================================================
+  docs/FLUTTER_API_GUIDE.txt           — Chat + chatbot detail
+  docs/FLUTTER_NEW_FEATURES_API.txt    — Verification, coupons, report
+  docs/FLUTTER_NEW_FEATURES.txt        — Feature notes
+  docs/FLUTTER_FAMILY_LOGIN_AND_SETTINGS.txt
+
+================================================================================
+END OF DOCUMENT
+================================================================================

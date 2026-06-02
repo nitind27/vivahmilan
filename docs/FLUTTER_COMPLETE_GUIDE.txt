@@ -1,0 +1,2530 @@
+﻿================================================================================
+  VIVAH DWAR — FLUTTER APP (COMPLETE GUIDE — SINGLE FILE)
+  Last Updated: June 2026
+  Base URL: https://vivahdwar.com   (local: http://localhost:3006)
+================================================================================
+
+  Yeh EK hi file hai — saari screens, APIs, UI notes, examples.
+  Purani alag files ki jagah isi file ko use karein.
+
+  TABLE OF CONTENTS
+  -----------------
+  PART A  — Start here (Auth, navigation, all screens UI)
+  PART B  — New features API detail (register, verify, coupon, report…)
+  PART C  — Member chat + Socket.IO
+  PART D  — Support chatbot
+  PART E  — Family login + Settings
+  PART F  — Portal launch gate
+  PART G  — Complete API index + master checklist
+  PART H  — Dart code snippets
+
+  Auth:  Authorization: Bearer <JWT>
+  Public APIs: no token (home, plans, profile-options grouped, published stories)
+
+================================================================================
+
+
+================================================================================
+  PART A — APP SCREENS + UI + NAVIGATION (Web parity)
+================================================================================
+
+AUTH (all protected routes):
+  Header: Authorization: Bearer <JWT>
+  JWT from: login, verify-otp, google auth, family-login
+
+PUBLIC (no token):
+  GET  /api/flutter/home
+  GET  /api/flutter/plans
+  GET  /api/flutter/profile-options?grouped=1
+  GET  /api/flutter/success-stories?published=1
+  GET  /api/flutter/early-bird/status  (optional token for personalized offer)
+
+WEB-ONLY (use WebView or skip in v1 app):
+  Admin panel (all /api/admin/*)
+  Welcome gate login page (/welcome.html)
+  QR desktop login flow (/api/auth/qr-session) — optional v2
+  KYC agent session (/kyc/[token]) — open in WebView if needed
+  Legal static pages: /privacy, /terms, /refund, /cookies, /help, /contact
+  Maintenance page UI (use GET /api/flutter/home → maintenance flag)
+  Chatbot: /api/chatbot/* (same as web, not under /api/flutter/)
+
+================================================================================
+QUICK STATUS — NEW APIS ADDED THIS AUDIT
+================================================================================
+  NEW  GET  /api/flutter/home
+  NEW  GET  /api/flutter/profile-options
+  NEW  GET  /api/flutter/early-bird/status
+  NEW  POST /api/flutter/early-bird/claim
+  NEW  POST /api/flutter/early-bird/popup-seen
+  NEW  POST /api/flutter/reminders
+  NEW  POST /api/flutter/upload/intro-video
+  NEW  DELETE /api/flutter/upload/intro-video
+  NEW  PATCH /api/flutter/saved-searches
+  NEW  GET  /api/flutter/success-stories?published=1
+
+All other user features below already had Flutter APIs — use as-is.
+
+
+================================================================================
+APP FLOW (recommended navigation)
+================================================================================
+
+[Splash]
+  → GET /api/flutter/home (maintenance? → maintenance screen)
+  → if no token → [Welcome / Login / Register]
+  → if token → [Dashboard]
+
+[Auth stack]
+  Login → Register → Verify OTP → Onboarding → Dashboard
+
+[Main tabs]
+  1. Home (Dashboard)
+  2. Matches
+  3. Search
+  4. Interests
+  5. Chat (premium gate)
+  6. Profile (own)
+
+[Drawer / More]
+  Notifications, Shortlist, Compare, Views, Premium, Refer, Settings,
+  Blocked users, Success stories, Safety (WebView)
+
+
+================================================================================
+SCREEN 1 — SPLASH / APP START
+================================================================================
+Web: homepage loads stats, slides, maintenance
+Flutter UI:
+  - Logo + loading
+  - If maintenance === true → full screen “Under maintenance”
+  - Else → Login or Dashboard
+
+API:
+  GET /api/flutter/home
+  Response: { maintenance, appLinks, slides, features, stats }
+
+SKIP: separate calls to /api/public/stats, /api/maintenance-status, /api/app-links
+
+
+================================================================================
+SCREEN 2 — LOGIN
+================================================================================
+Web: /login (email/password, Google, Family login, OTP login)
+Flutter UI:
+  - Email + password
+  - Forgot password link
+  - Google Sign-In button
+  - Family login section (owner email + family credentials)
+  - Register link
+
+API (EXISTS):
+  POST /api/flutter/auth/login
+  POST /api/flutter/auth/google
+  POST /api/flutter/auth/family-login
+  POST /api/flutter/auth/forgot-password
+  POST /api/flutter/auth/verify-otp        (LOGIN_OTP type)
+  POST /api/flutter/auth/resend-otp
+
+Store JWT in secure storage.
+
+
+================================================================================
+SCREEN 3 — REGISTER
+================================================================================
+Web: /register
+Flutter UI:
+  - Name, email, phone (required), password
+  - Referral code optional (?ref=)
+  - Terms checkbox → WebView /terms
+  - Submit → OTP screen
+
+API (EXISTS):
+  POST /api/flutter/auth/register
+  POST /api/flutter/auth/verify-otp          (EMAIL_VERIFY)
+  POST /api/flutter/auth/resend-otp
+
+
+================================================================================
+SCREEN 4 — FORGOT / RESET PASSWORD
+================================================================================
+Flutter UI:
+  - Enter email → OTP → new password
+
+API (EXISTS):
+  POST /api/flutter/auth/forgot-password
+  POST /api/flutter/auth/verify-otp          (PASSWORD_RESET)
+  POST /api/flutter/auth/reset-password
+
+
+================================================================================
+SCREEN 5 — ONBOARDING (multi-step profile)
+================================================================================
+Web: /onboarding
+Flutter UI (match web steps):
+  Step 1: Basic — gender, DOB, height, marital status
+  Step 2: Religion, community/caste (use CasteCommunitySelect logic)
+  Step 3: Location — country/state/city
+  Step 4: Education, profession, income
+  Step 5: Family, partner preferences
+  Step 6: About me
+  Step 7: Photos — main photo + family photos
+  Step 8: ID document upload
+  Step 9: Review checklist → Submit for verification
+  Optional: Intro video upload
+
+Dropdown data:
+  GET /api/flutter/profile-options?grouped=1
+  → options.religion, options.caste_Hindu, options.education, etc.
+  Hindu community: filter by category + region in UI (see web CasteCommunitySelect)
+  “Other” caste: allow custom text value
+
+API (EXISTS):
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+  GET  /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+
+API (NEW):
+  POST /api/flutter/upload/intro-video     multipart field: video
+  DELETE /api/flutter/upload/intro-video
+
+Location helpers (EXISTS):
+  GET /api/flutter/location/countries
+  GET /api/flutter/location/states?countryCode=
+  GET /api/flutter/location/cities?countryCode=&stateCode=
+
+
+================================================================================
+SCREEN 6 — DASHBOARD (Home)
+================================================================================
+Web: /dashboard — stats, matches, pending interests, activity, quick actions
+Flutter UI:
+  - Welcome card (name, photo, profile %)
+  - Premium / trial / early bird banner
+  - Stats row: Interests, Views, Messages, Matches (tap → screen)
+  - Quick actions grid (matches, search, chat, premium, etc.)
+  - Recommended matches horizontal list
+  - Pending interests
+  - Recent notifications preview
+
+API (EXISTS):
+  GET /api/flutter/dashboard
+
+API (NEW) — call once when dashboard opens:
+  POST /api/flutter/reminders
+  → { premiumInfo, birthdayInfo, created }
+  Use premiumInfo for expiry banner; birthdayInfo for birthday UI
+
+Early bird popup (if enabled):
+  GET  /api/flutter/early-bird/status
+  POST /api/flutter/early-bird/claim
+  POST /api/flutter/early-bird/popup-seen
+
+Permissions / interest templates:
+  GET /api/flutter/features
+  → { access, interestTemplates }
+
+
+================================================================================
+SCREEN 7 — MATCHES
+================================================================================
+Web: /matches
+Flutter UI:
+  - Filter chips (religion, age, city, kundali filters…)
+  - Profile cards grid
+  - Tap → profile detail
+  - Actions: interest, shortlist, chat (if allowed)
+
+API (EXISTS):
+  GET /api/flutter/matches?page=&limit=
+  GET /api/flutter/profile/{userId}
+  POST /api/flutter/interest
+  GET/POST /api/flutter/shortlist
+  GET /api/flutter/match-score?targetUserId=
+
+
+================================================================================
+SCREEN 8 — SEARCH
+================================================================================
+Web: /search — advanced filters, save search, alerts
+Flutter UI:
+  - Filter form (age, religion, caste, city, education, verified only…)
+  - Results list
+  - Save search modal (name + alert toggle)
+  - Saved searches list
+
+API (EXISTS):
+  GET  /api/flutter/search?...params
+  GET  /api/flutter/saved-searches
+  POST /api/flutter/saved-searches
+  DELETE /api/flutter/saved-searches?id=
+
+API (NEW):
+  PATCH /api/flutter/saved-searches
+  Body: { id, name?, filters?, alertEnabled? }
+
+
+================================================================================
+SCREEN 9 — PROFILE DETAIL (other user)
+================================================================================
+Web: /profile/[id]
+Flutter UI:
+  - Photo gallery, badges (verified, premium)
+  - Bio, horoscope/kundali section
+  - Intro video player if introVideoUrl
+  - Contact locked until premium
+  - Buttons: Send Interest, Chat, Shortlist, Compare, Block, Report, Share
+
+API (EXISTS):
+  GET  /api/flutter/profile/{id}
+  POST /api/flutter/interest
+  GET  /api/flutter/features          (canSeeContact, canChat…)
+  POST /api/flutter/block
+  GET  /api/flutter/block?userId=      (is blocked?)
+  POST /api/flutter/report
+  GET  /api/flutter/kundali/{userId}
+  GET  /api/flutter/kundali/match?userA=&userB=
+  GET  /api/flutter/profile/{id}/share  (share link payload)
+
+
+================================================================================
+SCREEN 10 — OWN PROFILE / EDIT
+================================================================================
+Web: /profile/edit
+Flutter UI: same fields as onboarding + manage photos/docs/video
+
+API (EXISTS):
+  GET/PUT /api/flutter/profile
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+  GET /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+  POST/DELETE /api/flutter/upload/intro-video  (NEW)
+
+
+================================================================================
+SCREEN 11 — INTERESTS
+================================================================================
+Web: /interests — tabs: Received, Sent, Accepted
+Flutter UI:
+  - Tabs with counts
+  - Cards with Accept / Decline / Withdraw
+  - Interest message templates from GET /api/flutter/features
+
+API (EXISTS):
+  GET   /api/flutter/interest?type=received|sent|accepted
+  PATCH /api/flutter/interest/{id}   body: { status: ACCEPTED|REJECTED }
+  DELETE /api/flutter/interest/{id}  (withdraw)
+
+
+================================================================================
+SCREEN 12 — CHAT (member chat)
+================================================================================
+Web: /chat — premium required, Socket.IO realtime
+Flutter UI:
+  - Room list with unread badges
+  - Chat thread: text, image, PDF, location, live location
+  - Typing indicators via socket
+
+API (EXISTS):
+  GET  /api/flutter/chat
+  POST /api/flutter/chat
+  GET  /api/flutter/chat/{roomId}
+  POST /api/flutter/chat/{roomId}
+  GET  /api/flutter/chat/unread
+  GET/PATCH /api/flutter/chat/location/{msgId}
+
+Socket.IO: path /api/socket, auth: { token: JWT }
+See docs/FLUTTER_API_GUIDE.txt for events.
+
+403 if not premium: { reason: no_access | premium_expired | trial_expired }
+
+
+================================================================================
+SCREEN 13 — SHORTLIST
+================================================================================
+Web: /shortlist
+Flutter UI: saved profiles list, remove, open profile
+
+API (EXISTS):
+  GET  /api/flutter/shortlist
+  POST /api/flutter/shortlist   body: { profileId }
+  DELETE /api/flutter/shortlist?id=
+
+
+================================================================================
+SCREEN 14 — COMPARE PROFILES
+================================================================================
+Web: /compare (up to 4 from shortlist)
+Flutter UI: side-by-side table
+
+API (EXISTS):
+  POST /api/flutter/compare
+  Body: { userIds: ["id1","id2",...] }
+
+
+================================================================================
+SCREEN 15 — WHO VIEWED ME
+================================================================================
+Web: /views
+Flutter UI: list of viewers
+
+API (EXISTS):
+  GET /api/flutter/profile-views
+
+
+================================================================================
+SCREEN 16 — RECENTLY VIEWED
+================================================================================
+API (EXISTS):
+  GET /api/flutter/recently-viewed
+
+
+================================================================================
+SCREEN 17 — NOTIFICATIONS
+================================================================================
+Web: /notifications
+Flutter UI:
+  - Group by Today / Yesterday / Week
+  - Tabs All / Unread
+  - Tap → deep link (profile, premium, interests…)
+  - Mark all read
+
+API (EXISTS):
+  GET   /api/flutter/notifications?limit=&skip=
+  PATCH /api/flutter/notifications   body: { id } or {} for all
+
+Note: NEW_MATCH may redirect free users to premium (same as web).
+
+
+================================================================================
+SCREEN 18 — PREMIUM / PLANS / PAYMENT
+================================================================================
+Web: /premium, /payment/checkout, /payment/status
+Flutter UI:
+  - Plan cards (3/6/12 months — no lifetime on web now)
+  - Coupon field
+  - Razorpay / Cashfree SDK checkout
+  - Success / failure screen
+
+API (EXISTS):
+  GET  /api/flutter/plans
+  GET  /api/flutter/subscription       (user status + duration options)
+  POST /api/flutter/coupons/validate
+  POST /api/flutter/payment/apply-coupon
+  POST /api/flutter/payment/create-order
+  POST /api/flutter/payment/verify
+
+Early bird free claim:
+  POST /api/flutter/early-bird/claim
+
+
+================================================================================
+SCREEN 19 — REFER & EARN
+================================================================================
+Web: /refer
+Flutter UI:
+  - Referral code + share link
+  - List of referred users
+
+API (EXISTS):
+  GET  /api/flutter/referral
+  POST /api/flutter/referral   (generate code if missing)
+
+
+================================================================================
+SCREEN 20 — SETTINGS
+================================================================================
+Web: /settings — privacy toggles, notifications, auto-renew, change password
+Flutter UI:
+  - Toggle switches
+  - Change password → separate screen
+  - Family portal access section
+  - Delete account (if web has)
+
+API (EXISTS):
+  GET  /api/flutter/settings
+  PATCH /api/flutter/settings
+  POST /api/flutter/auth/change-password
+  GET/POST /api/flutter/family-access
+  GET/POST /api/flutter/portal-access
+
+Push notifications:
+  POST /api/flutter/push/token   body: { token, platform }
+
+
+================================================================================
+SCREEN 21 — BLOCKED USERS
+================================================================================
+Web: /blocked (or settings)
+Flutter UI: list blocked users, unblock
+
+API (EXISTS):
+  GET    /api/flutter/block              (list all)
+  GET    /api/flutter/block?userId=      (check one)
+  POST   /api/flutter/block              toggle block
+  DELETE /api/flutter/block              body: { blockedId }
+
+
+================================================================================
+SCREEN 22 — SUCCESS STORIES
+================================================================================
+Web: /stories (public list), /share-story (submit)
+Flutter UI:
+  - Carousel of published stories on home/marketing
+  - Submit form: couple name, location, story, photo, wedding date
+
+API (EXISTS):
+  GET  /api/flutter/success-stories              (my submission status)
+  POST /api/flutter/success-stories
+  POST /api/flutter/upload/photo                   (then pass imageUrl in story)
+
+API (NEW):
+  GET  /api/flutter/success-stories?published=1  (public list)
+
+
+================================================================================
+SCREEN 23 — REPORT ABUSE
+================================================================================
+Web: /report-abuse
+Flutter UI: reason + details form (also on profile menu)
+
+API (EXISTS):
+  POST /api/flutter/report
+  Body: { reportedUserId, reason, details }
+
+
+================================================================================
+SCREEN 24 — FAMILY LOGIN (member account)
+================================================================================
+Web: family login at /login
+Flutter UI: read-only banner on dashboard; hide interest/chat actions
+
+API (EXISTS):
+  POST /api/flutter/auth/family-login
+  Portal: /api/flutter/portal-access
+
+
+================================================================================
+SCREEN 25 — SUPPORT / HELP
+================================================================================
+Web: ChatBot widget + /help page
+Flutter UI:
+  - In-app support chat screen
+  - FAQ accordion from static copy OR chatbot
+
+API (use web endpoints):
+  POST /api/chatbot/init
+  GET  /api/chatbot/session
+  POST /api/chatbot/message
+  GET  /api/chatbot/message?sessionId=
+
+Legal / help WebView URLs:
+  /privacy  /terms  /safety  /refund  /help  /contact
+
+
+================================================================================
+SCREEN 26 — KUNDALI
+================================================================================
+Flutter UI:
+  - Edit own kundali in profile
+  - View match kundali on profile detail
+  - PDF download (premium)
+
+API (EXISTS):
+  GET/PUT /api/flutter/kundali
+  GET /api/flutter/kundali/{userId}
+  GET /api/flutter/kundali/match
+  GET /api/flutter/kundali/match/pdf
+
+
+================================================================================
+COMPLETE FLUTTER API INDEX (user app)
+================================================================================
+
+AUTH
+  POST /api/flutter/auth/register
+  POST /api/flutter/auth/verify-otp
+  POST /api/flutter/auth/resend-otp
+  POST /api/flutter/auth/login
+  POST /api/flutter/auth/google
+  POST /api/flutter/auth/family-login
+  POST /api/flutter/auth/forgot-password
+  POST /api/flutter/auth/reset-password
+  POST /api/flutter/auth/change-password
+
+HOME / CONFIG
+  GET  /api/flutter/home                    ★ NEW
+  GET  /api/flutter/plans
+  GET  /api/flutter/profile-options         ★ NEW
+
+PROFILE
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+  GET  /api/flutter/profile/{id}
+  GET  /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+  GET  /api/flutter/profile/{id}/share
+
+UPLOADS
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+  POST /api/flutter/upload/intro-video      ★ NEW
+  DELETE /api/flutter/upload/intro-video    ★ NEW
+
+LOCATION
+  GET /api/flutter/location/countries
+  GET /api/flutter/location/states
+  GET /api/flutter/location/cities
+
+DISCOVERY
+  GET  /api/flutter/dashboard
+  POST /api/flutter/reminders               ★ NEW
+  GET  /api/flutter/matches
+  GET  /api/flutter/search
+  GET  /api/flutter/match-score
+  GET  /api/flutter/recently-viewed
+  GET  /api/flutter/profile-views
+
+SAVED SEARCH
+  GET    /api/flutter/saved-searches
+  POST   /api/flutter/saved-searches
+  PATCH  /api/flutter/saved-searches          ★ NEW
+  DELETE /api/flutter/saved-searches?id=
+
+INTERESTS
+  GET   /api/flutter/interest
+  PATCH /api/flutter/interest/{id}
+  DELETE /api/flutter/interest/{id}
+
+SHORTLIST / COMPARE
+  GET/POST/DELETE /api/flutter/shortlist
+  POST /api/flutter/compare
+
+CHAT
+  GET/POST /api/flutter/chat
+  GET/POST /api/flutter/chat/{roomId}
+  GET /api/flutter/chat/unread
+  GET/PATCH /api/flutter/chat/location/{msgId}
+
+NOTIFICATIONS
+  GET/PATCH /api/flutter/notifications
+
+PREMIUM / PAYMENT
+  GET  /api/flutter/subscription
+  GET  /api/flutter/early-bird/status       ★ NEW
+  POST /api/flutter/early-bird/claim          ★ NEW
+  POST /api/flutter/early-bird/popup-seen     ★ NEW
+  POST /api/flutter/coupons/validate
+  POST /api/flutter/payment/apply-coupon
+  POST /api/flutter/payment/create-order
+  POST /api/flutter/payment/verify
+
+SOCIAL
+  GET  /api/flutter/referral
+  POST /api/flutter/referral
+  GET  /api/flutter/success-stories
+  GET  /api/flutter/success-stories?published=1  ★ NEW
+  POST /api/flutter/success-stories
+
+SETTINGS / ACCESS
+  GET/PATCH /api/flutter/settings
+  GET/POST /api/flutter/family-access
+  GET/POST /api/flutter/portal-access
+  GET/POST/DELETE /api/flutter/block
+  POST /api/flutter/report
+  POST /api/flutter/push/token
+  GET  /api/flutter/features
+
+KUNDALI
+  GET/PUT /api/flutter/kundali
+  GET /api/flutter/kundali/{userId}
+  GET /api/flutter/kundali/match
+  GET /api/flutter/kundali/match/pdf
+
+
+================================================================================
+FLUTTER UI CHECKLIST (per feature)
+================================================================================
+
+[ ] Splash + maintenance check → /api/flutter/home
+[ ] Login / Register / OTP / Google / Family login
+[ ] Onboarding 9 steps + profile-options dropdowns
+[ ] Caste: religion → category → region filter → list + Other custom
+[ ] Dashboard stats + matches + POST reminders + early bird popup
+[ ] Matches + Search + Save search + alert toggle (PATCH)
+[ ] Profile view: interest, chat, shortlist, block, report, share, kundali
+[ ] Interests received/sent with templates
+[ ] Chat list + room + socket + premium gate
+[ ] Notifications list + mark read + deep links
+[ ] Premium plans + coupon + payment SDK
+[ ] Settings toggles + change password + push token
+[ ] Refer & earn
+[ ] Success stories list + submit
+[ ] Blocked users list
+[ ] Intro video upload on profile edit
+[ ] Support chatbot (/api/chatbot/*)
+[ ] WebView: Privacy, Terms, Safety, Refund, Help
+
+================================================================================
+RELATED DOCS
+================================================================================
+  docs/FLUTTER_API_GUIDE.txt           — Chat + chatbot detail
+  docs/FLUTTER_NEW_FEATURES_API.txt    — Verification, coupons, report
+  docs/FLUTTER_NEW_FEATURES.txt        — Feature notes
+  docs/FLUTTER_FAMILY_LOGIN_AND_SETTINGS.txt
+
+
+================================================================================
+  PART B — FEATURE APIs (Registration, Verify, Search, Coupon, Payment…)
+================================================================================
+
+NOTE: This document is for the FLUTTER MOBILE APP ONLY.
+      There is NO admin panel in the mobile app.
+      Admin / backend operations happen on the website only — not included here.
+
+All Flutter APIs are under:  /api/flutter/...
+Auth header (where required):
+  Authorization: Bearer <JWT_TOKEN>
+
+JWT is returned from login / verify-otp / google auth endpoints.
+
+
+================================================================================
+SUMMARY — NEW FEATURES FOR FLUTTER APP
+================================================================================
+
+1. Anti-fake profile system (strict verification before profile goes live)
+2. Disposable email blocking at registration
+3. Mandatory phone number at registration
+4. Profile submit checklist (photo + family photo + ID document + fields)
+5. Duplicate photo detection on upload
+6. Search filter: verified profiles only (ID badge)
+7. Report abuse (backend auto-hides suspicious profiles)
+8. Coupon codes — validate, apply, pay with discount
+9. Subscription receipt email after payment (automatic)
+11. Member chat (Premium / trial) + Support chatbot (AI help)
+12. Legal pages — open in WebView (Privacy, Terms, Safety, Refund)
+
+
+================================================================================
+FEATURE 1 — REGISTRATION (Phone mandatory + disposable email block)
+================================================================================
+
+POST /api/flutter/auth/register
+
+Body (JSON):
+{
+  "name": "Rahul Sharma",
+  "email": "rahul@gmail.com",
+  "phone": "+919876543210",      // REQUIRED now
+  "password": "MyPass123"
+}
+
+Success 201:
+{
+  "success": true,
+  "message": "Registration initiated. OTP sent to your email.",
+  "email": "rahul@gmail.com"
+}
+
+Errors:
+  400 — phone missing/invalid
+  400 — disposable email (temp-mail blocked)
+  409 — email or phone already registered
+
+Flutter UI changes:
+  - Phone field mandatory (not optional)
+  - Show error if temp email used
+  - Continue to OTP screen after success
+
+
+================================================================================
+FEATURE 2 — PROFILE SUBMIT CHECKLIST (Before profile verification)
+================================================================================
+
+Before user can submit profile, ALL items must pass:
+
+  ✓ All required fields filled
+  ✓ Valid phone on account
+  ✓ At least 1 profile photo
+  ✓ At least 1 family/lifestyle photo (in addition to profile photo)
+  ✓ ID document uploaded (Aadhaar/PAN/Passport etc.)
+  ✓ Profile marked 100% complete
+
+Required profile fields:
+  gender, dob, height, religion, education, profession, country, city, aboutMe
+
+--- GET verification checklist (show in onboarding UI) ---
+
+GET /api/flutter/profile/verification-checklist
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "eligible": false,
+  "checklist": [
+    {
+      "id": "profileComplete",
+      "label": "Profile 100% complete",
+      "passed": true,
+      "detail": "100% complete"
+    },
+    {
+      "id": "phone",
+      "label": "Valid phone number on file",
+      "passed": true,
+      "detail": "+919876543210"
+    },
+    {
+      "id": "photos",
+      "label": "Profile photo uploaded",
+      "passed": true,
+      "detail": "1 profile photo(s)"
+    },
+    {
+      "id": "visualProof",
+      "label": "Family / lifestyle photo uploaded",
+      "passed": false,
+      "detail": "Add at least one family or lifestyle photo in addition to your profile photo"
+    },
+    {
+      "id": "document",
+      "label": "Identity document uploaded",
+      "passed": false,
+      "detail": "Upload Aadhaar, PAN, Passport, or another valid ID"
+    },
+    {
+      "id": "submitted",
+      "label": "Submitted for review",
+      "passed": false,
+      "detail": "Profile not yet submitted for verification"
+    },
+    {
+      "id": "reports",
+      "label": "No critical abuse reports",
+      "passed": true,
+      "detail": "No open reports"
+    }
+  ],
+  "errors": ["Upload a profile photo and at least one family or lifestyle photo..."],
+  "missingFields": [],
+  "requiredFields": ["gender","dob","height","religion","education","profession","country","city","aboutMe"]
+}
+
+Flutter UI:
+  - Call this API on onboarding "Review" screen
+  - Show checklist with green ✓ / red ✗
+  - Enable "Submit for Review" button only when eligible === true
+
+
+--- POST submit profile for verification ---
+
+POST /api/flutter/profile/submit
+Headers: Authorization: Bearer <token>
+Body: {} (empty)
+
+Success 200:
+{
+  "success": true,
+  "message": "Profile submitted for admin review. You will be notified once approved.",
+  "code": "PENDING_APPROVAL"
+}
+
+(User sees: "Profile submitted! We will notify you once verified.")
+Note: API message may say "admin review" — show user-friendly text in Flutter UI.
+
+Error 400 — PROFILE_INCOMPLETE:
+{
+  "error": "Profile incomplete. Fill all required fields before submitting.",
+  "code": "PROFILE_INCOMPLETE",
+  "missingFields": ["aboutMe"],
+  "requiredFields": [...]
+}
+
+Error 400 — SUBMIT_REQUIREMENTS_NOT_MET:
+{
+  "error": "Your profile does not meet the verification requirements yet...",
+  "code": "SUBMIT_REQUIREMENTS_NOT_MET",
+  "checklist": [...],
+  "errors": [...]
+}
+
+
+--- Upload APIs used for checklist ---
+
+POST /api/flutter/upload/photo
+  Content-Type: multipart/form-data
+  Fields: photo (file), isMain ("true" / "false")
+
+POST /api/flutter/upload/family-photo
+  Content-Type: multipart/form-data
+  Fields: photo (file), caption (optional), memberCount (optional)
+
+POST /api/flutter/upload/document
+  Content-Type: multipart/form-data
+  Fields: document (file), type ("Aadhaar Card" | "PAN Card" | etc.)
+
+
+================================================================================
+FEATURE 3 — DUPLICATE PHOTO DETECTION
+================================================================================
+
+POST /api/flutter/upload/photo
+
+If same photo already used on another account:
+
+Error 409:
+{
+  "error": "This photo appears to be already used on another account. Please upload your own original photo.",
+  "code": "DUPLICATE_PHOTO"
+}
+
+Flutter: Show this message and ask user to upload a different photo.
+
+
+================================================================================
+FEATURE 4 — SEARCH: VERIFIED PROFILES ONLY
+================================================================================
+
+GET /api/flutter/search?verifiedOnly=1&page=1&limit=12
+
+Query params (all optional):
+  verifiedOnly=1 or verifiedOnly=true   ← NEW: only ID-verified badge profiles
+  q, gender, religion, country, state, city
+  education, profession, maritalStatus
+  ageMin, ageMax, heightMin, heightMax
+  page, limit
+
+Headers: Authorization: Bearer <token>
+
+Response includes verificationBadge on each user:
+{
+  "users": [
+    {
+      "id": "...",
+      "name": "...",
+      "verificationBadge": true,
+      "profile": { ... },
+      "photos": [ ... ]
+    }
+  ],
+  "total": 42,
+  "page": 1,
+  "isPremium": true,
+  "freeLimit": 5
+}
+
+Flutter UI:
+  - Add toggle "Show verified profiles only"
+  - Pass verifiedOnly=1 when toggle is ON
+  - Show verified badge icon when verificationBadge === true
+
+
+================================================================================
+FEATURE 5 — REPORT ABUSE + AUTO-HIDE
+================================================================================
+
+POST /api/flutter/report
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "targetId": "<reported_user_id>",
+  "reason": "Fake profile",
+  "details": "Optional description"
+}
+
+Success 201:
+{
+  "success": true,
+  "id": "report-uuid",
+  "message": "Report submitted successfully. Our team will review it shortly.",
+  "autoHidden": false,
+  "reportCount": 1
+}
+
+When target gets 3+ reports (handled by backend automatically):
+{
+  "success": true,
+  "message": "Report submitted. This profile has been temporarily hidden pending review due to multiple community reports.",
+  "autoHidden": true,
+  "reportCount": 3
+}
+
+Flutter: Show toast — "Report submitted". No admin UI needed in app.
+
+
+================================================================================
+FEATURE 6 — COUPON CODES (NEW / FIXED)
+================================================================================
+
+--- Quick validate (homepage / premium screen — no auth) ---
+
+POST /api/flutter/coupons/validate
+Body:
+{
+  "code": "SAVE20"
+}
+
+Success 200:
+{
+  "valid": true,
+  "discountPct": 30,
+  "code": "SAVE20"
+}
+
+Errors: 404 invalid, 410 expired or usage limit reached
+
+
+--- Apply coupon with plan price (checkout screen — auth required) ---
+
+POST /api/flutter/payment/apply-coupon
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "code": "SAVE20",
+  "planId": "GOLD",
+  "months": 3,              // optional: 1, 3, 6, 0=lifetime
+  "durationDays": 90        // optional: alternative to months
+}
+
+Success 200:
+{
+  "code": "SAVE20",
+  "discountPct": 30,
+  "originalPrice": 4497,
+  "finalPrice": 3148,
+  "durationDays": 90,
+  "isAgentRef": false,
+  "plan": "GOLD"
+}
+
+Also accepts agent referral codes (5% discount, isAgentRef: true)
+
+
+--- Create payment order with coupon ---
+
+POST /api/flutter/payment/create-order
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "plan": "GOLD",
+  "couponCode": "SAVE20",    // optional
+  "months": 3,               // optional: 1, 3, 6, 0=lifetime
+  "durationDays": 90         // optional
+}
+
+Success 200 (paid plan):
+{
+  "orderId": "MILAN_XXXXXXXX_1234567890",
+  "paymentSessionId": "session_...",
+  "orderAmount": 3148,
+  "plan": "GOLD",
+  "durationDays": 90,
+  "couponApplied": "SAVE20"
+}
+
+Success 200 (100% discount — instant activation):
+{
+  "instantActivation": true,
+  "plan": "GOLD",
+  "orderAmount": 0,
+  "premiumExpiry": "2026-08-28T..."
+}
+
+Flutter flow:
+  1. User enters coupon → call apply-coupon → show discounted price
+  2. User pays → call create-order with same couponCode
+  3. Open Cashfree SDK with paymentSessionId
+  4. After payment → call verify endpoint
+
+
+--- Verify payment ---
+
+POST /api/flutter/payment/verify
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "orderId": "MILAN_XXXXXXXX_1234567890",
+  "plan": "GOLD"
+}
+
+Success (paid):
+{
+  "status": "PAID",
+  "isPremium": true,
+  "premiumExpiry": "2026-08-28T..."
+}
+
+Note: Receipt email is sent automatically by backend after successful payment.
+
+
+================================================================================
+FEATURE 7 — SUBSCRIPTION RECEIPT EMAIL
+================================================================================
+
+No Flutter API call needed — automatic on backend when:
+  - POST /api/flutter/payment/verify returns status PAID
+  - Webhook confirms payment
+  - 100% coupon instant activation
+
+Email sent to user's registered email with plan, amount, dates, receipt ID.
+
+
+================================================================================
+FEATURE 8 — LOGIN / PENDING VERIFICATION
+================================================================================
+
+POST /api/flutter/auth/login
+
+If profile not yet approved by platform team:
+
+Error 403:
+{
+  "error": "Your profile is pending admin approval. You will be notified via email.",
+  "code": "PENDING_APPROVAL"
+}
+
+(Show user-friendly message in app — do not display raw "admin" text to user)
+
+Flutter UI:
+  - Show "Profile Under Review" waiting screen
+  - Message: "Your profile is being verified. You'll get an email when approved."
+  - Block search, match, chat until approved
+  - Poll login again or use push notification when approved
+
+
+================================================================================
+FEATURE 10 — LEGAL PAGES (WebView URLs)
+================================================================================
+
+Privacy Policy:  /privacy
+Terms of Service: /terms
+Safety Guidelines: /safety
+Refund Policy:   /refund
+Contact:         /contact
+
+
+================================================================================
+COMPLETE FLUTTER API QUICK REFERENCE (NEW + UPDATED)
+================================================================================
+
+AUTH
+  POST /api/flutter/auth/register          ← phone required, disposable email blocked
+  POST /api/flutter/auth/verify-otp
+  POST /api/flutter/auth/login             ← PENDING_APPROVAL error
+  POST /api/flutter/auth/google
+
+PROFILE / VERIFICATION
+  GET  /api/flutter/profile/verification-checklist   ← NEW
+  POST /api/flutter/profile/submit                   ← UPDATED (strict checklist)
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+
+UPLOADS
+  POST /api/flutter/upload/photo           ← UPDATED (duplicate photo check)
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+
+SEARCH
+  GET  /api/flutter/search?verifiedOnly=1  ← NEW param
+
+REPORT
+  POST /api/flutter/report                 ← UPDATED (autoHidden, reportCount)
+
+COUPONS / PAYMENT
+  POST /api/flutter/coupons/validate       ← NEW
+  POST /api/flutter/payment/apply-coupon   ← NEW
+  POST /api/flutter/payment/create-order   ← UPDATED (coupon + duration)
+  POST /api/flutter/payment/verify         ← receipt email auto-sent
+  GET  /api/flutter/plans
+
+MEMBER CHAT (Premium / Trial required)
+  GET  /api/flutter/chat
+  POST /api/flutter/chat
+  GET  /api/flutter/chat/{roomId}
+  POST /api/flutter/chat/{roomId}
+  GET  /api/flutter/chat/unread
+  GET  /api/flutter/chat/location/{msgId}
+  PATCH /api/flutter/chat/location/{msgId}
+  Socket.IO /api/socket (real-time)
+
+SUPPORT CHATBOT (Free — AI + Live Support)
+  POST /api/chatbot/init
+  GET  /api/chatbot/session
+  POST /api/chatbot/session
+  POST /api/chatbot/message
+  GET  /api/chatbot/message?sessionId=
+
+
+================================================================================
+FLUTTER IMPLEMENTATION CHECKLIST
+================================================================================
+
+[ ] Registration screen — phone mandatory
+[ ] Registration — handle disposable email error message
+[ ] Onboarding — upload profile photo + family photo + ID document
+[ ] Onboarding — call GET verification-checklist, show checklist UI
+[ ] Submit button — call POST profile/submit only when eligible=true
+[ ] Photo upload — handle DUPLICATE_PHOTO (409) error
+[ ] Search screen — add "Verified only" filter toggle
+[ ] Profile card — show verification badge if verificationBadge=true
+[ ] Report screen — show autoHidden message if applicable
+[ ] Premium/checkout — coupon input + apply-coupon API
+[ ] Payment — pass couponCode in create-order
+[ ] Payment — handle instantActivation (100% discount, no Cashfree)
+[ ] Login — handle PENDING_APPROVAL code with waiting UI
+[ ] Settings — link to Privacy/Terms web pages
+
+
+================================================================================
+SAMPLE FLUTTER CODE SNIPPETS (Dart)
+================================================================================
+
+--- Auth header ---
+final headers = {
+  'Authorization': 'Bearer $token',
+  'Content-Type': 'application/json',
+};
+
+--- Check verification checklist ---
+final res = await http.get(
+  Uri.parse('$baseUrl/api/flutter/profile/verification-checklist'),
+  headers: headers,
+);
+final data = jsonDecode(res.body);
+final canSubmit = data['eligible'] == true;
+
+--- Apply coupon ---
+final res = await http.post(
+  Uri.parse('$baseUrl/api/flutter/payment/apply-coupon'),
+  headers: headers,
+  body: jsonEncode({'code': coupon, 'planId': 'GOLD', 'months': 3}),
+);
+
+--- Search verified only ---
+final uri = Uri.parse('$baseUrl/api/flutter/search').replace(queryParameters: {
+  'verifiedOnly': '1',
+  'page': '1',
+  'limit': '12',
+});
+
+--- Report profile ---
+final res = await http.post(
+  Uri.parse('$baseUrl/api/flutter/report'),
+  headers: headers,
+  body: jsonEncode({
+    'targetId': userId,
+    'reason': 'Fake profile',
+    'details': 'Photos look copied',
+  }),
+);
+if (jsonDecode(res.body)['autoHidden'] == true) {
+  // show: profile hidden pending review
+}
+
+
+================================================================================
+FEATURE 11 — MEMBER CHAT (User-to-User messaging)
+================================================================================
+
+Premium OR active free trial required for chat access.
+
+--- Check access (403 response includes reason) ---
+reasons: no_access | premium_expired | trial_expired
+
+--- List all chat rooms ---
+
+GET /api/flutter/chat?page=1&limit=20
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "data": [
+    {
+      "id": "room-uuid",
+      "userAId": "...",
+      "userBId": "...",
+      "createdAt": "...",
+      "userA": { "id", "name", "isPremium", "profile", "photos", ... },
+      "userB": { ... },
+      "lastMessage": {
+        "id", "content", "createdAt", "senderId",
+        "type": "TEXT",          // TEXT | IMAGE | DOCUMENT | LOCATION
+        "isRead": false
+      }
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "limit": 20,
+  "hasMore": false
+}
+
+Error 403 (no premium/trial):
+{
+  "error": "Chat access required",
+  "hasAccess": false,
+  "reason": "no_access"
+}
+
+
+--- Start chat / send first message ---
+
+POST /api/flutter/chat
+Headers: Authorization: Bearer <token>
+
+Body (text):
+{
+  "receiverId": "<other_user_id>",
+  "content": "Hello!",
+  "type": "TEXT"
+}
+
+Body (location):
+{
+  "receiverId": "<other_user_id>",
+  "type": "LOCATION",
+  "latitude": 19.0760,
+  "longitude": 72.8777,
+  "locationType": "static",     // or "live"
+  "locationExpiry": "2026-05-28T12:00:00.000Z"   // required for live
+}
+
+Success 201: message object + roomId
+
+
+--- Get messages in a room ---
+
+GET /api/flutter/chat/{roomId}?page=1&limit=20
+GET /api/flutter/chat/{roomId}?before=2026-05-28T10:00:00.000Z&limit=20  (older msgs)
+
+Success 200:
+{
+  "data": [ { message objects, oldest first } ],
+  "total": 45,
+  "page": 1,
+  "limit": 20,
+  "hasMore": true
+}
+
+Note: Opening a room auto-marks received messages as read.
+
+
+--- Send message in existing room ---
+
+POST /api/flutter/chat/{roomId}
+
+Text (JSON):
+{ "content": "Hi there", "type": "TEXT" }
+
+Image/PDF (multipart/form-data):
+  Fields: file, type ("IMAGE" or "DOCUMENT")
+  IMAGE: JPG/PNG/WEBP/GIF, max 15MB
+  DOCUMENT: PDF only, max 15MB
+
+Location (JSON):
+{
+  "type": "LOCATION",
+  "latitude": 19.07,
+  "longitude": 72.87,
+  "locationType": "live",
+  "locationExpiry": "2026-05-28T12:30:00.000Z"
+}
+
+
+--- Live location update (sender only) ---
+
+GET  /api/flutter/chat/location/{msgId}     — poll current coords
+PATCH /api/flutter/chat/location/{msgId}
+Body: { "latitude": 19.08, "longitude": 72.88 }
+
+
+--- Unread message count (navbar badge) ---
+
+GET /api/flutter/chat/unread
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "total": 3,
+  "perRoom": {
+    "room-uuid-1": 2,
+    "room-uuid-2": 1
+  }
+}
+
+
+--- Real-time chat (Socket.IO) — RECOMMENDED ---
+
+Connect: wss://vivahdwar.com  path: /api/socket
+Auth: { token: "<JWT>" }  in handshake auth OR Authorization header
+
+Events to EMIT:
+  room:join          { roomId }
+  room:leave         { roomId }
+  message:send       { roomId, message }
+  message:read       { roomId, readerId }
+  typing:start       { roomId, userId }
+  typing:stop        { roomId, userId }
+  location:update    { roomId, msgId, latitude, longitude }
+  user:online        { userId }
+
+Events to LISTEN:
+  message:receive    — new message in room
+  message:read       — peer read messages
+  typing:start       — peer typing
+  typing:stop
+  location:update    — live location moved
+  users:online       — online user ids list
+
+Flutter: Use socket_io_client package. REST API for history; socket for live.
+
+
+================================================================================
+FEATURE 12 — SUPPORT CHATBOT (AI Help + Live Support)
+================================================================================
+
+In-app help assistant — FAQ, plans, payment, profile help.
+NOT member-to-member chat. Free for all users.
+
+APIs: /api/chatbot/* (shared with website — no /api/flutter/ prefix)
+No JWT required for guests. Pass userId when user is logged in.
+
+--- Init (call once on app start — creates DB tables if needed) ---
+
+POST /api/chatbot/init
+Body: {}
+
+Success: { "ok": true }
+
+
+--- Start or restore session ---
+
+GET /api/chatbot/session?sessionId={guestSessionId}
+  — restore guest session from local storage
+
+POST /api/chatbot/session
+Body: { "action": "new", "userId": "<optional logged-in user id>" }
+
+Success:
+{
+  "ok": true,
+  "sessionId": "uuid",
+  "status": "bot",          // bot | live | ended
+  "messages": [ { id, sessionId, sender, content, createdAt } ],
+  "storageKey": "vd-support-session"
+}
+
+Other session actions:
+  { "action": "escalate", "sessionId": "...", "userId": "..." }
+    → Connect to live support team (human reply via backend)
+
+  { "action": "attach", "sessionId": "...", "userId": "..." }
+    → Link guest session to logged-in user
+
+  { "action": "end", "sessionId": "..." }
+    → End support chat
+
+
+--- Send message to bot ---
+
+POST /api/chatbot/message
+Body:
+{
+  "sessionId": "uuid-or-null-for-new",
+  "message": "What are premium plans?",
+  "userId": "<optional logged-in user id>"
+}
+
+Success 200:
+{
+  "sessionId": "uuid",
+  "status": "bot",
+  "botReply": "Our premium plans are...",
+  "intent": "premium",
+  "followUps": [
+    { "label": "View Plans", "text": "premium plans" },
+    { "label": "Talk to Agent", "text": "__escalate__" }
+  ],
+  "actions": [],
+  "confidence": 0.85,
+  "suggestLiveAgent": false
+}
+
+When status is "live" — botReply is null; support team will reply.
+Poll GET /api/chatbot/message?sessionId=... every 3-5 seconds for new messages.
+
+Special followUp text "__escalate__" → call POST session action escalate.
+
+
+--- Get chat history ---
+
+GET /api/chatbot/message?sessionId={sessionId}
+
+Success:
+{
+  "messages": [
+    { "sender": "user",    "content": "...", "createdAt": "..." },
+    { "sender": "bot",     "content": "...", "createdAt": "..." },
+    { "sender": "support", "content": "...", "createdAt": "..." }
+  ],
+  "session": { "id", "status", "language", ... }
+}
+
+
+--- Bot capabilities (intents) ---
+  greeting, premium, payment, profile, verification, safety,
+  refund, login, search, agent (live support), fallback
+
+Supports English + Hindi (auto-detected).
+
+Flutter UI tips:
+  - Save sessionId in SharedPreferences (key: vd-support-session)
+  - Show followUp buttons from API response
+  - Poll messages every 3-5 sec when status === "live"
+  - Floating help button → open Support ChatBot screen
+
+
+================================================================================
+CHAT vs CHATBOT — DIFFERENCE
+================================================================================
+
+  MEMBER CHAT (/api/flutter/chat/*)
+    → Message other profiles (matches/interests)
+    → Requires Premium or Free Trial
+    → Socket.IO for real-time
+
+  SUPPORT CHATBOT (/api/chatbot/*)
+    → In-app help: plans, payments, verification, safety
+    → Free for all users (guest + logged in)
+    → AI bot + optional live support team (escalate action)
+
+
+================================================================================
+WHAT IS NOT IN FLUTTER APP (Website only — DO NOT BUILD)
+================================================================================
+
+  ✗ Admin panel (user approval, coupon create, reports review, KYC admin call)
+  ✗ Admin login / admin role screens
+  ✗ Pending users management
+  ✗ Document verification approve/reject UI
+  ✗ Video KYC admin side (website only)
+  ✗ Support chat reply panel (support team uses website)
+
+Flutter app is USER-FACING ONLY.
+
+
+================================================================================
+UPDATED FLUTTER CHECKLIST (Chat section)
+================================================================================
+
+[ ] Chat list screen — GET /api/flutter/chat
+[ ] Chat room — GET /api/flutter/chat/{roomId}
+[ ] Send text/image/pdf/location — POST /api/flutter/chat/{roomId}
+[ ] Unread badge — GET /api/flutter/chat/unread
+[ ] Socket.IO connect with JWT for real-time messages
+[ ] Show "Upgrade to Premium" when chat returns 403
+[ ] Support bot floating button — POST /api/chatbot/session action:new
+[ ] Bot messages — POST /api/chatbot/message
+[ ] Live agent — POST /api/chatbot/session action:escalate
+[ ] Save support sessionId locally
+
+
+================================================================================
+FEATURE — POST-VERIFICATION PORTAL LAUNCH GATE
+================================================================================
+
+After admin verifies a user, they CAN login — but if portal is CLOSED from admin
+Site Settings, they see a "Profile coming soon" screen instead of dashboard.
+
+Admin controls this at: Website → Admin → Site Settings → "User Portal Access"
+  OFF (default) = launch page after login
+  ON          = full portal access (dashboard, matches, chat, etc.)
+
+Developer bypass emails (same admin page):
+  Comma-separated emails that get full access even when portal is CLOSED.
+  Use YOUR developer email here for testing. Normal users always see launch page.
+
+
+--- WEB (for reference — implemented on website) ---
+
+Route: /profile-launch
+API:   GET /api/portal-access  (NextAuth session cookie)
+
+Contact shown on launch page:
+  Phone: +91 87359 95467  (8735995467)
+  Email: supportvivahdwar@gmail.com
+
+
+--- FLUTTER LOGIN RESPONSE (updated) ---
+
+POST /api/flutter/auth/login
+(same for /api/flutter/auth/google and /api/flutter/auth/family-login)
+
+Success 200 — portal OPEN:
+{
+  "success": true,
+  "token": "<JWT>",
+  "portalAccess": true,
+  "portalClosed": false,
+  "user": { ... }
+}
+
+Success 200 — portal CLOSED (user IS logged in, but limited):
+{
+  "success": true,
+  "token": "<JWT>",
+  "portalAccess": false,
+  "portalClosed": true,
+  "launchMessage": {
+    "titleHi": "Aapki Profile Jald Hi Tayyar Hogi!",
+    "titleEn": "Your Profile Will Be Live Soon",
+    "subtitle": "...",
+    "body": "...",
+    "updateNote": "...",
+    "supportNote": "..."
+  },
+  "contact": {
+    "phone": "8735995467",
+    "phoneDisplay": "+91 87359 95467",
+    "email": "supportvivahdwar@gmail.com"
+  },
+  "user": { ... }
+}
+
+Flutter UI when portalClosed === true:
+  - Do NOT navigate to home/dashboard
+  - Show full-screen launch page with launchMessage + contact buttons
+  - Poll GET /api/flutter/portal-access every 30s with Bearer token
+  - When granted becomes true → navigate to home
+
+
+--- FLUTTER PORTAL STATUS ---
+
+GET /api/flutter/portal-access
+Header: Authorization: Bearer <JWT>
+
+Response 200:
+{
+  "granted": false,
+  "reason": "portal_closed",
+  "portalAccess": false,
+  "message": { ... },
+  "contact": { ... },
+  "userId": "..."
+}
+
+When granted is true → allow full app navigation.
+
+
+--- FLUTTER API BLOCKED WHEN PORTAL CLOSED ---
+
+All /api/flutter/* routes (except auth + portal-access + location) return:
+
+403 {
+  "code": "PORTAL_CLOSED",
+  "portalAccess": false,
+  "error": "Your profile will be available soon...",
+  "contact": { ... }
+}
+
+Flutter must handle PORTAL_CLOSED on any API call and show launch screen.
+
+
+--- FLUTTER CHECKLIST ---
+
+[ ] After login, check portalClosed / portalAccess flag
+[ ] Build ProfileLaunchScreen (Hindi + English message, phone + email buttons)
+[ ] Poll /api/flutter/portal-access every 30 seconds
+[ ] Handle 403 PORTAL_CLOSED on all authenticated API calls
+[ ] Do NOT show dashboard/matches/chat until portalAccess is true
+[ ] Logout button on launch screen
+
+
+================================================================================
+SUPPORT
+================================================================================
+
+Backend repo: matrimonial-app
+Questions: share this file + API endpoint + request/response with backend team.
+
+
+================================================================================
+  PART C & D — MEMBER CHAT + SUPPORT CHATBOT
+================================================================================
+
+NOTE: Flutter mobile app only. No admin panel in the app.
+
+Auth header (where required):
+  Authorization: Bearer <JWT_TOKEN>
+
+Related documents:
+  NEW features (verification, coupons, report, search, etc.)
+    → docs/FLUTTER_NEW_FEATURES.txt
+
+  This file: member chat, support chatbot, full API index
+
+
+================================================================================
+COMPLETE FLUTTER API QUICK REFERENCE
+================================================================================
+
+AUTH
+  POST /api/flutter/auth/register          ← see FLUTTER_NEW_FEATURES.txt
+  POST /api/flutter/auth/verify-otp
+  POST /api/flutter/auth/login
+  POST /api/flutter/auth/google
+
+PROFILE / VERIFICATION
+  GET  /api/flutter/profile/verification-checklist
+  POST /api/flutter/profile/submit
+  GET  /api/flutter/profile
+  PUT  /api/flutter/profile
+
+UPLOADS
+  POST /api/flutter/upload/photo
+  POST /api/flutter/upload/family-photo
+  POST /api/flutter/upload/document
+
+SEARCH
+  GET  /api/flutter/search?verifiedOnly=1
+
+REPORT
+  POST /api/flutter/report
+
+COUPONS / PAYMENT
+  POST /api/flutter/coupons/validate
+  POST /api/flutter/payment/apply-coupon
+  POST /api/flutter/payment/create-order
+  POST /api/flutter/payment/verify
+  GET  /api/flutter/subscription   ← Premium screen (plans + user status)
+  GET  /api/flutter/plans          ← public plans only
+
+MEMBER CHAT (Premium / Trial required)
+  GET  /api/flutter/chat
+  POST /api/flutter/chat
+  GET  /api/flutter/chat/{roomId}
+  POST /api/flutter/chat/{roomId}
+  GET  /api/flutter/chat/unread
+  GET  /api/flutter/chat/location/{msgId}
+  PATCH /api/flutter/chat/location/{msgId}
+  Socket.IO /api/socket (real-time)
+
+SUPPORT CHATBOT (Free — AI + Live Support)
+  POST /api/chatbot/init
+  GET  /api/chatbot/session
+  POST /api/chatbot/session
+  POST /api/chatbot/message
+  GET  /api/chatbot/message?sessionId=
+
+
+================================================================================
+FEATURE — MEMBER CHAT (User-to-User messaging)
+================================================================================
+
+Premium OR active free trial required for chat access.
+
+403 reasons: no_access | premium_expired | trial_expired
+
+--- List chat rooms ---
+
+GET /api/flutter/chat?page=1&limit=20
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "data": [
+    {
+      "id": "room-uuid",
+      "userAId": "...",
+      "userBId": "...",
+      "createdAt": "...",
+      "userA": { "id", "name", "isPremium", "profile", "photos", ... },
+      "userB": { ... },
+      "lastMessage": {
+        "id", "content", "createdAt", "senderId",
+        "type": "TEXT",
+        "isRead": false
+      }
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "limit": 20,
+  "hasMore": false
+}
+
+Error 403:
+{ "error": "Chat access required", "hasAccess": false, "reason": "no_access" }
+
+
+--- Start chat / first message ---
+
+POST /api/flutter/chat
+Body (text):
+{ "receiverId": "<user_id>", "content": "Hello!", "type": "TEXT" }
+
+Body (location):
+{
+  "receiverId": "<user_id>",
+  "type": "LOCATION",
+  "latitude": 19.0760,
+  "longitude": 72.8777,
+  "locationType": "static",
+  "locationExpiry": "2026-05-28T12:00:00.000Z"
+}
+
+Success 201: message object + roomId
+
+
+--- Get messages ---
+
+GET /api/flutter/chat/{roomId}?page=1&limit=20
+GET /api/flutter/chat/{roomId}?before=2026-05-28T10:00:00.000Z&limit=20
+
+Success 200:
+{ "data": [...], "total": 45, "page": 1, "limit": 20, "hasMore": true }
+
+Opening a room auto-marks received messages as read.
+
+
+--- Send in existing room ---
+
+POST /api/flutter/chat/{roomId}
+
+Text: { "content": "Hi", "type": "TEXT" }
+
+Image/PDF (multipart): file, type ("IMAGE" or "DOCUMENT")
+  IMAGE: JPG/PNG/WEBP/GIF, max 15MB
+  DOCUMENT: PDF, max 15MB
+
+Location:
+{
+  "type": "LOCATION",
+  "latitude": 19.07,
+  "longitude": 72.87,
+  "locationType": "live",
+  "locationExpiry": "2026-05-28T12:30:00.000Z"
+}
+
+
+--- Live location ---
+
+GET  /api/flutter/chat/location/{msgId}
+PATCH /api/flutter/chat/location/{msgId}
+Body: { "latitude": 19.08, "longitude": 72.88 }
+
+
+--- Unread count ---
+
+GET /api/flutter/chat/unread
+
+Success: { "total": 3, "perRoom": { "room-uuid-1": 2 } }
+
+
+--- Real-time (Socket.IO) ---
+
+Connect: wss://vivahdwar.com  path: /api/socket
+Auth: { token: "<JWT>" }
+
+EMIT: room:join, room:leave, message:send, message:read,
+      typing:start, typing:stop, location:update, user:online
+
+LISTEN: message:receive, message:read, typing:start, typing:stop,
+        location:update, users:online
+
+Package: socket_io_client — REST for history, socket for live.
+
+
+================================================================================
+FEATURE — SUPPORT CHATBOT (AI Help + Live Support)
+================================================================================
+
+In-app help — FAQ, plans, payment, profile. Free for all users.
+APIs: /api/chatbot/* (NOT under /api/flutter/)
+
+--- Init ---
+
+POST /api/chatbot/init
+Body: {}
+Success: { "ok": true }
+
+
+--- Session ---
+
+GET /api/chatbot/session?sessionId={guestSessionId}
+
+POST /api/chatbot/session
+Body: { "action": "new", "userId": "<optional>" }
+
+Success:
+{
+  "ok": true,
+  "sessionId": "uuid",
+  "status": "bot",
+  "messages": [...],
+  "storageKey": "vd-support-session"
+}
+
+Actions:
+  { "action": "escalate", "sessionId": "...", "userId": "..." }
+  { "action": "attach", "sessionId": "...", "userId": "..." }
+  { "action": "end", "sessionId": "..." }
+
+
+--- Send message ---
+
+POST /api/chatbot/message
+Body:
+{
+  "sessionId": "uuid-or-null",
+  "message": "What are premium plans?",
+  "userId": "<optional>"
+}
+
+Success:
+{
+  "sessionId": "uuid",
+  "status": "bot",
+  "botReply": "...",
+  "intent": "premium",
+  "followUps": [
+    { "label": "View Plans", "text": "premium plans" },
+    { "label": "Talk to Agent", "text": "__escalate__" }
+  ],
+  "confidence": 0.85,
+  "suggestLiveAgent": false
+}
+
+When status is "live" — poll GET /api/chatbot/message?sessionId= every 3-5 sec.
+"__escalate__" followUp → POST session action escalate.
+
+
+--- History ---
+
+GET /api/chatbot/message?sessionId={sessionId}
+
+Intents: greeting, premium, payment, profile, verification, safety,
+         refund, login, search, agent, fallback
+Languages: English + Hindi
+
+
+================================================================================
+CHAT vs CHATBOT
+================================================================================
+
+  MEMBER CHAT (/api/flutter/chat/*)
+    → Message other profiles
+    → Premium or Free Trial required
+    → Socket.IO real-time
+
+  SUPPORT CHATBOT (/api/chatbot/*)
+    → App help: plans, payments, verification
+    → Free for all users
+    → AI bot + live support (escalate)
+
+
+================================================================================
+WHAT IS NOT IN FLUTTER APP (Website only)
+================================================================================
+
+  ✗ Admin panel, pending approval UI, coupon create, KYC admin
+  ✗ Document verify UI, support team reply panel
+
+
+================================================================================
+FULL IMPLEMENTATION CHECKLIST
+================================================================================
+
+New features → see FLUTTER_NEW_FEATURES.txt
+
+Chat:
+[ ] Chat list — GET /api/flutter/chat
+[ ] Chat room — GET /api/flutter/chat/{roomId}
+[ ] Send text/image/pdf/location
+[ ] Unread badge — GET /api/flutter/chat/unread
+[ ] Socket.IO with JWT
+[ ] "Upgrade to Premium" on 403
+
+Chatbot:
+[ ] Floating help button — POST /api/chatbot/session action:new
+[ ] Bot messages — POST /api/chatbot/message
+[ ] Live agent — action:escalate
+[ ] Save sessionId in SharedPreferences (vd-support-session)
+
+
+================================================================================
+SUPPORT
+================================================================================
+
+Backend repo: matrimonial-app
+New features doc: docs/FLUTTER_NEW_FEATURES.txt
+
+
+================================================================================
+  PART E — FAMILY LOGIN + SETTINGS PAGE
+================================================================================
+
+Mobile app only. No admin panel.
+
+
+================================================================================
+OVERVIEW
+================================================================================
+
+FAMILY LOGIN
+  Profile owner (member) can add up to 3 family members (parent/sibling).
+  Family logs in with their OWN email + password.
+  They browse profiles on behalf of the member — READ ONLY.
+
+  ✓ Allowed: search, view profiles, shortlist browse, dashboard
+  ✗ Blocked: send interest, chat, edit profile, change settings, payment, upload
+
+SETTINGS PAGE (Owner only)
+  Privacy toggles, notifications, family login management,
+  change password, premium renewal reminders, deactivate account.
+
+
+================================================================================
+PART 1 — FAMILY LOGIN
+================================================================================
+
+--- How it works ---
+
+1. Member (owner) → Settings → Add family login (name, email, password, relationship)
+2. Family member → Login screen → "Family Login" tab
+3. Family enters THEIR email + password (not member's email)
+4. JWT token issued with role = "FAMILY"
+5. App shows banner: "Family Login — browsing {ownerName}'s profile"
+6. All browse APIs use owner user id from token
+
+
+--- POST Family Login ---
+
+POST /api/flutter/auth/family-login
+Body:
+{
+  "email": "father@gmail.com",
+  "password": "family123"
+}
+
+Success 200:
+{
+  "success": true,
+  "token": "<JWT>",
+  "user": {
+    "id": "<owner_user_id>",
+    "name": "Ramesh (Parent)",
+    "email": "father@gmail.com",
+    "role": "FAMILY",
+    "isFamilyLogin": true,
+    "familyAccessId": "uuid",
+    "memberName": "Ramesh",
+    "relationship": "Parent",
+    "ownerName": "Rahul Sharma",
+    "ownerId": "<owner_user_id>",
+    "isPremium": true,
+    "premiumPlan": "GOLD",
+    "adminVerified": true,
+    "verificationBadge": false,
+    "freeTrialActive": false,
+    "freeTrialExpiry": null
+  }
+}
+
+Errors:
+  400 — email/password missing
+  401 — invalid family credentials
+  403 — owner account inactive
+
+
+--- JWT payload (store in app state) ---
+
+After family login, save:
+  token
+  user.role === "FAMILY"
+  user.isFamilyLogin === true
+  user.ownerName
+  user.id === owner's user id (used for all API calls)
+
+
+--- Flutter Login Screen UI ---
+
+Two tabs on login page:
+  [ Member Login ]  [ Family Login ]
+
+Member tab → POST /api/flutter/auth/login
+Family tab → POST /api/flutter/auth/family-login
+
+After family login success:
+  - Navigate to Dashboard (not onboarding)
+  - Show persistent banner at top:
+    "👨‍👩‍👧 Family mode — browsing Rahul's profile (read-only)"
+  - Hide bottom nav items: Chat, Interests send, Premium purchase, Settings edit
+
+
+--- What family CAN do ---
+
+GET  /api/flutter/search
+GET  /api/flutter/matches
+GET  /api/flutter/profile/{id}
+GET  /api/flutter/dashboard
+GET  /api/flutter/shortlist        (view only)
+GET  /api/flutter/profile-views
+GET  /api/flutter/recently-viewed
+GET  /api/flutter/settings         (read-only — readOnly: true in response)
+
+
+--- What family CANNOT do (403 FAMILY_READONLY) ---
+
+POST /api/flutter/interest              → send interest
+POST /api/flutter/chat                  → chat
+GET  /api/flutter/chat                  → chat list
+PUT  /api/flutter/profile               → edit profile
+PATCH /api/flutter/settings             → change settings
+POST /api/flutter/payment/*             → payment
+POST /api/flutter/upload/*              → uploads
+POST /api/flutter/auth/change-password  → password
+
+Error response:
+{
+  "error": "Family login cannot send interests",
+  "code": "FAMILY_READONLY"
+}
+
+
+--- Flutter UI rules for family mode ---
+
+On profile detail screen:
+  - Hide "Send Interest" button
+  - Hide "Chat" button
+  - Show info card:
+    "Family browse mode — only the profile owner can send interests."
+
+On dashboard:
+  - Show family banner (blue)
+  - Hide "Edit Profile" CTA
+
+On settings:
+  - Either hide Settings tab entirely for family
+  - OR show read-only message: "Settings can only be changed by profile owner"
+
+Detect family mode globally:
+  if (auth.user.isFamilyLogin == true) { ... disable actions ... }
+
+
+================================================================================
+PART 2 — SETTINGS PAGE (Profile owner only)
+================================================================================
+
+Family login users must NOT see editable settings.
+Only role USER (member/owner) manages settings.
+
+
+--- GET all settings ---
+
+GET /api/flutter/settings
+Headers: Authorization: Bearer <token>
+
+Success 200 (owner):
+{
+  "user": {
+    "name": "Rahul Sharma",
+    "email": "rahul@gmail.com",
+    "phone": "+919876543210",
+    "phoneVerified": false,
+    "isPremium": true,
+    "premiumPlan": "GOLD",
+    "profileBoost": false,
+    "boostExpiry": null,
+    "role": "USER",
+    "isFamilyLogin": false,
+    "memberName": null,
+    "relationship": null,
+    "ownerName": null
+  },
+  "privacy": {
+    "hidePhone": false,
+    "hidePhoto": false,
+    "profileVisible": true,
+    "showOnlineStatus": true
+  },
+  "notifications": {
+    "notifyInterest": true,
+    "notifyMessage": true,
+    "notifyProfileView": true,
+    "notifyMarketing": false
+  },
+  "profileComplete": 96,
+  "subscription": {
+    "autoRenew": true
+  },
+  "familyAccessCount": 1,
+  "readOnly": false,
+  "access": { ... plan permissions ... }
+}
+
+Success 200 (family — read only, for optional view):
+{
+  "user": { "role": "FAMILY", "isFamilyLogin": true, "ownerName": "Rahul Sharma", ... },
+  "readOnly": true,
+  ...
+}
+
+
+--- PATCH save settings (owner only) ---
+
+PATCH /api/flutter/settings
+Headers: Authorization: Bearer <token>
+
+Body (send only changed sections):
+{
+  "privacy": {
+    "hidePhone": true,
+    "hidePhoto": false,
+    "profileVisible": true,
+    "showOnlineStatus": false
+  },
+  "notifications": {
+    "notifyInterest": true,
+    "notifyMessage": true,
+    "notifyProfileView": false,
+    "notifyMarketing": false
+  },
+  "subscription": {
+    "autoRenew": true
+  }
+}
+
+Success: { "success": true }
+
+Error 403 (family):
+{
+  "error": "Family login cannot change settings",
+  "code": "FAMILY_READONLY"
+}
+
+Deactivate account:
+{
+  "deactivate": true
+}
+→ { "success": true, "deactivated": true } — then logout user
+
+
+--- Privacy toggles (Flutter UI) ---
+
+| Key               | Label                                      |
+|-------------------|--------------------------------------------|
+| hidePhone         | Hide phone number on profile               |
+| hidePhoto         | Hide photos until interest accepted        |
+| profileVisible    | Show my profile in search & matches        |
+| showOnlineStatus  | Show online status in chat                 |
+
+
+--- Notification toggles ---
+
+| Key               | Label                                      |
+|-------------------|--------------------------------------------|
+| notifyInterest    | Interest received / accepted               |
+| notifyMessage     | New messages                               |
+| notifyProfileView | Profile views                              |
+| notifyMarketing   | Offers & updates                           |
+
+
+--- Premium renewal reminders (premium users only) ---
+
+Toggle: subscription.autoRenew
+Label: "Email renewal reminders"
+Subtitle: "Reminders at 7, 3 & 1 days before premium expires"
+
+Backend sends emails automatically via cron — no extra Flutter API.
+
+
+================================================================================
+PART 3 — FAMILY ACCESS MANAGEMENT (Settings section)
+================================================================================
+
+Owner adds/removes family logins from Settings screen.
+Max 3 family members per account.
+
+
+--- GET list ---
+
+GET /api/flutter/family-access
+Headers: Authorization: Bearer <token>
+
+Success 200:
+{
+  "members": [
+    {
+      "id": "uuid",
+      "memberName": "Ramesh",
+      "email": "father@gmail.com",
+      "relationship": "Parent",
+      "isActive": 1,
+      "createdAt": "2026-05-01T..."
+    }
+  ],
+  "maxAllowed": 3
+}
+
+Error 403 — family member cannot call this API
+
+
+--- POST add family login ---
+
+POST /api/flutter/family-access
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "memberName": "Ramesh",
+  "email": "father@gmail.com",
+  "password": "family123",
+  "relationship": "Parent"
+}
+
+relationship options: Parent | Sibling | Guardian | Other
+password: minimum 6 characters
+
+Success 201:
+{
+  "id": "uuid",
+  "success": true,
+  "member": {
+    "id": "uuid",
+    "memberName": "Ramesh",
+    "email": "father@gmail.com",
+    "relationship": "Parent",
+    "isActive": true
+  }
+}
+
+Errors:
+  400 — missing fields / password too short
+  400 — maximum 3 family logins (code: FAMILY_LIMIT)
+  409 — email already used for family access
+
+
+--- DELETE remove family login ---
+
+DELETE /api/flutter/family-access?id={member_id}
+Headers: Authorization: Bearer <token>
+
+Success: { "success": true }
+
+
+--- Flutter Settings UI — Family Login section ---
+
+Title: "Family Login"
+Subtitle: "Let parents browse profiles on your behalf (read-only, max 3)"
+
+For each member in list:
+  - Show: name, email, relationship
+  - Delete button → confirm dialog → DELETE API
+
+If members.length < 3, show form:
+  - Name (e.g. Father)
+  - Email (family login email — unique, not member email)
+  - Password (min 6 chars)
+  - Relationship dropdown
+  - [Add Family Login] button
+
+After add success → refresh list → toast "Family login created"
+
+
+================================================================================
+PART 4 — CHANGE PASSWORD (Settings → Change Password)
+================================================================================
+
+--- GET has password? ---
+
+GET /api/flutter/auth/change-password
+Headers: Authorization: Bearer <token>
+
+Success: { "hasPassword": true }
+
+Google-only users: hasPassword = false (skip current password field)
+
+
+--- POST change password ---
+
+POST /api/flutter/auth/change-password
+Headers: Authorization: Bearer <token>
+
+Body:
+{
+  "currentPassword": "oldpass123",
+  "newPassword": "newpass456"
+}
+
+If hasPassword is false (Google user setting first password):
+{
+  "newPassword": "newpass456"
+}
+
+Success: { "success": true, "message": "Password updated successfully" }
+
+Errors:
+  400 — validation errors
+  403 — family login blocked
+
+
+================================================================================
+PART 5 — SETTINGS SCREEN LAYOUT (Flutter)
+================================================================================
+
+Recommended screen structure:
+
+┌─────────────────────────────────────┐
+│ Settings                    [Save]  │
+├─────────────────────────────────────┤
+│ ACCOUNT                             │
+│  Name, email, phone                 │
+│  [Change Password]                  │
+│  [Refer & Earn]  [Share Story]      │
+│  Profile 96% complete → link        │
+├─────────────────────────────────────┤
+│ SUBSCRIPTION (if premium)           │
+│  Email renewal reminders    [toggle]│
+│  Manage plan →                      │
+├─────────────────────────────────────┤
+│ FAMILY LOGIN (owner only)           │
+│  List of members + add form         │
+├─────────────────────────────────────┤
+│ PRIVACY                             │
+│  4 toggles                          │
+├─────────────────────────────────────┤
+│ NOTIFICATIONS                       │
+│  4 toggles                          │
+├─────────────────────────────────────┤
+│ DANGER ZONE                         │
+│  [Deactivate Account]               │
+└─────────────────────────────────────┘
+
+Save button → PATCH /api/flutter/settings with current toggle values
+
+Legal links (WebView):
+  /privacy  /terms  /safety  /refund  /contact
+
+
+================================================================================
+PART 6 — IMPLEMENTATION CHECKLIST
+================================================================================
+
+Login:
+[ ] Login screen — Member / Family tabs
+[ ] Family login → POST /api/flutter/auth/family-login
+[ ] Store isFamilyLogin + ownerName in auth state
+[ ] Family banner on dashboard
+
+Family mode restrictions:
+[ ] Hide Send Interest on profile detail when isFamilyLogin
+[ ] Hide Chat tab / disable chat navigation
+[ ] Hide Settings edit OR block with message
+[ ] Handle 403 FAMILY_READONLY gracefully
+[ ] Premium screen: GET /api/flutter/subscription — show plans always
+[ ] If code=SUBSCRIPTION_OWNER_ONLY → banner, disable Pay (NOT "Access Denied")
+
+Premium / Subscription screen (owner + family):
+[ ] GET /api/flutter/subscription on screen load
+[ ] Render plans even when canPurchase=false
+[ ] Map codes: LOGIN_REQUIRED | SUBSCRIPTION_OWNER_ONLY | PROFILE_NOT_VERIFIED
+[ ] Pay flow: apply-coupon → create-order → Cashfree SDK → verify
+[ ] Family login: browse plans OK, purchase blocked with clear message
+
+Settings (owner):
+[ ] GET /api/flutter/settings on screen load
+[ ] Privacy + notification toggles
+[ ] Premium autoRenew toggle (if isPremium)
+[ ] Save → PATCH /api/flutter/settings
+[ ] Change password screen → GET/POST change-password
+[ ] Deactivate → PATCH { deactivate: true } → logout
+
+Family access (owner):
+[ ] GET /api/flutter/family-access — list members
+[ ] POST add family member form
+[ ] DELETE remove member with confirm
+[ ] Show max 3 limit message
+
+Refer & Earn:
+[ ] GET /api/flutter/referral — show code + link
+
+
+================================================================================
+DART SNIPPETS
+================================================================================
+
+--- Family login ---
+final res = await http.post(
+  Uri.parse('$baseUrl/api/flutter/auth/family-login'),
+  headers: {'Content-Type': 'application/json'},
+  body: jsonEncode({'email': email, 'password': password}),
+);
+final data = jsonDecode(res.body);
+if (data['success'] == true) {
+  final isFamily = data['user']['isFamilyLogin'] == true;
+  await storage.saveToken(data['token']);
+  await storage.saveUser(data['user']);
+}
+
+--- Load settings ---
+final res = await http.get(
+  Uri.parse('$baseUrl/api/flutter/settings'),
+  headers: {'Authorization': 'Bearer $token'},
+);
+final settings = jsonDecode(res.body);
+if (settings['readOnly'] == true) {
+  // family user — show read-only or redirect
+}
+
+--- Save settings ---
+await http.patch(
+  Uri.parse('$baseUrl/api/flutter/settings'),
+  headers: headers,
+  body: jsonEncode({
+    'privacy': privacyMap,
+    'notifications': notificationsMap,
+    'subscription': {'autoRenew': autoRenew},
+  }),
+);
+
+--- Add family member ---
+await http.post(
+  Uri.parse('$baseUrl/api/flutter/family-access'),
+  headers: headers,
+  body: jsonEncode({
+    'memberName': name,
+    'email': email,
+    'password': password,
+    'relationship': 'Parent',
+  }),
+);
+
+--- Global family guard (example) ---
+bool get isFamilyBrowse => auth.user?['isFamilyLogin'] == true;
+
+Widget interestButton() {
+  if (isFamilyBrowse) {
+    return InfoCard(
+      text: 'Family browse mode — only owner can send interest.',
+    );
+  }
+  return ElevatedButton(onPressed: sendInterest, child: Text('Send Interest'));
+}
+
+
+================================================================================
+  END — FLUTTER_COMPLETE_GUIDE.txt
+================================================================================
+

@@ -50,6 +50,34 @@ export async function POST(req) {
   }
 }
 
+export async function PATCH(req) {
+  try {
+    const token = getTokenFromRequest(req);
+    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const decoded = verifyToken(token);
+    if (!decoded) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+
+    const { id, name, filters, alertEnabled } = await req.json();
+    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
+
+    await ensureFeatureTables();
+    const existing = await queryOne('SELECT id FROM savedsearch WHERE id = ? AND userId = ?', [id, decoded.id]);
+    if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+    const sets = [];
+    const vals = [];
+    if (name != null) { sets.push('name = ?'); vals.push(name.trim()); }
+    if (filters != null) { sets.push('filters = ?'); vals.push(JSON.stringify(filters)); }
+    if (alertEnabled != null) { sets.push('alertEnabled = ?'); vals.push(alertEnabled ? 1 : 0); }
+    if (sets.length) {
+      await execute(`UPDATE savedsearch SET ${sets.join(', ')}, updatedAt = NOW() WHERE id = ?`, [...vals, id]);
+    }
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
+
 export async function DELETE(req) {
   try {
     const token = getTokenFromRequest(req);
