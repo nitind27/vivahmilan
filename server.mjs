@@ -200,9 +200,13 @@ app.prepare().then(() => {
               "SELECT value FROM siteconfig WHERE `key` = 'developer_portal_emails' LIMIT 1"
             );
             const devEmails = (devRows[0]?.value || '')
-              .split(/[,;\s]+/)
-              .map(e => e.trim().toLowerCase())
-              .filter(Boolean);
+              .split(/[\n\r,;]+/)
+              .map(e => {
+                const s = e.trim().toLowerCase();
+                const i = s.indexOf(':');
+                return i > 0 && s.includes('@') ? s.slice(0, i).trim() : s;
+              })
+              .filter(e => e.includes('@'));
             const isDev = devEmails.includes(String(decoded.email).trim().toLowerCase());
             if (!isDev) {
               const [portalRows] = await pool.execute(

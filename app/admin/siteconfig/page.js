@@ -136,20 +136,47 @@ export default function SiteConfigPage() {
           />
         </div>
         <div>
-          <label className="text-xs text-gray-400 mb-1 block">Developer Bypass Emails</label>
-          <p className="text-xs text-gray-600 mb-2">Comma-separated. In emails ko portal closed hone par bhi full access milega (testing ke liye).</p>
-          <input
+          <label className="text-xs text-gray-400 mb-1 block">Developer Test Accounts</label>
+          <p className="text-xs text-gray-600 mb-2">
+            Har line: <code className="text-amber-300/90">email:password</code> (password min 6 chars).
+            Portal band hone par bhi full access + <strong className="text-gray-400">/login</strong> par email/password se login.
+          </p>
+          <textarea
+            rows={4}
             value={config.developer_portal_emails || ''}
             onChange={e => setConfig(p => ({ ...p, developer_portal_emails: e.target.value }))}
-            placeholder="developer@gmail.com, admin@test.com"
-            className={inp}
+            placeholder={'test@gmail.com:Test@123\nother@gmail.com:Pass@456'}
+            className={`${inp} resize-y font-mono text-xs leading-relaxed`}
           />
           <button
             disabled={saving}
-            onClick={() => save('developer_portal_emails', config.developer_portal_emails || '')}
+            onClick={async () => {
+              setSaving(true);
+              try {
+                const res = await fetch('/api/admin/developer-access', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ accounts: config.developer_portal_emails || '' }),
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                  toast.error(data.error || 'Failed');
+                  return;
+                }
+                if (data.emails?.length) {
+                  setConfig(p => ({ ...p, developer_portal_emails: data.emails.join(', ') }));
+                }
+                toast.success(data.message || 'Developer accounts saved');
+                if (data.errors?.length) {
+                  toast.error(`${data.errors.length} entry failed — check format email:password`);
+                }
+              } finally {
+                setSaving(false);
+              }
+            }}
             className="mt-3 vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60"
           >
-            {saving ? 'Saving…' : 'Save Developer Emails'}
+            {saving ? 'Saving…' : 'Save & Create Login Accounts'}
           </button>
         </div>
       </div>

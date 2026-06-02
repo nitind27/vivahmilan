@@ -8,6 +8,7 @@ import { recordRegistrationGeo, recordLoginGeo, getClientIPFromHeaders } from '@
 import { randomUUID } from 'crypto';
 import https from 'https';
 import { getPortalAccessForUser } from '@/lib/portalAccess';
+import { isDeveloperBypassEmail } from '@/lib/developerAccess';
 
 // Force IPv6 for Google OAuth — server has IPv6 connectivity but IPv4 is unreachable
 const ipv6Agent = new https.Agent({ family: 6 });
@@ -171,8 +172,10 @@ export const authOptions = {
           if (!isValid) return null;
           if (!user.isActive) throw new Error('Account suspended by admin');
 
+          const isDevBypass = await isDeveloperBypassEmail(user.email);
+
           // ── Profile completion check (non-admin only) ──────────────────
-          if (user.role !== 'ADMIN') {
+          if (user.role !== 'ADMIN' && !isDevBypass) {
             const profile = await queryOne('SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?', [user.id]);
             const REQUIRED = ['gender','dob','height','religion','education','profession','country','city','aboutMe'];
             const missing = REQUIRED.filter(f => !profile?.[f]);
@@ -181,7 +184,7 @@ export const authOptions = {
             }
           }
 
-          if (user.role !== 'ADMIN' && !user.adminVerified) throw new Error('PENDING_APPROVAL');
+          if (user.role !== 'ADMIN' && !user.adminVerified && !isDevBypass) throw new Error('PENDING_APPROVAL');
           const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
           const portalAccess = await getPortalAccessForUser({ email: user.email, role: user.role });
           return {
@@ -314,11 +317,12 @@ export const authOptions = {
         // ── Existing user ──────────────────────────────────────────────
         if (!dbUser.isActive) return '/login?error=AccountSuspended';
 
+        const isDevBypass = await isDeveloperBypassEmail(dbUser.email);
         const trialActive = dbUser.freeTrialExpiry && new Date(dbUser.freeTrialExpiry) > new Date();
 
         // Check profile completeness
         let isNewUser = false;
-        if (dbUser.role !== 'ADMIN') {
+        if (dbUser.role !== 'ADMIN' && !isDevBypass) {
           const profile = await queryOne(
             'SELECT gender, dob, height, religion, education, profession, country, city, aboutMe FROM profile WHERE userId = ?',
             [dbUser.id]
@@ -328,7 +332,7 @@ export const authOptions = {
         }
 
         // If profile incomplete, send back to onboarding
-        if (isNewUser && dbUser.role !== 'ADMIN') {
+        if (isNewUser && dbUser.role !== 'ADMIN' && !isDevBypass) {
           user.id = dbUser.id;
           user.role = dbUser.role;
           user.isVerified = !!dbUser.isVerified;
@@ -341,7 +345,7 @@ export const authOptions = {
         }
 
         // Profile complete but not yet admin approved — show pending screen
-        if (!dbUser.adminVerified && dbUser.role !== 'ADMIN') {
+        if (!dbUser.adminVerified && dbUser.role !== 'ADMIN' && !isDevBypass) {
           return '/login?error=PENDING_APPROVAL';
         }
 
