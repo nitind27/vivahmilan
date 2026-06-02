@@ -9,7 +9,7 @@ import {
   BarChart2, UserCheck, Users, Sparkles, UserPlus, Crown,
   Bell, Activity, Shield, Flag, Star, Settings, Heart,
   FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw,
-  TrendingUp, HandCoins, IndianRupee
+  TrendingUp, HandCoins, IndianRupee, UserCog,
 } from 'lucide-react';
 import AdminNotifications from '@/components/AdminNotifications';
 
@@ -36,6 +36,7 @@ export const ADMIN_TABS = [
   { id: 'homepage',      label: 'Homepage Content',  icon: FileText,      badge: null },
   { id: 'options',       label: 'Profile Options',   icon: Edit2,         badge: null },
   { id: 'siteconfig',    label: 'Site Settings',     icon: Lock,          badge: null },
+  { id: 'adminsettings', label: 'Admin Settings',    icon: UserCog,       badge: null },
   { id: 'support',       label: 'Support Chat',      icon: MessageCircle, badge: null },
 ];
 
