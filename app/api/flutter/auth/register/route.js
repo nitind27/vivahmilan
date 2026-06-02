@@ -4,7 +4,7 @@ import { queryOne, execute } from '@/lib/db';
 import { sendOTPEmail, sendWelcomeEmail } from '@/lib/email';
 import { capturePendingRegistrationGeo } from '@/lib/geoTracking';
 import { isDisposableEmail, DISPOSABLE_EMAIL_MESSAGE } from '@/lib/disposableEmails';
-import { isValidPhone } from '@/lib/profileVerification';
+import { assertPhoneVerifiedForRegister } from '@/lib/phoneVerification';
 import { randomUUID } from 'crypto';
 
 function generateOTP() {
@@ -14,7 +14,7 @@ function generateOTP() {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, email, phone, password } = body;
+    const { name, email, phone, password, phoneVerificationToken } = body;
     const geo = await capturePendingRegistrationGeo(req, body);
 
     if (!name || !email || !password)
@@ -23,8 +23,12 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
     if (isDisposableEmail(email))
       return NextResponse.json({ error: DISPOSABLE_EMAIL_MESSAGE }, { status: 400 });
-    if (!phone || !isValidPhone(phone))
-      return NextResponse.json({ error: 'A valid phone number is required to register on Vivah Dwar.' }, { status: 400 });
+
+    const phoneCheck = assertPhoneVerifiedForRegister(phone, phoneVerificationToken);
+    if (!phoneCheck.ok) {
+      return NextResponse.json({ error: phoneCheck.error }, { status: 400 });
+    }
+    const phoneE164 = phoneCheck.e164;
 
     // Check if email already exists in user table
     const existing = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
@@ -32,10 +36,12 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
 
     // Check if phone already exists in user table
-    if (phone) {
-      const existingPhone = await queryOne('SELECT id FROM `user` WHERE phone = ?', [phone]);
-      if (existingPhone)
-        return NextResponse.json({ error: 'Phone number already registered' }, { status: 409 });
+    const existingPhone = await queryOne(
+      'SELECT id FROM `user` WHERE phone = ? OR phone = ?',
+      [phoneE164, phone]
+    );
+    if (existingPhone) {
+      return NextResponse.json({ error: 'Phone number already registered' }, { status: 409 });
     }
 
     // Hash password
@@ -50,11 +56,11 @@ export async function POST(req) {
     // Store in pending_registration table (NOT in user table yet)
     await execute(
       `INSERT INTO pending_registration
-        (id, name, email, phone, password, otp, otpExpiresAt,
+        (id, name, email, phone, phoneE164, phoneVerified, password, otp, otpExpiresAt,
          registrationIp, registrationCountry, registrationCity, registrationLat, registrationLon, createdAt)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+       VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
       [
-        pendingId, name.trim(), email.toLowerCase().trim(), phone || null, hashed, otp, expiresAt,
+        pendingId, name.trim(), email.toLowerCase().trim(), phoneE164, phoneE164, hashed, otp, expiresAt,
         geo.ip, geo.country, geo.city, geo.latitude, geo.longitude,
       ]
     );
@@ -65,8 +71,9 @@ export async function POST(req) {
 
     return NextResponse.json({
       success: true,
-      message: 'Registration initiated. OTP sent to your email.',
+      message: 'Registration initiated. Mobile verified. OTP sent to your email.',
       email: email.toLowerCase().trim(),
+      phoneVerified: true,
     }, { status: 201 });
 
   } catch (err) {

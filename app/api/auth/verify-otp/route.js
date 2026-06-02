@@ -31,14 +31,17 @@ export async function POST(req) {
         const now = new Date();
         const isGoogleSignup = pending.password === 'GOOGLE_AUTH';
 
+        const phoneVerified = pending.phoneVerified ? 1 : 0;
+        const storedPhone = pending.phoneE164 || pending.phone || null;
+
         if (!isGoogleSignup) {
           // Normal email/password registration
           await execute(
             `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
               adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
               loginOtpEnabled, emailVerified, createdAt, updatedAt)
-             VALUES (?, ?, ?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?)`,
-            [userId, pending.name, pending.email, pending.password, pending.phone || null, now, now]
+             VALUES (?, ?, ?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, ?, 0, 1, NOW(), ?, ?)`,
+            [userId, pending.name, pending.email, pending.password, storedPhone, phoneVerified, now, now]
           );
         } else {
           // Google OAuth registration — no password, email already verified by Google

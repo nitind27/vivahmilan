@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, User, Mail, Lock, Phone, ChevronRight, ChevronLeft, Sparkles, Eye, EyeOff } from 'lucide-react';
+import { Heart, User, Mail, Lock, Phone, ChevronRight, ChevronLeft, Sparkles, Eye, EyeOff, CheckCircle, Loader2 } from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import SiteLoader from '@/components/SiteLoader';
@@ -32,10 +32,30 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [form, setForm] = useState({ name: '', email: '', password: '', phone: '', gender: '' });
+  const [phoneOtp, setPhoneOtp] = useState(['', '', '', '', '', '']);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [phoneVerificationToken, setPhoneVerificationToken] = useState('');
+  const [sendingPhoneOtp, setSendingPhoneOtp] = useState(false);
+  const [verifyingPhoneOtp, setVerifyingPhoneOtp] = useState(false);
+  const [phoneOtpSent, setPhoneOtpSent] = useState(false);
+  const [phoneCountdown, setPhoneCountdown] = useState(0);
 
   useEffect(() => {
     if (status === 'authenticated') router.replace('/dashboard');
   }, [status, router]);
+
+  useEffect(() => {
+    if (phoneCountdown <= 0) return;
+    const t = setTimeout(() => setPhoneCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [phoneCountdown]);
+
+  useEffect(() => {
+    setPhoneVerified(false);
+    setPhoneVerificationToken('');
+    setPhoneOtpSent(false);
+    setPhoneOtp(['', '', '', '', '', '']);
+  }, [form.phone]);
 
   if (status === 'loading') {
     return <SiteLoader message="Loading…" size="lg" />;
@@ -86,9 +106,76 @@ export default function RegisterPage() {
     };
     if (!form.gender) e.gender = 'Please select what you are looking for';
     if (!form.phone?.trim()) e.phone = 'Phone number is required for account verification';
+    if (!phoneVerified) e.phone = e.phone || 'Verify your mobile number with the SMS OTP';
     setTouched(p => ({ ...p, gender: true, phone: true }));
     setErrors(e);
     return Object.keys(e).length === 0;
+  };
+
+  const sendPhoneOtp = async () => {
+    const e = validateField('phone', form.phone);
+    if (Object.keys(e).length) {
+      setTouched((p) => ({ ...p, phone: true }));
+      setErrors((p) => ({ ...p, ...e }));
+      return;
+    }
+    setSendingPhoneOtp(true);
+    try {
+      const res = await fetch('/api/phone/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Could not send SMS');
+        return;
+      }
+      setPhoneOtpSent(true);
+      setPhoneCountdown(60);
+      toast.success(data.message || 'OTP sent to your mobile');
+      if (data.devOtp) toast(`Dev OTP: ${data.devOtp}`, { icon: '📱' });
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setSendingPhoneOtp(false);
+    }
+  };
+
+  const verifyPhoneOtp = async () => {
+    const code = phoneOtp.join('');
+    if (code.length !== 6) {
+      toast.error('Enter the 6-digit SMS code');
+      return;
+    }
+    setVerifyingPhoneOtp(true);
+    try {
+      const res = await fetch('/api/phone/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone, otp: code }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Invalid OTP');
+        return;
+      }
+      setPhoneVerified(true);
+      setPhoneVerificationToken(data.phoneVerificationToken);
+      toast.success('Mobile number verified');
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setVerifyingPhoneOtp(false);
+    }
+  };
+
+  const handlePhoneOtpInput = (i, val) => {
+    if (!/^\d*$/.test(val)) return;
+    const next = [...phoneOtp];
+    next[i] = val.slice(-1);
+    setPhoneOtp(next);
+    if (val && i < 5) document.getElementById(`reg-phone-otp-${i + 1}`)?.focus();
   };
 
   const next = () => {
@@ -107,7 +194,13 @@ export default function RegisterPage() {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, platform: 'web', ...geo, ...(clientPublicIp ? { clientPublicIp } : {}) }),
+        body: JSON.stringify({
+          ...form,
+          phoneVerificationToken,
+          platform: 'web',
+          ...geo,
+          ...(clientPublicIp ? { clientPublicIp } : {}),
+        }),
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); setLoading(false); return; }
@@ -274,16 +367,79 @@ export default function RegisterPage() {
 
                   <div>
                     <label className="block text-sm font-semibold text-vd-text-sub mb-1.5">
-                      Phone <span className="text-red-500 font-normal">*</span>
+                      Mobile number <span className="text-red-500 font-normal">*</span>
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-vd-text-light" />
-                      <input type="tel" value={form.phone}
-                        onChange={e => update('phone', e.target.value)}
-                        onBlur={() => setTouched(p => ({ ...p, phone: true }))}
-                        className={inpCls('phone')} placeholder="+91 98765 43210" />
+                      <input
+                        type="tel"
+                        value={form.phone}
+                        onChange={(e) => update('phone', e.target.value)}
+                        onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
+                        disabled={phoneVerified}
+                        className={inpCls('phone')}
+                        placeholder="+91 87359 95467"
+                      />
+                      {phoneVerified && (
+                        <CheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
+                      )}
                     </div>
+                    <p className="text-xs text-vd-text-light mt-1">
+                      We validate your number and send a one-time code via SMS (powered by Veriphone).
+                    </p>
                     <ErrMsg msg={touched.phone && errors.phone} />
+
+                    {!phoneVerified && (
+                      <div className="mt-3 space-y-3 rounded-2xl border border-vd-border bg-vd-bg-alt/50 p-4">
+                        <button
+                          type="button"
+                          onClick={sendPhoneOtp}
+                          disabled={sendingPhoneOtp || phoneCountdown > 0}
+                          className="w-full py-2.5 rounded-xl text-sm font-semibold border border-vd-primary text-vd-primary hover:bg-vd-accent-soft disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                          {sendingPhoneOtp ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> Sending SMS…</>
+                          ) : phoneCountdown > 0 ? (
+                            `Resend SMS in ${phoneCountdown}s`
+                          ) : phoneOtpSent ? (
+                            'Resend SMS OTP'
+                          ) : (
+                            'Send SMS verification code'
+                          )}
+                        </button>
+
+                        {phoneOtpSent && (
+                          <>
+                            <p className="text-xs text-vd-text-sub text-center">Enter the 6-digit code sent to your mobile</p>
+                            <div className="flex justify-center gap-2" onPaste={(e) => {
+                              const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                              if (paste.length === 6) setPhoneOtp(paste.split(''));
+                            }}>
+                              {phoneOtp.map((digit, i) => (
+                                <input
+                                  key={i}
+                                  id={`reg-phone-otp-${i}`}
+                                  type="text"
+                                  inputMode="numeric"
+                                  maxLength={1}
+                                  value={digit}
+                                  onChange={(e) => handlePhoneOtpInput(i, e.target.value)}
+                                  className="w-10 h-11 text-center text-lg font-bold border border-vd-border rounded-xl focus:border-vd-primary outline-none"
+                                />
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={verifyPhoneOtp}
+                              disabled={verifyingPhoneOtp || phoneOtp.join('').length !== 6}
+                              className="w-full py-2.5 vd-gradient-gold text-white rounded-xl text-sm font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                              {verifyingPhoneOtp ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify mobile number'}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
