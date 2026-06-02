@@ -3,9 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import {
   getEarlyBirdSettings,
+  getEarlyBirdClaimedCount,
   normalizeEarlyBirdSettings,
-  syncEarlyBirdClaimedCount,
   formatDurationLabel,
+  getPublicEarlyBirdCounts,
+  getRealEarlyBirdCounts,
 } from '@/lib/earlyBird';
 import { queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
@@ -18,11 +20,17 @@ export async function GET() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const settings = await syncEarlyBirdClaimedCount();
+  const settings = await getEarlyBirdSettings();
+  const actualClaimed = await getEarlyBirdClaimedCount();
+  const settingsSynced = { ...settings, claimed: actualClaimed };
+  const real = getRealEarlyBirdCounts(settingsSynced, actualClaimed);
+  const display = getPublicEarlyBirdCounts(settingsSynced);
   return NextResponse.json({
-    settings,
-    durationLabel: formatDurationLabel(settings),
-    slotsLeft: Math.max(0, settings.limit - settings.claimed),
+    settings: settingsSynced,
+    durationLabel: formatDurationLabel(settingsSynced),
+    real,
+    display,
+    slotsLeft: display.slotsLeft,
   });
 }
 
@@ -40,6 +48,8 @@ export async function POST(req) {
       ...body,
       enabled: body.enabled !== undefined ? body.enabled : current.enabled,
       limit: body.limit !== undefined ? body.limit : current.limit,
+      displayLimit: body.displayLimit !== undefined ? body.displayLimit : current.displayLimit,
+      displayClaimed: body.displayClaimed !== undefined ? body.displayClaimed : current.displayClaimed,
       planId: body.planId || current.planId,
       durationUnit: body.durationUnit || current.durationUnit,
       durationValue: body.durationValue !== undefined ? body.durationValue : current.durationValue,
@@ -47,14 +57,13 @@ export async function POST(req) {
       guestPopupEnabled: body.guestPopupEnabled !== undefined ? body.guestPopupEnabled : current.guestPopupEnabled,
       title: body.title ?? current.title,
       subtitle: body.subtitle ?? current.subtitle,
-      claimed: body.resetClaimed ? 0 : current.claimed,
     });
 
-    const actualClaimed = body.resetClaimed ? 0 : merged.claimed;
-    const toSave = { ...merged, claimed: actualClaimed };
+    const actualClaimed = await getEarlyBirdClaimedCount();
+    const finalSettings = { ...merged, claimed: actualClaimed };
 
     const existing = await queryOne('SELECT id FROM siteconfig WHERE `key` = ?', [CONFIG_KEY]);
-    const value = JSON.stringify(toSave);
+    const value = JSON.stringify(finalSettings);
     if (existing) {
       await execute('UPDATE siteconfig SET value = ?, updatedAt = NOW() WHERE `key` = ?', [value, CONFIG_KEY]);
     } else {
@@ -64,14 +73,17 @@ export async function POST(req) {
       );
     }
 
-    const synced = body.resetClaimed ? toSave : await syncEarlyBirdClaimedCount();
+    const real = getRealEarlyBirdCounts(finalSettings, finalSettings.claimed);
+    const display = getPublicEarlyBirdCounts(finalSettings);
 
     return NextResponse.json({
       success: true,
-      settings: synced,
-      durationLabel: formatDurationLabel(synced),
-      slotsLeft: Math.max(0, synced.limit - synced.claimed),
-      message: `Saved: first ${synced.limit} users get ${synced.planId} free for ${formatDurationLabel(synced)}`,
+      settings: finalSettings,
+      durationLabel: formatDurationLabel(finalSettings),
+      real,
+      display,
+      slotsLeft: display.slotsLeft,
+      message: `Saved. Site shows ${display.claimedCount} / ${display.limit} claimed (${display.slotsLeft} left). Actual: ${real.claimedCount} / ${real.limit}.`,
     });
   } catch (err) {
     console.error('[admin/early-bird]', err);

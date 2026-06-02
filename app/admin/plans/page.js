@@ -26,11 +26,14 @@ export default function PlansPage() {
   const [plans, setPlans] = useState([]);
   const [editPlan, setEditPlan] = useState(null);
   
+  const [earlyBirdReal, setEarlyBirdReal] = useState({ claimedCount: 0, limit: 1000, slotsLeft: 1000 });
   const [earlyBird, setEarlyBird] = useState({
     enabled: true,
     guestPopupEnabled: true,
     limit: 1000,
     claimed: 0,
+    displayLimit: 1000,
+    displayClaimed: 0,
     planId: 'GOLD',
     durationUnit: 'years',
     durationValue: 1,
@@ -69,7 +72,10 @@ export default function PlansPage() {
       .then(r => r.json())
       .then(d => {
         if (d.settings) setEarlyBird(d.settings);
-        if (d.slotsLeft != null) setSlotsLeft(d.slotsLeft);
+        if (d.real) setEarlyBirdReal(d.real);
+        if (d.display) {
+          setSlotsLeft(d.display.slotsLeft);
+        } else if (d.slotsLeft != null) setSlotsLeft(d.slotsLeft);
         if (d.durationLabel) setDurationLabel(d.durationLabel);
       })
       .catch(() => {});
@@ -136,7 +142,9 @@ export default function PlansPage() {
       if (res.ok) {
         toast.success(data.message || 'Early Bird settings saved');
         if (data.settings) setEarlyBird(data.settings);
-        if (data.slotsLeft != null) setSlotsLeft(data.slotsLeft);
+        if (data.real) setEarlyBirdReal(data.real);
+        if (data.display) setSlotsLeft(data.display.slotsLeft);
+        else if (data.slotsLeft != null) setSlotsLeft(data.slotsLeft);
         if (data.durationLabel) setDurationLabel(data.durationLabel);
       } else toast.error(data.error || 'Failed to save');
     } finally {
@@ -144,23 +152,9 @@ export default function PlansPage() {
     }
   };
 
-  const resetEarlyBirdCount = async () => {
-    if (!confirm('Reset claimed count to match database? Use only if count is wrong.')) return;
-    setSavingEb(true);
-    try {
-      const res = await fetch('/api/admin/early-bird', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...earlyBird, resetClaimed: false }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        loadEarlyBird();
-        toast.success('Count synced from database');
-      }
-    } finally {
-      setSavingEb(false);
-    }
+  const resetEarlyBirdCount = () => {
+    loadEarlyBird();
+    toast.success('Actual count refreshed from database');
   };
 
   const openNewPlan = () => {
@@ -228,8 +222,8 @@ export default function PlansPage() {
         {earlyBird.enabled && (
           <div className="mt-4 space-y-4 bg-gray-950/30 p-4 rounded-xl border border-gray-800">
             <div className="p-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-sm text-pink-200">
-              Preview: First <strong>{earlyBird.limit}</strong> users receive <strong>{earlyBird.planId}</strong> plan free for{' '}
-              <strong>{durationLabel}</strong> · <strong>{slotsLeft}</strong> slots remaining
+              Users see: <strong>{earlyBird.displayClaimed ?? 0} / {earlyBird.displayLimit ?? earlyBird.limit}</strong> claimed ·{' '}
+              <strong>{slotsLeft}</strong> slots left · Plan <strong>{earlyBird.planId}</strong> · {durationLabel}
             </div>
 
             <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-gray-900/80 border border-amber-500/30">
@@ -250,11 +244,11 @@ export default function PlansPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Maximum Users (e.g. 1000)</label>
+                <label className="text-xs text-gray-400 mb-1 block">Actual max users (real limit)</label>
                 <input type="number" min={1} value={earlyBird.limit}
                   onChange={e => setEarlyBird(p => ({ ...p, limit: parseInt(e.target.value, 10) || 1 }))}
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-pink-500" />
-                <p className="text-[10px] text-gray-600 mt-1">How many users can claim this offer</p>
+                <p className="text-[10px] text-gray-600 mt-1">Stops new claims when this many real subscriptions exist</p>
               </div>
               <div>
                 <label className="text-xs text-gray-400 mb-1 block">Free Access Duration</label>
@@ -282,14 +276,40 @@ export default function PlansPage() {
                   {plans.map(p => <option key={p.plan} value={p.plan}>{p.displayName} ({p.plan})</option>)}
                 </select>
               </div>
-              <div>
-                <label className="text-xs text-gray-400 mb-1 block">Claimed / Limit</label>
-                <p className="text-2xl font-bold text-pink-400">{earlyBird.claimed} / {earlyBird.limit}</p>
-                <p className="text-xs text-green-400">{slotsLeft} slots left</p>
-                <button type="button" onClick={resetEarlyBirdCount}
-                  className="mt-2 text-xs text-gray-500 hover:text-white border border-gray-700 px-2 py-1 rounded">
-                  Sync count from DB
-                </button>
+              <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-gray-900/60 border border-gray-700">
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Actual — Claimed / Limit (database)</label>
+                  <p className="text-2xl font-bold text-emerald-400">
+                    {earlyBirdReal.claimedCount ?? earlyBird.claimed} / {earlyBirdReal.limit ?? earlyBird.limit}
+                  </p>
+                  <p className="text-xs text-gray-500">{earlyBirdReal.slotsLeft ?? 0} real slots left</p>
+                  <button type="button" onClick={resetEarlyBirdCount}
+                    className="mt-2 text-xs text-gray-500 hover:text-white border border-gray-700 px-2 py-1 rounded">
+                    Refresh from database
+                  </button>
+                </div>
+                <div>
+                  <label className="text-xs text-amber-400/90 mb-1 block">Shown to users — Claimed / Limit</label>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="number"
+                      min={0}
+                      value={earlyBird.displayClaimed ?? 0}
+                      onChange={e => setEarlyBird(p => ({ ...p, displayClaimed: Math.max(0, parseInt(e.target.value, 10) || 0) }))}
+                      className="w-24 px-3 py-2 bg-gray-800 border border-amber-700/50 rounded-lg text-sm text-amber-200 focus:outline-none focus:border-amber-500"
+                    />
+                    <span className="text-gray-500">/</span>
+                    <input
+                      type="number"
+                      min={1}
+                      value={earlyBird.displayLimit ?? earlyBird.limit}
+                      onChange={e => setEarlyBird(p => ({ ...p, displayLimit: Math.max(1, parseInt(e.target.value, 10) || 1) }))}
+                      className="w-24 px-3 py-2 bg-gray-800 border border-amber-700/50 rounded-lg text-sm text-amber-200 focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <p className="text-xs text-amber-400/80 mt-1">{slotsLeft} slots left (on site)</p>
+                  <p className="text-[10px] text-gray-600 mt-1">Edit these numbers for visitors. Each new claim adds +1 to shown claimed automatically.</p>
+                </div>
               </div>
               <div className="flex items-end md:col-span-2">
                 <label className="flex items-start gap-2 text-sm text-gray-300 cursor-pointer">
