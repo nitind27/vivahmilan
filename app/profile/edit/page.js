@@ -524,21 +524,13 @@ function EditProfilePage() {
                   <Select label="Max Height" value={form.partnerHeightMax} onChange={v => set('partnerHeightMax', v)} options={HEIGHTS} placeholder="Any" />
                   <Select label="Preferred Religion" value={form.partnerReligion} onChange={v => set('partnerReligion', v)} options={['Any', ...ALL_RELIGIONS]} />
                   {form.partnerReligion && form.partnerReligion !== 'Any' && (
-                    {form.partnerReligion ? (
+                    <div className="col-span-2">
                       <CasteCommunitySelect
                         religion={form.partnerReligion}
                         value={form.partnerCaste === "Any / Doesn't Matter" ? '' : form.partnerCaste}
                         onChange={v => set('partnerCaste', v || "Any / Doesn't Matter")}
                       />
-                    ) : (
-                      <SearchableSelect
-                        label="Preferred Community"
-                        value={form.partnerCaste}
-                        onChange={v => set('partnerCaste', v)}
-                        options={[{ val: "Any / Doesn't Matter", label: "Any / Doesn't Matter", group: '' }]}
-                        placeholder="Select partner religion first"
-                      />
-                    )}
+                    </div>
                   )}
                   <Select label="Preferred Education" value={form.partnerEducation} onChange={v => set('partnerEducation', v)} options={['Any', ...EDUCATIONS]} />
                   <Select label="Preferred Profession" value={form.partnerProfession} onChange={v => set('partnerProfession', v)} options={['Any', ...PROFESSIONS]} />
