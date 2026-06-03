@@ -36,14 +36,11 @@ export async function GET(req) {
   // Attach last message to each session
   const enriched = await Promise.all(sessions.map(async (s) => {
     const lastMsg = await queryOne(
-      'SELECT * FROM support_message WHERE sessionId = ? ORDER BY createdAt DESC LIMIT 1',
+      'SELECT id, sender, content, createdAt FROM support_message WHERE sessionId = ? ORDER BY createdAt DESC LIMIT 1',
       [s.id]
     );
-    const unread = await queryOne(
-      `SELECT COUNT(*) as cnt FROM support_message WHERE sessionId = ? AND sender = 'user'`,
-      [s.id]
-    );
-    return { ...s, lastMessage: lastMsg, unreadCount: unread?.cnt || 0 };
+    const needsReply = lastMsg?.sender === 'user';
+    return { ...s, lastMessage: lastMsg, needsReply, unreadCount: needsReply ? 1 : 0 };
   }));
 
   return NextResponse.json(enriched);

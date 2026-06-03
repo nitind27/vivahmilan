@@ -88,7 +88,11 @@ export async function GET(req) {
           (SELECT COUNT(*) FROM document WHERE status = 'REJECTED') AS documentsRejected,
           (SELECT COUNT(*) FROM report WHERE status = 'PENDING') AS pendingReports,
           (SELECT COUNT(*) FROM report WHERE status = 'REVIEWED') AS reportsReviewed,
-          (SELECT COUNT(*) FROM report WHERE status = 'RESOLVED') AS reportsResolved
+          (SELECT COUNT(*) FROM report WHERE status = 'RESOLVED') AS reportsResolved,
+          (SELECT COUNT(*) FROM support_session WHERE status = 'live') AS supportLiveSessions,
+          (SELECT COUNT(*) FROM support_session ss WHERE ss.status = 'live' AND (
+            SELECT m.sender FROM support_message m WHERE m.sessionId = ss.id ORDER BY m.createdAt DESC LIMIT 1
+          ) = 'user') AS pendingSupportLive
       `, [todayStart]),
     ]);
 
@@ -104,6 +108,8 @@ export async function GET(req) {
       newUsersToday: Number(userStats?.newUsersToday || 0),
       newUsersMonth: Number(userStats?.newUsersMonth || 0),
       pendingAdminVerify: Number(userStats?.pendingAdminVerify || 0),
+      pendingSupportLive: Number(miscStats?.pendingSupportLive || 0),
+      supportLiveSessions: Number(miscStats?.supportLiveSessions || 0),
       totalSubscriptions: Number(subscriptionStats?.totalSubscriptions || 0),
       activeSubscriptions: Number(subscriptionStats?.activeSubscriptions || 0),
       totalInterests: Number(interestStats?.totalInterests || 0),

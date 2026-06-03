@@ -370,7 +370,10 @@ export default function ChatBot() {
     }]);
   };
 
-  const isHidden = pathname === '/chat' || pathname?.startsWith('/chat');
+  const isHidden =
+    pathname === '/chat' ||
+    pathname?.startsWith('/chat') ||
+    pathname?.startsWith('/admin');
   if (isHidden || !chatAllowed) return null;
 
   return (

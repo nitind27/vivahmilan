@@ -39,7 +39,7 @@ export const ADMIN_TABS = [
   { id: 'options',       label: 'Profile Options',   icon: Edit2,         badge: null },
   { id: 'siteconfig',    label: 'Site Settings',     icon: Lock,          badge: null },
   { id: 'adminsettings', label: 'Admin Settings',    icon: UserCog,       badge: null },
-  { id: 'support',       label: 'Support Chat',      icon: MessageCircle, badge: null },
+  { id: 'support',       label: 'Support Chat',      icon: MessageCircle, badge: 'pendingSupportLive' },
 ];
 
 export default function AdminLayout({ children }) {

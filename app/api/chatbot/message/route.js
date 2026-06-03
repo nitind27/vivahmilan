@@ -22,12 +22,8 @@ async function getUserContext(userId) {
 
 async function notifyAgent(title, message, sessionId) {
   try {
-    const { notifyAdmins } = await import('@/lib/adminNotifications');
-    await notifyAdmins({
-      title,
-      message,
-      link: `/admin/support?session=${sessionId}`,
-    });
+    const { notifyAdminSupportEvent } = await import('@/lib/adminSupportLive');
+    await notifyAdminSupportEvent({ sessionId, title, message, type: 'live' });
   } catch {}
 }
 
