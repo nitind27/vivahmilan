@@ -1,6 +1,22 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { isPortalBlockedForToken } from '@/lib/portalAccess';
+
+/** Edge-safe: live portal check via API (no Node db/crypto imports). */
+async function isPortalBlockedForToken(token, req) {
+  if (!token) return false;
+  if (token.role !== 'USER' && token.role !== 'FAMILY') return false;
+  try {
+    const url = new URL('/api/portal-access', req.url);
+    const res = await fetch(url, {
+      headers: { cookie: req.headers.get('cookie') || '' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return !data.granted;
+    }
+  } catch { /* ignore */ }
+  return token.portalAccessGranted === false;
+}
 
 const PUBLIC_PREFIXES = [
   '/login', '/register', '/forgot-password', '/verify-email', '/google-verify',
