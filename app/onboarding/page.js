@@ -445,10 +445,8 @@ function OnboardingInner() {
           <Link href="/" className="inline-flex justify-center">
             <img src="/logo/logo.png" alt="Vivah Dwar" className="h-20 w-auto object-contain" />
           </Link>
-          <p className="text-vd-text-light text-sm mt-1">Complete your profile on vivahdwar.com</p>
+          <p className="text-vd-text-light text-sm mt-1">Complete your matrimonial profile</p>
         </div>
-
-        <PlatformNotice variant="general" className="mb-5" />
 
         {/* Progress bar */}
         <div className="mb-6">
@@ -482,7 +480,8 @@ function OnboardingInner() {
 
             {/* STEP 0: Basic */}
             {step === 0 && (
-              <div className="space-y-4">
+              <div className="space-y-5">
+                <PlatformNotice variant="full" />
                 <h2 className="font-bold text-lg flex items-center gap-2"><User className="w-5 h-5 text-vd-primary" /> Basic Information</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2"><Inp label="Full Name *" value={form.name} onChange={v => set('name', v)} placeholder="Your full name" /></div>
@@ -581,7 +580,7 @@ function OnboardingInner() {
 
             {/* STEP 5: Photo & ID */}
             {step === 5 && (
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <h2 className="font-bold text-lg flex items-center gap-2"><Camera className="w-5 h-5 text-vd-primary" /> Profile Photo & ID Verification</h2>
 
                 <PlatformNotice variant="upload" />
@@ -605,9 +604,7 @@ function OnboardingInner() {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 mb-3">
-                        Clear face photo required. Max 8MB. You are responsible for photo authenticity — vivahdwar.com does not verify ownership.
-                      </p>
+                      <p className="text-sm text-vd-text-light mb-3">Clear face photo · Max 8MB</p>
                       <label className="cursor-pointer vd-gradient-gold text-white text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 w-fit">
                         <Upload className="w-4 h-4" /> {photoPreview ? 'Change Photo' : 'Upload Photo'}
                         <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadPhoto(e.target.files[0])} />
@@ -619,10 +616,7 @@ function OnboardingInner() {
                 {/* ID Document */}
                 <div className="border-t border-vd-border pt-5">
                   <p className={labelCls}>Government ID Document <span className="text-red-500">*</span></p>
-                  <p className="text-xs text-vd-text-sub mb-4">
-                    Upload any one government-issued ID. Admin reviews for platform safety only —{' '}
-                    <strong className="text-vd-text-heading">vivahdwar.com is not responsible</strong> for document authenticity.
-                  </p>
+                  <p className="text-xs text-vd-text-sub mb-4">Upload one government ID (JPG, PNG or PDF · Max 5MB)</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {DOC_TYPES.map(t => (
                       <button key={t} type="button" onClick={() => setSelectedDocType(t)}
@@ -735,29 +729,27 @@ function OnboardingInner() {
                   </div>
                 )}
               </div>
+
+                <div className="border-t border-vd-border pt-5 space-y-4">
+                  <ApprovalChecklist
+                    checklist={displayChecklist}
+                    eligible={canSubmit}
+                    title={canSubmit ? 'Ready to submit for admin review' : 'Complete all items above'}
+                  />
+                  <label className="flex items-start gap-3 rounded-2xl border border-vd-border bg-vd-bg-alt/50 px-4 py-3.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={agreedSubmit}
+                      onChange={(e) => setAgreedSubmit(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 flex-shrink-0 rounded border-vd-border text-vd-primary focus:ring-vd-primary"
+                    />
+                    <span className="text-xs text-vd-text-sub leading-relaxed">{SUBMIT_AGREEMENT_LABEL}</span>
+                  </label>
+                </div>
             </div>
             )}
           </motion.div>
         </AnimatePresence>
-
-        {step === STEPS.length - 1 && (
-          <div className="mt-5 space-y-4">
-            <ApprovalChecklist
-              checklist={displayChecklist}
-              eligible={canSubmit}
-              title={canSubmit ? 'All checks passed — you can submit for review' : 'Complete all items below before submitting'}
-            />
-            <label className="flex items-start gap-3 rounded-2xl border border-vd-border bg-vd-bg-section px-4 py-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={agreedSubmit}
-                onChange={(e) => setAgreedSubmit(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded border-vd-border text-vd-primary focus:ring-vd-primary"
-              />
-              <span className="text-xs text-vd-text-sub leading-relaxed">{SUBMIT_AGREEMENT_LABEL}</span>
-            </label>
-          </div>
-        )}
 
         {/* Navigation */}
         <div className="flex items-center justify-between mt-5">
