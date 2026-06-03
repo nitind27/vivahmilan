@@ -36,9 +36,9 @@ export async function GET(req) {
       // Top pages
       query(`SELECT page, COUNT(*) as views FROM pageview WHERE createdAt >= ? GROUP BY page ORDER BY views DESC LIMIT 10`, [since]),
       // Top countries
-      query(`SELECT country, COUNT(*) as views, COUNT(DISTINCT ip) as unique_visitors FROM pageview WHERE createdAt >= ? AND country IS NOT NULL GROUP BY country ORDER BY views DESC LIMIT 15`, [since]),
+      query(`SELECT country, COUNT(*) as views, COUNT(DISTINCT ip) as unique_visitors FROM pageview WHERE createdAt >= ? AND country IS NOT NULL AND country NOT IN ('Unknown','Local','Local network') GROUP BY country ORDER BY views DESC LIMIT 15`, [since]),
       // Top cities
-      query(`SELECT city, country, COUNT(*) as views FROM pageview WHERE createdAt >= ? AND city IS NOT NULL AND city != 'Unknown' GROUP BY city, country ORDER BY views DESC LIMIT 10`, [since]),
+      query(`SELECT city, region, country, COUNT(*) as views FROM pageview WHERE createdAt >= ? AND country IS NOT NULL AND country NOT IN ('Unknown','Local','Local network') GROUP BY city, region, country ORDER BY views DESC LIMIT 10`, [since]),
       // Device breakdown
       query(`SELECT device, COUNT(*) as cnt FROM pageview WHERE createdAt >= ? GROUP BY device ORDER BY cnt DESC`, [since]),
       // Browser breakdown
@@ -48,7 +48,7 @@ export async function GET(req) {
       // Top referrers
       query(`SELECT referrer, COUNT(*) as cnt FROM pageview WHERE createdAt >= ? AND referrer IS NOT NULL AND referrer != '' GROUP BY referrer ORDER BY cnt DESC LIMIT 10`, [since]),
       // Recent visitors (last 50)
-      query(`SELECT id, page, ip, country, city, device, browser, os, referrer, sessionId, userId, createdAt FROM pageview ORDER BY createdAt DESC LIMIT 50`),
+      query(`SELECT id, page, ip, country, region, city, device, browser, os, referrer, sessionId, userId, createdAt FROM pageview ORDER BY createdAt DESC LIMIT 50`),
       // Daily trend (last N days)
       query(`SELECT DATE(createdAt) as date, COUNT(*) as views, COUNT(DISTINCT ip) as unique_visitors FROM pageview WHERE createdAt >= ? GROUP BY DATE(createdAt) ORDER BY date ASC`, [since]),
     ]);

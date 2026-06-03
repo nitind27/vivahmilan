@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { acceptsAnalytics, hasConsentChoice } from '@/lib/cookieConsent';
+import { getCachedClientPublicIP } from '@/lib/clientGeo';
 
 // Generate or retrieve a session ID for this browser session
 function getSessionId() {
@@ -35,18 +36,22 @@ export default function PageTracker() {
     const sessionId = getSessionId();
     const referrer = document.referrer || null;
 
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        page: pathname,
-        referrer,
-        sessionId,
-        userId: session?.user?.id || null,
-      }),
-      // Fire and forget — don't block anything
-      keepalive: true,
-    }).catch(() => {});
+    (async () => {
+      const clientPublicIp = await getCachedClientPublicIP();
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          page: pathname,
+          referrer,
+          sessionId,
+          userId: session?.user?.id || null,
+          ...(clientPublicIp ? { clientPublicIp } : {}),
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent?.slice(0, 500) : null,
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    })();
   }, [pathname, session?.user?.id, canTrack]);
 
   return null;

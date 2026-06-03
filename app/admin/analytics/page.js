@@ -41,6 +41,23 @@ function BarRow({ label, value, max, color = 'bg-vd-primary', sub }) {
 const DEVICE_ICONS = { Mobile: Smartphone, Tablet: Tablet, Desktop: Monitor };
 const DEVICE_COLORS = { Mobile: 'text-green-400 bg-green-900/20', Tablet: 'text-blue-400 bg-blue-900/20', Desktop: 'text-purple-400 bg-purple-900/20' };
 
+function formatLocation(v) {
+  const parts = [v.city, v.region, v.country].filter(
+    (p) => p && !['Unknown', 'Local', '—'].includes(p)
+  );
+  if (parts.length) return parts.join(', ');
+  if (v.country === 'Local network') return 'Local network';
+  return '—';
+}
+
+function formatIp(ip) {
+  if (!ip || ip === '0.0.0.0') return '—';
+  if (ip.startsWith('127.') || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+    return `${ip} (local)`;
+  }
+  return ip;
+}
+
 export default function AnalyticsPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -242,7 +259,13 @@ export default function AnalyticsPage() {
                 <div className="p-4 space-y-1">
                   {(data?.topCities || []).length === 0 && <p className="text-center py-8 text-gray-500 text-sm">No city data yet</p>}
                   {(data?.topCities || []).map((c, i) => (
-                    <BarRow key={i} label={`${c.city}, ${c.country}`} value={Number(c.views)} max={data?.topCities?.[0]?.views || 1} color="bg-blue-500" />
+                    <BarRow
+                      key={i}
+                      label={[c.city, c.region, c.country].filter((x) => x && x !== 'Unknown').join(', ') || 'Unknown'}
+                      value={Number(c.views)}
+                      max={data?.topCities?.[0]?.views || 1}
+                      color="bg-blue-500"
+                    />
                   ))}
                 </div>
               </div>
@@ -283,7 +306,7 @@ export default function AnalyticsPage() {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-700/30">
                     <tr>
-                      {['Time', 'Page', 'IP', 'Country / City', 'Device', 'Browser', 'Source'].map(h => (
+                      {['Time', 'Page', 'IP Address', 'Location', 'Device', 'Browser', 'Source'].map(h => (
                         <th key={h} className="text-left px-4 py-2.5 text-xs text-gray-400 font-medium whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -300,9 +323,11 @@ export default function AnalyticsPage() {
                         <td className="px-4 py-2.5 text-white max-w-xs">
                           <span className="truncate block text-xs" title={v.page}>{v.page}</span>
                         </td>
-                        <td className="px-4 py-2.5 text-gray-400 text-xs font-mono whitespace-nowrap">{v.ip}</td>
-                        <td className="px-4 py-2.5 text-gray-300 text-xs whitespace-nowrap">
-                          {[v.city, v.country].filter(Boolean).join(', ') || '—'}
+                        <td className="px-4 py-2.5 text-gray-400 text-xs font-mono whitespace-nowrap" title={v.ip}>
+                          {formatIp(v.ip)}
+                        </td>
+                        <td className="px-4 py-2.5 text-gray-300 text-xs whitespace-nowrap" title={formatLocation(v)}>
+                          {formatLocation(v)}
                         </td>
                         <td className="px-4 py-2.5 text-xs whitespace-nowrap">
                           <span className={`px-2 py-0.5 rounded-full text-xs ${v.device === 'Mobile' ? 'bg-green-900/30 text-green-400' : v.device === 'Tablet' ? 'bg-blue-900/30 text-blue-400' : 'bg-purple-900/30 text-purple-400'}`}>
