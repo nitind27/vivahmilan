@@ -5,19 +5,8 @@ import { processSupportQuery, detectLang, ESCALATE_PROMPT, formatLivePlans } fro
 import { normalizePlans } from '@/lib/plans';
 
 async function getUserContext(userId) {
-  if (!userId) return {};
-  try {
-    const user = await queryOne(
-      'SELECT name, isPremium, premiumExpiry FROM `user` WHERE id = ?',
-      [userId]
-    );
-    if (!user) return {};
-    const premiumActive =
-      !!user.isPremium && (!user.premiumExpiry || new Date(user.premiumExpiry) > new Date());
-    return { userName: user.name, isPremium: premiumActive };
-  } catch {
-    return {};
-  }
+  const { getSupportUserContext } = await import('@/lib/supportUserContext');
+  return getSupportUserContext(userId);
 }
 
 async function notifyAgent(title, message, sessionId) {
@@ -93,7 +82,7 @@ export async function POST(req) {
     let followUps = result.followUps || [];
     let reply = result.reply;
 
-    if (['premium', 'payment'].includes(result.intent)) {
+    if (['premium', 'payment'].includes(result.intent) && !userCtx.hasFullAccess) {
       try {
         const rows = await query(
           'SELECT plan, price, durationDays, isActive, permissions FROM planconfig ORDER BY price ASC'

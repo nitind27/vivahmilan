@@ -210,7 +210,7 @@ export default function ChatBot() {
   const buildGreetingMsg = () => ({
     id: 'local-greeting',
     sender: 'bot',
-    content: getGreetingText(lang, { userName: session?.user?.name, isPremium: session?.user?.isPremium }),
+    content: getGreetingText(lang, { userName: session?.user?.name }),
     followUps: getDefaultFollowUps(lang),
     createdAt: new Date(),
   });

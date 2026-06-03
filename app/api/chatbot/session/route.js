@@ -8,19 +8,8 @@ import { getGreetingText } from '@/lib/supportAgent';
 export const STORAGE_KEY = 'vd-support-session';
 
 async function getUserContext(userId) {
-  if (!userId) return {};
-  try {
-    const user = await queryOne(
-      'SELECT name, isPremium, premiumExpiry FROM `user` WHERE id = ?',
-      [userId]
-    );
-    if (!user) return {};
-    const premiumActive =
-      !!user.isPremium && (!user.premiumExpiry || new Date(user.premiumExpiry) > new Date());
-    return { userName: user.name, isPremium: premiumActive };
-  } catch {
-    return {};
-  }
+  const { getSupportUserContext } = await import('@/lib/supportUserContext');
+  return getSupportUserContext(userId);
 }
 
 async function loadMessages(sessionId) {
@@ -52,12 +41,8 @@ async function findActiveSession(userId, guestSessionId) {
 
 async function notifyAgent(title, message, sessionId) {
   try {
-    const { notifyAdmins } = await import('@/lib/adminNotifications');
-    await notifyAdmins({
-      title,
-      message,
-      link: `/admin/support?session=${sessionId}`,
-    });
+    const { notifyAdminSupportEvent } = await import('@/lib/adminSupportLive');
+    await notifyAdminSupportEvent({ sessionId, title, message, type: 'live' });
   } catch {}
 }
 
