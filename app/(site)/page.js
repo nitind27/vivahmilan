@@ -18,10 +18,10 @@ import {
 const DEFAULT_SLIDES = [
   {
     id: 1,
-    tag: '🪔 Vivah Dwar — Your Marriage Gateway',
-    headline: 'Find Your',
+    tag: '🪔 Vivah Dwar — Vivah Milan Matrimonial',
+    headline: 'Find Love & Your',
     highlight: 'Life Partner',
-    sub: 'Browse genuine profiles and discover someone who shares your values, dreams, and family expectations.',
+    sub: 'India\'s trusted matrimonial platform — verified profiles, smart matching & secure chat for shaadi and marriage.',
   },
   {
     id: 2,
@@ -331,10 +331,12 @@ export default function Home() {
     <div className="min-h-screen">
       <Navbar />
 
+      <main id="main-content">
       {/* ══════════════════════════════════════════
           HERO — full-screen video background
       ══════════════════════════════════════════ */}
       <section
+        aria-label="Vivah Dwar matrimonial hero"
         className="relative flex items-end overflow-hidden isolate"
         style={{ height: '100svh', minHeight: '560px', maxHeight: '1080px' }}
         data-hero-cinematic
@@ -417,7 +419,10 @@ export default function Home() {
               >
                 {current.tag}
               </motion.span>
-              <motion.h1
+              <h1 className="sr-only">
+                Vivah Dwar – Vivah Milan Matrimonial | Find Love & Life Partner in India
+              </h1>
+              <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -425,7 +430,7 @@ export default function Home() {
               >
                 {current.headline}{' '}
                 <span className="vd-gradient-text drop-shadow-none">{current.highlight}</span>
-              </motion.h1>
+              </motion.h2>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -874,6 +879,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* Footer — matches site warm theme (vd-*) */}
       <footer className="relative bg-vd-bg text-vd-text-sub">
@@ -1018,7 +1024,8 @@ export default function Home() {
         <div className="bg-vd-bg-alt border-t border-vd-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-vd-text-light">
             <p>
-              © {new Date().getFullYear()} <span className="text-vd-text-sub font-medium">{siteName}</span> Matrimony. All rights reserved.
+              © {new Date().getFullYear()}{' '}
+              <span className="text-vd-text-sub font-medium">Vivah Dwar</span> (Vivah Milan) — Indian Matrimonial &amp; Find Love Platform. All rights reserved.
             </p>
             <p className="flex items-center gap-1">
               Made with <Heart className="w-3 h-3 fill-vd-primary text-vd-primary" /> in India

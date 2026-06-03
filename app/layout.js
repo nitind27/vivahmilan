@@ -6,28 +6,15 @@ import SetPasswordModal from '@/components/SetPasswordModal';
 import MarketingPopup from '@/components/MarketingPopup';
 import PageTracker from '@/components/PageTracker';
 import CookieConsent from '@/components/CookieConsent';
+import JsonLd from '@/components/seo/JsonLd';
 import { Toaster } from 'react-hot-toast';
+import { rootLayoutMetadata, getGlobalJsonLdGraph } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Milan Matrimony – Find Your Perfect Life Partner',
-  description: 'Join millions of happy couples. Find your perfect match based on religion, location, profession and more.',
-  keywords: 'matrimony, marriage, shaadi, life partner, match making',
-  openGraph: {
-    title: 'Milan Matrimony',
-    description: 'Find your perfect life partner',
-    type: 'website',
-  },
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Milan',
-  },
-};
+export const metadata = rootLayoutMetadata;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en-IN" suppressHydrationWarning>
       <head>
         {/* Prevent dark/light flash on load */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}` }} />
@@ -40,6 +27,7 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="apple-touch-icon" href="/logo/icon.png" />
+        <JsonLd data={getGlobalJsonLdGraph()} />
       </head>
       <body className={`bg-vd-bg dark:bg-vd-bg text-vd-text-heading dark:text-vd-text-heading`} suppressHydrationWarning>
         <Providers>

@@ -1,12 +1,14 @@
 {
-  "name": "Milan Matrimony",
-  "short_name": "Milan",
-  "description": "Find your perfect life partner — verified matrimonial profiles",
-  "start_url": "/dashboard",
+  "name": "Vivah Dwar – Matrimonial | Vivah Milan",
+  "short_name": "Vivah Dwar",
+  "description": "India's trusted matrimonial platform — find love, verified profiles & smart matchmaking. Vivah Dwar (Vivah Milan).",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFDF8",
   "theme_color": "#C8A45C",
   "orientation": "portrait-primary",
+  "lang": "en-IN",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/logo/icon.png",
@@ -21,10 +23,10 @@
       "purpose": "any"
     }
   ],
-  "categories": ["social", "lifestyle"],
+  "categories": ["social", "lifestyle", "matrimony"],
   "shortcuts": [
-    { "name": "Search", "url": "/search", "description": "Find matches" },
-    { "name": "Messages", "url": "/chat", "description": "Open chat" },
-    { "name": "Interests", "url": "/interests", "description": "View interests" }
+    { "name": "Register Free", "url": "/register", "description": "Create matrimonial profile" },
+    { "name": "Login", "url": "/login", "description": "Sign in to Vivah Dwar" },
+    { "name": "Success Stories", "url": "/stories", "description": "Couples who found love" }
   ]
 }
