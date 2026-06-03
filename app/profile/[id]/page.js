@@ -685,12 +685,11 @@ export default function ProfilePage() {
     </div>
   );
 
-  // ── Access denied (religion/caste/gender mismatch) ───────────────────────
+  // ── Access denied (religion/gender/gotra mismatch) ───────────────────────
   if (accessError) {
     const titles = {
       GENDER_MISMATCH: 'Gender criteria not met',
       RELIGION_MISMATCH: 'Religion criteria not met',
-      CASTE_MISMATCH: 'Caste criteria not met',
       GOTRA_MISMATCH: 'Gotra restriction',
       BLOCKED: 'Profile blocked',
       PROFILE_UNAVAILABLE: 'Profile not available',
@@ -710,7 +709,7 @@ export default function ProfilePage() {
               {accessError.reason || accessError.message}
             </p>
             <p className="text-xs text-vd-text-light mb-6">
-              Shared profiles are only visible when your religion, caste (for Hindu), and gender match our matrimonial criteria — same as Find Matches.
+              Shared profiles are only visible when your religion and gender match our matrimonial criteria — same as Find Matches.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/matches" className="inline-flex items-center justify-center gap-2 vd-gradient-gold text-white px-6 py-3 rounded-2xl font-semibold hover:opacity-90">

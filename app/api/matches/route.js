@@ -40,7 +40,6 @@ export async function GET(req) {
 
   const myGender   = currentUser?.gender;
   const myReligion = currentUser?.religion;
-  const myCaste    = currentUser?.caste;
   const myGotra    = currentUser?.gotra;
 
   // Is user premium or on active free trial?
@@ -73,21 +72,10 @@ export async function GET(req) {
     params.push(genderFilter);
   }
 
-  // ── STRICT RELIGION & CASTE MATCHING ─────────────────────────────────────────
+  // ── Same religion only (Hindu sees all Hindus; Muslim sees all Muslims, etc.) ──
   if (myReligion) {
-    if (myReligion.toLowerCase() === 'hindu') {
-      conditions.push('p.religion = ?');
-      params.push(myReligion);
-      if (myCaste) {
-        // Strict same-caste matching for Hindus
-        conditions.push('p.caste = ?');
-        params.push(myCaste);
-      }
-    } else {
-      // Other religions: strict same-religion matching (no caste matching required)
-      conditions.push('p.religion = ?');
-      params.push(myReligion);
-    }
+    conditions.push('p.religion = ?');
+    params.push(myReligion);
   } else if (religion) {
     conditions.push('p.religion = ?');
     params.push(religion);
