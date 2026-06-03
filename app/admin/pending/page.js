@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { format, formatDistanceToNow } from 'date-fns';
 import {
   UserCheck, CheckCircle, XCircle, Eye, Search, ChevronLeft, ChevronRight,
@@ -10,19 +10,7 @@ import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 import ApprovalChecklist from '@/components/ApprovalChecklist';
 import AdminReminderModal from '@/components/AdminReminderModal';
-
-const CORRECTION_FIELD_OPTIONS = [
-  { key: 'profile_photo', label: 'Profile photo' },
-  { key: 'family_photos', label: 'Family / lifestyle photos' },
-  { key: 'identity_document', label: 'Identity document' },
-  { key: 'basic_info', label: 'Basic profile details' },
-  { key: 'religion', label: 'Religion & community' },
-  { key: 'location', label: 'Location' },
-  { key: 'career', label: 'Career & education' },
-  { key: 'family', label: 'Family background' },
-  { key: 'phone', label: 'Phone number' },
-  { key: 'email', label: 'Email (note in message)' },
-];
+import { CORRECTION_FIELD_OPTIONS } from '@/lib/profileCorrectionFields';
 
 const REJECTION_PRESET_OPTIONS = [
   { key: 'photos', label: 'Profile photos unclear, inappropriate, or missing' },
@@ -37,13 +25,52 @@ const REJECTION_PRESET_OPTIONS = [
 
 function CorrectionModal({ target, onClose, onSent }) {
   const [message, setMessage] = useState('');
-  const [fields, setFields] = useState(['profile_photo', 'identity_document']);
+  const [fields, setFields] = useState([]);
   const [sendEmail, setSendEmail] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingSuggestion, setLoadingSuggestion] = useState(true);
+  const [failedItems, setFailedItems] = useState([]);
+
+  const loadSuggestion = useCallback(async (preserveMessage = false) => {
+    if (!target?.id) return;
+    setLoadingSuggestion(true);
+    try {
+      const res = await fetch(`/api/admin/users/${target.id}/correction-suggestion`);
+      const data = await res.json();
+      if (res.ok) {
+        setFields(data.fields || []);
+        setFailedItems(data.failedItems || []);
+        if (!preserveMessage) setMessage(data.message || '');
+      } else {
+        setFields(['profile_photo', 'identity_document']);
+        setFailedItems([]);
+        if (!preserveMessage) {
+          setMessage(
+            'Dear member,\n\nThank you for joining Vivah Dwar. Our verification team reviewed your profile and needs a few updates before we can approve it. Please log in using the link in this email, update your profile, and save your changes.\n\nThank you,\nVivah Dwar Verification Team'
+          );
+        }
+      }
+    } catch {
+      setFields(['profile_photo', 'identity_document']);
+      if (!preserveMessage) {
+        setMessage(
+          'Dear member,\n\nPlease log in and update your profile as requested by our verification team. Save your changes when done.\n\nThank you,\nVivah Dwar Verification Team'
+        );
+      }
+    } finally {
+      setLoadingSuggestion(false);
+    }
+  }, [target?.id]);
+
+  useEffect(() => {
+    loadSuggestion(false);
+  }, [target?.id, loadSuggestion]);
 
   const toggleField = (key) => {
     setFields((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   };
+
+  const refreshAutoFill = () => loadSuggestion(false);
 
   const submit = async () => {
     if (message.trim().length < 10) {
@@ -95,6 +122,41 @@ function CorrectionModal({ target, onClose, onSent }) {
           </p>
         </div>
         <div className="p-6 space-y-4">
+          {loadingSuggestion ? (
+            <div className="flex items-center gap-2 text-sm text-gray-400 py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+              Analysing profile and pre-selecting items…
+            </div>
+          ) : failedItems.length > 0 ? (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 space-y-1.5">
+              <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider">
+                Auto-detected from verification checklist
+              </p>
+              {failedItems.map((item) => (
+                <p key={item.id} className="text-xs text-amber-100/90 flex gap-2">
+                  <span className="text-red-400 shrink-0">✕</span>
+                  <span>
+                    <strong className="text-amber-200">{item.label}</strong>
+                    {item.detail ? ` — ${item.detail}` : ''}
+                  </span>
+                </p>
+              ))}
+              <button
+                type="button"
+                onClick={refreshAutoFill}
+                className="text-xs text-amber-400 hover:text-amber-300 font-semibold mt-1"
+              >
+                Regenerate selections & instructions
+              </button>
+            </div>
+          ) : (
+            <p className="text-xs text-gray-500 rounded-xl border border-gray-700 bg-gray-800/50 px-3 py-2">
+              No checklist failures detected — default items selected. Adjust checkboxes and edit instructions as needed.
+              <button type="button" onClick={refreshAutoFill} className="block text-amber-400 hover:text-amber-300 font-semibold mt-1">
+                Regenerate from profile
+              </button>
+            </p>
+          )}
           <div>
             <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
               What must they fix?
@@ -125,10 +187,13 @@ function CorrectionModal({ target, onClose, onSent }) {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              rows={4}
-              placeholder="e.g. Your Aadhaar photo is blurry. Please upload a clear front image. Profile photo should show your face clearly."
-              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white resize-none focus:border-amber-500/50 outline-none"
+              rows={8}
+              placeholder="Instructions are generated automatically from failed verification items. You can edit before sending."
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white resize-none focus:border-amber-500/50 outline-none leading-relaxed"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              {message.trim().length} characters {message.trim().length < 10 ? '(minimum 10 required)' : ''}
+            </p>
           </div>
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="mt-1 rounded" />
@@ -145,7 +210,7 @@ function CorrectionModal({ target, onClose, onSent }) {
           <button
             type="button"
             onClick={submit}
-            disabled={submitting}
+            disabled={submitting || loadingSuggestion}
             className="flex-1 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Edit3 className="w-4 h-4" />}
