@@ -19,8 +19,9 @@ export async function GET(req) {
   const userId = searchParams.get('userId');
 
   if (userId) {
+    const allowApproved = searchParams.get('allowApproved') === '1';
     const history = await getReminderHistory(userId, 15);
-    const check = await canSendPendingReminder(userId, { force: false });
+    const check = await canSendPendingReminder(userId, { force: false, allowApproved });
     return NextResponse.json({ history, canSend: check.eligible, blockReason: check.reason || null });
   }
 
@@ -41,6 +42,7 @@ export async function POST(req) {
     customTitle,
     customMessage,
     force = false,
+    allowApproved = false,
   } = body;
 
   const ids = [...new Set((userIds.length ? userIds : userId ? [userId] : []).filter(Boolean))];
@@ -60,6 +62,7 @@ export async function POST(req) {
       customTitle,
       customMessage,
       force,
+      allowApproved,
     });
     results.push(result);
   }

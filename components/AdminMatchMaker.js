@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon, Ban, Unlock, Star, Trash2, CheckCircle, Key, RefreshCw } from 'lucide-react';
+import { Search, MessageCircle, Eye, Sparkles, Phone, UserSearch, Send, X as XIcon, Ban, Unlock, Star, Trash2, CheckCircle, Key, RefreshCw, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
+import AdminReminderModal from '@/components/AdminReminderModal';
 import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 
 // ── Admin Direct Chat Modal ───────────────────────────────────────────────────
@@ -103,6 +104,7 @@ export function AllMembersTab() {
   const [viewUserId, setViewUserId] = useState(null);
   const [passwordUser, setPasswordUser] = useState(null);
   const [newPassword, setNewPassword] = useState('');
+  const [reminderTargets, setReminderTargets] = useState(null);
   const abortRef = useRef(null);
 
   useEffect(() => {
@@ -327,6 +329,17 @@ export function AllMembersTab() {
                       <button onClick={() => updateUser(m.id, { isPremium: !m.isPremium })} className="p-1.5 bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500 hover:text-white rounded-lg transition-colors" title="Toggle Premium">
                         <Star className="w-4 h-4" />
                       </button>
+                      <button
+                        onClick={() => {
+                          if (!m.email) return toast.error('No email on this account');
+                          setReminderTargets([{ id: m.id, name: m.name, email: m.email }]);
+                        }}
+                        className="p-1.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white rounded-lg transition-colors disabled:opacity-40"
+                        title={m.email ? 'Send email reminder' : 'No email'}
+                        disabled={!m.email}
+                      >
+                        <Mail className="w-4 h-4" />
+                      </button>
                       <button onClick={() => setPasswordUser({ id: m.id, name: m.name })} className="p-1.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Change Password">
                         <Key className="w-4 h-4" />
                       </button>
@@ -363,6 +376,14 @@ export function AllMembersTab() {
             </div>
           </div>
         </div>
+      )}
+
+      {reminderTargets && (
+        <AdminReminderModal
+          targets={reminderTargets}
+          allowApproved
+          onClose={() => setReminderTargets(null)}
+        />
       )}
 
       {chatUser && <AdminDirectChatModal user={chatUser} onClose={() => setChatUser(null)} />}
