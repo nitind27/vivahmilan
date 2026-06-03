@@ -9,15 +9,18 @@ export default function SmartImage({ src, alt = '', fill, width, height, classNa
   if (!src) return null;
 
   const isLocal = src.startsWith('/uploads/') || src.startsWith('/public/');
+  const objectFitFromClass =
+    className?.match(/\bobject-(contain|cover|fill|none|scale-down)\b/)?.[1] || null;
 
   if (isLocal) {
     if (fill) {
+      const objectFit = style?.objectFit || objectFitFromClass || 'cover';
       return (
         <img
           src={src}
           alt={alt}
           className={`absolute inset-0 w-full h-full ${className || ''}`}
-          style={{ objectFit: 'cover', ...style }}
+          style={{ objectFit, ...style }}
           {...props}
         />
       );

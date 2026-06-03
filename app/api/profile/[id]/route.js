@@ -72,10 +72,19 @@ export async function GET(req, { params }) {
     [session.user.id, id]
   );
 
-  // Hide sensitive data
+  // Hide sensitive data (owner always sees own photos)
   const safeUser = { ...user };
-  if (profile?.hidePhone) safeUser.phone = null;
-  if (profile?.hidePhoto && !session.user.isPremium) photos.length = 0;
+  const viewingSelf = session.user.id === id;
+  if (profile?.hidePhone && !viewingSelf) safeUser.phone = null;
+  if (
+    profile?.hidePhoto &&
+    !session.user.isPremium &&
+    !viewingSelf &&
+    session.user.role !== 'ADMIN'
+  ) {
+    photos.length = 0;
+    safeUser.image = null;
+  }
 
   return NextResponse.json({
     ...safeUser,

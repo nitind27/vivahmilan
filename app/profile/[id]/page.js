@@ -121,6 +121,7 @@ function DetailGrid({ items }) {
 
 function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
   const [lightbox, setLightbox] = useState(false);
+  const multi = photos.length > 1;
 
   const go = (dir) => {
     setActivePhoto(i => {
@@ -128,6 +129,11 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
       if (!n) return 0;
       return dir > 0 ? (i + 1) % n : (i - 1 + n) % n;
     });
+  };
+
+  const openLightbox = (index) => {
+    if (index != null && index >= 0 && index < photos.length) setActivePhoto(index);
+    setLightbox(true);
   };
 
   if (!photos.length) {
@@ -143,77 +149,93 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
   return (
     <>
       <div className="relative bg-black/5 dark:bg-black/30">
-        <div className="relative aspect-[4/5] max-h-[520px] w-full overflow-hidden">
+        <div
+          className="relative aspect-[4/5] max-h-[520px] w-full overflow-hidden cursor-zoom-in group"
+          role="button"
+          tabIndex={0}
+          onClick={() => openLightbox(activePhoto)}
+          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(activePhoto); } }}
+          aria-label="View photo full screen"
+        >
           <SmartImage
             src={photos[activePhoto]?.url}
             alt={name}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
 
-          {photos.length > 1 && (
+          {multi && (
             <>
               <button
                 type="button"
-                onClick={() => go(-1)}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+                onClick={e => { e.stopPropagation(); go(-1); }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors z-10"
                 aria-label="Previous photo"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 type="button"
-                onClick={() => go(1)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+                onClick={e => { e.stopPropagation(); go(1); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors z-10"
                 aria-label="Next photo"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
-              <button
-                type="button"
-                onClick={() => setLightbox(true)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors"
-                aria-label="View fullscreen"
-              >
-                <ZoomIn className="w-4 h-4" />
-              </button>
             </>
           )}
 
-          <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-1.5">
-            {photos.map((_, i) => (
+          <button
+            type="button"
+            onClick={e => { e.stopPropagation(); openLightbox(activePhoto); }}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60 transition-colors z-10"
+            aria-label="View fullscreen"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </button>
+
+          <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            Tap to enlarge
+          </div>
+
+          {multi && (
+            <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-1.5 z-10">
+              {photos.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={e => { e.stopPropagation(); setActivePhoto(i); }}
+                  className={`h-1.5 rounded-full transition-all ${activePhoto === i ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`}
+                  aria-label={`Photo ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="p-4 border-t border-vd-border bg-vd-bg-section/80 dark:bg-vd-bg-card/80">
+          <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-3 flex items-center gap-1.5">
+            <ImageIcon className="w-3.5 h-3.5" /> {multi ? `All Photos (${photos.length})` : 'Your photo'}
+          </p>
+          <div className={`grid gap-2 ${multi ? 'grid-cols-4 sm:grid-cols-5 md:grid-cols-6' : 'grid-cols-1 max-w-[120px]'}`}>
+            {photos.map((p, i) => (
               <button
-                key={i}
+                key={`${p.url}-${i}`}
                 type="button"
-                onClick={() => setActivePhoto(i)}
-                className={`h-1.5 rounded-full transition-all ${activePhoto === i ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`}
-                aria-label={`Photo ${i + 1}`}
-              />
+                onClick={() => openLightbox(i)}
+                className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${activePhoto === i ? 'border-vd-primary ring-2 ring-vd-primary/30 scale-[1.02]' : 'border-transparent opacity-80 hover:opacity-100'}`}
+                aria-label={`View photo ${i + 1} full screen`}
+              >
+                <SmartImage src={p.url} alt="" fill className="object-cover" />
+                <span className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/25 transition-colors">
+                  <ZoomIn className="w-5 h-5 text-white opacity-0 hover:opacity-100 drop-shadow-md" />
+                </span>
+              </button>
             ))}
           </div>
         </div>
-
-        {photos.length > 1 && (
-          <div className="p-4 border-t border-vd-border bg-vd-bg-section/80 dark:bg-vd-bg-card/80">
-            <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-3 flex items-center gap-1.5">
-              <ImageIcon className="w-3.5 h-3.5" /> All Photos ({photos.length})
-            </p>
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
-              {photos.map((p, i) => (
-                <button
-                  key={p.url}
-                  type="button"
-                  onClick={() => setActivePhoto(i)}
-                  className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${activePhoto === i ? 'border-vd-primary ring-2 ring-vd-primary/30 scale-[1.02]' : 'border-transparent opacity-80 hover:opacity-100'}`}
-                >
-                  <SmartImage src={p.url} alt="" fill className="object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       <AnimatePresence>
@@ -232,22 +254,33 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
             >
               <X className="w-5 h-5" />
             </button>
-            {photos.length > 1 && (
+            {multi && (
               <>
                 <button type="button" onClick={e => { e.stopPropagation(); go(-1); }}
-                  className="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center">
+                  className="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 z-10">
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button type="button" onClick={e => { e.stopPropagation(); go(1); }}
-                  className="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center">
+                  className="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 z-10">
                   <ChevronRight className="w-6 h-6" />
                 </button>
               </>
             )}
-            <div className="relative w-full max-w-3xl aspect-[3/4] max-h-[85vh]" onClick={e => e.stopPropagation()}>
-              <SmartImage src={photos[activePhoto]?.url} alt={name} fill className="object-contain" />
+            <div
+              className="relative w-full max-w-4xl h-[min(85vh,720px)] min-h-[240px]"
+              onClick={e => e.stopPropagation()}
+            >
+              <SmartImage
+                src={photos[activePhoto]?.url}
+                alt={name}
+                fill
+                className="object-contain"
+                sizes="100vw"
+              />
             </div>
-            <p className="absolute bottom-6 text-white/70 text-sm">{activePhoto + 1} / {photos.length}</p>
+            {multi && (
+              <p className="absolute bottom-6 text-white/70 text-sm">{activePhoto + 1} / {photos.length}</p>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
