@@ -54,7 +54,37 @@ const MIME = {
   '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.png': 'image/png', '.webp': 'image/webp',
   '.gif': 'image/gif', '.pdf': 'application/pdf',
+  '.html': 'text/html; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
 };
+
+const GOOGLE_VERIFY_FILE = 'google195f37c4f1dfaf5a.html';
+const GOOGLE_VERIFY_PATHS = new Set([
+  `/${GOOGLE_VERIFY_FILE}`,
+  `/sitemap.xml/${GOOGLE_VERIFY_FILE}`,
+]);
+
+function servePublicFile(res, relativePath) {
+  const filePath = join(process.cwd(), 'public', relativePath);
+  if (!existsSync(filePath)) {
+    res.writeHead(404);
+    res.end('Not found');
+    return true;
+  }
+  const ext = extname(filePath).toLowerCase();
+  res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  try {
+    const stat = statSync(filePath);
+    res.setHeader('Content-Length', stat.size);
+    createReadStream(filePath).pipe(res);
+  } catch {
+    res.writeHead(500);
+    res.end('Error reading file');
+  }
+  return true;
+}
 
 // Global io accessor for API routes
 global.getIO = () => global.__io || null;
@@ -68,8 +98,17 @@ app.prepare().then(() => {
     // ── Welcome gate (admin: siteconfig welcome_gate_enabled = 1) ──
     const PREVIEW_COOKIE_NAME  = 'vd_preview_auth';
     const PREVIEW_COOKIE_VALUE = 'granted_2710';
+    // Google Search Console verification (must never redirect to welcome)
+    if (GOOGLE_VERIFY_PATHS.has(pathname)) {
+      servePublicFile(res, GOOGLE_VERIFY_FILE);
+      return;
+    }
+
     const WELCOME_GATE_BYPASS = [
       '/welcome.html',
+      `/${GOOGLE_VERIFY_FILE}`,
+      '/robots.txt',
+      '/sitemap.xml',
       '/_next/',
       '/favicon.ico',
       '/logo/',
@@ -98,6 +137,7 @@ app.prepare().then(() => {
       '/kyc/',
     ];
     const isWelcomeBypassed = WELCOME_GATE_BYPASS.some(p => pathname.startsWith(p))
+      || pathname.startsWith('/google')
       || (pathname.includes('.') && !pathname.endsWith('.html'));
 
     let welcomeGateEnabled = false;
@@ -154,6 +194,7 @@ app.prepare().then(() => {
       '/maintenance', '/api/', '/_next', '/favicon', '/logo',
       '/images', '/uploads', '/audio', '/video', '/welcome',
       '/register', '/verify-email', '/onboarding', '/forgot-password', '/kyc/',
+      `/${GOOGLE_VERIFY_FILE}`, '/robots.txt', '/sitemap.xml',
     ];
     const isMaintenanceBypassed =
       pathname.startsWith('/admin') ||

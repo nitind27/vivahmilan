@@ -47,6 +47,14 @@ function needsAuth(pathname) {
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
+  // Google Search Console HTML verification (root + mistaken sitemap.xml/ path)
+  if (
+    pathname === '/google195f37c4f1dfaf5a.html' ||
+    pathname === '/sitemap.xml/google195f37c4f1dfaf5a.html'
+  ) {
+    return NextResponse.next();
+  }
+
   if (isPublic(pathname)) return NextResponse.next();
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });

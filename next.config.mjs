@@ -25,6 +25,16 @@ const nextConfig = {
     ];
   },
 
+  async rewrites() {
+    return [
+      // Search Console mistaken property URL (sitemap.xml/ prefix)
+      {
+        source: '/sitemap.xml/google195f37c4f1dfaf5a.html',
+        destination: '/google195f37c4f1dfaf5a.html',
+      },
+    ];
+  },
+
   allowedDevOrigins: [
     'http://vivahdwar.com',
     'https://vivahdwar.com',
