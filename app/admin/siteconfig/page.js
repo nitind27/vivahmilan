@@ -291,15 +291,36 @@ export default function SiteConfigPage() {
       {/* Free Trial */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
         <h3 className="font-bold text-lg text-white">Free Trial Settings</h3>
+        <p className="text-xs text-gray-500">
+          Applies when admin approves a profile. Early Bird members receive the correct Early Bird duration in emails — not the trial length below.
+        </p>
+        <div className="flex items-center justify-between p-4 rounded-xl border bg-gray-900/50 border-gray-700">
+          <div>
+            <p className="text-sm font-semibold text-white">Include access details in approval email</p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Off = verification-only email (no trial or Early Bird box). On = show Early Bird or free trial with valid-until date.
+            </p>
+          </div>
+          <Toggle
+            value={config.freeTrialEmailEnabled !== '0'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig(p => ({ ...p, freeTrialEmailEnabled: newVal }));
+              const res = await fetch('/api/admin/siteconfig', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'freeTrialEmailEnabled', value: newVal }) });
+              if (res.ok) toast.success(val ? 'Access details will be included in approval emails' : 'Approval emails will be verification-only');
+              else { toast.error('Failed'); setConfig(p => ({ ...p, freeTrialEmailEnabled: val ? '0' : '1' })); }
+            }}
+          />
+        </div>
         <div>
-          <label className="text-xs text-gray-400 mb-1.5 block">Free Trial Duration (days) — 0 to disable</label>
+          <label className="text-xs text-gray-400 mb-1.5 block">Free trial duration (days) — 0 to disable granting a trial on approval</label>
           <div className="flex gap-3 items-center">
             <input type="number" min="0" max="365" value={config.freeTrialDays ?? '1'} onChange={e => setConfig(p => ({ ...p, freeTrialDays: e.target.value }))} className="w-32 px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white" />
             <span className="text-gray-400 text-sm">days</span>
           </div>
         </div>
         <button disabled={saving} onClick={() => save('freeTrialDays', config.freeTrialDays)} className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60">
-          {saving ? 'Saving…' : 'Save Settings'}
+          {saving ? 'Saving…' : 'Save trial duration'}
         </button>
       </div>
 

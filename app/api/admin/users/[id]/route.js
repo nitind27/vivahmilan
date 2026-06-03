@@ -126,9 +126,10 @@ export async function PATCH(req, { params }) {
     updateData.profileCorrectionRequestedAt = null;
     updateData.profileCorrectionToken = null;
   }
-  if (data.adminVerified === true && !user?.adminVerified && !user?.freeTrialUsed) {
-    const trialDays = parseInt(await getSiteConfig('freeTrialDays') || '1');
-    if (trialDays > 0) {
+  if (data.adminVerified === true && !user?.adminVerified) {
+    const { shouldGrantFreeTrialOnApproval } = await import('@/lib/userAccessMessaging');
+    if (await shouldGrantFreeTrialOnApproval(id, user?.freeTrialUsed)) {
+      const trialDays = parseInt(await getSiteConfig('freeTrialDays') || '1', 10);
       updateData.freeTrialUsed = true;
       updateData.freeTrialExpiry = new Date(Date.now() + trialDays * 86400000);
     }
@@ -149,23 +150,31 @@ export async function PATCH(req, { params }) {
   }
 
   if (data.adminVerified === true && !user?.adminVerified && user?.email) {
-    const trialDays = parseInt(await getSiteConfig('freeTrialDays') || '1');
-    try { await sendAdminVerificationEmail(user.email, user.name || 'User', trialDays); } catch (e) { console.error('Email error:', e.message); }
+    const {
+      getUserAccessGrantForEmail,
+      isFreeTrialEmailEnabled,
+      buildApprovalPushBody,
+      buildApprovalNotificationMessage,
+    } = await import('@/lib/userAccessMessaging');
+    const showAccessGift = await isFreeTrialEmailEnabled();
+    const accessGrant = await getUserAccessGrantForEmail(id);
+    try {
+      await sendAdminVerificationEmail(user.email, user.name || 'User', { accessGrant, showAccessGift });
+    } catch (e) { console.error('Email error:', e.message); }
     await prisma.notification.create({
       data: {
         userId: id,
         type: 'VERIFICATION_APPROVED',
         title: '✅ Profile Approved!',
-        message: 'Your profile has been verified by admin. You can now login and enjoy your free trial!',
+        message: buildApprovalNotificationMessage(accessGrant, showAccessGift),
         link: '/login',
       },
     });
-    // Web Push
     try {
       const { sendPushToUser } = await import('@/lib/webpush');
       await sendPushToUser(id, {
         title: '✅ Profile Approved!',
-        body: `Welcome to Milan Matrimony! Your ${trialDays}-day free trial starts now.`,
+        body: buildApprovalPushBody(accessGrant, showAccessGift),
         url: '/login',
       });
     } catch (e) { console.error('Push error:', e.message); }
