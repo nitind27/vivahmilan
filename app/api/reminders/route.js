@@ -85,9 +85,18 @@ export async function POST(req) {
   if (user?.isPremium && user?.premiumExpiry && new Date(user.premiumExpiry) > now) {
     const daysLeft = Math.max(0, Math.ceil((new Date(user.premiumExpiry) - now) / 86400000));
     const totalDays = earlyBird?.totalDays || 30;
+    let planDisplayName = null;
+    if (earlyBird && user.premiumPlan) {
+      const planRow = await queryOne('SELECT displayName FROM planconfig WHERE plan = ?', [user.premiumPlan]);
+      planDisplayName = planRow?.displayName || earlyBird.label || 'Early Bird — Free Full Access';
+    } else if (user.premiumPlan && user.premiumPlan !== 'EARLY_BIRD') {
+      const planRow = await queryOne('SELECT displayName FROM planconfig WHERE plan = ?', [user.premiumPlan]);
+      planDisplayName = planRow?.displayName || user.premiumPlan;
+    }
     premiumInfo = {
       isPremium: true,
       plan: user.premiumPlan,
+      planDisplayName,
       expiry: user.premiumExpiry,
       daysLeft,
       totalDays,

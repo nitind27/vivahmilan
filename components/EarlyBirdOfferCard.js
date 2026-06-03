@@ -63,7 +63,7 @@ export default function EarlyBirdOfferCard({ className = '' }) {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`rounded-2xl border-2 border-emerald-400/50 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/40 dark:to-green-950/30 p-5 sm:p-6 ${className}`}
+        className={`rounded-2xl border-2 border-emerald-400/50 bg-vd-bg-card p-5 sm:p-6 ${className}`}
       >
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex items-center gap-3 flex-1">
@@ -71,12 +71,12 @@ export default function EarlyBirdOfferCard({ className = '' }) {
               <CheckCircle className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Early Bird Active</p>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                Free {offer.planDisplayName || offer.plan} Access
+              <p className="text-xs font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">Early Bird Active</p>
+              <h3 className="text-lg font-bold text-vd-text-heading">
+                Early Bird — Full Free Access
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {offer.daysLeft} days left · Valid till {expiryStr}
+              <p className="text-sm text-vd-text-sub">
+                {offer.daysLeft} days left · Valid until {expiryStr}
               </p>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function EarlyBirdOfferCard({ className = '' }) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-950/50 dark:via-yellow-950/30 dark:to-orange-950/30 p-5 sm:p-6 shadow-lg ${className}`}
+      className={`rounded-2xl border-2 border-amber-400/60 bg-vd-bg-card p-5 sm:p-6 shadow-lg ${className}`}
     >
       <div className="flex flex-col lg:flex-row lg:items-center gap-5">
         <div className="flex items-start gap-4 flex-1">
@@ -110,10 +110,10 @@ export default function EarlyBirdOfferCard({ className = '' }) {
                 Limited Offer · {offer.slotsLeft} slots left
               </span>
             </div>
-            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-1">
+            <h3 className="text-xl font-black text-vd-text-heading mb-1">
               {offer.title || 'Early Bird Offer'}
             </h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-vd-text-sub leading-relaxed">
               {offer.subtitle || offer.message || (
                 <>Get <strong>{offer.planDisplayName}</strong> plan <strong>FREE</strong> for <strong>{offer.durationLabel}</strong> — first {offer.limit} users only!</>
               )}

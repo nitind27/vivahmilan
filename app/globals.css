@@ -85,6 +85,33 @@ label { color: var(--vd-text-sub); }
   color: var(--vd-text-sub);
 }
 
+/* Dashboard welcome card — white-on-gold in light & dark (override global heading/body colors) */
+.dashboard-welcome-card {
+  color: rgba(255, 255, 255, 0.9);
+}
+.dashboard-welcome-card h1,
+.dashboard-welcome-card h2,
+.dashboard-welcome-card h3 {
+  color: #ffffff !important;
+}
+.dashboard-welcome-card p,
+.dashboard-welcome-card span,
+.dashboard-welcome-card label {
+  color: inherit;
+}
+.dashboard-welcome-card .text-white {
+  color: #ffffff !important;
+}
+.dashboard-welcome-card [class*='text-white/90'] {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.dashboard-welcome-card [class*='text-white/80'] {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.dashboard-welcome-card [class*='text-white/75'] {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
 /* Homepage hero + CTA — always cinematic text (light site theme does not override) */
 .hero-section {
   color: rgba(255, 255, 255, 0.9);
@@ -119,6 +146,14 @@ label { color: var(--vd-text-sub); }
 .dark .bg-vd-bg {
   color: var(--vd-text-heading);
 }
+
+/* ── Light + dark: map gray text utilities to design tokens (same pattern) ── */
+.text-gray-900 { color: var(--vd-text-heading) !important; }
+.text-gray-800 { color: var(--vd-text-heading) !important; }
+.text-gray-700 { color: var(--vd-text-sub) !important; }
+.text-gray-600 { color: var(--vd-text-sub) !important; }
+.text-gray-500 { color: var(--vd-text-light) !important; }
+.text-gray-400 { color: var(--vd-text-light) !important; }
 
 /* ── Dark mode Tailwind gray overrides ────────────────────────────────────── */
 .dark .text-gray-900 { color: var(--vd-text-heading) !important; }
