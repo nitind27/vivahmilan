@@ -67,6 +67,11 @@ model user {
   needsPassword     Boolean   @default(false)
   profileRejectionReason String? @db.Text
   profileRejectedAt      DateTime?
+  profileCorrectionRequired Boolean @default(false)
+  profileCorrectionNote     String?   @db.Text
+  profileCorrectionFields   String?   @db.Text
+  profileCorrectionRequestedAt DateTime?
+  profileCorrectionToken    String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

@@ -111,6 +111,12 @@ export async function POST(req) {
       }
 
       await execute('UPDATE profile SET profileComplete = 100, updatedAt = NOW() WHERE userId = ?', [user.id]);
+
+      try {
+        const { clearProfileCorrection } = await import('@/lib/profileCorrection.js');
+        await clearProfileCorrection(user.id);
+      } catch {}
+
       try {
         const { notifyAdmins } = await import('@/lib/adminNotifications');
         await notifyAdmins({

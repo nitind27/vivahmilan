@@ -16,6 +16,26 @@ export async function PATCH(req, { params }) {
   const { id } = await params;
   const data = await req.json();
 
+  if (data.profileCorrectionRequest) {
+    const { requestProfileCorrection } = await import('@/lib/profileCorrection.js');
+    const result = await requestProfileCorrection(id, {
+      message: data.profileCorrectionRequest.message,
+      fields: data.profileCorrectionRequest.fields,
+      sendEmail: data.profileCorrectionRequest.sendEmail !== false,
+      adminId: session.user.id,
+      adminName: session.user.name || session.user.email,
+    });
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: result.status || 400 });
+    }
+    return NextResponse.json({
+      success: true,
+      correctionUrl: result.correctionUrl,
+      emailSent: result.emailSent,
+      fields: result.fields,
+    });
+  }
+
   if (data.profileRejection) {
     const reason = (data.profileRejection.reason || '').trim();
     const sendEmail = data.profileRejection.sendEmail !== false;
@@ -99,6 +119,13 @@ export async function PATCH(req, { params }) {
 
   // When approving, also activate free trial if not already used
   let updateData = { ...data };
+  if (data.adminVerified === true) {
+    updateData.profileCorrectionRequired = false;
+    updateData.profileCorrectionNote = null;
+    updateData.profileCorrectionFields = null;
+    updateData.profileCorrectionRequestedAt = null;
+    updateData.profileCorrectionToken = null;
+  }
   if (data.adminVerified === true && !user?.adminVerified && !user?.freeTrialUsed) {
     const trialDays = parseInt(await getSiteConfig('freeTrialDays') || '1');
     if (trialDays > 0) {

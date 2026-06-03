@@ -22,7 +22,7 @@ const PROFILE_REQUIRED = ['gender', 'dob', 'height', 'religion', 'education', 'p
 /** Load DB user into JWT after Google OAuth (OAuth profile alone lacks role/portal flags). */
 async function applyDbUserToToken(token, email) {
   const dbUser = await queryOne(
-    'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, needsPassword, freeTrialExpiry FROM `user` WHERE email = ?',
+    'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, needsPassword, freeTrialExpiry, profileCorrectionRequired FROM `user` WHERE email = ?',
     [String(email).trim().toLowerCase()]
   );
   if (!dbUser) return token;
@@ -52,6 +52,7 @@ async function applyDbUserToToken(token, email) {
   token.needsPassword = !!dbUser.needsPassword;
   token.isNewUser = profileIncomplete;
   token.portalAccessGranted = portalAccess.granted;
+  token.profileCorrectionRequired = !!dbUser.profileCorrectionRequired;
   return token;
 }
 
@@ -165,7 +166,8 @@ export const authOptions = {
         const rememberMe = credentials.remember === 'true' || credentials.remember === true;
         try {
           const user = await queryOne(
-            'SELECT id, email, name, password, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, freeTrialExpiry FROM `user` WHERE email = ?',
+            `SELECT id, email, name, password, role, isActive, isPremium, premiumPlan, isVerified, adminVerified,
+              freeTrialExpiry, profileCorrectionRequired FROM \`user\` WHERE email = ?`,
             [credentials.email]
           );
           if (!user || !user.password) return null;
@@ -185,7 +187,14 @@ export const authOptions = {
             }
           }
 
-          if (user.role !== 'ADMIN' && !user.adminVerified && !isDevBypass) throw new Error('PENDING_APPROVAL');
+          if (
+            user.role !== 'ADMIN' &&
+            !user.adminVerified &&
+            !isDevBypass &&
+            !user.profileCorrectionRequired
+          ) {
+            throw new Error('PENDING_APPROVAL');
+          }
           const trialActive = user.freeTrialExpiry && new Date(user.freeTrialExpiry) > new Date();
           const portalAccess = await getPortalAccessForUser({ email: user.email, role: user.role });
           return {
@@ -203,6 +212,7 @@ export const authOptions = {
             isNewUser: false,
             rememberMe,
             portalAccessGranted: portalAccess.granted,
+            profileCorrectionRequired: !!user.profileCorrectionRequired,
           };
         } catch (err) {
           console.error('Auth error:', err.message);
@@ -253,7 +263,7 @@ export const authOptions = {
       try {
         const now = new Date();
         const dbUser = await queryOne(
-          'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, needsPassword, freeTrialExpiry FROM `user` WHERE email = ?',
+          'SELECT id, name, email, role, isActive, isPremium, premiumPlan, isVerified, adminVerified, needsPassword, freeTrialExpiry, profileCorrectionRequired FROM `user` WHERE email = ?',
           [user.email]
         );
 
@@ -336,6 +346,16 @@ export const authOptions = {
           return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 
+        // Admin asked for profile corrections — open onboarding (not login block)
+        if (
+          !dbUser.adminVerified &&
+          dbUser.profileCorrectionRequired &&
+          dbUser.role !== 'ADMIN' &&
+          !isDevBypass
+        ) {
+          return `/onboarding?email=${encodeURIComponent(dbUser.email)}&correction=1`;
+        }
+
         // Profile complete but not yet admin approved — show pending screen
         if (!dbUser.adminVerified && dbUser.role !== 'ADMIN' && !isDevBypass) {
           return '/login?error=PENDING_APPROVAL';
@@ -395,6 +415,9 @@ export const authOptions = {
         } else if (token.portalAccessGranted === undefined) {
           token.portalAccessGranted = true;
         }
+        if (user.profileCorrectionRequired !== undefined) {
+          token.profileCorrectionRequired = !!user.profileCorrectionRequired;
+        }
         const maxAgeSec = token.rememberMe ? SESSION_REMEMBER_SEC : SESSION_DEFAULT_SEC;
         token.exp = Math.floor(Date.now() / 1000) + maxAgeSec;
       }
@@ -411,6 +434,11 @@ export const authOptions = {
         try {
           const portalAccess = await getPortalAccessForUser({ email: token.email, role: token.role });
           token.portalAccessGranted = portalAccess.granted;
+          const row = await queryOne(
+            'SELECT profileCorrectionRequired FROM `user` WHERE email = ?',
+            [token.email]
+          );
+          token.profileCorrectionRequired = !!row?.profileCorrectionRequired;
         } catch (e) {
           console.error('jwt portal refresh error:', e.message);
         }
@@ -436,6 +464,7 @@ export const authOptions = {
         session.user.ownerName      = token.ownerName || null;
         session.user.isFamilyLogin  = token.role === 'FAMILY';
         session.user.portalAccessGranted = token.portalAccessGranted === true;
+        session.user.profileCorrectionRequired = !!token.profileCorrectionRequired;
       }
       delete session.user.image;
       return session;

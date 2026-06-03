@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {
   User, MapPin, Star, Briefcase, Users, Camera,
   ChevronRight, ChevronLeft, Check, Upload, FileText,
-  Loader2, CheckCircle, Clock, Save
+  Loader2, CheckCircle, Clock, Save, AlertCircle, Edit3,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SearchableSelect from '@/components/SearchableSelect';
@@ -49,6 +49,32 @@ const INCOMES = ['Below ₹2 Lakh','₹2-5 Lakh','₹5-10 Lakh','₹10-20 Lakh',
 const MARITAL = [{ val: 'NEVER_MARRIED', label: 'Never Married' },{ val: 'DIVORCED', label: 'Divorced' },{ val: 'WIDOWED', label: 'Widowed' }];
 const DIETS = ['Vegetarian','Non-Vegetarian','Eggetarian','Vegan','Jain Vegetarian'];
 const DOC_TYPES = ['Aadhaar Card','PAN Card','Voter ID Card','Passport','Driving License'];
+
+const CORRECTION_STEP_BY_FIELD = {
+  profile_photo: 5,
+  family_photos: 5,
+  identity_document: 5,
+  basic_info: 0,
+  religion: 1,
+  location: 2,
+  career: 3,
+  family: 4,
+  phone: 0,
+  email: -1,
+};
+
+const CORRECTION_LABELS = {
+  profile_photo: 'Profile photo',
+  family_photos: 'Family / lifestyle photos',
+  identity_document: 'Identity document',
+  basic_info: 'Basic profile details',
+  religion: 'Religion & community',
+  location: 'Location',
+  career: 'Career & education',
+  family: 'Family background',
+  phone: 'Phone number',
+  email: 'Email address',
+};
 
 function Field({ label, children }) {
   return <div><label className={labelCls}>{label}</label>{children}</div>;
@@ -97,8 +123,10 @@ function OnboardingInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get('email') || '';
+  const correctionParam = searchParams.get('correction') === '1';
 
   const [step, setStep] = useState(0);
+  const [correction, setCorrection] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -149,10 +177,25 @@ function OnboardingInner() {
         if (data.document)  setDocStatus(data.document);
         if (data.document?.type) setSelectedDocType(data.document.type);
         if (data.familyPhotos) setFamilyPhotos(data.familyPhotos);
+        if (data.correction?.required) {
+          setCorrection(data.correction);
+          const steps = (data.correction.fields || [])
+            .map((f) => CORRECTION_STEP_BY_FIELD[f])
+            .filter((s) => s != null && s >= 0);
+          if (steps.length) setStep(Math.min(...steps));
+        } else if (correctionParam) {
+          toast('Open the link from your email, or log in to see what to update.', { icon: '✉️' });
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [email]);
+  }, [email, correctionParam]);
+
+  const correctionSteps = new Set(
+    (correction?.fields || [])
+      .map((f) => CORRECTION_STEP_BY_FIELD[f])
+      .filter((s) => s != null && s >= 0)
+  );
 
   // ── Check if all required fields are filled ──────────────────────────────
   const missingRequired = REQUIRED_FIELDS.filter((f) => {
@@ -419,9 +462,12 @@ function OnboardingInner() {
         <div className="w-20 h-20 vd-gradient-gold rounded-full flex items-center justify-center mx-auto mb-5">
           <Clock className="w-10 h-10 text-white" />
         </div>
-        <h2 className="text-2xl font-bold mb-3">Profile Submitted! 🎉</h2>
-        <p className="text-vd-text-sub text-sm mb-2">Your profile is under review by our admin team.</p>
-        <p className="text-vd-text-light text-sm mb-6">You'll receive an email at <strong className="text-vd-primary">{email}</strong> once your profile is approved. This usually takes 24-48 hours.</p>
+        <h2 className="text-2xl font-bold mb-3">Resubmitted for review 🎉</h2>
+        <p className="text-vd-text-sub text-sm mb-2">Thank you — our team will review your updated profile.</p>
+        <p className="text-vd-text-light text-sm mb-6">
+          You will receive an email at <strong className="text-vd-primary">{email}</strong> when approved.
+          Until then, use <strong>Login</strong> only if we ask you to fix something again.
+        </p>
         <div className="space-y-2 text-left bg-vd-bg-alt rounded-2xl p-4 mb-6">
           {['Profile details saved','Photo uploaded','ID document submitted','Awaiting admin review'].map((s, i) => (
             <div key={i} className="flex items-center gap-2 text-sm">
@@ -445,8 +491,46 @@ function OnboardingInner() {
           <Link href="/" className="inline-flex justify-center">
             <img src="/logo/logo.png" alt="Vivah Dwar" className="h-20 w-auto object-contain" />
           </Link>
-          <p className="text-vd-text-light text-sm mt-1">Complete your matrimonial profile</p>
+          <p className="text-vd-text-light text-sm mt-1">
+            {correction?.required ? 'Update your profile as requested by our team' : 'Complete your matrimonial profile'}
+          </p>
         </div>
+
+        {correction?.required && (
+          <div className="mb-6 rounded-2xl border-2 border-amber-400/50 bg-amber-50 dark:bg-amber-950/30 p-4 sm:p-5">
+            <div className="flex items-start gap-3">
+              <Edit3 className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <p className="font-bold text-amber-900 dark:text-amber-200 text-sm sm:text-base">
+                  Admin requested corrections
+                </p>
+                <p className="text-sm text-amber-900/90 dark:text-amber-100/80 mt-2 leading-relaxed">
+                  {correction.note}
+                </p>
+                <ul className="mt-3 space-y-1">
+                  {(correction.fields || []).map((f) => (
+                    <li key={f} className="text-xs sm:text-sm text-amber-800 dark:text-amber-200 flex items-center gap-1.5">
+                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                      {CORRECTION_LABELS[f] || f}
+                      {CORRECTION_STEP_BY_FIELD[f] >= 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setStep(CORRECTION_STEP_BY_FIELD[f])}
+                          className="ml-1 underline font-semibold"
+                        >
+                          Go →
+                        </button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs text-amber-800/80 dark:text-amber-300/70 mt-3">
+                  Fix the items above, then tap <strong>Submit for admin review</strong> at the end.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Progress bar */}
         <div className="mb-6">
@@ -462,14 +546,19 @@ function OnboardingInner() {
         {/* Step tabs */}
         <div className="flex gap-1.5 overflow-x-auto pb-2 mb-5 scrollbar-hide">
           {STEPS.map((s, i) => (
-            <div key={s.id} className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap flex-shrink-0 transition-all ${
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setStep(i)}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap flex-shrink-0 transition-all ${
               i === step ? 'vd-gradient-gold text-white shadow-sm' :
               i < step ? 'bg-vd-accent-soft text-vd-primary border border-vd-primary/30' :
               'bg-vd-bg-section text-vd-text-light border border-vd-border'
-            }`}>
+            } ${correctionSteps.has(i) ? 'ring-2 ring-amber-400 ring-offset-1' : ''}`}
+            >
               {i < step ? <Check className="w-3 h-3" /> : <s.icon className="w-3 h-3" />}
               {s.label}
-            </div>
+            </button>
           ))}
         </div>
 

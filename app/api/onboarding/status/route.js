@@ -8,11 +8,34 @@ export async function GET(req) {
   const email = searchParams.get('email');
   if (!email) return NextResponse.json({ error: 'email required' }, { status: 400 });
 
+  const token = searchParams.get('token');
   const user = await queryOne(
-    'SELECT id, name, phone, image FROM `user` WHERE email = ?',
+    `SELECT id, name, phone, image, adminVerified, profileCorrectionRequired, profileCorrectionNote,
+            profileCorrectionFields, profileCorrectionRequestedAt, profileCorrectionToken
+     FROM \`user\` WHERE email = ?`,
     [email]
   );
   if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+  const correctionFields = user.profileCorrectionFields
+    ? (() => {
+        try {
+          return JSON.parse(user.profileCorrectionFields);
+        } catch {
+          return [];
+        }
+      })()
+    : [];
+
+  const correction = user.profileCorrectionRequired
+    ? {
+        required: true,
+        note: user.profileCorrectionNote || '',
+        fields: correctionFields,
+        requestedAt: user.profileCorrectionRequestedAt,
+        tokenValid: token ? token === user.profileCorrectionToken : null,
+      }
+    : { required: false };
 
   const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [user.id]);
 
@@ -46,6 +69,8 @@ export async function GET(req) {
   return NextResponse.json({
     name:    user.name  || '',
     phone:   user.phone || '',
+    adminVerified: !!user.adminVerified,
+    correction,
     photoUrl: photo?.url || user.image || null,
     document: doc ? { type: doc.type, status: doc.status } : null,
     familyPhotos: familyPhotos || [],

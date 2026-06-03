@@ -80,7 +80,12 @@ export async function middleware(req) {
     if (token.role === 'FAMILY' && (pathname.startsWith('/profile/edit') || pathname.startsWith('/premium') || pathname.startsWith('/settings') || pathname.startsWith('/refer') || pathname.startsWith('/share-story'))) {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
-    if (await isPortalBlockedForToken(token, req)) {
+    if (token.profileCorrectionRequired) {
+      if (!pathname.startsWith('/onboarding') && !pathname.startsWith('/api/onboarding')) {
+        const email = encodeURIComponent(token.email || '');
+        return NextResponse.redirect(new URL(`/onboarding?email=${email}&correction=1`, req.url));
+      }
+    } else if (await isPortalBlockedForToken(token, req)) {
       return NextResponse.redirect(new URL('/profile-launch', req.url));
     }
   }
@@ -88,10 +93,15 @@ export async function middleware(req) {
   if (
     pathname.startsWith('/profile-launch') &&
     token &&
-    (token.role === 'USER' || token.role === 'FAMILY') &&
-    !(await isPortalBlockedForToken(token, req))
+    (token.role === 'USER' || token.role === 'FAMILY')
   ) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    if (token.profileCorrectionRequired) {
+      const email = encodeURIComponent(token.email || '');
+      return NextResponse.redirect(new URL(`/onboarding?email=${email}&correction=1`, req.url));
+    }
+    if (!(await isPortalBlockedForToken(token, req))) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
   }
 
   // After Google OAuth: logged-in verified user should not stay stuck on /login

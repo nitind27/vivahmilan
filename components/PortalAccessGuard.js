@@ -38,13 +38,19 @@ export default function PortalAccessGuard() {
         .then(r => r.json())
         .then(data => {
           if (cancelled) return;
+          if (data.needsProfileCorrection && data.correctionUrl) {
+            if (!pathname.startsWith('/onboarding')) {
+              router.replace(data.correctionUrl);
+            }
+            return;
+          }
           if (data.granted) {
             if (pathname.startsWith('/profile-launch')) {
               router.replace('/dashboard');
             }
             return;
           }
-          if (!pathname.startsWith('/profile-launch')) {
+          if (!pathname.startsWith('/profile-launch') && !pathname.startsWith('/onboarding')) {
             router.replace('/profile-launch');
           }
         })

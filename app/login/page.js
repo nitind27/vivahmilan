@@ -21,14 +21,19 @@ const QR_TTL = 5 * 60 * 1000;
 async function resolvePostLoginPath(user) {
   if (!user) return '/dashboard';
   if (user.role === 'ADMIN') return '/admin';
-  if (!user.adminVerified) return '/dashboard';
+  if (user.profileCorrectionRequired && user.email) {
+    return `/onboarding?email=${encodeURIComponent(user.email)}&correction=1`;
+  }
   try {
     const res = await fetch('/api/portal-access', { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
+      if (data.needsProfileCorrection && data.correctionUrl) return data.correctionUrl;
+      if (!user.adminVerified && !data.granted) return '/profile-launch';
       return data.granted ? '/dashboard' : '/profile-launch';
     }
   } catch { /* fallback below */ }
+  if (!user.adminVerified) return '/profile-launch';
   return user.portalAccessGranted === false ? '/profile-launch' : '/dashboard';
 }
 

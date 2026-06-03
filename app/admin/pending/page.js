@@ -4,12 +4,25 @@ import { format, formatDistanceToNow } from 'date-fns';
 import {
   UserCheck, CheckCircle, XCircle, Eye, Search, ChevronLeft, ChevronRight,
   FileText, Calendar, MapPin, Mail, Phone, Hash, Shield, Bell, Send,
-  Smartphone, Loader2, Trash2,
+  Smartphone, Loader2, Trash2, Edit3,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminUserProfileModal from '@/components/AdminUserProfileModal';
 import ApprovalChecklist from '@/components/ApprovalChecklist';
 import AdminReminderModal from '@/components/AdminReminderModal';
+
+const CORRECTION_FIELD_OPTIONS = [
+  { key: 'profile_photo', label: 'Profile photo' },
+  { key: 'family_photos', label: 'Family / lifestyle photos' },
+  { key: 'identity_document', label: 'Identity document' },
+  { key: 'basic_info', label: 'Basic profile details' },
+  { key: 'religion', label: 'Religion & community' },
+  { key: 'location', label: 'Location' },
+  { key: 'career', label: 'Career & education' },
+  { key: 'family', label: 'Family background' },
+  { key: 'phone', label: 'Phone number' },
+  { key: 'email', label: 'Email (note in message)' },
+];
 
 const REJECTION_PRESET_OPTIONS = [
   { key: 'photos', label: 'Profile photos unclear, inappropriate, or missing' },
@@ -21,6 +34,128 @@ const REJECTION_PRESET_OPTIONS = [
 ];
 
 // ── Profile Approvals Components ──────────────────────────────────────────────
+
+function CorrectionModal({ target, onClose, onSent }) {
+  const [message, setMessage] = useState('');
+  const [fields, setFields] = useState(['profile_photo', 'identity_document']);
+  const [sendEmail, setSendEmail] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  const toggleField = (key) => {
+    setFields((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
+  };
+
+  const submit = async () => {
+    if (message.trim().length < 10) {
+      toast.error('Write clear instructions (min 10 characters)');
+      return;
+    }
+    if (!fields.length) {
+      toast.error('Select at least one item to update');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin/users/${target.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profileCorrectionRequest: { message: message.trim(), fields, sendEmail },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Failed');
+        return;
+      }
+      toast.success(
+        sendEmail && data.emailSent
+          ? 'Edit request sent — user can log in and fix via onboarding link'
+          : 'Edit request saved'
+      );
+      onSent?.();
+      onClose();
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+      <div className="bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-800">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <Edit3 className="w-5 h-5 text-amber-400" />
+            Request profile corrections
+          </h3>
+          <p className="text-sm text-gray-400 mt-1">
+            {target.name} can log in again, open onboarding, fix items, and resubmit — not a full rejection.
+          </p>
+        </div>
+        <div className="p-6 space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
+              What must they fix?
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {CORRECTION_FIELD_OPTIONS.map((f) => (
+                <label
+                  key={f.key}
+                  className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer text-sm ${
+                    fields.includes(f.key) ? 'border-amber-500/50 bg-amber-500/10 text-amber-200' : 'border-gray-700 text-gray-400'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={fields.includes(f.key)}
+                    onChange={() => toggleField(f.key)}
+                    className="rounded"
+                  />
+                  {f.label}
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
+              Instructions for user *
+            </label>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              rows={4}
+              placeholder="e.g. Your Aadhaar photo is blurry. Please upload a clear front image. Profile photo should show your face clearly."
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white resize-none focus:border-amber-500/50 outline-none"
+            />
+          </div>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="mt-1 rounded" />
+            <span className="text-sm text-gray-300">
+              <strong className="text-white">Email with direct link</strong> to onboarding
+              <span className="block text-xs text-gray-500 mt-1">Also sends in-app notification & push</span>
+            </span>
+          </label>
+        </div>
+        <div className="p-6 border-t border-gray-800 flex gap-3">
+          <button type="button" onClick={onClose} className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={submitting}
+            className="flex-1 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Edit3 className="w-4 h-4" />}
+            Send edit request
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function RejectModal({ target, onClose, onRejected }) {
   const [preset, setPreset] = useState('photos');
@@ -246,7 +381,7 @@ function DeleteAccountModal({ target, onClose, onDeleted }) {
   );
 }
 
-function UserCard({ u, onView, onApprove, onReject, onRemind, onDeleteAccount, statusBadge, selected, onToggleSelect, showReminder }) {
+function UserCard({ u, onView, onApprove, onReject, onRequestCorrection, onRemind, onDeleteAccount, statusBadge, selected, onToggleSelect, showReminder }) {
   const rs = u.reminderStats;
   const lastReminded = rs?.lastReminderAt
     ? formatDistanceToNow(new Date(rs.lastReminderAt), { addSuffix: true })
@@ -278,6 +413,9 @@ function UserCard({ u, onView, onApprove, onReject, onRemind, onDeleteAccount, s
           {statusBadge === 'approved' && <span className="text-xs font-semibold bg-green-500/20 text-green-400 px-2.5 py-1 rounded-full mt-2 inline-block">Approved</span>}
           {statusBadge === 'rejected' && <span className="text-xs font-semibold bg-red-500/20 text-red-400 px-2.5 py-1 rounded-full mt-2 inline-block">Rejected</span>}
           {statusBadge === 'pending' && <span className="text-xs font-semibold bg-yellow-500/20 text-yellow-500 px-2.5 py-1 rounded-full mt-2 inline-block">Pending Review</span>}
+          {statusBadge === 'pending' && u.profileCorrectionRequired && (
+            <span className="text-xs font-semibold bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full mt-2 inline-block ml-1">Awaiting edits</span>
+          )}
         </div>
       </div>
 
@@ -328,6 +466,15 @@ function UserCard({ u, onView, onApprove, onReject, onRemind, onDeleteAccount, s
       </div>
 
       <div className="flex flex-col gap-2 mt-auto">
+        {statusBadge === 'pending' && onRequestCorrection && (
+          <button
+            type="button"
+            onClick={() => onRequestCorrection(u)}
+            className="w-full py-2.5 bg-amber-600/20 hover:bg-amber-600/35 text-amber-300 border border-amber-500/35 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <Edit3 className="w-4 h-4" /> Request corrections
+          </button>
+        )}
         {statusBadge === 'pending' && showReminder && onRemind && (
           <button
             type="button"
@@ -379,6 +526,7 @@ function ProfilesTab() {
   const [blockModal, setBlockModal] = useState(null);
   const [reminderTargets, setReminderTargets] = useState(null);
   const [rejectTarget, setRejectTarget] = useState(null);
+  const [correctionTarget, setCorrectionTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [selectedIds, setSelectedIds] = useState(new Set());
 
@@ -531,6 +679,7 @@ function ProfilesTab() {
               onView={() => setSelectedId(u.id)}
               onApprove={() => updateUser(u.id, { adminVerified: true })}
               onReject={() => setRejectTarget(u)}
+              onRequestCorrection={(user) => setCorrectionTarget(user)}
               onRemind={(user) => setReminderTargets([user])}
               onDeleteAccount={activeTab === 'rejected' ? (user) => setDeleteTarget(user) : undefined}
               statusBadge={activeTab}
@@ -592,6 +741,17 @@ function ProfilesTab() {
           onSent={() => {
             setSelectedIds(new Set());
             load();
+          }}
+        />
+      )}
+
+      {correctionTarget && (
+        <CorrectionModal
+          target={correctionTarget}
+          onClose={() => setCorrectionTarget(null)}
+          onSent={() => {
+            load();
+            window.dispatchEvent(new Event('admin-stats-refresh'));
           }}
         />
       )}

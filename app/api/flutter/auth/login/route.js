@@ -18,7 +18,8 @@ export async function POST(req) {
 
     const user = await queryOne(
       `SELECT id, name, email, phone, password, role, isActive, isPremium, premiumPlan,
-              adminVerified, emailVerified, freeTrialExpiry, verificationBadge
+              adminVerified, emailVerified, freeTrialExpiry, verificationBadge,
+              profileCorrectionRequired, profileCorrectionToken
        FROM \`user\` WHERE email = ?`,
       [email.toLowerCase().trim()]
     );
@@ -67,6 +68,37 @@ export async function POST(req) {
           profileComplete: profile?.profileComplete || 0,
           requiredFields: REQUIRED_FIELDS,
         }, { status: 403 });
+      }
+
+      // Admin requested profile corrections — allow login with onboarding link
+      if (!user.adminVerified && user.profileCorrectionRequired) {
+        const { buildCorrectionOnboardingUrl } = await import('@/lib/profileCorrection.js');
+        const correctionUrl = buildCorrectionOnboardingUrl(
+          user.email,
+          user.profileCorrectionToken
+        );
+        const token = signToken({
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          isPremium: !!user.isPremium,
+        });
+        return NextResponse.json({
+          success: true,
+          token,
+          needsProfileCorrection: true,
+          correctionUrl,
+          portalAccess: false,
+          portalClosed: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone || null,
+            role: user.role,
+            adminVerified: false,
+          },
+        });
       }
 
       // Profile complete but not yet sent for admin review — mark as pending
