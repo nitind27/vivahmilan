@@ -51,9 +51,10 @@ export default function AdminSupportChat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const bottomRef = useRef(null);
+  const messagesScrollRef = useRef(null);
   const pollRef = useRef(null);
   const selectedIdRef = useRef(null);
+  const shouldStickToBottomRef = useRef(true);
 
   useEffect(() => {
     selectedIdRef.current = selected?.id || null;
@@ -99,9 +100,26 @@ export default function AdminSupportChat() {
     return () => clearInterval(interval);
   }, [fetchSessions]);
 
+  const scrollMessagesToBottom = useCallback((smooth = true) => {
+    const el = messagesScrollRef.current;
+    if (!el) return;
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: smooth ? 'smooth' : 'auto',
+    });
+  }, []);
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (!shouldStickToBottomRef.current) return;
+    requestAnimationFrame(() => scrollMessagesToBottom(true));
+  }, [messages, scrollMessagesToBottom]);
+
+  const onMessagesScroll = () => {
+    const el = messagesScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    shouldStickToBottomRef.current = distanceFromBottom < 80;
+  };
 
   useEffect(() => {
     clearInterval(pollRef.current);
@@ -159,6 +177,7 @@ export default function AdminSupportChat() {
     setSelected(s);
     selectedIdRef.current = s.id;
     setMessages([]);
+    shouldStickToBottomRef.current = true;
     router.replace(`/admin/support?session=${s.id}`, { scroll: false });
   };
 
@@ -198,7 +217,7 @@ export default function AdminSupportChat() {
   const awaitingReply = sessions.filter((s) => s.needsReply).length;
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 gap-3">
+    <div className="flex flex-col h-full min-h-0 overflow-hidden gap-3">
       {awaitingReply > 0 && (
         <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-green-500/30 bg-green-500/10 text-green-300 text-sm shrink-0">
           <Bell className="w-4 h-4 shrink-0" />
@@ -208,9 +227,9 @@ export default function AdminSupportChat() {
         </div>
       )}
 
-      <div className="flex flex-1 min-h-[min(720px,calc(100vh-11rem))] bg-gray-900 rounded-2xl border border-gray-700 overflow-hidden">
+      <div className="flex flex-1 min-h-0 h-0 bg-gray-900 rounded-2xl border border-gray-700 overflow-hidden">
         {/* Sidebar */}
-        <div className="w-72 border-r border-gray-700 flex flex-col min-h-0 shrink-0">
+        <div className="w-72 md:w-80 border-r border-gray-700 flex flex-col h-full min-h-0 shrink-0 overflow-hidden">
           <div className="p-4 border-b border-gray-700 flex items-center justify-between shrink-0">
             <h3 className="text-white font-semibold text-sm">Support Chats</h3>
             <button type="button" onClick={fetchSessions} className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors" title="Refresh">
@@ -218,7 +237,7 @@ export default function AdminSupportChat() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain">
             {liveSessions.length > 0 && (
               <div>
                 <p className="px-4 py-2 text-xs text-green-400 font-semibold uppercase tracking-wider sticky top-0 bg-gray-900 z-[1]">
@@ -250,8 +269,8 @@ export default function AdminSupportChat() {
 
         {/* Chat area */}
         {selected ? (
-          <div className="flex-1 flex flex-col min-h-0 min-w-0">
-            <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between shrink-0 bg-gray-900">
+          <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between shrink-0 bg-gray-900 z-10">
               <div className="min-w-0">
                 <p className="text-white font-semibold text-sm truncate">
                   {selected.userName || 'Guest'}
@@ -276,13 +295,16 @@ export default function AdminSupportChat() {
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 min-h-0">
+            <div
+              ref={messagesScrollRef}
+              onScroll={onMessagesScroll}
+              className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain p-4"
+            >
               {messages.map((msg, i) => <Bubble key={msg.id || i} msg={msg} />)}
-              <div ref={bottomRef} />
             </div>
 
             {selected.status !== 'ended' && (
-              <div className="shrink-0 p-3 border-t border-gray-700 bg-gray-900 flex gap-2 items-center relative z-20">
+              <div className="shrink-0 p-3 border-t border-gray-700 bg-gray-900 flex gap-2 items-center z-10">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -304,7 +326,7 @@ export default function AdminSupportChat() {
             )}
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500 min-h-0">
+          <div className="flex-1 flex items-center justify-center text-gray-500 min-h-0 overflow-hidden">
             <div className="text-center px-6">
               <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-700" />
               <p className="text-sm font-medium text-gray-400">Select a chat from the list</p>

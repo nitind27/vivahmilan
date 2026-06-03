@@ -4,7 +4,7 @@ import AdminSupportChat from '@/components/AdminSupportChat';
 
 function SupportPageInner() {
   return (
-    <div className="flex flex-col min-h-[calc(100vh-8.5rem)] -mb-2">
+    <div className="flex flex-col h-full min-h-0 overflow-hidden">
       <AdminSupportChat />
     </div>
   );

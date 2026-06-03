@@ -111,6 +111,7 @@ export default function AdminLayout({ children }) {
 
   const activeId = pathname.split('/admin/')[1]?.split('/')[0] || 'overview';
   const activeTab = ADMIN_TABS.find(t => t.id === activeId);
+  const isSupportPage = activeId === 'support';
 
   const NavItem = ({ tab }) => {
     const isActive = tab.id === activeId;
@@ -209,9 +210,9 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 pt-14 md:pt-0 min-h-screen">
-        <div className="px-4 md:px-6 py-6">
-          <div className="flex items-center justify-between mb-6">
+      <main className={`flex-1 md:ml-64 pt-14 md:pt-0 ${isSupportPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
+        <div className={`px-4 md:px-6 py-6 ${isSupportPage ? 'h-full flex flex-col overflow-hidden min-h-0' : ''}`}>
+          <div className={`flex items-center justify-between shrink-0 ${isSupportPage ? 'mb-4' : 'mb-6'}`}>
             <div>
               <h1 className="text-xl md:text-2xl font-bold">{activeTab?.label || 'Admin'}</h1>
               <p className="text-gray-500 text-xs mt-0.5 hidden sm:block">
@@ -226,7 +227,9 @@ export default function AdminLayout({ children }) {
               </button>
             </div>
           </div>
-          {children}
+          <div className={isSupportPage ? 'flex-1 min-h-0 overflow-hidden' : undefined}>
+            {children}
+          </div>
         </div>
       </main>
     </div>
