@@ -17,6 +17,21 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const QR_POLL_INTERVAL = 2000;
 const QR_TTL = 5 * 60 * 1000;
 
+/** Uses live siteconfig (not stale session JWT) for portal launch vs dashboard. */
+async function resolvePostLoginPath(user) {
+  if (!user) return '/dashboard';
+  if (user.role === 'ADMIN') return '/admin';
+  if (!user.adminVerified) return '/dashboard';
+  try {
+    const res = await fetch('/api/portal-access', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      return data.granted ? '/dashboard' : '/profile-launch';
+    }
+  } catch { /* fallback below */ }
+  return user.portalAccessGranted === false ? '/profile-launch' : '/dashboard';
+}
+
 function QRLoginPanel({ onBack }) {
   const router = useRouter();
   const [sessionId, setSessionId] = useState(null);
@@ -64,7 +79,7 @@ function QRLoginPanel({ onBack }) {
             toast.success('Logged in via QR code!');
             logWebLogin();
             const s = await getSession();
-            router.push(s?.user?.role === 'ADMIN' ? '/admin' : s?.user?.portalAccessGranted === false ? '/profile-launch' : '/dashboard');
+            router.push(await resolvePostLoginPath(s?.user));
           } else {
             toast.error('QR login failed. Please try again.');
             setQrStatus('error');
@@ -267,22 +282,15 @@ function LoginInner() {
       router.replace(`/onboarding?email=${email}&name=${name}`);
       return;
     }
-    const defaultPath =
-      session.user.role === 'ADMIN'
-        ? '/admin'
-        : session.user.adminVerified && session.user.portalAccessGranted === false
-          ? '/profile-launch'
-          : '/dashboard';
-    const callbackUrl = searchParams?.get('callbackUrl');
-    if (
-      callbackUrl &&
-      callbackUrl.startsWith('/') &&
-      !(session.user.adminVerified && session.user.portalAccessGranted === false)
-    ) {
-      router.replace(callbackUrl);
-    } else {
-      router.replace(defaultPath);
-    }
+    (async () => {
+      const defaultPath = await resolvePostLoginPath(session.user);
+      const callbackUrl = searchParams?.get('callbackUrl');
+      if (callbackUrl && callbackUrl.startsWith('/') && defaultPath !== '/profile-launch') {
+        router.replace(callbackUrl);
+      } else {
+        router.replace(defaultPath);
+      }
+    })();
   }, [status, session, router, searchParams]);
 
   const validate = (f) => {
@@ -335,12 +343,8 @@ function LoginInner() {
       logWebLogin();
       const s = await getSession();
       const callbackUrl = searchParams?.get('callbackUrl');
-      const defaultPath = s?.user?.role === 'ADMIN'
-        ? '/admin'
-        : s?.user?.adminVerified && s?.user?.portalAccessGranted === false
-          ? '/profile-launch'
-          : '/dashboard';
-      if (callbackUrl && callbackUrl.startsWith('/') && !(s?.user?.adminVerified && s?.user?.portalAccessGranted === false)) {
+      const defaultPath = await resolvePostLoginPath(s?.user);
+      if (callbackUrl && callbackUrl.startsWith('/') && defaultPath !== '/profile-launch') {
         router.push(callbackUrl);
       } else {
         router.push(defaultPath);
@@ -450,7 +454,7 @@ function LoginInner() {
                       callbackUrl:
                         callbackUrl && callbackUrl.startsWith('/')
                           ? callbackUrl
-                          : '/profile-launch',
+                          : '/dashboard',
                     });
                   }}
                   disabled={googleLoading}

@@ -38,7 +38,13 @@ export default function PortalAccessGuard() {
         .then(r => r.json())
         .then(data => {
           if (cancelled) return;
-          if (!data.granted && !pathname.startsWith('/profile-launch')) {
+          if (data.granted) {
+            if (pathname.startsWith('/profile-launch')) {
+              router.replace('/dashboard');
+            }
+            return;
+          }
+          if (!pathname.startsWith('/profile-launch')) {
             router.replace('/profile-launch');
           }
         })

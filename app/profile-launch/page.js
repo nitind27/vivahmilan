@@ -54,7 +54,7 @@ function formatPhone(contact) {
 }
 
 export default function ProfileLaunchPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const [data, setData] = useState(null);
   const [checking, setChecking] = useState(true);
@@ -66,6 +66,7 @@ export default function ProfileLaunchPage() {
       const res = await fetch('/api/portal-access');
       const json = await res.json();
       if (json.granted) {
+        await update().catch(() => {});
         router.replace('/dashboard');
         return;
       }
@@ -75,7 +76,7 @@ export default function ProfileLaunchPage() {
     } finally {
       setChecking(false);
     }
-  }, [router]);
+  }, [router, update]);
 
   useEffect(() => {
     document.documentElement.style.background = '#0D0A0A';

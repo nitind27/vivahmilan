@@ -41,6 +41,7 @@ async function applyDbUserToToken(token, email) {
 
   token.id = dbUser.id;
   token.sub = dbUser.id;
+  token.email = dbUser.email;
   token.role = dbUser.role;
   token.isPremium = !!dbUser.isPremium;
   token.premiumPlan = dbUser.premiumPlan || null;
@@ -399,6 +400,15 @@ export const authOptions = {
         if (session.isVerified    !== undefined) token.isVerified    = session.isVerified;
         if (session.needsPassword !== undefined) token.needsPassword = session.needsPassword;
         if (session.isNewUser     !== undefined) token.isNewUser     = session.isNewUser;
+        if (session.portalAccessGranted !== undefined) token.portalAccessGranted = session.portalAccessGranted;
+      }
+      if (token.role && token.role !== 'ADMIN' && token.email) {
+        try {
+          const portalAccess = await getPortalAccessForUser({ email: token.email, role: token.role });
+          token.portalAccessGranted = portalAccess.granted;
+        } catch (e) {
+          console.error('jwt portal refresh error:', e.message);
+        }
       }
       delete token.picture;
       delete token.image;

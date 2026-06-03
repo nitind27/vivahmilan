@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { isPortalBlockedForToken } from '@/lib/portalAccess';
 
 const PUBLIC_PREFIXES = [
   '/login', '/register', '/forgot-password', '/verify-email', '/google-verify',
@@ -55,7 +56,7 @@ export async function middleware(req) {
     if (token.role === 'FAMILY' && (pathname.startsWith('/profile/edit') || pathname.startsWith('/premium') || pathname.startsWith('/settings') || pathname.startsWith('/refer') || pathname.startsWith('/share-story'))) {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
-    if ((token.role === 'USER' || token.role === 'FAMILY') && token.portalAccessGranted === false) {
+    if (await isPortalBlockedForToken(token, req)) {
       return NextResponse.redirect(new URL('/profile-launch', req.url));
     }
   }
@@ -64,7 +65,7 @@ export async function middleware(req) {
     pathname.startsWith('/profile-launch') &&
     token &&
     (token.role === 'USER' || token.role === 'FAMILY') &&
-    token.portalAccessGranted === true
+    !(await isPortalBlockedForToken(token, req))
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
@@ -75,7 +76,7 @@ export async function middleware(req) {
     token &&
     (token.role === 'USER' || token.role === 'FAMILY') &&
     token.adminVerified === true &&
-    token.portalAccessGranted === false
+    (await isPortalBlockedForToken(token, req))
   ) {
     return NextResponse.redirect(new URL('/profile-launch', req.url));
   }
@@ -98,7 +99,7 @@ export async function middleware(req) {
     pathname.startsWith('/api/') &&
     !PORTAL_API_BYPASS.some(p => pathname === p || pathname.startsWith(p + '/'))
   ) {
-    if (token && (token.role === 'USER' || token.role === 'FAMILY') && token.portalAccessGranted === false) {
+    if (token && (await isPortalBlockedForToken(token, req))) {
       return NextResponse.json({
         error: 'Your profile will be available soon. Please wait for our update.',
         code: 'PORTAL_CLOSED',
