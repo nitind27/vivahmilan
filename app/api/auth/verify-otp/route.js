@@ -40,8 +40,8 @@ export async function POST(req) {
             `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
               adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
               loginOtpEnabled, emailVerified, createdAt, updatedAt)
-             VALUES (?, ?, ?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, ?, 0, 1, NOW(), ?, ?)`,
-            [userId, pending.name, pending.email, pending.password, storedPhone, phoneVerified, now, now]
+             VALUES (?, ?, ?, ?, ?, 'USER', 1, 1, 0, 0, 0, 0, ?, 0, 1, NOW(), ?)`,
+            [userId, pending.name, pending.email, pending.password, storedPhone, phoneVerified, now]
           );
         } else {
           // Google OAuth registration — no password, email already verified by Google
@@ -49,8 +49,8 @@ export async function POST(req) {
             `INSERT INTO \`user\` (id, name, email, password, phone, role, isActive, isVerified,
               adminVerified, verificationBadge, isPremium, profileBoost, phoneVerified,
               loginOtpEnabled, emailVerified, createdAt, updatedAt)
-             VALUES (?, ?, ?, NULL, NULL, 'USER', 1, 1, 0, 0, 0, 0, 0, 0, NOW(), ?, ?)`,
-            [userId, pending.name, pending.email, now, now]
+             VALUES (?, ?, ?, NULL, ?, 'USER', 1, 1, 0, 0, 0, 0, ?, 0, 1, NOW(), ?)`,
+            [userId, pending.name, pending.email, storedPhone, phoneVerified, now]
           );
         }
 
