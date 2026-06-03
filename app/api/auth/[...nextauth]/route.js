@@ -298,6 +298,11 @@ export const authOptions = {
             console.error('[google signup] geo log error:', e.message)
           );
 
+          try {
+            const { clearDeletedUserArchiveByEmail } = await import('@/lib/deletedUserArchive.js');
+            await clearDeletedUserArchiveByEmail(user.email);
+          } catch {}
+
           return `/onboarding?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`;
         }
 

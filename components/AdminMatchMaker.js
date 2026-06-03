@@ -206,7 +206,7 @@ export function AllMembersTab() {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) return toast.error(data.error || 'Delete failed');
-    toast.success('Account permanently deleted'); reload();
+    toast.success('Account deleted — see Admin → Deleted Users'); reload();
   };
 
   const handlePasswordChange = async () => {

@@ -37,8 +37,10 @@ export async function POST(req) {
     const phoneE164 = phoneCheck.e164;
     const phoneVerifiedFlag = phoneCheck.phoneVerified ? 1 : 0;
 
-    // Check if email already exists in user table
-    const existing = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
+    const emailNorm = email.trim().toLowerCase();
+
+    // Check if email already exists in user table (deleted accounts are removed — archive does not block signup)
+    const existing = await queryOne('SELECT id FROM `user` WHERE LOWER(TRIM(email)) = ?', [emailNorm]);
     if (existing)
       return NextResponse.json({ error: 'This email is already registered. Please login.' }, { status: 409 });
 

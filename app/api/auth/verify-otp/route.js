@@ -63,6 +63,11 @@ export async function POST(req) {
         // Remove from pending_registration
         await execute('DELETE FROM pending_registration WHERE email = ?', [pending.email]);
 
+        try {
+          const { clearDeletedUserArchiveByEmail } = await import('@/lib/deletedUserArchive.js');
+          await clearDeletedUserArchiveByEmail(pending.email);
+        } catch {}
+
         const storedGeo = pending.registrationIp ? {
           ip: pending.registrationIp,
           country: pending.registrationCountry,

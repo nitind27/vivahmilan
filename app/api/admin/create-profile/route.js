@@ -75,6 +75,11 @@ export async function POST(req) {
   const vals = [profileId, userId, profileComplete, sanitized.maritalStatus || 'NEVER_MARRIED', sanitized.smoking || 'NO', sanitized.drinking || 'NO', 0, 0, now, now, ...Object.values(sanitized)];
   await execute(`INSERT INTO profile (${cols.map(c=>`\`${c}\``).join(',')}) VALUES (${vals.map(()=>'?').join(',')})`, vals);
 
+  try {
+    const { clearDeletedUserArchiveByEmail } = await import('@/lib/deletedUserArchive.js');
+    await clearDeletedUserArchiveByEmail(email);
+  } catch {}
+
   return NextResponse.json({ success: true, userId, message: 'Profile created. Default password: Vivah@1234' });
 }
 

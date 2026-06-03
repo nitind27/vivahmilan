@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import {
-  BarChart2, UserCheck, Users, Sparkles, UserPlus, Crown,
+  BarChart2,   UserCheck, Users, Sparkles, UserPlus, Crown, UserX,
   Bell, Activity, Shield, Flag, Star, Settings, Heart,
   FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw,
   TrendingUp, HandCoins, IndianRupee, UserCog,
@@ -18,6 +18,7 @@ export const ADMIN_TABS = [
   { id: 'moderation',    label: 'Moderation Queue', icon: Shield,        badge: null },
   { id: 'pending',       label: 'Pending Approval',  icon: UserCheck,     badge: 'pendingAdminVerify' },
   { id: 'members',       label: 'All Members',       icon: Users,         badge: null },
+  { id: 'deleted-users', label: 'Deleted Users',     icon: UserX,         badge: null },
   { id: 'subscriptions', label: 'Subscriptions',     icon: Star,          badge: null },
   { id: 'revenue',       label: 'Revenue',           icon: IndianRupee,   badge: null },
   { id: 'referrals',     label: 'Referrals',         icon: HandCoins,     badge: null },

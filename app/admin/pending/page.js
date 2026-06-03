@@ -187,7 +187,7 @@ function DeleteAccountModal({ target, onClose, onDeleted }) {
         toast.error(data.error || 'Failed to delete account');
         return;
       }
-      toast.success('Account permanently deleted from database');
+      toast.success('Account deleted — listed under Admin → Deleted Users');
       onDeleted?.();
       onClose();
     } catch {

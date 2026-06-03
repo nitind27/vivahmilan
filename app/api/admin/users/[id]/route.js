@@ -184,7 +184,10 @@ export async function DELETE(req, { params }) {
     );
   }
 
-  const result = await permanentlyDeleteUserAccount(id);
+  const result = await permanentlyDeleteUserAccount(id, {
+    adminId: session.user.id,
+    adminName: session.user.name || session.user.email,
+  });
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: result.status || 400 });
   }
