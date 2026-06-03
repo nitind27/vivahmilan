@@ -7,7 +7,7 @@ const sections = [
     title: 'Refund Policy Overview',
     content: (
       <div className="space-y-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-        <p>At Vivah Milan, we strive to provide the best possible experience. We understand that sometimes things don't go as expected, and we have a fair refund policy to address such situations.</p>
+        <p>At Vivah Dwar, we strive to provide the best possible experience. We understand that sometimes things don't go as expected, and we have a fair refund policy to address such situations.</p>
         <div className="grid sm:grid-cols-3 gap-3 mt-3">
           {[
             { label: '7-Day Window', desc: 'Refund requests accepted within 7 days of purchase', icon: '📅' },

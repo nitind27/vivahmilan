@@ -9,7 +9,7 @@ import {
   BarChart2,   UserCheck, Users, Sparkles, UserPlus, Crown, UserX,
   Bell, Activity, Shield, Flag, Star, Settings, Heart,
   FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw,
-  TrendingUp, HandCoins, IndianRupee, UserCog,
+  TrendingUp, HandCoins, IndianRupee, UserCog, HeartHandshake,
 } from 'lucide-react';
 import AdminNotifications from '@/components/AdminNotifications';
 
@@ -19,6 +19,7 @@ export const ADMIN_TABS = [
   { id: 'pending',       label: 'Pending Approval',  icon: UserCheck,     badge: 'pendingAdminVerify' },
   { id: 'members',       label: 'All Members',       icon: Users,         badge: null },
   { id: 'deleted-users', label: 'Deleted Users',     icon: UserX,         badge: null },
+  { id: 'donations',     label: 'Donations',         icon: HeartHandshake, badge: null },
   { id: 'subscriptions', label: 'Subscriptions',     icon: Star,          badge: null },
   { id: 'revenue',       label: 'Revenue',           icon: IndianRupee,   badge: null },
   { id: 'referrals',     label: 'Referrals',         icon: HandCoins,     badge: null },

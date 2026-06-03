@@ -38,7 +38,7 @@ const [[{ total_mb }]] = await conn.query(`
 `);
 
 console.log('═══════════════════════════════════════════════');
-console.log('  Vivah Milan — Dummy User Cleanup');
+console.log('  Vivah Dwar — Dummy User Cleanup');
 console.log('═══════════════════════════════════════════════');
 console.log(`  Dummy users to delete : ${dummy_count}`);
 console.log(`  Real users (kept)     : ${real_count}`);

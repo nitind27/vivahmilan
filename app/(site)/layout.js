@@ -8,7 +8,7 @@ const homePageSchema = {
   '@type': 'WebPage',
   '@id': `${SITE_URL}/#webpage`,
   url: SITE_URL,
-  name: `${BRAND.name} – Matrimonial Website | Vivah Milan | Find Love`,
+  name: `${BRAND.name} – Matrimonial Website | Vivah Dwar | Find Love`,
   description: BRAND.description,
   isPartOf: { '@id': `${SITE_URL}/#website` },
   about: { '@id': `${SITE_URL}/#matrimonial-service` },

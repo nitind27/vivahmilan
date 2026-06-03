@@ -62,7 +62,7 @@ export default function ReportAbusePage() {
               <CheckCircle className="w-10 h-10 text-green-500" />
             </div>
             <h2 className="text-2xl font-bold mb-2">Report Submitted</h2>
-            <p className="text-gray-500 text-sm mb-6">Thank you for helping keep Vivah Milan safe. Our team will review your report within 24 hours and take appropriate action.</p>
+            <p className="text-gray-500 text-sm mb-6">Thank you for helping keep Vivah Dwar safe. Our team will review your report within 24 hours and take appropriate action.</p>
             <div className="space-y-2">
               <Link href="/dashboard" className="block vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity">
                 Back to Dashboard

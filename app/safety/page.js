@@ -87,7 +87,7 @@ export default function SafetyPage() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Your Safety is Our Priority</h1>
           <p className="text-white/80 max-w-xl mx-auto text-sm">
-            Vivah Milan is committed to providing a safe and secure platform. Follow these tips to protect yourself.
+            Vivah Dwar is committed to providing a safe and secure platform. Follow these tips to protect yourself.
           </p>
         </div>
 

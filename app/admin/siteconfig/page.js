@@ -369,6 +369,34 @@ export default function SiteConfigPage() {
           className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60">{saving ? 'Saving…' : 'Save'}</button>
       </div>
 
+      {/* Wedding donations */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <h3 className="font-bold text-lg text-white">Wedding Donations (Shaadi Sahayata)</h3>
+        <p className="text-xs text-gray-500">
+          When OFF, /donate is hidden from users. Manage beneficiaries & fund usage in Admin → Donations.
+        </p>
+        <div className={`flex items-center justify-between p-4 rounded-xl border ${config.donation_enabled === '1' ? 'bg-green-900/10 border-green-800/30' : 'bg-gray-900/50 border-gray-700'}`}>
+          <p className="text-sm font-semibold text-white">
+            Donations {config.donation_enabled === '1' ? <span className="text-green-400">ON</span> : <span className="text-gray-500">OFF</span>}
+          </p>
+          <Toggle
+            value={config.donation_enabled === '1'}
+            onChange={async (val) => {
+              const newVal = val ? '1' : '0';
+              setConfig((p) => ({ ...p, donation_enabled: newVal }));
+              const res = await fetch('/api/admin/siteconfig', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'donation_enabled', value: newVal }),
+              });
+              if (res.ok) toast.success(val ? 'Donations enabled' : 'Donations disabled');
+              else toast.error('Failed');
+            }}
+          />
+        </div>
+        <a href="/admin/donations" className="text-sm text-pink-400 hover:underline">Open Donations admin panel →</a>
+      </div>
+
       {/* CTA */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
         <h3 className="font-bold text-lg text-white">CTA Section</h3>

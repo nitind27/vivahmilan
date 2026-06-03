@@ -353,7 +353,7 @@ function EditProfilePage() {
             className="mb-6 vd-gradient-gold rounded-2xl p-5 text-white flex items-start gap-4">
             <div className="text-3xl flex-shrink-0">🎉</div>
             <div>
-              <p className="font-bold text-lg">Welcome to Vivah Milan!</p>
+              <p className="font-bold text-lg">Welcome to Vivah Dwar!</p>
               <p className="text-white/85 text-sm mt-1">
                 You've signed in with Google. Please complete your profile — our admin team will review and approve it within 24 hours. After approval you can start finding matches!
               </p>

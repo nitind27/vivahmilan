@@ -17,6 +17,14 @@ export default function Navbar() {
   const [chatUnread, setChatUnread] = useState(0);
   const [clientReady, setClientReady] = useState(false);
   const [appLinks, setAppLinks] = useState({ playStoreUrl: '', appStoreUrl: '', enabled: true });
+  const [donationEnabled, setDonationEnabled] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/donation/config')
+      .then((r) => r.json())
+      .then((d) => setDonationEnabled(!!d.enabled))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch('/api/app-links')
@@ -113,6 +121,11 @@ export default function Navbar() {
             <Link href="/matches" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Find Matches</Link>
             <Link href="/search" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Search</Link>
             <Link href="/premium" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Premium</Link>
+            {donationEnabled && (
+              <Link href="/donate" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors flex items-center gap-1">
+                <Gift className="w-3.5 h-3.5" /> Donate
+              </Link>
+            )}
           </div>
 
           {/* Right side */}
@@ -281,6 +294,11 @@ export default function Navbar() {
                     <Link href="/shortlist" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">My Shortlist</Link>
                   )}
                   <Link href="/premium" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Premium</Link>
+                  {donationEnabled && (
+                    <Link href="/donate" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2">
+                      <Gift className="w-4 h-4" /> Donate
+                    </Link>
+                  )}
                 </div>
               </motion.div>
             )}

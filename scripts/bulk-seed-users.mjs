@@ -153,7 +153,7 @@ function buildUser(globalIndex, prefix, passwordHash, now, premiumRatio, runId) 
 
 function printHelp() {
   console.log(`
-Bulk Dummy User Seeder — Vivah Milan
+Bulk Dummy User Seeder — Vivah Dwar
 
 Usage:
   node scripts/bulk-seed-users.mjs --count 5000
@@ -190,7 +190,7 @@ async function main() {
   }
 
   console.log('═══════════════════════════════════════════════');
-  console.log('  Vivah Milan — Bulk Dummy User Seeder');
+  console.log('  Vivah Dwar — Bulk Dummy User Seeder');
   console.log('═══════════════════════════════════════════════');
   console.log(`  Target count : ${count}`);
   console.log(`  Batch size   : ${batch}`);

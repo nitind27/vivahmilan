@@ -8,7 +8,7 @@ const sections = [
     content: (
       <div className="space-y-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
         <p>Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences, keep you logged in, and improve your overall experience.</p>
-        <p>Vivah Milan uses cookies and similar technologies (like local storage and session storage) to provide a seamless experience across your visits.</p>
+        <p>Vivah Dwar uses cookies and similar technologies (like local storage and session storage) to provide a seamless experience across your visits.</p>
       </div>
     ),
   },
@@ -95,7 +95,7 @@ const sections = [
           ))}
         </div>
         <div className="p-3 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-700 dark:text-amber-400">
-          ⚠️ Disabling essential cookies may prevent you from logging in or using core features of Vivah Milan.
+          ⚠️ Disabling essential cookies may prevent you from logging in or using core features of Vivah Dwar.
         </div>
       </div>
     ),
@@ -127,7 +127,7 @@ export default function CookiesPage() {
   return (
     <LegalPage
       title="Cookie Policy"
-      subtitle="How Vivah Milan uses cookies to improve your experience"
+      subtitle="How Vivah Dwar uses cookies to improve your experience"
       icon={Cookie}
       iconBg="vd-gradient-gold"
       lastUpdated="January 1, 2026"

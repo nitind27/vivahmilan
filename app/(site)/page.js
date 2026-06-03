@@ -18,7 +18,7 @@ import {
 const DEFAULT_SLIDES = [
   {
     id: 1,
-    tag: '🪔 Vivah Dwar — Vivah Milan Matrimonial',
+    tag: '🪔 Vivah Dwar — Vivah Dwar Matrimonial',
     headline: 'Find Love & Your',
     highlight: 'Life Partner',
     sub: 'India\'s trusted matrimonial platform — verified profiles, smart matching & secure chat for shaadi and marriage.',
@@ -420,7 +420,7 @@ export default function Home() {
                 {current.tag}
               </motion.span>
               <h1 className="sr-only">
-                Vivah Dwar – Vivah Milan Matrimonial | Find Love & Life Partner in India
+                Vivah Dwar – Vivah Dwar Matrimonial | Find Love & Life Partner in India
               </h1>
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
@@ -1025,7 +1025,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-vd-text-light">
             <p>
               © {new Date().getFullYear()}{' '}
-              <span className="text-vd-text-sub font-medium">Vivah Dwar</span> (Vivah Milan) — Indian Matrimonial &amp; Find Love Platform. All rights reserved.
+              <span className="text-vd-text-sub font-medium">Vivah Dwar</span> (Vivah Dwar) — Indian Matrimonial &amp; Find Love Platform. All rights reserved.
             </p>
             <p className="flex items-center gap-1">
               Made with <Heart className="w-3 h-3 fill-vd-primary text-vd-primary" /> in India
