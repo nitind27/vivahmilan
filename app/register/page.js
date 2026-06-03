@@ -7,8 +7,10 @@ import { Heart, User, Mail, Lock, Phone, ChevronRight, ChevronLeft, Sparkles, Ey
 import { signIn, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import SiteLoader from '@/components/SiteLoader';
+import PlatformNotice from '@/components/PlatformNotice';
 import { getClientGeo, getClientPublicIP } from '@/lib/clientGeo';
 import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
+import { REGISTER_AGREEMENT_LABEL } from '@/lib/platformDisclaimer';
 
 const steps = ['Account', 'Personal', 'Done'];
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,6 +50,7 @@ export default function RegisterPage() {
   const [requirePhoneValidation, setRequirePhoneValidation] = useState(true);
   const [phoneValidated, setPhoneValidated] = useState(false);
   const [checkingPhone, setCheckingPhone] = useState(false);
+  const [agreedNotice, setAgreedNotice] = useState(false);
   const verifiedPhoneDigitsRef = useRef('');
 
   useEffect(() => {
@@ -317,7 +320,7 @@ export default function RegisterPage() {
 
       <div className="flex-1 lg:overflow-y-auto flex items-center justify-center px-4 sm:px-6 py-8 bg-vd-bg">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-          className="w-full max-w-sm sm:max-w-md">
+          className="w-full max-w-md sm:max-w-lg">
 
         
 
@@ -354,6 +357,7 @@ export default function RegisterPage() {
               {/* Step 0 — Account */}
               {step === 0 && (
                 <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+                  <PlatformNotice variant="general" />
                   <button onClick={() => signIn('google', { callbackUrl: '/profile/edit' })}
                     className="w-full flex items-center justify-center gap-3 bg-vd-bg-section border border-vd-border rounded-2xl py-3 font-medium text-sm text-vd-text-heading hover:bg-vd-accent-soft transition-all shadow-sm hover:shadow-md">
                     <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
@@ -429,6 +433,7 @@ export default function RegisterPage() {
               {/* Step 1 — Personal */}
               {step === 1 && (
                 <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+                  <PlatformNotice variant="upload" />
                   <div>
                     <label className="block text-sm font-semibold text-vd-text-sub mb-3">I am looking for</label>
                     <div className="grid grid-cols-2 gap-3">
@@ -554,8 +559,18 @@ export default function RegisterPage() {
                     <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-white fill-white" />
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-vd-text-heading mb-2">You're all set!</h3>
-                  <p className="text-vd-text-sub text-sm mb-5">Complete your profile to start finding your perfect match.</p>
-                  <button onClick={submit} disabled={loading}
+                  <p className="text-vd-text-sub text-sm mb-4">Complete your profile to start finding your perfect match.</p>
+                  <PlatformNotice variant="upload" className="mb-4 text-left" />
+                  <label className="flex items-start gap-3 text-left text-xs text-vd-text-sub mb-4 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={agreedNotice}
+                      onChange={(e) => setAgreedNotice(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 rounded border-vd-border text-vd-primary focus:ring-vd-primary"
+                    />
+                    <span>{REGISTER_AGREEMENT_LABEL}</span>
+                  </label>
+                  <button onClick={submit} disabled={loading || !agreedNotice}
                     className="w-full vd-gradient-gold text-white py-3 rounded-2xl font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                     style={{ boxShadow: '0 4px 20px rgba(200,164,92,0.35)' }}>
                     {loading ? (

@@ -20,7 +20,9 @@ import CasteCommunitySelect from '@/components/CasteCommunitySelect';
 import SiteLoader from '@/components/SiteLoader';
 import AboutMeField from '@/components/AboutMeField';
 import ApprovalChecklist from '@/components/ApprovalChecklist';
+import PlatformNotice from '@/components/PlatformNotice';
 import { validateAboutMe } from '@/lib/aboutMeValidation';
+import { SUBMIT_AGREEMENT_LABEL } from '@/lib/platformDisclaimer';
 
 const inputCls = "w-full px-4 py-3 border border-vd-border rounded-2xl bg-vd-bg-section text-sm text-vd-text-heading placeholder:text-vd-text-light focus:outline-none focus:border-vd-primary focus:ring-2 focus:ring-vd-accent-soft transition-all";
 const labelCls = "block text-xs font-semibold text-vd-text-light mb-1.5 uppercase tracking-wide";
@@ -110,6 +112,7 @@ function OnboardingInner() {
   const [familyCaption, setFamilyCaption] = useState('');
   const [familyMemberCount, setFamilyMemberCount] = useState('');
   const [serverChecklist, setServerChecklist] = useState(null);
+  const [agreedSubmit, setAgreedSubmit] = useState(false);
   const photoRef = useRef(null);
   const docRef = useRef(null);
   const familyPhotoRef = useRef(null);
@@ -364,6 +367,10 @@ function OnboardingInner() {
   };
 
   const submit = async () => {
+    if (!agreedSubmit) {
+      toast.error('Please accept the upload & platform notice before submitting');
+      return;
+    }
     if (!canSubmit) {
       if (!hasPhone) toast.error('Phone number is required for profile verification');
       else if (!photoPreview) toast.error('Please upload a profile photo');
@@ -438,8 +445,10 @@ function OnboardingInner() {
           <Link href="/" className="inline-flex justify-center">
             <img src="/logo/logo.png" alt="Vivah Dwar" className="h-20 w-auto object-contain" />
           </Link>
-          <p className="text-vd-text-light text-sm mt-1">Complete your profile to get started</p>
+          <p className="text-vd-text-light text-sm mt-1">Complete your profile on vivahdwar.com</p>
         </div>
+
+        <PlatformNotice variant="general" className="mb-5" />
 
         {/* Progress bar */}
         <div className="mb-6">
@@ -575,6 +584,8 @@ function OnboardingInner() {
               <div className="space-y-6">
                 <h2 className="font-bold text-lg flex items-center gap-2"><Camera className="w-5 h-5 text-vd-primary" /> Profile Photo & ID Verification</h2>
 
+                <PlatformNotice variant="upload" />
+
                 {/* Profile Photo */}
                 <div>
                   <p className={labelCls}>Profile Photo <span className="text-red-500">*</span></p>
@@ -594,7 +605,9 @@ function OnboardingInner() {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 mb-3">Clear face photo required for profile verification. Max 8MB.</p>
+                      <p className="text-sm text-gray-500 mb-3">
+                        Clear face photo required. Max 8MB. You are responsible for photo authenticity — vivahdwar.com does not verify ownership.
+                      </p>
                       <label className="cursor-pointer vd-gradient-gold text-white text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 w-fit">
                         <Upload className="w-4 h-4" /> {photoPreview ? 'Change Photo' : 'Upload Photo'}
                         <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadPhoto(e.target.files[0])} />
@@ -606,9 +619,10 @@ function OnboardingInner() {
                 {/* ID Document */}
                 <div className="border-t border-vd-border pt-5">
                   <p className={labelCls}>Government ID Document <span className="text-red-500">*</span></p>
-                  <div className="p-3 bg-vd-accent-soft border border-vd-border rounded-2xl mb-4">
-                    <p className="text-xs text-vd-text-sub">Upload any one government-issued ID for verification. Admin will review and approve your profile.</p>
-                  </div>
+                  <p className="text-xs text-vd-text-sub mb-4">
+                    Upload any one government-issued ID. Admin reviews for platform safety only —{' '}
+                    <strong className="text-vd-text-heading">vivahdwar.com is not responsible</strong> for document authenticity.
+                  </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {DOC_TYPES.map(t => (
                       <button key={t} type="button" onClick={() => setSelectedDocType(t)}
@@ -727,12 +741,21 @@ function OnboardingInner() {
         </AnimatePresence>
 
         {step === STEPS.length - 1 && (
-          <div className="mt-5">
+          <div className="mt-5 space-y-4">
             <ApprovalChecklist
               checklist={displayChecklist}
               eligible={canSubmit}
               title={canSubmit ? 'All checks passed — you can submit for review' : 'Complete all items below before submitting'}
             />
+            <label className="flex items-start gap-3 rounded-2xl border border-vd-border bg-vd-bg-section px-4 py-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={agreedSubmit}
+                onChange={(e) => setAgreedSubmit(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded border-vd-border text-vd-primary focus:ring-vd-primary"
+              />
+              <span className="text-xs text-vd-text-sub leading-relaxed">{SUBMIT_AGREEMENT_LABEL}</span>
+            </label>
           </div>
         )}
 
@@ -761,7 +784,7 @@ function OnboardingInner() {
                     : 'Upload an ID document'}
                 </p>
               )}
-              <button onClick={submit} disabled={saving || !canSubmit}
+              <button onClick={submit} disabled={saving || !canSubmit || !agreedSubmit}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-2xl vd-gradient-gold text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
                 style={{ boxShadow: canSubmit ? '0 4px 16px rgba(200,164,92,0.35)' : 'none' }}>
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
