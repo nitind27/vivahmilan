@@ -35,7 +35,7 @@ const USER_PREFIXES = [
 
 function isPublic(pathname) {
   if (pathname === '/' || pathname.startsWith('/_next') || pathname.startsWith('/uploads')) return true;
-  if (pathname.match(/\.(ico|png|jpg|jpeg|svg|webp|js|css|woff2?|json|txt|mp4|webm)$/)) return true;
+  if (pathname.match(/\.(ico|png|jpg|jpeg|svg|webp|js|css|woff2?|json|txt|html|xml|mp4|webm)$/)) return true;
   return PUBLIC_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
 }
 
