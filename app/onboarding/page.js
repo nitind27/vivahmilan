@@ -123,7 +123,9 @@ function OnboardingInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get('email') || '';
+  const completionToken = searchParams.get('completionToken') || '';
   const correctionParam = searchParams.get('correction') === '1';
+  const viaAdminInvite = !!completionToken;
 
   const [step, setStep] = useState(0);
   const [correction, setCorrection] = useState(null);
@@ -161,8 +163,14 @@ function OnboardingInner() {
 
   // ── Load existing data on mount ──────────────────────────────────────────
   useEffect(() => {
-    if (!email) { setLoading(false); return; }
-    fetch(`/api/onboarding/status?email=${encodeURIComponent(email)}`)
+    if (!email) {
+      if (completionToken) router.replace(`/complete-profile/${completionToken}`);
+      setLoading(false);
+      return;
+    }
+    const statusQs = new URLSearchParams({ email });
+    if (completionToken) statusQs.set('completionToken', completionToken);
+    fetch(`/api/onboarding/status?${statusQs}`)
       .then(r => r.json())
       .then(data => {
         if (data.error) return;
@@ -189,7 +197,7 @@ function OnboardingInner() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [email, correctionParam]);
+  }, [email, completionToken, correctionParam, router]);
 
   const correctionSteps = new Set(
     (correction?.fields || [])
@@ -250,7 +258,9 @@ function OnboardingInner() {
   const refreshServerChecklist = async () => {
     if (!email) return;
     try {
-      const res = await fetch(`/api/onboarding/verification-checklist?email=${encodeURIComponent(email)}`);
+      const checklistQs = new URLSearchParams({ email });
+      if (completionToken) checklistQs.set('completionToken', completionToken);
+      const res = await fetch(`/api/onboarding/verification-checklist?${checklistQs}`);
       if (res.ok) setServerChecklist(await res.json());
     } catch { /* ignore */ }
   };
@@ -328,6 +338,7 @@ function OnboardingInner() {
       const fd = new FormData();
       fd.append('photo', blob, 'photo.jpg');
       fd.append('email', email);
+      if (completionToken) fd.append('completionToken', completionToken);
       const res = await fetch('/api/onboarding/photo', { method: 'POST', body: fd });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); return; }
@@ -342,6 +353,7 @@ function OnboardingInner() {
       const fd = new FormData();
       fd.append('document', file);
       fd.append('email', email);
+      if (completionToken) fd.append('completionToken', completionToken);
       fd.append('type', selectedDocType);
       const res = await fetch('/api/onboarding/document', { method: 'POST', body: fd });
       const data = await res.json();
@@ -360,6 +372,7 @@ function OnboardingInner() {
       const fd = new FormData();
       fd.append('photo', blob, 'family.jpg');
       fd.append('email', email);
+      if (completionToken) fd.append('completionToken', completionToken);
       if (familyCaption.trim()) fd.append('caption', familyCaption.trim());
       if (familyMemberCount) fd.append('memberCount', familyMemberCount);
       const res = await fetch('/api/onboarding/family-photo', { method: 'POST', body: fd });
@@ -377,7 +390,7 @@ function OnboardingInner() {
       const res = await fetch('/api/onboarding/family-photo', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, photoId }),
+        body: JSON.stringify({ email, photoId, completionToken: completionToken || undefined }),
       });
       if (!res.ok) { const d = await res.json(); toast.error(d.error); return; }
       setFamilyPhotos(prev => prev.filter(p => p.id !== photoId));
@@ -391,7 +404,7 @@ function OnboardingInner() {
       const res = await fetch('/api/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, ...form }),
+        body: JSON.stringify({ email, completionToken: completionToken || undefined, ...form }),
       });
       if (!res.ok) { const d = await res.json(); toast.error(d.error); return false; }
       return true;
@@ -429,7 +442,7 @@ function OnboardingInner() {
       const res = await fetch('/api/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, ...form, _submitForReview: true }),
+        body: JSON.stringify({ email, completionToken: completionToken || undefined, ...form, _submitForReview: true }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -492,9 +505,19 @@ function OnboardingInner() {
             <img src="/logo/logo.png" alt="Vivah Dwar" className="h-20 w-auto object-contain" />
           </Link>
           <p className="text-vd-text-light text-sm mt-1">
-            {correction?.required ? 'Update your profile as requested by our team' : 'Complete your matrimonial profile'}
+            {correction?.required
+              ? 'Update your profile as requested by our team'
+              : viaAdminInvite
+                ? 'Upload your photos & documents — details were saved by our team'
+                : 'Complete your matrimonial profile'}
           </p>
         </div>
+
+        {viaAdminInvite && !correction?.required && (
+          <div className="mb-6 rounded-2xl border border-vd-primary/30 bg-vd-accent-soft/20 p-4 text-sm text-vd-text-sub">
+            Please review your details, upload your <strong>profile photo</strong>, <strong>family photos</strong>, and <strong>ID document</strong>, then submit for review.
+          </div>
+        )}
 
         {correction?.required && (
           <div className="mb-6 rounded-2xl border-2 border-amber-400/50 bg-amber-50 dark:bg-amber-950/30 p-4 sm:p-5">

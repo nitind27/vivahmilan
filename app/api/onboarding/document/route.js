@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { queryOne, execute } from '@/lib/db';
 import { saveFile, deleteFile } from '@/lib/upload';
 import { randomUUID } from 'crypto';
+import { resolveOnboardingUser } from '@/lib/onboardingAccess.js';
 
 export const maxDuration = 30;
 
@@ -10,12 +11,14 @@ export async function POST(req) {
     const formData = await req.formData();
     const file = formData.get('document');
     const email = formData.get('email');
+    const completionToken = formData.get('completionToken');
     const docType = formData.get('type');
 
     if (!email || !file || !docType) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
 
-    const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    const access = await resolveOnboardingUser({ email, completionToken });
+    if (!access.ok) return NextResponse.json({ error: access.error }, { status: access.status || 403 });
+    const user = access.user;
 
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Max 5MB' }, { status: 400 });
 

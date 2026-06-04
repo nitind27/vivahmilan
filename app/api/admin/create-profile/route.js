@@ -11,8 +11,9 @@ const ALLOWED_PROFILE_COLS = new Set([
   'maritalStatus','smoking','drinking','diet','complexion','bodyType',
   'fatherOccupation','motherOccupation','siblings','familyType','familyStatus',
   'partnerAgeMin','partnerAgeMax','partnerHeightMin','partnerHeightMax',
-  'partnerReligion','partnerEducation','partnerLocation',
-  'horoscopeSign','nakshatra','manglik','kundliMatch','hidePhone','hidePhoto',
+  'partnerReligion','partnerCaste','partnerEducation','partnerProfession','partnerLocation',
+  'partnerMaritalStatus','partnerManglik',
+  'horoscopeSign','nakshatra','manglik','kundliMatch','amritdhari','hidePhone','hidePhoto',
 ]);
 
 // GET — fetch user + profile by userId or phone
@@ -36,8 +37,18 @@ export async function GET(req) {
   const profile = await queryOne('SELECT * FROM profile WHERE userId = ?', [user.id]);
   const photos  = await query('SELECT * FROM photo WHERE userId = ? ORDER BY isMain DESC', [user.id]);
   const docs    = await query('SELECT id, type, status, url FROM document WHERE userId = ?', [user.id]);
+  let familyPhotos = [];
+  try {
+    familyPhotos = await query('SELECT id, url, caption FROM family_photo WHERE userId = ? ORDER BY createdAt DESC', [user.id]);
+  } catch { /* table optional */ }
 
-  return NextResponse.json({ user, profile, photos, documents: docs });
+  let completionInvite = null;
+  try {
+    const { getLatestInviteForUser } = await import('@/lib/profileCompletionInvite.js');
+    completionInvite = await getLatestInviteForUser(user.id);
+  } catch { /* ignore */ }
+
+  return NextResponse.json({ user, profile, photos, documents: docs, familyPhotos, completionInvite });
 }
 
 // POST — create new user + profile (admin creates on behalf)
@@ -140,6 +151,10 @@ function sanitizeProfile(data) {
     if (!ALLOWED_PROFILE_COLS.has(k)) continue;
     if (v === '' || v === undefined || v === null) { out[k] = null; continue; }
     if (k === 'dob') { const d = new Date(v); out[k] = isNaN(d.getTime()) ? null : d; continue; }
+    if (['hidePhone','hidePhoto'].includes(k)) {
+      out[k] = v === true || v === 1 || v === '1' || v === 'true' ? 1 : 0;
+      continue;
+    }
     if (['height','weight','siblings','partnerAgeMin','partnerAgeMax','partnerHeightMin','partnerHeightMax'].includes(k)) {
       const n = parseInt(v); out[k] = isNaN(n) ? null : n; continue;
     }

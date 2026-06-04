@@ -1,10 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Search, Save, Plus, User, Mail, Phone, MapPin, Briefcase,
   GraduationCap, Heart, Send, Bell, Activity, Crown,
   RefreshCw, CheckCircle, XCircle, Calendar, TrendingUp,
-  MessageSquare, UserPlus, Zap, Gift, Clock, ChevronDown
+  MessageSquare, UserPlus, Zap, Gift, Clock, ChevronDown, Camera, FileText, Link2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
@@ -13,55 +14,91 @@ import { format } from 'date-fns';
 const inp = "w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary placeholder:text-gray-500";
 const lbl = "block text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wide";
 
+const ADMIN_PROFILE_BLANK = {
+  name:'', email:'', phone:'', password:'',
+  gender:'', dob:'', height:'', weight:'', bodyType:'', complexion:'',
+  religion:'', caste:'', subCaste:'', sect:'', gotra:'', motherTongue:'',
+  education:'', profession:'', income:'', city:'', state:'', country:'',
+  maritalStatus:'NEVER_MARRIED', aboutMe:'', familyType:'', familyStatus:'',
+  fatherOccupation:'', motherOccupation:'', siblings:'', smoking:'NO', drinking:'NO', diet:'',
+  manglik:'No', horoscopeSign:'', nakshatra:'', kundliMatch:'Not Required', amritdhari:'',
+  partnerAgeMin:'', partnerAgeMax:'', partnerHeightMin:'', partnerHeightMax:'',
+  partnerReligion:'', partnerCaste:'', partnerEducation:'', partnerProfession:'',
+  partnerLocation:'', partnerMaritalStatus:'', partnerManglik:'',
+  hidePhone:false, hidePhoto:false,
+};
+
+function mapProfileToAdminForm(data) {
+  const p = data.profile;
+  const dob = p?.dob ? String(p.dob).split('T')[0] : '';
+  return {
+    ...ADMIN_PROFILE_BLANK,
+    name: data.user.name || '', email: data.user.email || '', phone: data.user.phone || '',
+    ...(p ? {
+      gender: p.gender || '', dob, height: p.height ? String(p.height) : '', weight: p.weight ? String(p.weight) : '',
+      bodyType: p.bodyType || '', complexion: p.complexion || '',
+      religion: p.religion || '', caste: p.caste || '', subCaste: p.subCaste || '', sect: p.sect || '',
+      gotra: p.gotra || '', motherTongue: p.motherTongue || '', education: p.education || '',
+      profession: p.profession || '', income: p.income || '', city: p.city || '', state: p.state || '',
+      country: p.country || '', maritalStatus: p.maritalStatus || 'NEVER_MARRIED', aboutMe: p.aboutMe || '',
+      familyType: p.familyType || '', familyStatus: p.familyStatus || '',
+      fatherOccupation: p.fatherOccupation || '', motherOccupation: p.motherOccupation || '',
+      siblings: p.siblings != null ? String(p.siblings) : '',
+      smoking: p.smoking || 'NO', drinking: p.drinking || 'NO', diet: p.diet || '',
+      manglik: p.manglik || 'No', horoscopeSign: p.horoscopeSign || '', nakshatra: p.nakshatra || '',
+      kundliMatch: p.kundliMatch || 'Not Required', amritdhari: p.amritdhari || '',
+      partnerAgeMin: p.partnerAgeMin ? String(p.partnerAgeMin) : '',
+      partnerAgeMax: p.partnerAgeMax ? String(p.partnerAgeMax) : '',
+      partnerHeightMin: p.partnerHeightMin ? String(p.partnerHeightMin) : '',
+      partnerHeightMax: p.partnerHeightMax ? String(p.partnerHeightMax) : '',
+      partnerReligion: p.partnerReligion || '', partnerCaste: p.partnerCaste || '',
+      partnerEducation: p.partnerEducation || '', partnerProfession: p.partnerProfession || '',
+      partnerLocation: p.partnerLocation || '', partnerMaritalStatus: p.partnerMaritalStatus || '',
+      partnerManglik: p.partnerManglik || '',
+      hidePhone: !!p.hidePhone, hidePhoto: !!p.hidePhoto,
+    } : {}),
+  };
+}
+
 // ── Admin Create / Edit Profile Tab ──────────────────────────────────────────
 export function AdminCreateProfileTab() {
+  const urlParams = useSearchParams();
   const [searchVal, setSearchVal] = useState('');
   const [searchType, setSearchType] = useState('phone');
   const [mode, setMode] = useState('search'); // search | edit | create
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [sendingInvite, setSendingInvite] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  const BLANK = {
-    name:'', email:'', phone:'', password:'',
-    gender:'', dob:'', height:'', weight:'', religion:'', caste:'', motherTongue:'',
-    education:'', profession:'', income:'', city:'', state:'', country:'',
-    maritalStatus:'NEVER_MARRIED', aboutMe:'', familyType:'', familyStatus:'',
-    fatherOccupation:'', motherOccupation:'', smoking:'NO', drinking:'NO', diet:'',
-    manglik:'No', horoscopeSign:'', nakshatra:'',
-  };
-  const [form, setForm] = useState(BLANK);
+  const [form, setForm] = useState(ADMIN_PROFILE_BLANK);
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const lookup = async () => {
-    if (!searchVal.trim()) return;
+  const lookup = async (overrideVal, overrideType) => {
+    const val = (overrideVal ?? searchVal).trim();
+    const type = overrideType ?? searchType;
+    if (!val) return;
     setLoading(true);
     try {
-      const param = searchType === 'phone' ? `phone=${encodeURIComponent(searchVal)}` : searchType === 'email' ? `email=${encodeURIComponent(searchVal)}` : `userId=${searchVal}`;
+      const param = type === 'phone' ? `phone=${encodeURIComponent(val)}` : type === 'email' ? `email=${encodeURIComponent(val)}` : `userId=${val}`;
       const res = await fetch(`/api/admin/create-profile?${param}`);
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); return; }
       setUserData(data);
-      setForm({
-        ...BLANK,
-        name: data.user.name || '', email: data.user.email || '', phone: data.user.phone || '',
-        gender: data.profile?.gender || '', dob: data.profile?.dob ? data.profile.dob.split('T')[0] : '',
-        height: data.profile?.height || '', weight: data.profile?.weight || '',
-        religion: data.profile?.religion || '', caste: data.profile?.caste || '',
-        motherTongue: data.profile?.motherTongue || '', education: data.profile?.education || '',
-        profession: data.profile?.profession || '', income: data.profile?.income || '',
-        city: data.profile?.city || '', state: data.profile?.state || '', country: data.profile?.country || '',
-        maritalStatus: data.profile?.maritalStatus || 'NEVER_MARRIED',
-        aboutMe: data.profile?.aboutMe || '', familyType: data.profile?.familyType || '',
-        familyStatus: data.profile?.familyStatus || '', fatherOccupation: data.profile?.fatherOccupation || '',
-        motherOccupation: data.profile?.motherOccupation || '', smoking: data.profile?.smoking || 'NO',
-        drinking: data.profile?.drinking || 'NO', diet: data.profile?.diet || '',
-        manglik: data.profile?.manglik || 'No', horoscopeSign: data.profile?.horoscopeSign || '',
-        nakshatra: data.profile?.nakshatra || '',
-      });
+      setForm(mapProfileToAdminForm(data));
       setMode('edit');
     } finally { setLoading(false); }
   };
+
+  useEffect(() => {
+    const uid = urlParams.get('userId');
+    if (uid) {
+      setSearchType('userId');
+      setSearchVal(uid);
+      lookup(uid, 'userId');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlParams]);
 
   const save = async () => {
     setSaving(true);
@@ -73,7 +110,7 @@ export function AdminCreateProfileTab() {
         const data = await res.json();
         if (!res.ok) { toast.error(data.error); return; }
         toast.success(`Profile created! Default password: Vivah@1234`);
-        setMode('search'); setForm(BLANK); setUserData(null);
+        setMode('search'); setForm(ADMIN_PROFILE_BLANK); setUserData(null);
       } else {
         const res = await fetch('/api/admin/create-profile', {
           method: 'PATCH', headers: { 'Content-Type': 'application/json' },
@@ -84,6 +121,32 @@ export function AdminCreateProfileTab() {
       }
     } finally { setSaving(false); }
   };
+
+  const sendCompletionInvite = async () => {
+    if (!userData?.user?.id) return;
+    if (!form.email?.trim()) { toast.error('Save email on profile first'); return; }
+    if (!confirm(`Send photo & document completion link to ${form.email}?`)) return;
+    setSendingInvite(true);
+    try {
+      const res = await fetch('/api/admin/profile-completion-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userData.user.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error); return; }
+      toast.success(data.message);
+      if (data.completionUrl && !data.emailSent) {
+        navigator.clipboard?.writeText(data.completionUrl);
+        toast('Link copied to clipboard', { icon: '📋' });
+      }
+      lookup(userData.user.id, 'userId');
+    } finally { setSendingInvite(false); }
+  };
+
+  const mainPhoto = userData?.photos?.find(p => p.isMain) || userData?.photos?.[0];
+  const hasDoc = (userData?.documents?.length || 0) > 0;
+  const familyCount = userData?.familyPhotos?.length || 0;
 
   const F = ({ label, k, type = 'text', placeholder = '' }) => (
     <div><label className={lbl}>{label}</label>
@@ -103,11 +166,11 @@ export function AdminCreateProfileTab() {
     <div className="space-y-5">
       {/* Mode switcher */}
       <div className="flex gap-2">
-        <button onClick={() => { setMode('search'); setUserData(null); setForm(BLANK); }}
+        <button onClick={() => { setMode('search'); setUserData(null); setForm(ADMIN_PROFILE_BLANK); }}
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${mode === 'search' || mode === 'edit' ? 'bg-vd-primary text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}>
           🔍 Find & Edit User
         </button>
-        <button onClick={() => { setMode('create'); setUserData(null); setForm(BLANK); }}
+        <button onClick={() => { setMode('create'); setUserData(null); setForm(ADMIN_PROFILE_BLANK); }}
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${mode === 'create' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}>
           <Plus className="w-4 h-4 inline mr-1" />Create New Profile
         </button>
@@ -126,7 +189,7 @@ export function AdminCreateProfileTab() {
             <input value={searchVal} onChange={e => setSearchVal(e.target.value)} onKeyDown={e => e.key === 'Enter' && lookup()}
               placeholder={searchType === 'phone' ? PHONE_PLACEHOLDER : searchType === 'email' ? 'user@email.com' : 'User ID'}
               className="flex-1 px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary" />
-            <button onClick={lookup} disabled={loading} className="px-5 py-2.5 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
+            <button onClick={() => lookup()} disabled={loading} className="px-5 py-2.5 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
               {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Search className="w-4 h-4" />} Find
             </button>
           </div>
@@ -150,11 +213,21 @@ export function AdminCreateProfileTab() {
             <h3 className="font-semibold text-white flex items-center gap-2">
               {mode === 'create' ? <><UserPlus className="w-5 h-5 text-green-400" /> Create New Profile</> : <><User className="w-5 h-5 text-vd-primary" /> Edit Profile — {userData?.user?.name}</>}
             </h3>
-            <button onClick={save} disabled={saving}
-              className="flex items-center gap-2 px-5 py-2 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50">
-              {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
-              {mode === 'create' ? 'Create Profile' : 'Save Changes'}
-            </button>
+            <div className="flex items-center gap-2">
+              {mode === 'edit' && userData?.user?.email && (
+                <button type="button" onClick={sendCompletionInvite} disabled={sendingInvite}
+                  className="flex items-center gap-2 px-4 py-2 bg-amber-600/90 text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50"
+                  title="User will upload photo, family photos & ID via secure email link">
+                  {sendingInvite ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
+                  Send upload link
+                </button>
+              )}
+              <button onClick={save} disabled={saving}
+                className="flex items-center gap-2 px-5 py-2 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50">
+                {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
+                {mode === 'create' ? 'Create Profile' : 'Save Changes'}
+              </button>
+            </div>
           </div>
 
           <div className="p-5 space-y-6">
@@ -177,8 +250,10 @@ export function AdminCreateProfileTab() {
                 <F label="Date of Birth" k="dob" type="date" />
                 <F label="Height (cm)" k="height" type="number" placeholder="165" />
                 <F label="Weight (kg)" k="weight" type="number" placeholder="60" />
-                <S label="Marital Status" k="maritalStatus" options={[{v:'NEVER_MARRIED',l:'Never Married'},{v:'DIVORCED',l:'Divorced'},{v:'WIDOWED',l:'Widowed'}]} />
-                <S label="Diet" k="diet" options={['Vegetarian','Non-Vegetarian','Eggetarian','Vegan']} />
+                <S label="Body Type" k="bodyType" options={['Slim','Athletic','Average','Heavy']} />
+                <S label="Complexion" k="complexion" options={['Very Fair','Fair','Wheatish','Wheatish Brown','Dark']} />
+                <S label="Marital Status" k="maritalStatus" options={[{v:'NEVER_MARRIED',l:'Never Married'},{v:'DIVORCED',l:'Divorced'},{v:'WIDOWED',l:'Widowed'},{v:'SEPARATED',l:'Separated'}]} />
+                <S label="Diet" k="diet" options={['Vegetarian','Non-Vegetarian','Eggetarian','Vegan','Jain Vegetarian']} />
                 <S label="Smoking" k="smoking" options={[{v:'NO',l:'No'},{v:'OCCASIONALLY',l:'Occasionally'},{v:'YES',l:'Yes'}]} />
                 <S label="Drinking" k="drinking" options={[{v:'NO',l:'No'},{v:'OCCASIONALLY',l:'Occasionally'},{v:'YES',l:'Yes'}]} />
               </div>
@@ -189,11 +264,15 @@ export function AdminCreateProfileTab() {
               <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">🙏 Religion & Community</p>
               <div className="grid grid-cols-2 gap-3">
                 <F label="Religion" k="religion" placeholder="Hindu" />
-                <F label="Caste" k="caste" placeholder="Brahmin" />
+                <F label="Caste / Community" k="caste" placeholder="Brahmin" />
+                <F label="Sub-caste" k="subCaste" placeholder="" />
+                <F label="Sect" k="sect" placeholder="" />
+                <F label="Gotra" k="gotra" placeholder="Kashyap" />
                 <F label="Mother Tongue" k="motherTongue" placeholder="Hindi" />
                 <S label="Manglik" k="manglik" options={['Yes','No',"Don't Know"]} />
                 <F label="Horoscope Sign" k="horoscopeSign" placeholder="Aries" />
                 <F label="Nakshatra" k="nakshatra" placeholder="Ashwini" />
+                <S label="Kundli Match" k="kundliMatch" options={['Required','Preferred','Not Required']} />
               </div>
             </div>
 
@@ -225,8 +304,57 @@ export function AdminCreateProfileTab() {
                 <S label="Family Status" k="familyStatus" options={['Middle Class','Upper Middle Class','Rich / Affluent']} />
                 <F label="Father's Occupation" k="fatherOccupation" placeholder="Business" />
                 <F label="Mother's Occupation" k="motherOccupation" placeholder="Homemaker" />
+                <F label="Siblings" k="siblings" type="number" placeholder="1" />
               </div>
             </div>
+
+            {/* Partner preferences */}
+            <div>
+              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">💑 Partner Preferences</p>
+              <div className="grid grid-cols-2 gap-3">
+                <F label="Age Min" k="partnerAgeMin" type="number" placeholder="25" />
+                <F label="Age Max" k="partnerAgeMax" type="number" placeholder="32" />
+                <F label="Height Min (cm)" k="partnerHeightMin" type="number" placeholder="155" />
+                <F label="Height Max (cm)" k="partnerHeightMax" type="number" placeholder="180" />
+                <F label="Partner Religion" k="partnerReligion" placeholder="Any" />
+                <F label="Partner Caste" k="partnerCaste" placeholder="" />
+                <F label="Partner Education" k="partnerEducation" placeholder="Graduate" />
+                <F label="Partner Profession" k="partnerProfession" placeholder="" />
+                <div className="col-span-2"><F label="Partner Location" k="partnerLocation" placeholder="India" /></div>
+              </div>
+            </div>
+
+            {/* Photos & documents (user uploads via email link) */}
+            {mode === 'edit' && userData && (
+              <div className="rounded-xl border border-amber-700/40 bg-amber-900/10 p-4 space-y-3">
+                <p className="text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center gap-2">
+                  <Camera className="w-4 h-4" /> Photos & documents (user uploads)
+                </p>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div className={`p-3 rounded-lg border ${mainPhoto ? 'border-green-600/50 bg-green-900/20' : 'border-gray-600 bg-gray-900/30'}`}>
+                    <p className="font-semibold text-gray-300">Profile photo</p>
+                    <p className={mainPhoto ? 'text-green-400' : 'text-gray-500'}>{mainPhoto ? '✓ Uploaded' : 'Pending'}</p>
+                  </div>
+                  <div className={`p-3 rounded-lg border ${familyCount > 0 ? 'border-green-600/50 bg-green-900/20' : 'border-gray-600 bg-gray-900/30'}`}>
+                    <p className="font-semibold text-gray-300">Family photos</p>
+                    <p className={familyCount > 0 ? 'text-green-400' : 'text-gray-500'}>{familyCount > 0 ? `✓ ${familyCount}` : 'Pending'}</p>
+                  </div>
+                  <div className={`p-3 rounded-lg border ${hasDoc ? 'border-green-600/50 bg-green-900/20' : 'border-gray-600 bg-gray-900/30'}`}>
+                    <p className="font-semibold text-gray-300 flex items-center gap-1"><FileText className="w-3 h-3" /> ID doc</p>
+                    <p className={hasDoc ? 'text-green-400' : 'text-gray-500'}>{hasDoc ? `✓ ${userData.documents[0]?.type || 'Uploaded'}` : 'Pending'}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Admin fills profile details here. Click <strong className="text-amber-300">Send upload link</strong> — user opens email, confirms same address, then uploads photo, family photos & ID on a secure form.
+                </p>
+                {userData.completionInvite && (
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <Link2 className="w-3 h-3" />
+                    Last invite: {userData.completionInvite.status} · {new Date(userData.completionInvite.createdAt).toLocaleString('en-IN')}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* About */}
             <div>

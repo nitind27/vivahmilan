@@ -1,21 +1,26 @@
 import { NextResponse } from 'next/server';
 import { queryOne, query } from '@/lib/db';
+import { resolveOnboardingUser } from '@/lib/onboardingAccess.js';
 
-// GET /api/onboarding/status?email=...
+// GET /api/onboarding/status?email=...&completionToken=...
 // Returns existing profile data + photo + doc status for pre-filling onboarding form
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get('email');
-  if (!email) return NextResponse.json({ error: 'email required' }, { status: 400 });
+  const completionToken = searchParams.get('completionToken');
+
+  const access = await resolveOnboardingUser({ email, completionToken });
+  if (!access.ok) {
+    return NextResponse.json({ error: access.error }, { status: access.status || 403 });
+  }
 
   const token = searchParams.get('token');
   const user = await queryOne(
     `SELECT id, name, phone, image, adminVerified, profileCorrectionRequired, profileCorrectionNote,
             profileCorrectionFields, profileCorrectionRequestedAt, profileCorrectionToken
-     FROM \`user\` WHERE email = ?`,
-    [email]
+     FROM \`user\` WHERE id = ?`,
+    [access.user.id]
   );
-  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
   const correctionFields = user.profileCorrectionFields
     ? (() => {

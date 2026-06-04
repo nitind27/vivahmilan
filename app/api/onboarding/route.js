@@ -4,23 +4,19 @@ import { randomUUID } from 'crypto';
 import { validateSubmitForReview, formatUserSubmitChecklist } from '@/lib/profileVerification';
 import { assertAboutMeForSave } from '@/lib/aboutMeValidation.js';
 import { validateUserPhoneForSave } from '@/lib/validateUserPhone';
+import { resolveOnboardingUser } from '@/lib/onboardingAccess.js';
+import { markCompletionSessionDone } from '@/lib/profileCompletionInvite.js';
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { email, _activateTrial, _submitForReview, ...data } = body;
+    const { email, completionToken, _activateTrial, _submitForReview, ...data } = body;
 
-    if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
-
-    const user = await queryOne(
-      'SELECT id, emailVerified, name, phone, phoneVerified, password, freeTrialUsed FROM `user` WHERE email = ?',
-      [email]
-    );
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    const isGoogleAccount = user.password == null || user.password === '';
-    if (!user.emailVerified && !isGoogleAccount) {
-      return NextResponse.json({ error: 'Email not verified' }, { status: 403 });
+    const access = await resolveOnboardingUser({ email, completionToken });
+    if (!access.ok) {
+      return NextResponse.json({ error: access.error }, { status: access.status || 403 });
     }
+    const user = access.user;
 
     const { name, phone, ...profileData } = data;
 
@@ -125,6 +121,12 @@ export async function POST(req) {
           link: '/admin/pending',
         });
       } catch {}
+
+      if (completionToken) {
+        try {
+          await markCompletionSessionDone(completionToken);
+        } catch { /* ignore */ }
+      }
     }
 
     return NextResponse.json({ success: true });

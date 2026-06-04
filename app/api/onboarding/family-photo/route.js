@@ -32,6 +32,7 @@ export async function POST(req) {
     const formData = await req.formData();
     const file = formData.get('photo');
     const email = formData.get('email');
+    const completionToken = formData.get('completionToken');
     const caption = formData.get('caption') || null;
     const memberCount = formData.get('memberCount') ? parseInt(formData.get('memberCount')) : null;
 
@@ -39,8 +40,10 @@ export async function POST(req) {
     if (!file.type.startsWith('image/')) return NextResponse.json({ error: 'Images only' }, { status: 400 });
     if (file.size > 10 * 1024 * 1024) return NextResponse.json({ error: 'Max 10MB' }, { status: 400 });
 
-    const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    const { resolveOnboardingUser } = await import('@/lib/onboardingAccess.js');
+    const access = await resolveOnboardingUser({ email, completionToken });
+    if (!access.ok) return NextResponse.json({ error: access.error }, { status: access.status || 403 });
+    const user = access.user;
 
     const existing = await query('SELECT id FROM family_photo WHERE userId = ?', [user.id]);
     if (existing.length >= 10) return NextResponse.json({ error: 'Maximum 10 family photos allowed' }, { status: 400 });
@@ -64,11 +67,13 @@ export async function POST(req) {
 export async function DELETE(req) {
   try {
     await init();
-    const { email, photoId } = await req.json();
+    const { email, photoId, completionToken } = await req.json();
     if (!email || !photoId) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
 
-    const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    const { resolveOnboardingUser } = await import('@/lib/onboardingAccess.js');
+    const access = await resolveOnboardingUser({ email, completionToken });
+    if (!access.ok) return NextResponse.json({ error: access.error }, { status: access.status || 403 });
+    const user = access.user;
 
     const photo = await queryOne(
       'SELECT * FROM family_photo WHERE id = ? AND userId = ?',

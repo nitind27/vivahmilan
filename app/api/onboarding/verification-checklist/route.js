@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
-import { queryOne } from '@/lib/db';
 import { getUserSubmitChecklist } from '@/lib/profileVerification';
+import { resolveOnboardingUser } from '@/lib/onboardingAccess.js';
 
 /** GET /api/onboarding/verification-checklist?email=... — web onboarding submit gate */
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get('email');
-  if (!email) return NextResponse.json({ error: 'email required' }, { status: 400 });
+  const completionToken = searchParams.get('completionToken');
 
-  const user = await queryOne('SELECT id FROM `user` WHERE email = ?', [email]);
-  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+  const access = await resolveOnboardingUser({ email, completionToken });
+  if (!access.ok) {
+    return NextResponse.json({ error: access.error }, { status: access.status || 403 });
+  }
 
-  const result = await getUserSubmitChecklist(user.id);
+  const result = await getUserSubmitChecklist(access.user.id);
   return NextResponse.json(result);
 }
