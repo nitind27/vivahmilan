@@ -5,60 +5,15 @@ import {
   Search, Save, Plus, User, Mail, Phone, MapPin, Briefcase,
   GraduationCap, Heart, Send, Bell, Activity, Crown,
   RefreshCw, CheckCircle, XCircle, Calendar, TrendingUp,
-  MessageSquare, UserPlus, Zap, Gift, Clock, ChevronDown, Camera, FileText, Link2
+  MessageSquare, UserPlus, Zap, Gift, Clock, ChevronDown,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { PHONE_PLACEHOLDER } from '@/lib/phonePlaceholder';
 import { format } from 'date-fns';
-
-const inp = "w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary placeholder:text-gray-500";
-const lbl = "block text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wide";
-
-const ADMIN_PROFILE_BLANK = {
-  name:'', email:'', phone:'', password:'',
-  gender:'', dob:'', height:'', weight:'', bodyType:'', complexion:'',
-  religion:'', caste:'', subCaste:'', sect:'', gotra:'', motherTongue:'',
-  education:'', profession:'', income:'', city:'', state:'', country:'',
-  maritalStatus:'NEVER_MARRIED', aboutMe:'', familyType:'', familyStatus:'',
-  fatherOccupation:'', motherOccupation:'', siblings:'', smoking:'NO', drinking:'NO', diet:'',
-  manglik:'No', horoscopeSign:'', nakshatra:'', kundliMatch:'Not Required', amritdhari:'',
-  partnerAgeMin:'', partnerAgeMax:'', partnerHeightMin:'', partnerHeightMax:'',
-  partnerReligion:'', partnerCaste:'', partnerEducation:'', partnerProfession:'',
-  partnerLocation:'', partnerMaritalStatus:'', partnerManglik:'',
-  hidePhone:false, hidePhoto:false,
-};
-
-function mapProfileToAdminForm(data) {
-  const p = data.profile;
-  const dob = p?.dob ? String(p.dob).split('T')[0] : '';
-  return {
-    ...ADMIN_PROFILE_BLANK,
-    name: data.user.name || '', email: data.user.email || '', phone: data.user.phone || '',
-    ...(p ? {
-      gender: p.gender || '', dob, height: p.height ? String(p.height) : '', weight: p.weight ? String(p.weight) : '',
-      bodyType: p.bodyType || '', complexion: p.complexion || '',
-      religion: p.religion || '', caste: p.caste || '', subCaste: p.subCaste || '', sect: p.sect || '',
-      gotra: p.gotra || '', motherTongue: p.motherTongue || '', education: p.education || '',
-      profession: p.profession || '', income: p.income || '', city: p.city || '', state: p.state || '',
-      country: p.country || '', maritalStatus: p.maritalStatus || 'NEVER_MARRIED', aboutMe: p.aboutMe || '',
-      familyType: p.familyType || '', familyStatus: p.familyStatus || '',
-      fatherOccupation: p.fatherOccupation || '', motherOccupation: p.motherOccupation || '',
-      siblings: p.siblings != null ? String(p.siblings) : '',
-      smoking: p.smoking || 'NO', drinking: p.drinking || 'NO', diet: p.diet || '',
-      manglik: p.manglik || 'No', horoscopeSign: p.horoscopeSign || '', nakshatra: p.nakshatra || '',
-      kundliMatch: p.kundliMatch || 'Not Required', amritdhari: p.amritdhari || '',
-      partnerAgeMin: p.partnerAgeMin ? String(p.partnerAgeMin) : '',
-      partnerAgeMax: p.partnerAgeMax ? String(p.partnerAgeMax) : '',
-      partnerHeightMin: p.partnerHeightMin ? String(p.partnerHeightMin) : '',
-      partnerHeightMax: p.partnerHeightMax ? String(p.partnerHeightMax) : '',
-      partnerReligion: p.partnerReligion || '', partnerCaste: p.partnerCaste || '',
-      partnerEducation: p.partnerEducation || '', partnerProfession: p.partnerProfession || '',
-      partnerLocation: p.partnerLocation || '', partnerMaritalStatus: p.partnerMaritalStatus || '',
-      partnerManglik: p.partnerManglik || '',
-      hidePhone: !!p.hidePhone, hidePhoto: !!p.hidePhoto,
-    } : {}),
-  };
-}
+import AdminCreateProfileWizard, {
+  ADMIN_PROFILE_BLANK,
+  mapProfileToAdminForm,
+} from '@/components/AdminCreateProfileWizard';
 
 // ── Admin Create / Edit Profile Tab ──────────────────────────────────────────
 export function AdminCreateProfileTab() {
@@ -100,25 +55,40 @@ export function AdminCreateProfileTab() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlParams]);
 
-  const save = async () => {
+  const save = async (showToast = true) => {
     setSaving(true);
     try {
-      if (mode === 'create') {
+      const userId = userData?.user?.id;
+
+      if (mode === 'create' && !userId) {
+        if (!showToast) return true;
         const res = await fetch('/api/admin/create-profile', {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
         });
         const data = await res.json();
-        if (!res.ok) { toast.error(data.error); return; }
-        toast.success(`Profile created! Default password: Vivah@1234`);
-        setMode('search'); setForm(ADMIN_PROFILE_BLANK); setUserData(null);
-      } else {
-        const res = await fetch('/api/admin/create-profile', {
-          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: userData.user.id, ...form }),
-        });
-        if (!res.ok) { toast.error('Save failed'); return; }
-        toast.success('Profile updated!');
+        if (!res.ok) { toast.error(data.error); return false; }
+        toast.success('Profile created! Default password: Vivah@1234');
+        if (data.userId) {
+          setSearchType('userId');
+          setSearchVal(data.userId);
+          await lookup(data.userId, 'userId');
+          setMode('edit');
+        } else {
+          setMode('search'); setForm(ADMIN_PROFILE_BLANK); setUserData(null);
+        }
+        return true;
       }
+
+      if (!userId) { toast.error('Save account step first'); return false; }
+
+      const res = await fetch('/api/admin/create-profile', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, ...form }),
+      });
+      if (!res.ok) { toast.error('Save failed'); return false; }
+      if (showToast) toast.success(mode === 'create' ? 'Profile created!' : 'Profile updated!');
+      else toast.success('Step saved');
+      return true;
     } finally { setSaving(false); }
   };
 
@@ -143,24 +113,6 @@ export function AdminCreateProfileTab() {
       lookup(userData.user.id, 'userId');
     } finally { setSendingInvite(false); }
   };
-
-  const mainPhoto = userData?.photos?.find(p => p.isMain) || userData?.photos?.[0];
-  const hasDoc = (userData?.documents?.length || 0) > 0;
-  const familyCount = userData?.familyPhotos?.length || 0;
-
-  const F = ({ label, k, type = 'text', placeholder = '' }) => (
-    <div><label className={lbl}>{label}</label>
-      <input type={type} value={form[k] || ''} onChange={e => set(k, e.target.value)} placeholder={placeholder} className={inp} />
-    </div>
-  );
-  const S = ({ label, k, options }) => (
-    <div><label className={lbl}>{label}</label>
-      <select value={form[k] || ''} onChange={e => set(k, e.target.value)} className={inp}>
-        <option value="">Select…</option>
-        {options.map(o => <option key={o.v || o} value={o.v || o}>{o.l || o}</option>)}
-      </select>
-    </div>
-  );
 
   return (
     <div className="space-y-5">
@@ -209,161 +161,23 @@ export function AdminCreateProfileTab() {
       {/* Form */}
       {(mode === 'edit' || mode === 'create') && (
         <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-700 flex items-center justify-between">
+          <div className="px-5 py-4 border-b border-gray-700">
             <h3 className="font-semibold text-white flex items-center gap-2">
               {mode === 'create' ? <><UserPlus className="w-5 h-5 text-green-400" /> Create New Profile</> : <><User className="w-5 h-5 text-vd-primary" /> Edit Profile — {userData?.user?.name}</>}
             </h3>
-            <div className="flex items-center gap-2">
-              {mode === 'edit' && userData?.user?.email && (
-                <button type="button" onClick={sendCompletionInvite} disabled={sendingInvite}
-                  className="flex items-center gap-2 px-4 py-2 bg-amber-600/90 text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50"
-                  title="User will upload photo, family photos & ID via secure email link">
-                  {sendingInvite ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
-                  Send upload link
-                </button>
-              )}
-              <button onClick={save} disabled={saving}
-                className="flex items-center gap-2 px-5 py-2 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50">
-                {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
-                {mode === 'create' ? 'Create Profile' : 'Save Changes'}
-              </button>
-            </div>
+            <p className="text-xs text-gray-500 mt-1">Same steps as member onboarding — save each step, then send upload link on last step</p>
           </div>
 
-          <div className="p-5 space-y-6">
-            {/* Account */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">👤 Account Info</p>
-              <div className="grid grid-cols-2 gap-3">
-                <F label="Full Name *" k="name" placeholder="Rahul Sharma" />
-                <F label="Email *" k="email" type="email" placeholder="rahul@email.com" />
-                <F label="Phone" k="phone" placeholder={PHONE_PLACEHOLDER} />
-                {mode === 'create' && <F label="Password (default: Vivah@1234)" k="password" type="password" placeholder="Leave blank for default" />}
-              </div>
-            </div>
-
-            {/* Personal */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">🧬 Personal Details</p>
-              <div className="grid grid-cols-2 gap-3">
-                <S label="Gender" k="gender" options={[{v:'MALE',l:'Male'},{v:'FEMALE',l:'Female'},{v:'OTHER',l:'Other'}]} />
-                <F label="Date of Birth" k="dob" type="date" />
-                <F label="Height (cm)" k="height" type="number" placeholder="165" />
-                <F label="Weight (kg)" k="weight" type="number" placeholder="60" />
-                <S label="Body Type" k="bodyType" options={['Slim','Athletic','Average','Heavy']} />
-                <S label="Complexion" k="complexion" options={['Very Fair','Fair','Wheatish','Wheatish Brown','Dark']} />
-                <S label="Marital Status" k="maritalStatus" options={[{v:'NEVER_MARRIED',l:'Never Married'},{v:'DIVORCED',l:'Divorced'},{v:'WIDOWED',l:'Widowed'},{v:'SEPARATED',l:'Separated'}]} />
-                <S label="Diet" k="diet" options={['Vegetarian','Non-Vegetarian','Eggetarian','Vegan','Jain Vegetarian']} />
-                <S label="Smoking" k="smoking" options={[{v:'NO',l:'No'},{v:'OCCASIONALLY',l:'Occasionally'},{v:'YES',l:'Yes'}]} />
-                <S label="Drinking" k="drinking" options={[{v:'NO',l:'No'},{v:'OCCASIONALLY',l:'Occasionally'},{v:'YES',l:'Yes'}]} />
-              </div>
-            </div>
-
-            {/* Religion */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">🙏 Religion & Community</p>
-              <div className="grid grid-cols-2 gap-3">
-                <F label="Religion" k="religion" placeholder="Hindu" />
-                <F label="Caste / Community" k="caste" placeholder="Brahmin" />
-                <F label="Sub-caste" k="subCaste" placeholder="" />
-                <F label="Sect" k="sect" placeholder="" />
-                <F label="Gotra" k="gotra" placeholder="Kashyap" />
-                <F label="Mother Tongue" k="motherTongue" placeholder="Hindi" />
-                <S label="Manglik" k="manglik" options={['Yes','No',"Don't Know"]} />
-                <F label="Horoscope Sign" k="horoscopeSign" placeholder="Aries" />
-                <F label="Nakshatra" k="nakshatra" placeholder="Ashwini" />
-                <S label="Kundli Match" k="kundliMatch" options={['Required','Preferred','Not Required']} />
-              </div>
-            </div>
-
-            {/* Location */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">📍 Location</p>
-              <div className="grid grid-cols-3 gap-3">
-                <F label="City" k="city" placeholder="Mumbai" />
-                <F label="State" k="state" placeholder="Maharashtra" />
-                <F label="Country" k="country" placeholder="India" />
-              </div>
-            </div>
-
-            {/* Career */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">💼 Career</p>
-              <div className="grid grid-cols-2 gap-3">
-                <F label="Education" k="education" placeholder="B.Tech" />
-                <F label="Profession" k="profession" placeholder="Software Engineer" />
-                <div className="col-span-2"><F label="Annual Income" k="income" placeholder="₹10-20 Lakh" /></div>
-              </div>
-            </div>
-
-            {/* Family */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">👨‍👩‍👧 Family</p>
-              <div className="grid grid-cols-2 gap-3">
-                <S label="Family Type" k="familyType" options={['Nuclear','Joint','Extended']} />
-                <S label="Family Status" k="familyStatus" options={['Middle Class','Upper Middle Class','Rich / Affluent']} />
-                <F label="Father's Occupation" k="fatherOccupation" placeholder="Business" />
-                <F label="Mother's Occupation" k="motherOccupation" placeholder="Homemaker" />
-                <F label="Siblings" k="siblings" type="number" placeholder="1" />
-              </div>
-            </div>
-
-            {/* Partner preferences */}
-            <div>
-              <p className="text-xs font-bold text-vd-primary uppercase tracking-widest mb-3">💑 Partner Preferences</p>
-              <div className="grid grid-cols-2 gap-3">
-                <F label="Age Min" k="partnerAgeMin" type="number" placeholder="25" />
-                <F label="Age Max" k="partnerAgeMax" type="number" placeholder="32" />
-                <F label="Height Min (cm)" k="partnerHeightMin" type="number" placeholder="155" />
-                <F label="Height Max (cm)" k="partnerHeightMax" type="number" placeholder="180" />
-                <F label="Partner Religion" k="partnerReligion" placeholder="Any" />
-                <F label="Partner Caste" k="partnerCaste" placeholder="" />
-                <F label="Partner Education" k="partnerEducation" placeholder="Graduate" />
-                <F label="Partner Profession" k="partnerProfession" placeholder="" />
-                <div className="col-span-2"><F label="Partner Location" k="partnerLocation" placeholder="India" /></div>
-              </div>
-            </div>
-
-            {/* Photos & documents (user uploads via email link) */}
-            {mode === 'edit' && userData && (
-              <div className="rounded-xl border border-amber-700/40 bg-amber-900/10 p-4 space-y-3">
-                <p className="text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center gap-2">
-                  <Camera className="w-4 h-4" /> Photos & documents (user uploads)
-                </p>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <div className={`p-3 rounded-lg border ${mainPhoto ? 'border-green-600/50 bg-green-900/20' : 'border-gray-600 bg-gray-900/30'}`}>
-                    <p className="font-semibold text-gray-300">Profile photo</p>
-                    <p className={mainPhoto ? 'text-green-400' : 'text-gray-500'}>{mainPhoto ? '✓ Uploaded' : 'Pending'}</p>
-                  </div>
-                  <div className={`p-3 rounded-lg border ${familyCount > 0 ? 'border-green-600/50 bg-green-900/20' : 'border-gray-600 bg-gray-900/30'}`}>
-                    <p className="font-semibold text-gray-300">Family photos</p>
-                    <p className={familyCount > 0 ? 'text-green-400' : 'text-gray-500'}>{familyCount > 0 ? `✓ ${familyCount}` : 'Pending'}</p>
-                  </div>
-                  <div className={`p-3 rounded-lg border ${hasDoc ? 'border-green-600/50 bg-green-900/20' : 'border-gray-600 bg-gray-900/30'}`}>
-                    <p className="font-semibold text-gray-300 flex items-center gap-1"><FileText className="w-3 h-3" /> ID doc</p>
-                    <p className={hasDoc ? 'text-green-400' : 'text-gray-500'}>{hasDoc ? `✓ ${userData.documents[0]?.type || 'Uploaded'}` : 'Pending'}</p>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-400 leading-relaxed">
-                  Admin fills profile details here. Click <strong className="text-amber-300">Send upload link</strong> — user opens email, confirms same address, then uploads photo, family photos & ID on a secure form.
-                </p>
-                {userData.completionInvite && (
-                  <p className="text-xs text-gray-500 flex items-center gap-1">
-                    <Link2 className="w-3 h-3" />
-                    Last invite: {userData.completionInvite.status} · {new Date(userData.completionInvite.createdAt).toLocaleString('en-IN')}
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* About */}
-            <div>
-              <label className={lbl}>About Me</label>
-              <textarea value={form.aboutMe || ''} onChange={e => set('aboutMe', e.target.value)} rows={3}
-                placeholder="Write something about this person…"
-                className={inp + ' resize-none'} />
-            </div>
-          </div>
+          <AdminCreateProfileWizard
+            mode={mode}
+            form={form}
+            setForm={setForm}
+            userData={userData}
+            saving={saving}
+            onSave={save}
+            onSendInvite={sendCompletionInvite}
+            sendingInvite={sendingInvite}
+          />
         </div>
       )}
     </div>
