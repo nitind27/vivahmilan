@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Edit2, Trash2, Plus, ExternalLink, Star, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { BLOG_CATEGORIES, slugify } from '@/lib/blog';
+import { BLOG_CATEGORIES, slugify } from '@/lib/blogShared';
 
 const EMPTY = {
   title: '',
