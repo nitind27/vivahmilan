@@ -8,7 +8,7 @@ import { signOut } from 'next-auth/react';
 import {
   BarChart2,   UserCheck, Users, Sparkles, UserPlus, Crown, UserX,
   Bell, Activity, Shield, Flag, Star, Settings, Heart,
-  FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw,
+  FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw, BookOpen,
   TrendingUp, HandCoins, IndianRupee, UserCog, HeartHandshake,
 } from 'lucide-react';
 import AdminNotifications from '@/components/AdminNotifications';
@@ -35,6 +35,7 @@ export const ADMIN_TABS = [
   { id: 'reports',       label: 'Reports',           icon: Flag,          badge: 'pendingReports' },
   { id: 'marketing',     label: 'Marketing & Popups',icon: Sparkles,      badge: null },
   { id: 'stories',       label: 'Success Stories',   icon: Heart,         badge: null },
+  { id: 'blog',          label: 'Blog',              icon: BookOpen,      badge: null },
   { id: 'homepage',      label: 'Homepage Content',  icon: FileText,      badge: null },
   { id: 'options',       label: 'Profile Options',   icon: Edit2,         badge: null },
   { id: 'siteconfig',    label: 'Site Settings',     icon: Lock,          badge: null },

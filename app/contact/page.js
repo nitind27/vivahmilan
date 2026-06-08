@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import SiteFooter from '@/components/SiteFooter';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, MessageCircle, HelpCircle, Flag, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -78,9 +79,9 @@ export default function ContactPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-vd-bg">
+      <div className="min-h-screen bg-vd-bg flex flex-col">
         <Navbar />
-        <div className="pt-24 flex items-center justify-center px-4 pb-12">
+        <div className="flex-1 pt-24 flex items-center justify-center px-4 pb-12">
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
             className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl p-10 max-w-md w-full text-center border border-vd-border shadow-xl">
             <div className="w-20 h-20 vd-gradient-gold rounded-full flex items-center justify-center mx-auto mb-5">
@@ -95,14 +96,15 @@ export default function ContactPage() {
             </button>
           </motion.div>
         </div>
+        <SiteFooter />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-vd-bg">
+    <div className="min-h-screen bg-vd-bg flex flex-col">
       <Navbar />
-      <div className="pt-16">
+      <div className="flex-1 pt-16">
         <div className="vd-gradient-gold py-14 px-4 text-center">
           <h1 className="text-3xl font-bold text-white mb-2">Contact Us</h1>
           <p className="text-white/80 text-sm max-w-md mx-auto">Have a question or need help? We are here for you. Reach out and we will get back to you as soon as possible.</p>
@@ -205,6 +207,7 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

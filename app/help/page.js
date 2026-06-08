@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { SUPPORT_EMAIL, SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_TEL, SUPPORT_HOURS } from '@/lib/siteContact';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import SiteFooter from '@/components/SiteFooter';
 import { Heart, Search, ChevronDown, MessageCircle, Shield, User, CreditCard, Settings, Bell } from 'lucide-react';
 
 const CATEGORIES = [
@@ -91,9 +92,9 @@ export default function HelpPage() {
   })).filter(cat => !search || cat.faqs.length > 0);
 
   return (
-    <div className="min-h-screen bg-vd-bg">
+    <div className="min-h-screen bg-vd-bg flex flex-col">
       <Navbar />
-      <div className="pt-16">
+      <div className="flex-1 pt-16">
         {/* Hero */}
         <div className="vd-gradient-gold py-16 px-4 text-center">
           <h1 className="text-3xl font-bold text-white mb-2">How can we help you?</h1>
@@ -157,6 +158,7 @@ export default function HelpPage() {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

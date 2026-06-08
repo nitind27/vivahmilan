@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import SiteFooter from '@/components/SiteFooter';
 import { Heart, MapPin, Quote } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
 
@@ -17,7 +18,7 @@ export default function StoriesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-vd-bg">
+    <div className="min-h-screen bg-vd-bg flex flex-col">
       <Navbar />
       <div className="pt-24 pb-16 px-4" style={{ background: 'linear-gradient(135deg, #A67C3D 0%, #C8A45C 50%, #D4AF37 100%)' }}>
         <div className="max-w-3xl mx-auto text-center">
@@ -31,7 +32,7 @@ export default function StoriesPage() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="flex-1 max-w-4xl mx-auto px-4 py-10 w-full">
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map(i => <div key={i} className="h-40 skeleton rounded-2xl" />)}
@@ -75,6 +76,7 @@ export default function StoriesPage() {
           </div>
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }
