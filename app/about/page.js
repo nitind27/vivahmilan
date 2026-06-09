@@ -200,8 +200,14 @@ export default function AboutPage() {
                     <div className="hidden sm:block sm:w-1/2" />
                     <div className="absolute left-4 sm:left-1/2 w-3 h-3 rounded-full vd-gradient-gold border-2 border-vd-bg -translate-x-1/2 mt-6 z-10 shadow" />
                     <div className={`sm:w-1/2 pl-10 sm:pl-0 ${i % 2 === 0 ? 'sm:pr-10 sm:text-right' : 'sm:pl-10'}`}>
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-bold vd-gradient-gold text-white mb-2">
-                        {m.year}
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${
+                          m.year === 'Soon'
+                            ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700'
+                            : 'vd-gradient-gold text-white'
+                        }`}
+                      >
+                        {m.year === 'Soon' ? 'Coming Soon' : m.year}
                       </span>
                       <h3 className="font-bold text-vd-text-heading mb-1">{m.title}</h3>
                       <p className="text-sm text-vd-text-sub leading-relaxed">{m.description}</p>
@@ -218,8 +224,8 @@ export default function AboutPage() {
           {[
             { icon: Shield, label: 'Verified Profiles' },
             { icon: Users, label: 'Family Trusted' },
-            { icon: Globe, label: 'Pan-India Reach' },
-            { icon: Award, label: 'Premium Support' },
+            { icon: Sparkles, label: 'Launching 2026' },
+            { icon: Award, label: 'Free Registration' },
           ].map((item, i) => (
             <div key={i} className="flex flex-col items-center text-center p-4 rounded-2xl border border-vd-border bg-vd-bg-section">
               <item.icon className="w-6 h-6 text-vd-primary mb-2" />
@@ -229,19 +235,18 @@ export default function AboutPage() {
         </motion.section>
 
         {/* CTA */}
-        <motion.section
-          {...fadeUp}
-          className="vd-gradient-gold rounded-3xl p-8 sm:p-12 text-center text-white relative overflow-hidden"
-        >
-          <Sparkles className="w-8 h-8 mx-auto mb-4 opacity-60" />
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">{s.cta_title || 'Ready to Begin Your Journey?'}</h2>
-          <p className="text-white/85 text-sm max-w-md mx-auto mb-6">
-            {s.cta_subtitle || 'Create your free profile today and find your perfect life partner.'}
+        <motion.section {...fadeUp} className="blog-cta-banner rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden">
+          <Sparkles className="w-8 h-8 mx-auto mb-4 text-white opacity-80 relative z-10" />
+          <h2 className="blog-cta-title text-2xl sm:text-3xl font-bold mb-3 relative z-10">
+            {s.cta_title || 'Free Registration Is Open'}
+          </h2>
+          <p className="blog-cta-sub text-sm max-w-md mx-auto mb-6 relative z-10">
+            {s.cta_subtitle || 'Create your free profile today. Be among the first members before our full platform launch in 2026.'}
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3 relative z-10">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 bg-white text-vd-primary px-6 py-3 rounded-2xl font-semibold text-sm hover:opacity-90 shadow-lg transition-opacity"
+              className="blog-cta-btn inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm shadow-lg hover:scale-[1.02] transition-all"
             >
               Create Free Profile <ArrowRight className="w-4 h-4" />
             </Link>

@@ -121,9 +121,9 @@ if (!Number(valueCount?.c)) {
 const milestoneCount = await queryOne('SELECT COUNT(*) AS c FROM about_milestone');
 if (!Number(milestoneCount?.c)) {
   const milestones = [
-    { year: '2024', title: 'Platform Launch', description: 'Vivah Dwar goes live with verified profiles.', sortOrder: 0 },
-    { year: '2025', title: 'Growing Community', description: 'Thousands of members join across India.', sortOrder: 1 },
-    { year: '2026', title: 'Next Chapter', description: 'Expanding smart matchmaking and multilingual support.', sortOrder: 2 },
+    { year: '2026', title: 'Vivah Dwar — Coming Soon', description: 'Building a trusted matrimonial platform for Indian families.', sortOrder: 0 },
+    { year: '2026', title: 'Free Registration Open', description: 'Create your free profile now before the full platform goes live.', sortOrder: 1 },
+    { year: 'Soon', title: 'Full Platform Launch', description: 'Coming soon — smart matching, secure chat, and premium plans.', sortOrder: 2 },
   ];
   for (const m of milestones) {
     await execute('INSERT INTO about_milestone (id, year, title, description, sortOrder, isActive) VALUES (?, ?, ?, ?, ?, 1)', [randomUUID(), m.year, m.title, m.description, m.sortOrder]);
