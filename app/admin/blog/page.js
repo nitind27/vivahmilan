@@ -1,9 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Edit2, Trash2, Plus, ExternalLink, Star, Eye, EyeOff } from 'lucide-react';
+import { Edit2, Trash2, Plus, ExternalLink, Star, Eye, EyeOff, HelpCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { BLOG_CATEGORIES, slugify } from '@/lib/blogShared';
+import AdminFaqManager from '@/components/admin/AdminFaqManager';
 
 const EMPTY = {
   title: '',
@@ -22,6 +23,7 @@ const EMPTY = {
 };
 
 export default function AdminBlogPage() {
+  const [pageTab, setPageTab] = useState('posts');
   const [posts, setPosts] = useState([]);
   const [form, setForm] = useState(EMPTY);
   const [editId, setEditId] = useState(null);
@@ -121,6 +123,27 @@ export default function AdminBlogPage() {
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setPageTab('posts')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 ${pageTab === 'posts' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}
+        >
+          <Star className="w-4 h-4" /> Blog Posts
+        </button>
+        <button
+          type="button"
+          onClick={() => setPageTab('faq')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 ${pageTab === 'faq' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}
+        >
+          <HelpCircle className="w-4 h-4" /> FAQs
+        </button>
+      </div>
+
+      {pageTab === 'faq' ? (
+        <AdminFaqManager />
+      ) : (
+      <>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-white">Blog Posts</h2>
@@ -261,6 +284,8 @@ export default function AdminBlogPage() {
           </div>
         ))}
       </div>
+      </>
+      )}
     </div>
   );
 }

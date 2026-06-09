@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import SiteFooter from '@/components/SiteFooter';
 import BlogContent from '@/components/BlogContent';
 import SmartImage from '@/components/SmartImage';
+import BlogCtaBanner from '@/components/BlogCtaBanner';
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 
 function formatDate(d) {
@@ -105,12 +106,7 @@ export default function BlogPostPage() {
                 </div>
               )}
 
-              <div className="mt-10 p-6 rounded-2xl vd-gradient-gold text-white text-center">
-                <p className="font-semibold mb-3">Ready to find your life partner?</p>
-                <Link href="/register" className="inline-block bg-white text-vd-primary px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90">
-                  Create Free Profile
-                </Link>
-              </div>
+              <BlogCtaBanner className="mt-10" />
             </article>
           )}
         </div>

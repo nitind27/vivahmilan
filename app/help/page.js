@@ -1,13 +1,13 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { SUPPORT_EMAIL, SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_TEL, SUPPORT_HOURS } from '@/lib/siteContact';
-import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import SiteFooter from '@/components/SiteFooter';
-import { Heart, Search, ChevronDown, MessageCircle, Shield, User, CreditCard, Settings, Bell } from 'lucide-react';
+import FaqAccordion from '@/components/FaqAccordion';
+import { Search, User, Heart, MessageCircle, CreditCard, Settings, Bell, Shield } from 'lucide-react';
 
-const CATEGORIES = [
+const FALLBACK_CATEGORIES = [
   {
     icon: User, label: 'Account & Profile', color: 'bg-vd-accent-soft dark:bg-vd-accent/20 text-vd-primary',
     faqs: [
@@ -22,7 +22,7 @@ const CATEGORIES = [
     faqs: [
       { q: 'How does matching work?', a: 'Our algorithm matches profiles based on religion, location, age range, education, and partner preferences you set in your profile.' },
       { q: 'How do I send an interest?', a: 'Visit any profile and click the "Send Interest" button. The other person will be notified and can accept or decline.' },
-      { q: 'Can I shortlist profiles?', a: 'Yes! Click the heart icon on any profile card or use "Add to Shortlist" on a profile page. View all saved profiles on My Shortlist (/shortlist) — navbar bookmark icon, dashboard, or the link in the success toast.' },
+      { q: 'Can I shortlist profiles?', a: 'Yes! Click the heart icon on any profile card or use "Add to Shortlist" on a profile page. View all saved profiles on My Shortlist (/shortlist).' },
     ],
   },
   {
@@ -36,9 +36,8 @@ const CATEGORIES = [
   {
     icon: CreditCard, label: 'Subscription & Payments', color: 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-600',
     faqs: [
-      { q: 'What plans are available?', a: 'We offer Silver (₹749/month), Gold (₹1499/month), and Platinum (₹2999/month) plans. Each plan unlocks different features.' },
-      { q: 'Is there a free trial?', a: 'Yes! New users get a free trial after their profile is approved by admin. The trial duration is set by our team.' },
-      { q: 'How do I cancel my subscription?', a: "Subscriptions are one-time payments and do not auto-renew. Simply don't repurchase when your plan expires." },
+      { q: 'What plans are available?', a: 'We offer Silver, Gold, and Platinum plans. Each plan unlocks different features.' },
+      { q: 'Is there a free trial?', a: 'Yes! New users get a free trial after their profile is approved by admin.' },
       { q: 'What payment methods are accepted?', a: 'We accept all major credit/debit cards, UPI, net banking, and wallets via Cashfree payment gateway.' },
     ],
   },
@@ -59,50 +58,59 @@ const CATEGORIES = [
   },
 ];
 
-function FAQItem({ q, a }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border-b border-vd-border last:border-0">
-      <button onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-4 text-left gap-4 hover:text-vd-primary transition-colors">
-        <span className="font-medium text-sm">{q}</span>
-        <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform ${open ? 'rotate-180 text-vd-primary' : 'text-gray-400'}`} />
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden">
-            <p className="text-vd-text-sub text-sm pb-4 leading-relaxed">{a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+const ICON_MAP = { User, Heart, MessageCircle, CreditCard, Bell, Settings, Shield };
+
+function fallbackToFaqItems() {
+  return FALLBACK_CATEGORIES.flatMap((cat) =>
+    cat.faqs.map((f, i) => ({
+      id: `fallback-${cat.label}-${i}`,
+      category: cat.label,
+      question: f.q,
+      answer: f.a,
+      icon: Object.keys(ICON_MAP).find((k) => ICON_MAP[k] === cat.icon) || 'HelpCircle',
+    }))
   );
 }
 
 export default function HelpPage() {
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [activeCategory, setActiveCategory] = useState(null);
 
-  const filtered = CATEGORIES.map(cat => ({
-    ...cat,
-    faqs: cat.faqs.filter(f =>
-      !search || f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase())
-    ),
-  })).filter(cat => !search || cat.faqs.length > 0);
+  useEffect(() => {
+    fetch('/api/faq?help=1')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setFaqs(data);
+        } else {
+          setFaqs(fallbackToFaqItems());
+        }
+      })
+      .catch(() => setFaqs(fallbackToFaqItems()))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filteredFaqs = useMemo(() => {
+    if (!search) return faqs;
+    const q = search.toLowerCase();
+    return faqs.filter(
+      (f) => f.question?.toLowerCase().includes(q) || f.answer?.toLowerCase().includes(q)
+    );
+  }, [faqs, search]);
 
   return (
     <div className="min-h-screen bg-vd-bg flex flex-col">
       <Navbar />
       <div className="flex-1 pt-16">
-        {/* Hero */}
         <div className="vd-gradient-gold py-16 px-4 text-center">
           <h1 className="text-3xl font-bold text-white mb-2">How can we help you?</h1>
           <p className="text-white/80 mb-8">Search our help center or browse categories below</p>
           <div className="relative max-w-xl mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              value={search} onChange={e => setSearch(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for answers…"
               className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-gray-900 text-sm focus:outline-none shadow-lg"
             />
@@ -110,40 +118,24 @@ export default function HelpPage() {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-12">
-          {/* Category grid */}
-          {!search && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12">
-              {CATEGORIES.map((cat, i) => (
-                <button key={i} onClick={() => setActiveCategory(activeCategory === i ? null : i)}
-                  className={`p-4 rounded-2xl border-2 text-left transition-all ${activeCategory === i ? 'border-vd-primary bg-vd-accent-soft dark:bg-vd-accent/10' : 'border-vd-border bg-vd-bg-section dark:bg-vd-bg-card hover:border-vd-primary'}`}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${cat.color}`}>
-                    <cat.icon className="w-5 h-5" />
-                  </div>
-                  <p className="font-semibold text-sm">{cat.label}</p>
-                  <p className="text-xs text-vd-text-light mt-0.5">{cat.faqs.length} articles</p>
-                </button>
+          {loading ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-24 skeleton rounded-2xl" />
               ))}
             </div>
+          ) : (
+            <FaqAccordion
+              items={filteredFaqs}
+              searchable={false}
+              showCategories={!search}
+              title=""
+              subtitle=""
+              variant="compact"
+              emptyMessage="No matching answers found. Try a different search or contact support."
+            />
           )}
 
-          {/* FAQs */}
-          <div className="space-y-6">
-            {(search ? filtered : activeCategory !== null ? [CATEGORIES[activeCategory]] : CATEGORIES).map((cat, i) => (
-              <div key={i} className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl border border-vd-border overflow-hidden">
-                <div className="flex items-center gap-3 px-5 py-4 border-b border-vd-border">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${cat.color}`}>
-                    <cat.icon className="w-4 h-4" />
-                  </div>
-                  <h2 className="font-bold">{cat.label}</h2>
-                </div>
-                <div className="px-5">
-                  {cat.faqs.map((faq, j) => <FAQItem key={j} q={faq.q} a={faq.a} />)}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Still need help */}
           <div className="mt-12 vd-gradient-gold rounded-2xl p-6 text-white text-center">
             <h3 className="font-bold text-lg mb-1">Still need help?</h3>
             <p className="text-white/80 text-sm mb-2">Our support team is here for you — {SUPPORT_HOURS}</p>

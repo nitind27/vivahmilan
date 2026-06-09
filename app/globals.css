@@ -296,6 +296,23 @@ label { color: var(--vd-text-sub); }
   border-color: var(--vd-primary);
 }
 
+/* ── Blog CTA banner (gold bg — override global p/link colors) ───────────── */
+.blog-cta-banner .blog-cta-title,
+.blog-cta-banner .blog-cta-sub {
+  color: #ffffff !important;
+}
+.blog-cta-banner .blog-cta-sub {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.blog-cta-banner .blog-cta-btn {
+  background-color: #ffffff !important;
+  color: #5C4520 !important;
+}
+.blog-cta-banner .blog-cta-btn:hover {
+  background-color: #FFF8EE !important;
+  color: #4A3818 !important;
+}
+
 /* ── Dark mode hover states ───────────────────────────────────────────────── */
 .dark .hover\:bg-gray-50:hover  { background-color: var(--vd-bg-card) !important; }
 .dark .hover\:bg-gray-700:hover { background-color: #221818 !important; }
