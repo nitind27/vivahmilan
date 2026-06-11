@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Edit2, Trash2, Plus, ExternalLink, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { ABOUT_VALUE_ICONS } from '@/lib/about';
+import { ABOUT_VALUE_ICONS } from '@/lib/aboutConstants';
 
 const SETTING_FIELDS = [
   { key: 'hero_tag', label: 'Hero Tag', placeholder: '🪔 Vivah Dwar Matrimonial' },

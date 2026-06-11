@@ -15,6 +15,9 @@ import AdminCreateProfileWizard, {
   mapProfileToAdminForm,
 } from '@/components/AdminCreateProfileWizard';
 
+const inp = 'w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary placeholder:text-gray-500';
+const lbl = 'text-xs text-gray-400 mb-1 block';
+
 // ── Admin Create / Edit Profile Tab ──────────────────────────────────────────
 export function AdminCreateProfileTab() {
   const urlParams = useSearchParams();
