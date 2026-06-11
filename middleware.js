@@ -124,7 +124,7 @@ export async function middleware(req) {
   const PORTAL_API_BYPASS = [
     '/api/auth', '/api/register', '/api/onboarding', '/api/portal-access',
     '/api/public', '/api/admin', '/api/flutter', '/api/plans', '/api/stories',
-    '/api/kyc', '/api/maintenance-status', '/api/welcome-gate-status', '/api/app-links',
+    '/api/kyc', '/api/maintenance-status', '/api/welcome-gate-status', '/api/app-links', '/api/social-links',
     '/api/chatbot', '/api/track', '/api/location', '/api/profile-options',
     '/api/coupons/validate', '/api/marketing-popup', '/api/payment/status',
     '/api/socket',

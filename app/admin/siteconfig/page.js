@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Lock, Unlock, DoorOpen, Phone } from 'lucide-react';
+import { Lock, Unlock, DoorOpen, Phone, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function Toggle({ value, onChange }) {
@@ -378,6 +378,69 @@ export default function SiteConfigPage() {
           className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60"
         >
           {saving ? 'Saving…' : 'Save App Links'}
+        </button>
+      </div>
+
+      {/* Social Media — Connect with us */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-pink-900/20">
+            <Share2 className="w-5 h-5 text-pink-400" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg text-white">Connect With Us (Social Media)</h3>
+            <p className="text-xs text-gray-500">
+              Footer aur homepage par &quot;Connect with us&quot; icons ke liye URLs. Khali chhodo to wo icon hide ho jayega.
+            </p>
+          </div>
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Facebook URL</label>
+          <input
+            value={config.social_facebook_url || ''}
+            onChange={e => setConfig(p => ({ ...p, social_facebook_url: e.target.value }))}
+            placeholder="https://facebook.com/yourpage"
+            className={inp}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Instagram URL</label>
+          <input
+            value={config.social_instagram_url || ''}
+            onChange={e => setConfig(p => ({ ...p, social_instagram_url: e.target.value }))}
+            placeholder="https://instagram.com/yourpage"
+            className={inp}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">YouTube URL</label>
+          <input
+            value={config.social_youtube_url || ''}
+            onChange={e => setConfig(p => ({ ...p, social_youtube_url: e.target.value }))}
+            placeholder="https://youtube.com/@yourchannel"
+            className={inp}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">WhatsApp URL</label>
+          <input
+            value={config.social_whatsapp_url || ''}
+            onChange={e => setConfig(p => ({ ...p, social_whatsapp_url: e.target.value }))}
+            placeholder="https://wa.me/918735995467"
+            className={inp}
+          />
+        </div>
+        <button
+          disabled={saving}
+          onClick={() => saveMultiple([
+            ['social_facebook_url', config.social_facebook_url || ''],
+            ['social_instagram_url', config.social_instagram_url || ''],
+            ['social_youtube_url', config.social_youtube_url || ''],
+            ['social_whatsapp_url', config.social_whatsapp_url || ''],
+          ])}
+          className="vd-gradient-gold text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60"
+        >
+          {saving ? 'Saving…' : 'Save Social Links'}
         </button>
       </div>
 
