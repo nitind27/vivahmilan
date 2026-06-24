@@ -13,6 +13,7 @@ const EMPTY = {
   isActive: true,
   showOnBlog: true,
   showOnHelp: true,
+  showOnHome: true,
 };
 
 export default function AdminFaqManager() {
@@ -49,6 +50,7 @@ export default function AdminFaqManager() {
       isActive: f.isActive !== false,
       showOnBlog: f.showOnBlog !== false,
       showOnHelp: f.showOnHelp !== false,
+      showOnHome: f.showOnHome !== false,
     });
     setShowForm(true);
   };
@@ -107,7 +109,7 @@ export default function AdminFaqManager() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-white">FAQ Management</h2>
-          <p className="text-gray-400 text-sm mt-1">General FAQs for Blog listing &amp; Help Center (not tied to a single article)</p>
+          <p className="text-gray-400 text-sm mt-1">General FAQs for Home page, Blog listing &amp; Help Center</p>
         </div>
         <button
           type="button"
@@ -182,6 +184,10 @@ export default function AdminFaqManager() {
                 <input type="checkbox" checked={form.showOnHelp} onChange={(e) => setForm((p) => ({ ...p, showOnHelp: e.target.checked }))} className="rounded" />
                 Show on Help page
               </label>
+              <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                <input type="checkbox" checked={form.showOnHome} onChange={(e) => setForm((p) => ({ ...p, showOnHome: e.target.checked }))} className="rounded" />
+                Show on Home page
+              </label>
             </div>
           </div>
           <div className="flex gap-2">
@@ -210,6 +216,7 @@ export default function AdminFaqManager() {
                   {!f.isActive && <span className="text-xs px-2 py-0.5 rounded-full bg-red-900/40 text-red-400">Inactive</span>}
                   {f.showOnBlog && <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/40 text-blue-400">Blog</span>}
                   {f.showOnHelp && <span className="text-xs px-2 py-0.5 rounded-full bg-green-900/40 text-green-400">Help</span>}
+                  {f.showOnHome !== false && <span className="text-xs px-2 py-0.5 rounded-full bg-amber-900/40 text-amber-400">Home</span>}
                 </div>
                 <p className="font-semibold text-white text-sm">{f.question}</p>
                 <p className="text-sm text-gray-400 mt-1 line-clamp-2">{f.answer}</p>

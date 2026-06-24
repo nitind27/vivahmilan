@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import SiteLoader, { SiteLoaderInline } from '@/components/SiteLoader';
 import { normalizePlans } from '@/lib/plans.js';
 import PricingPlanGrid from '@/components/PricingPlanGrid';
+import HomeFaqSection from '@/components/HomeFaqSection';
 import CookieManageButton from '@/components/CookieManageButton';
 import SocialLinks from '@/components/SocialLinks';
 import {
@@ -159,6 +160,7 @@ export default function Home() {
   const [siteConfig, setSiteConfig] = useState({});
   const [contentLoaded, setContentLoaded] = useState(false);
   const [showPricingSection, setShowPricingSection] = useState(true);
+  const [homeFaqs, setHomeFaqs] = useState([]);
 
   // Derived — fall back to defaults if DB is empty
   const SLIDES = hpSlides.length > 0 ? hpSlides : DEFAULT_SLIDES;
@@ -202,6 +204,13 @@ export default function Home() {
       setSiteConfig(cfg || {});
       setContentLoaded(true);
     });
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/faq?home=1')
+      .then((r) => r.json())
+      .then((data) => setHomeFaqs(Array.isArray(data) ? data : []))
+      .catch(() => setHomeFaqs([]));
   }, []);
 
   useEffect(() => {
@@ -731,6 +740,9 @@ export default function Home() {
         </div>
       </section>
       )}
+
+      {/* General FAQs — admin-managed */}
+      <HomeFaqSection items={homeFaqs} />
 
       {/* CTA — image slider + glass panel (cinematic text in all themes) */}
       <section className="relative min-h-[32rem] sm:min-h-[36rem] overflow-hidden isolate" data-cta-cinematic>

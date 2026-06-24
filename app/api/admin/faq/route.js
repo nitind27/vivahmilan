@@ -36,6 +36,7 @@ export async function POST(req) {
     isActive,
     showOnBlog,
     showOnHelp,
+    showOnHome,
   } = body;
 
   if (!question?.trim() || !answer?.trim()) {
@@ -51,13 +52,14 @@ export async function POST(req) {
     isActive: isActive !== false ? 1 : 0,
     showOnBlog: showOnBlog !== false ? 1 : 0,
     showOnHelp: showOnHelp !== false ? 1 : 0,
+    showOnHome: showOnHome !== false ? 1 : 0,
   };
 
   if (id) {
     await execute(
       `UPDATE faqitem SET category = ?, question = ?, answer = ?, icon = ?, sortOrder = ?,
-       isActive = ?, showOnBlog = ?, showOnHelp = ?, updatedAt = NOW() WHERE id = ?`,
-      [data.category, data.question, data.answer, data.icon, data.sortOrder, data.isActive, data.showOnBlog, data.showOnHelp, id]
+       isActive = ?, showOnBlog = ?, showOnHelp = ?, showOnHome = ?, updatedAt = NOW() WHERE id = ?`,
+      [data.category, data.question, data.answer, data.icon, data.sortOrder, data.isActive, data.showOnBlog, data.showOnHelp, data.showOnHome, id]
     );
     const updated = await queryOne('SELECT * FROM faqitem WHERE id = ?', [id]);
     return NextResponse.json(formatFaqRow(updated));
@@ -65,9 +67,9 @@ export async function POST(req) {
 
   const newId = randomUUID();
   await execute(
-    `INSERT INTO faqitem (id, category, question, answer, icon, sortOrder, isActive, showOnBlog, showOnHelp)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [newId, data.category, data.question, data.answer, data.icon, data.sortOrder, data.isActive, data.showOnBlog, data.showOnHelp]
+    `INSERT INTO faqitem (id, category, question, answer, icon, sortOrder, isActive, showOnBlog, showOnHelp, showOnHome)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [newId, data.category, data.question, data.answer, data.icon, data.sortOrder, data.isActive, data.showOnBlog, data.showOnHelp, data.showOnHome]
   );
   const created = await queryOne('SELECT * FROM faqitem WHERE id = ?', [newId]);
   return NextResponse.json(formatFaqRow(created), { status: 201 });
