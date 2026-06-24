@@ -741,9 +741,6 @@ export default function Home() {
       </section>
       )}
 
-      {/* General FAQs — admin-managed */}
-      <HomeFaqSection items={homeFaqs} />
-
       {/* CTA — image slider + glass panel (cinematic text in all themes) */}
       <section className="relative min-h-[32rem] sm:min-h-[36rem] overflow-hidden isolate" data-cta-cinematic>
         {/* Background slides */}
@@ -904,6 +901,9 @@ export default function Home() {
         </div>
       </section>
       </main>
+
+      {/* General FAQs — above footer, after CTA slider */}
+      <HomeFaqSection items={homeFaqs} />
 
       {/* Footer — matches site warm theme (vd-*) */}
       <footer className="relative bg-vd-bg text-vd-text-sub">
