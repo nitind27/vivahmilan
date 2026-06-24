@@ -74,6 +74,7 @@ function StatCard({ icon: Icon, value, suffix, label, delay }) {
   const [inView, setInView] = useState(false);
   const ref = useRef(null);
   const count = useCounter(value, 1800, inView);
+  const displaySuffix = suffix ?? '';
 
   useEffect(() => {
     const observer = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold: 0.5 });
@@ -93,7 +94,9 @@ function StatCard({ icon: Icon, value, suffix, label, delay }) {
       <div className="w-12 h-12 vd-gradient-gold rounded-2xl flex items-center justify-center mx-auto mb-3">
         <Icon className="w-6 h-6 text-white" />
       </div>
-      <div className="text-3xl font-bold vd-gradient-text">{count}{suffix}</div>
+      <div className="text-3xl font-bold vd-gradient-text" key={`${label}-${value}${displaySuffix}`}>
+        {count}{displaySuffix}
+      </div>
       <div className="text-vd-text-sub text-sm mt-1">{label}</div>
     </motion.div>
   );
@@ -189,12 +192,12 @@ export default function Home() {
   useEffect(() => {
     Promise.all([
       fetch('/api/admin/homepage/slides').then(r => r.json()).catch(() => []),
-      fetch('/api/public/stats').then(r => r.json()).catch(() => null),
+      fetch('/api/public/stats', { cache: 'no-store' }).then(r => r.json()).catch(() => null),
       fetch('/api/admin/homepage/features').then(r => r.json()).catch(() => []),
       fetch('/api/admin/siteconfig').then(r => r.json()).catch(() => ({})),
     ]).then(([slides, statsData, feats, cfg]) => {
       if (Array.isArray(slides)) setHpSlides(slides);
-      if (statsData?.stats) setLiveStats(statsData);
+      if (statsData?.stats && !statsData.error) setLiveStats(statsData);
       if (Array.isArray(feats)) setHpFeatures(feats);
       setSiteConfig(cfg || {});
       setContentLoaded(true);

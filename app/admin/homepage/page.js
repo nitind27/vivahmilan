@@ -79,7 +79,7 @@ export default function HomepagePage() {
       if (res.ok) {
         setStatsBundle(data);
         setEditStat(null);
-        toast.success('Display number saved');
+        toast.success('Display number saved — custom stats now shown on homepage');
       } else toast.error(data.error || 'Failed');
     } finally { setSaving(false); }
   };

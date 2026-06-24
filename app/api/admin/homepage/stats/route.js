@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { execute, queryOne } from '@/lib/db';
-import { randomUUID } from 'crypto';
+import { execute } from '@/lib/db';
 import {
   getHomepageStatsBundle,
   updateCustomStat,
   HOMEPAGE_STAT_DEFS,
+  setHomepageStatsMode,
 } from '@/lib/homepageStats';
 
 export async function GET() {
@@ -29,19 +29,7 @@ export async function POST(req) {
 
   if (body.action === 'set_mode') {
     const mode = body.mode === 'manual' ? 'manual' : 'live';
-    const existing = await queryOne('SELECT id FROM siteconfig WHERE `key` = ?', ['homepage_stats_mode']);
-
-    if (existing) {
-      await execute(
-        'UPDATE siteconfig SET value = ?, updatedAt = NOW() WHERE `key` = ?',
-        [mode, 'homepage_stats_mode']
-      );
-    } else {
-      await execute(
-        'INSERT INTO siteconfig (id, `key`, value, updatedAt, createdAt) VALUES (?, ?, ?, NOW(), NOW())',
-        [randomUUID(), 'homepage_stats_mode', mode]
-      );
-    }
+    await setHomepageStatsMode(mode);
     const bundle = await getHomepageStatsBundle();
     return NextResponse.json({ success: true, ...bundle });
   }
