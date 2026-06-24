@@ -85,31 +85,9 @@ label { color: var(--vd-text-sub); }
   color: var(--vd-text-sub);
 }
 
-/* Dashboard welcome card — white-on-gold in light & dark (override global heading/body colors) */
+/* Dashboard welcome card — inline gold gradient (same text rules as vd-gold-surface) */
 .dashboard-welcome-card {
   color: rgba(255, 255, 255, 0.9);
-}
-.dashboard-welcome-card h1,
-.dashboard-welcome-card h2,
-.dashboard-welcome-card h3 {
-  color: #ffffff !important;
-}
-.dashboard-welcome-card p,
-.dashboard-welcome-card span,
-.dashboard-welcome-card label {
-  color: inherit;
-}
-.dashboard-welcome-card .text-white {
-  color: #ffffff !important;
-}
-.dashboard-welcome-card [class*='text-white/90'] {
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-.dashboard-welcome-card [class*='text-white/80'] {
-  color: rgba(255, 255, 255, 0.8) !important;
-}
-.dashboard-welcome-card [class*='text-white/75'] {
-  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 /* Homepage hero + CTA — always cinematic text (light site theme does not override) */
@@ -238,6 +216,86 @@ label { color: var(--vd-text-sub); }
 .gradient-bg,
 .vd-gradient-gold {
   background: linear-gradient(135deg, #C8A45C, #E5C88B);
+}
+
+/* ── Gold gradient surfaces: same white text in light & dark ─────────────── */
+/* Beats global .dark h1/p and .text-gray-* rules on C8A45C → E5C88B backgrounds */
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(h1, h2, h3, h4, h5, h6),
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(h1, h2, h3, h4, h5, h6) {
+  color: #ffffff !important;
+}
+
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(p, span, label, li, small, strong, em, div),
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(p, span, label, li, small, strong, em, div) {
+  color: inherit;
+}
+
+:is(a, button, span, div).vd-gradient-gold,
+:is(a, button).gradient-bg {
+  color: #ffffff !important;
+}
+
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) .text-white,
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) .text-white {
+  color: #ffffff !important;
+}
+
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/50'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/50'] {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/60'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/60'] {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/65'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/65'] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/70'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/70'] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/75'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/75'] {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/80'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/80'] {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/90'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/90'] {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/92'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) [class*='text-white/92'] {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* Contrast buttons/links sitting on gold (solid white pill, etc.) */
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(a, button).bg-white,
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(a, button)[class~='bg-white'],
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(a, button).bg-white,
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(a, button)[class~='bg-white'] {
+  color: #5c4520 !important;
+}
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) .blog-cta-btn,
+.dark :is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) .blog-cta-btn {
+  color: #5c4520 !important;
+}
+
+/* Inputs inside gold hero strips keep their own colors */
+:is(.vd-gradient-gold, .gradient-bg, .vd-gold-surface) :is(input, textarea, select) {
+  color: var(--vd-text-heading) !important;
 }
 
 .vd-gradient-romantic {

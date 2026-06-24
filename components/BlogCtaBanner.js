@@ -3,7 +3,7 @@ import { Heart, ArrowRight } from 'lucide-react';
 
 export default function BlogCtaBanner({ className = '' }) {
   return (
-    <div className={`blog-cta-banner relative overflow-hidden rounded-3xl p-6 sm:p-8 text-center shadow-lg ${className}`}>
+    <div className={`blog-cta-banner vd-gold-surface relative overflow-hidden rounded-3xl p-6 sm:p-8 text-center shadow-lg ${className}`}>
       <div className="absolute inset-0 vd-gradient-gold" />
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/30 blur-2xl" />

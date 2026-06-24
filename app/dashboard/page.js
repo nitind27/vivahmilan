@@ -112,7 +112,7 @@ function DashboardWelcomeCard({ name, profileComplete, photo, premiumInfo, freeT
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="dashboard-welcome-card relative mb-6 overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/10 dark:ring-white/10"
+      className="dashboard-welcome-card vd-gold-surface relative mb-6 overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/10 dark:ring-white/10"
       style={{ background: 'linear-gradient(135deg, #6b5210 0%, #8B6914 38%, #C8A45C 72%, #A67C3D 100%)' }}
     >
       <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
