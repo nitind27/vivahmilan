@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Mail, Lock, Eye, EyeOff, Clock, CheckCircle, Sparkles,
-  QrCode, RefreshCw, Smartphone, ArrowLeft, ShieldCheck
+  QrCode, RefreshCw, Smartphone, ArrowLeft, ShieldCheck, Home
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { logWebLogin } from '@/lib/clientGeo';
@@ -16,6 +16,30 @@ import { getRememberedEmail, getRememberPreference, saveRememberLogin } from '@/
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const QR_POLL_INTERVAL = 2000;
 const QR_TTL = 5 * 60 * 1000;
+const DEFAULT_LOGIN_OPTIONS = {
+  emailEnabled: true,
+  qrEnabled: true,
+  googleEnabled: true,
+  familyEnabled: true,
+};
+
+function LoginTopBar({ onBackHome }) {
+  return (
+    <div className="flex items-center justify-between mb-6 pb-4 border-b border-vd-border">
+      <button
+        type="button"
+        onClick={onBackHome}
+        className="flex items-center gap-1.5 text-sm font-medium text-vd-text-sub hover:text-vd-primary transition-colors"
+      >
+        <Home className="w-4 h-4" />
+        Back to Home
+      </button>
+      <Link href="/" className="text-sm font-bold text-vd-primary tracking-wide">
+        Vivah Dwar
+      </Link>
+    </div>
+  );
+}
 
 /** Uses live siteconfig (not stale session JWT) for portal launch vs dashboard. */
 async function resolvePostLoginPath(user) {
@@ -37,7 +61,7 @@ async function resolvePostLoginPath(user) {
   return user.portalAccessGranted === false ? '/profile-launch' : '/dashboard';
 }
 
-function QRLoginPanel({ onBack }) {
+function QRLoginPanel({ onBack, onBackHome }) {
   const router = useRouter();
   const [sessionId, setSessionId] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState(null);
@@ -127,10 +151,13 @@ function QRLoginPanel({ onBack }) {
   return (
     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }} className="w-full">
-      <button onClick={onBack}
-        className="flex items-center gap-1.5 text-sm text-vd-text-light hover:text-vd-primary transition-colors mb-5">
-        <ArrowLeft className="w-4 h-4" /> Back to login
-      </button>
+      <LoginTopBar onBackHome={onBackHome} />
+      <div className="flex items-center gap-3 mb-5">
+        <button onClick={onBack}
+          className="flex items-center gap-1.5 text-sm text-vd-text-light hover:text-vd-primary transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Back to login
+        </button>
+      </div>
       <div className="mb-5">
         <div className="flex items-center gap-2 mb-1.5">
           <QrCode className="w-4 h-4 text-vd-primary" />
@@ -258,9 +285,40 @@ function LoginInner() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [pendingEmail, setPendingEmail] = useState(null);
-  const [showQR, setShowQR] = useState(false);
+  const [qrPanelOpen, setQrPanelOpen] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loginMode, setLoginMode] = useState('member');
+  const [loginOptions, setLoginOptions] = useState(DEFAULT_LOGIN_OPTIONS);
+  const [optionsLoaded, setOptionsLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/login-options', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => {
+        setLoginOptions({
+          emailEnabled: data.emailEnabled !== false,
+          qrEnabled: data.qrEnabled !== false,
+          googleEnabled: data.googleEnabled !== false,
+          familyEnabled: data.familyEnabled !== false,
+        });
+      })
+      .catch(() => setLoginOptions(DEFAULT_LOGIN_OPTIONS))
+      .finally(() => setOptionsLoaded(true));
+  }, []);
+
+  useEffect(() => {
+    if (!optionsLoaded) return;
+    const memberMethods =
+      loginOptions.emailEnabled || loginOptions.googleEnabled || loginOptions.qrEnabled;
+    if (!loginOptions.familyEnabled && loginMode === 'family') {
+      setLoginMode('member');
+    } else if (!memberMethods && loginOptions.familyEnabled) {
+      setLoginMode('family');
+    }
+    if (!loginOptions.qrEnabled && qrPanelOpen) {
+      setQrPanelOpen(false);
+    }
+  }, [optionsLoaded, loginOptions, loginMode, qrPanelOpen]);
 
   useEffect(() => {
     setRememberMe(getRememberPreference());
@@ -366,6 +424,22 @@ function LoginInner() {
     return <SiteLoader message="Signing you in…" size="lg" />;
   }
 
+  const goHome = () => router.push('/');
+  const showMemberExtras = loginMode === 'member';
+  const showGoogleBtn = showMemberExtras && loginOptions.googleEnabled;
+  const showQrBtn = showMemberExtras && loginOptions.qrEnabled;
+  const showEmailForm = loginOptions.emailEnabled || loginMode === 'family';
+  const showFamilyTab = loginOptions.familyEnabled;
+  const showMemberTab = loginOptions.emailEnabled || loginOptions.googleEnabled || loginOptions.qrEnabled;
+  const hasAltLogin = showGoogleBtn || showQrBtn;
+  const showOrDivider = loginOptions.emailEnabled && hasAltLogin && showMemberExtras;
+  const noLoginMethods =
+    optionsLoaded &&
+    !loginOptions.emailEnabled &&
+    !loginOptions.qrEnabled &&
+    !loginOptions.googleEnabled &&
+    !loginOptions.familyEnabled;
+
   if (pendingEmail) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-vd-bg px-4 py-8">
@@ -419,11 +493,15 @@ function LoginInner() {
           className="w-full max-w-sm sm:max-w-md">
 
           <AnimatePresence mode="wait">
-            {showQR ? (
-              <QRLoginPanel key="qr" onBack={() => setShowQR(false)} />
+            {!optionsLoaded ? (
+              <SiteLoader message="Loading…" size="md" />
+            ) : qrPanelOpen ? (
+              <QRLoginPanel key="qr" onBack={() => setQrPanelOpen(false)} onBackHome={goHome} />
             ) : (
               <motion.div key="form" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}>
+
+                <LoginTopBar onBackHome={goHome} />
 
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-1.5">
@@ -436,20 +514,36 @@ function LoginInner() {
                   </p>
                 </div>
 
+                {noLoginMethods ? (
+                  <div className="rounded-2xl border border-vd-border bg-vd-bg-alt p-6 text-center space-y-4">
+                    <p className="text-sm text-vd-text-sub">Login is temporarily unavailable. Please try again later or contact support.</p>
+                    <button type="button" onClick={goHome}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-vd-primary hover:opacity-80">
+                      <Home className="w-4 h-4" /> Back to Home
+                    </button>
+                  </div>
+                ) : (
+                <>
+                {showMemberTab && showFamilyTab && (
                 <div className="flex bg-vd-bg-alt rounded-xl p-1 border border-vd-border mb-4">
+                  {showMemberTab && (
                   <button type="button" onClick={() => setLoginMode('member')}
                     className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${loginMode === 'member' ? 'bg-vd-primary text-white' : 'text-vd-text-sub'}`}>
                     Member Login
                   </button>
+                  )}
+                  {showFamilyTab && (
                   <button type="button" onClick={() => setLoginMode('family')}
                     className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${loginMode === 'family' ? 'bg-vd-primary text-white' : 'text-vd-text-sub'}`}>
                     Family Login
                   </button>
+                  )}
                 </div>
+                )}
 
-                {loginMode === 'member' && (
+                {showMemberExtras && (
                 <>
-                {/* Google */}
+                {showGoogleBtn && (
                 <button
                   type="button"
                   onClick={() => {
@@ -482,11 +576,12 @@ function LoginInner() {
                     </>
                   )}
                 </button>
+                )}
 
-                {/* QR Login */}
+                {showQrBtn && (
                 <button
                   type="button"
-                  onClick={() => setShowQR(true)}
+                  onClick={() => setQrPanelOpen(true)}
                   className="w-full flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 mb-5 rounded-2xl border border-vd-border bg-vd-bg-section text-sm font-medium text-vd-text-heading hover:bg-vd-accent-soft hover:border-vd-primary/25 transition-all shadow-sm hover:shadow-md group"
                 >
                   <QrCode className="w-5 h-5 flex-shrink-0 text-vd-primary group-hover:scale-105 transition-transform" />
@@ -495,15 +590,19 @@ function LoginInner() {
                     Mobile
                   </span>
                 </button>
+                )}
 
+                {showOrDivider && (
                 <div className="flex items-center gap-3 mb-5">
                   <div className="flex-1 h-px bg-vd-border" />
                   <span className="text-xs text-vd-text-light font-medium px-2">OR</span>
                   <div className="flex-1 h-px bg-vd-border" />
                 </div>
+                )}
                 </>
                 )}
 
+                {showEmailForm && (
                 <form onSubmit={handleSubmit} noValidate className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-vd-text-sub mb-1.5">Email address</label>
@@ -580,11 +679,16 @@ function LoginInner() {
                     ) : 'Sign In'}
                   </button>
                 </form>
+                )}
 
+                {!noLoginMethods && (
                 <p className="text-center text-sm text-vd-text-light mt-5 pb-4">
                   Don't have an account?{' '}
                   <Link href="/register" className="text-vd-primary font-semibold hover:text-vd-primary-dark">Register free</Link>
                 </p>
+                )}
+                </>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Lock, Unlock, DoorOpen, Phone, Share2 } from 'lucide-react';
+import { Lock, Unlock, DoorOpen, Phone, Share2, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function Toggle({ value, onChange }) {
@@ -86,6 +86,83 @@ export default function SiteConfigPage() {
             }}
           />
         </div>
+      </div>
+
+      {/* Login page options */}
+      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-pink-900/20">
+            <LogIn className="w-5 h-5 text-pink-400" />
+          </div>
+          <div>
+            <h3 className="font-bold text-white">Login Page Options</h3>
+            <p className="text-xs text-gray-500">
+              Control which sign-in methods appear on <code className="text-amber-300/90">/login</code>. OFF = hidden from users.
+            </p>
+          </div>
+        </div>
+        {[
+          {
+            key: 'login_email_enabled',
+            title: 'Web login (Email & Password)',
+            descOn: 'Users can sign in with email and password',
+            descOff: 'Email/password form hidden — Google or QR only (if enabled)',
+          },
+          {
+            key: 'login_qr_enabled',
+            title: 'QR login (Mobile app scan)',
+            descOn: '"Login with QR Code" button visible on login page',
+            descOff: 'QR login option hidden',
+          },
+          {
+            key: 'login_google_enabled',
+            title: 'Google sign-in',
+            descOn: '"Continue with Google" button visible',
+            descOff: 'Google OAuth button hidden',
+          },
+          {
+            key: 'login_family_enabled',
+            title: 'Family login tab',
+            descOn: 'Family Login tab shown for read-only parent access',
+            descOff: 'Family Login tab hidden — member login only',
+          },
+        ].map(({ key, title, descOn, descOff }) => {
+          const on = config[key] !== '0';
+          return (
+            <div
+              key={key}
+              className={`flex items-center justify-between p-4 rounded-xl border ${on ? 'bg-green-900/10 border-green-800/30' : 'bg-gray-900/50 border-gray-700'}`}
+            >
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  {title}{' '}
+                  <span className={on ? 'text-green-400' : 'text-gray-500'}>{on ? 'ON' : 'OFF'}</span>
+                </p>
+                <p className="text-xs text-gray-500 mt-0.5">{on ? descOn : descOff}</p>
+              </div>
+              <Toggle
+                value={on}
+                onChange={async (val) => {
+                  const newVal = val ? '1' : '0';
+                  setConfig((p) => ({ ...p, [key]: newVal }));
+                  const res = await fetch('/api/admin/siteconfig', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, value: newVal }),
+                  });
+                  if (res.ok) toast.success(val ? `${title} enabled` : `${title} hidden`);
+                  else {
+                    toast.error('Failed');
+                    setConfig((p) => ({ ...p, [key]: val ? '0' : '1' }));
+                  }
+                }}
+              />
+            </div>
+          );
+        })}
+        <a href="/login" target="_blank" rel="noopener noreferrer" className="text-sm text-pink-400 hover:underline">
+          Preview login page →
+        </a>
       </div>
 
       {/* User Portal Access — post-verification launch gate */}
