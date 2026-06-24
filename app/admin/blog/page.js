@@ -5,6 +5,7 @@ import { Edit2, Trash2, Plus, ExternalLink, Star, Eye, EyeOff, HelpCircle } from
 import toast from 'react-hot-toast';
 import { BLOG_CATEGORIES, slugify } from '@/lib/blogShared';
 import AdminFaqManager from '@/components/admin/AdminFaqManager';
+import BlogPostFaqEditor from '@/components/admin/BlogPostFaqEditor';
 
 const EMPTY = {
   title: '',
@@ -29,6 +30,7 @@ export default function AdminBlogPage() {
   const [editId, setEditId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [slugTouched, setSlugTouched] = useState(false);
+  const [postFaqs, setPostFaqs] = useState([]);
 
   const inp = 'w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-white placeholder:text-gray-500';
 
@@ -43,11 +45,12 @@ export default function AdminBlogPage() {
   const openNew = () => {
     setEditId(null);
     setForm(EMPTY);
+    setPostFaqs([]);
     setSlugTouched(false);
     setShowForm(true);
   };
 
-  const openEdit = (p) => {
+  const openEdit = async (p) => {
     setEditId(p.id);
     setForm({
       title: p.title || '',
@@ -66,6 +69,13 @@ export default function AdminBlogPage() {
     });
     setSlugTouched(true);
     setShowForm(true);
+    try {
+      const res = await fetch(`/api/admin/blog/${p.id}`);
+      const data = await res.json();
+      setPostFaqs(Array.isArray(data.faqs) ? data.faqs : []);
+    } catch {
+      setPostFaqs([]);
+    }
   };
 
   const set = (k, v) => {
@@ -84,7 +94,18 @@ export default function AdminBlogPage() {
     const res = await fetch('/api/admin/blog', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, id: editId || undefined }),
+      body: JSON.stringify({
+        ...form,
+        id: editId || undefined,
+        faqs: postFaqs
+          .filter((f) => f.question?.trim() && f.answer?.trim())
+          .map((f, i) => ({
+            id: f.id,
+            question: f.question.trim(),
+            answer: f.answer.trim(),
+            sortOrder: i,
+          })),
+      }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -95,6 +116,7 @@ export default function AdminBlogPage() {
     setShowForm(false);
     setEditId(null);
     setForm(EMPTY);
+    setPostFaqs([]);
     load();
   };
 
@@ -136,7 +158,7 @@ export default function AdminBlogPage() {
           onClick={() => setPageTab('faq')}
           className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 ${pageTab === 'faq' ? 'vd-gradient-gold text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}
         >
-          <HelpCircle className="w-4 h-4" /> FAQs
+          <HelpCircle className="w-4 h-4" /> General FAQs
         </button>
       </div>
 
@@ -233,11 +255,13 @@ export default function AdminBlogPage() {
             </label>
           </div>
 
+          <BlogPostFaqEditor faqs={postFaqs} onChange={setPostFaqs} />
+
           <div className="flex flex-wrap gap-2 pt-2">
             <button type="button" onClick={save} className="px-6 py-2.5 vd-gradient-gold text-white rounded-xl text-sm font-semibold hover:opacity-90">
               {editId ? 'Update Post' : 'Create Post'}
             </button>
-            <button type="button" onClick={() => { setShowForm(false); setEditId(null); }} className="px-4 py-2.5 border border-gray-600 rounded-xl text-sm text-gray-300 hover:bg-gray-700">
+            <button type="button" onClick={() => { setShowForm(false); setEditId(null); setPostFaqs([]); }} className="px-4 py-2.5 border border-gray-600 rounded-xl text-sm text-gray-300 hover:bg-gray-700">
               Cancel
             </button>
           </div>
@@ -265,7 +289,10 @@ export default function AdminBlogPage() {
                     {p.isPublished ? 'Published' : 'Draft'}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-1">{p.category} · /blog/{p.slug}</p>
+                <p className="text-xs text-gray-500 mb-1">
+                  {p.category} · /blog/{p.slug}
+                  {p.faqCount > 0 && <span className="text-pink-400/80"> · {p.faqCount} FAQ{p.faqCount !== 1 ? 's' : ''}</span>}
+                </p>
                 <p className="text-sm text-gray-400 line-clamp-2">{p.excerpt}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">

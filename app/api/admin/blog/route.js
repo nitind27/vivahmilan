@@ -3,7 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
 import { ensureBlogTable, slugify } from '@/lib/blog';
-import { queryOne } from '@/lib/db';
+import { queryOne, query } from '@/lib/db';
+import { ensureFaqTable, syncBlogPostFaqs, deleteFaqsForBlogPost, getAdminFaqsForBlogPost } from '@/lib/faq';
 
 async function uniqueSlug(base, excludeId) {
   let slug = slugify(base);
@@ -28,7 +29,18 @@ export async function GET() {
   const posts = await prisma.blogPost.findMany({
     orderBy: [{ isFeatured: 'desc' }, { sortOrder: 'asc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
   });
-  return NextResponse.json(posts.map((p) => ({ ...p, isPublished: !!p.isPublished, isFeatured: !!p.isFeatured })));
+  await ensureFaqTable();
+  const faqCounts = await query(
+    'SELECT blogPostId, COUNT(*) AS c FROM faqitem WHERE blogPostId IS NOT NULL GROUP BY blogPostId'
+  ).catch(() => []);
+  const countMap = Object.fromEntries((faqCounts || []).map((r) => [r.blogPostId, Number(r.c)]));
+
+  return NextResponse.json(posts.map((p) => ({
+    ...p,
+    isPublished: !!p.isPublished,
+    isFeatured: !!p.isFeatured,
+    faqCount: countMap[p.id] || 0,
+  })));
 }
 
 export async function POST(req) {
@@ -54,6 +66,7 @@ export async function POST(req) {
     isFeatured,
     sortOrder,
     publishedAt,
+    faqs,
   } = body;
 
   const data = {
@@ -81,15 +94,35 @@ export async function POST(req) {
       where: { id },
       data: { ...data, slug: finalSlug },
     });
-    return NextResponse.json({ ...updated, isPublished: !!updated.isPublished, isFeatured: !!updated.isFeatured });
+    if (Array.isArray(faqs)) {
+      await syncBlogPostFaqs(id, faqs);
+    }
+    const postFaqs = await getAdminFaqsForBlogPost(id);
+    return NextResponse.json({
+      ...updated,
+      isPublished: !!updated.isPublished,
+      isFeatured: !!updated.isFeatured,
+      faqs: postFaqs,
+      faqCount: postFaqs.length,
+    });
   }
 
   const finalSlug = await uniqueSlug(slug || data.title, null);
   const created = await prisma.blogPost.create({
     data: { ...data, slug: finalSlug },
   });
+  if (Array.isArray(faqs)) {
+    await syncBlogPostFaqs(created.id, faqs);
+  }
+  const postFaqs = await getAdminFaqsForBlogPost(created.id);
   return NextResponse.json(
-    { ...created, isPublished: !!created.isPublished, isFeatured: !!created.isFeatured },
+    {
+      ...created,
+      isPublished: !!created.isPublished,
+      isFeatured: !!created.isFeatured,
+      faqs: postFaqs,
+      faqCount: postFaqs.length,
+    },
     { status: 201 }
   );
 }
@@ -102,6 +135,7 @@ export async function DELETE(req) {
   const { id } = await req.json();
   if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
   await ensureBlogTable();
+  await deleteFaqsForBlogPost(id);
   await prisma.blogPost.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }

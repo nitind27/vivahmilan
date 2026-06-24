@@ -166,9 +166,18 @@ export default function Home() {
     ? liveStats.stats.map(s => ({ ...s, icon: ICON_MAP[s.icon] || Heart }))
     : DEFAULT_STATS;
 
-  const membersLabel = liveStats?.members
-    ? `${liveStats.members >= 100000 ? `${Math.floor(liveStats.members / 100000)} Lakh+` : liveStats.members.toLocaleString('en-IN')} members`
-    : 'members';
+  const membersLabel = (() => {
+    const membersStat = STATS.find((s) => s.label === 'Members');
+    if (membersStat && (membersStat.value > 0 || membersStat.suffix)) {
+      return `${membersStat.value}${membersStat.suffix} members`.replace('++', '+');
+    }
+    if (liveStats?.members) {
+      return liveStats.members >= 100000
+        ? `${Math.floor(liveStats.members / 100000)} Lakh+ members`
+        : `${liveStats.members.toLocaleString('en-IN')} members`;
+    }
+    return 'members';
+  })();
 
   const ctaHeading = siteConfig.cta_heading || 'Ready to Find Your Soulmate?';
   const ctaSubtext = siteConfig.cta_subtext || `Join ${membersLabel} and start your journey today. It's free!`;

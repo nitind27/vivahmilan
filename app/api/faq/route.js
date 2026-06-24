@@ -7,14 +7,18 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const blog = searchParams.get('blog') === '1';
   const help = searchParams.get('help') === '1';
+  const blogPostId = searchParams.get('blogPostId');
 
   let sql = 'SELECT * FROM faqitem WHERE isActive = 1';
   const params = [];
 
-  if (blog) {
-    sql += ' AND showOnBlog = 1';
+  if (blogPostId) {
+    sql += ' AND blogPostId = ?';
+    params.push(blogPostId);
+  } else if (blog) {
+    sql += ' AND showOnBlog = 1 AND blogPostId IS NULL';
   } else if (help) {
-    sql += ' AND showOnHelp = 1';
+    sql += ' AND showOnHelp = 1 AND blogPostId IS NULL';
   }
 
   sql += ' ORDER BY category ASC, sortOrder ASC, createdAt ASC';

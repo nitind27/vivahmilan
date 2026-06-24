@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { ensureBlogTable } from '@/lib/blog';
+import { getFaqsForBlogPost } from '@/lib/faq';
 
 export const revalidate = 60;
 
@@ -14,6 +15,8 @@ export async function GET(req, { params }) {
   });
 
   if (!post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+
+  const faqs = await getFaqsForBlogPost(post.id);
 
   return NextResponse.json({
     id: post.id,
@@ -31,5 +34,6 @@ export async function GET(req, { params }) {
     publishedAt: post.publishedAt,
     createdAt: post.createdAt,
     updatedAt: post.updatedAt,
+    faqs,
   });
 }

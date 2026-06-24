@@ -107,7 +107,7 @@ export default function AdminFaqManager() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-white">FAQ Management</h2>
-          <p className="text-gray-400 text-sm mt-1">Manage FAQs shown on Blog and Help Center pages</p>
+          <p className="text-gray-400 text-sm mt-1">General FAQs for Blog listing &amp; Help Center (not tied to a single article)</p>
         </div>
         <button
           type="button"

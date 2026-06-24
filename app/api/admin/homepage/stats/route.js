@@ -1,42 +1,74 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { query, execute } from '@/lib/db';
+import { execute, queryOne } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import {
+  getHomepageStatsBundle,
+  updateCustomStat,
+  HOMEPAGE_STAT_DEFS,
+} from '@/lib/homepageStats';
 
 export async function GET() {
-  const stats = await query('SELECT * FROM homepage_stat WHERE isActive = 1 ORDER BY sortOrder ASC');
-  return NextResponse.json(stats);
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  const bundle = await getHomepageStatsBundle();
+  return NextResponse.json(bundle);
 }
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN')
+  if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
-  const { id, icon, value, suffix, label, sortOrder } = await req.json();
+  const body = await req.json();
 
-  if (id) {
+  if (body.action === 'set_mode') {
+    const mode = body.mode === 'manual' ? 'manual' : 'live';
+    const existing = await queryOne('SELECT id FROM siteconfig WHERE `key` = ?', ['homepage_stats_mode']);
+
+    if (existing) {
+      await execute(
+        'UPDATE siteconfig SET value = ?, updatedAt = NOW() WHERE `key` = ?',
+        [mode, 'homepage_stats_mode']
+      );
+    } else {
+      await execute(
+        'INSERT INTO siteconfig (id, `key`, value, updatedAt, createdAt) VALUES (?, ?, ?, NOW(), NOW())',
+        [randomUUID(), 'homepage_stats_mode', mode]
+      );
+    }
+    const bundle = await getHomepageStatsBundle();
+    return NextResponse.json({ success: true, ...bundle });
+  }
+
+  if (body.id && HOMEPAGE_STAT_DEFS.some((d) => d.id === body.id)) {
+    await updateCustomStat(body.id, { value: body.value, suffix: body.suffix });
+    const bundle = await getHomepageStatsBundle();
+    return NextResponse.json({ success: true, ...bundle });
+  }
+
+  // Legacy: full stat row update (slides admin compatibility)
+  const { id, icon, value, suffix, label, sortOrder } = body;
+  if (id && HOMEPAGE_STAT_DEFS.some((d) => d.id === id)) {
     await execute(
       'UPDATE homepage_stat SET icon = ?, value = ?, suffix = ?, label = ?, sortOrder = ?, updatedAt = NOW() WHERE id = ?',
       [icon, Number(value), suffix, label, sortOrder || 0, id]
     );
-  } else {
-    await execute(
-      'INSERT INTO homepage_stat (id, icon, value, suffix, label, sortOrder, isActive, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, 1, NOW(), NOW())',
-      [randomUUID(), icon, Number(value), suffix, label, sortOrder || 0]
-    );
+    const bundle = await getHomepageStatsBundle();
+    return NextResponse.json({ success: true, ...bundle });
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
 }
 
-export async function DELETE(req) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
-  const { id } = await req.json();
-  await execute('DELETE FROM homepage_stat WHERE id = ?', [id]);
-  return NextResponse.json({ success: true });
+export async function DELETE() {
+  return NextResponse.json(
+    { error: 'Homepage stats are fixed — edit values instead of deleting.' },
+    { status: 400 }
+  );
 }

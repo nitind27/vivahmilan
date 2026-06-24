@@ -50,7 +50,7 @@ function FaqRow({ question, answer, open, onToggle }) {
   );
 }
 
-export default function BlogFaqSection({ items = [] }) {
+export default function BlogFaqSection({ items = [], title = 'Frequently Asked Questions', subtitle = 'Quick answers about matrimony, profiles & Vivah Dwar' }) {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [openId, setOpenId] = useState(null);
@@ -81,8 +81,8 @@ export default function BlogFaqSection({ items = [] }) {
               <HelpCircle className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-vd-text-heading">Frequently Asked Questions</h2>
-              <p className="text-sm text-vd-text-sub mt-1">Quick answers about matrimony, profiles &amp; Vivah Dwar</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-vd-text-heading">{title}</h2>
+              <p className="text-sm text-vd-text-sub mt-1">{subtitle}</p>
             </div>
           </div>
         </div>
