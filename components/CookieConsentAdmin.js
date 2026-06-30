@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Cookie, Shield, BarChart3, Settings2 } from 'lucide-react';
 
-export default function CookieConsentAdmin({ days }) {
+export default function CookieConsentAdmin({ days, label }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +16,8 @@ export default function CookieConsentAdmin({ days }) {
       .finally(() => setLoading(false));
   }, [days]);
 
+  const periodText = label || (days === 1 ? 'Today' : `last ${days}d`);
+
   if (loading) {
     return (
       <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 animate-pulse h-40" />
@@ -26,7 +28,7 @@ export default function CookieConsentAdmin({ days }) {
     return (
       <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6">
         <h3 className="text-white font-bold flex items-center gap-2 mb-2">
-          <Cookie className="w-5 h-5 text-amber-400" /> Cookie consent (last {days}d)
+          <Cookie className="w-5 h-5 text-amber-400" /> Cookie consent ({periodText})
         </h3>
         <p className="text-gray-400 text-sm">No consent events logged yet. Choices appear when visitors use the cookie banner.</p>
       </div>
@@ -36,7 +38,7 @@ export default function CookieConsentAdmin({ days }) {
   return (
     <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 space-y-4">
       <h3 className="text-white font-bold flex items-center gap-2">
-        <Cookie className="w-5 h-5 text-amber-400" /> Cookie consent (last {days}d)
+        <Cookie className="w-5 h-5 text-amber-400" /> Cookie consent ({periodText})
       </h3>
       <p className="text-gray-400 text-xs">
         Each save is one anonymous log (no name/email). Same visitor may appear more than once if they change settings.

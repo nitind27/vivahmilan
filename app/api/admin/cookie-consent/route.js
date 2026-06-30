@@ -20,6 +20,8 @@ async function ensureTable() {
   `);
 }
 
+import { getAnalyticsWindow } from '@/lib/analyticsWindow';
+
 export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'ADMIN') {
@@ -27,8 +29,8 @@ export async function GET(req) {
   }
 
   const { searchParams } = new URL(req.url);
-  const days = parseInt(searchParams.get('days') || '30', 10);
-  const since = new Date(Date.now() - days * 86400000).toISOString().slice(0, 19).replace('T', ' ');
+  const window = getAnalyticsWindow(searchParams.get('days'));
+  const { whereSql, params, isToday, days, label } = window;
 
   try {
     if (!tableReady) {
@@ -37,26 +39,31 @@ export async function GET(req) {
     }
 
     const [total, byType, functionalOn, analyticsOn, today, daily] = await Promise.all([
-      queryOne(`SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE createdAt >= ?`, [since]),
+      queryOne(`SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE ${whereSql}`, params),
       query(
-        `SELECT choiceType, COUNT(*) AS cnt FROM cookieconsentlog WHERE createdAt >= ?
+        `SELECT choiceType, COUNT(*) AS cnt FROM cookieconsentlog WHERE ${whereSql}
          GROUP BY choiceType ORDER BY cnt DESC`,
-        [since]
+        params
       ),
       queryOne(
-        `SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE createdAt >= ? AND functional = 1`,
-        [since]
+        `SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE ${whereSql} AND functional = 1`,
+        params
       ),
       queryOne(
-        `SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE createdAt >= ? AND analytics = 1`,
-        [since]
+        `SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE ${whereSql} AND analytics = 1`,
+        params
       ),
       queryOne(`SELECT COUNT(*) AS cnt FROM cookieconsentlog WHERE DATE(createdAt) = CURDATE()`),
-      query(
-        `SELECT DATE(createdAt) AS date, COUNT(*) AS cnt FROM cookieconsentlog
-         WHERE createdAt >= ? GROUP BY DATE(createdAt) ORDER BY date ASC`,
-        [since]
-      ),
+      isToday
+        ? query(
+            `SELECT HOUR(createdAt) AS hour, COUNT(*) AS cnt FROM cookieconsentlog
+             WHERE DATE(createdAt) = CURDATE() GROUP BY HOUR(createdAt) ORDER BY hour ASC`
+          )
+        : query(
+            `SELECT DATE(createdAt) AS date, COUNT(*) AS cnt FROM cookieconsentlog
+             WHERE ${whereSql} GROUP BY DATE(createdAt) ORDER BY date ASC`,
+            params
+          ),
     ]);
 
     const totalCnt = Number(total?.cnt || 0);
@@ -66,6 +73,8 @@ export async function GET(req) {
 
     return NextResponse.json({
       days,
+      label,
+      isToday,
       total: totalCnt,
       today: Number(today?.cnt || 0),
       acceptAll: acceptAllCnt,
@@ -82,6 +91,8 @@ export async function GET(req) {
     console.error('[Admin CookieConsent]', err.message);
     return NextResponse.json({
       days,
+      label: `Last ${days} days`,
+      isToday: false,
       total: 0,
       today: 0,
       acceptAll: 0,

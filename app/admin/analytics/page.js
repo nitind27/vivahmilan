@@ -61,7 +61,7 @@ function formatIp(ip) {
 export default function AnalyticsPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [days, setDays] = useState(30);
+  const [days, setDays] = useState(1);
   const [activeTab, setActiveTab] = useState('overview');
 
   const load = async () => {
@@ -81,19 +81,39 @@ export default function AnalyticsPage() {
   const totalDevices = data?.deviceBreakdown?.reduce((s, d) => s + Number(d.cnt), 0) || 1;
   const totalBrowsers = data?.browserBreakdown?.reduce((s, d) => s + Number(d.cnt), 0) || 1;
 
-  // Mini sparkline from daily trend
-  const trend = data?.dailyTrend || [];
-  const maxTrend = Math.max(...trend.map(t => Number(t.views)), 1);
+  const isToday = data?.period?.isToday ?? days === 1;
+  const periodLabel = data?.period?.label || (isToday ? 'Today' : `Last ${days} days`);
+  const periodDate = data?.period?.date;
+
+  // Mini sparkline from daily or hourly trend
+  const trend = isToday ? (data?.hourlyTrend || []) : (data?.dailyTrend || []);
+  const maxTrend = Math.max(...trend.map(t => Number(t.views ?? t.cnt ?? 0)), 1);
+  const avgPerDay = !isToday && data?.dailyTrend?.length
+    ? Math.round(Number(data.summary.totalViews) / data.dailyTrend.length)
+    : null;
+
+  const formatHour = (h) => {
+    const hour = Number(h);
+    if (hour === 0) return '12 AM';
+    if (hour < 12) return `${hour} AM`;
+    if (hour === 12) return '12 PM';
+    return `${hour - 12} PM`;
+  };
 
   return (
     <div className="space-y-6">
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex gap-1 bg-gray-800 rounded-xl p-1 border border-gray-700">
-          {[7, 30, 90].map(d => (
-            <button key={d} onClick={() => setDays(d)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${days === d ? 'bg-vd-primary text-white' : 'text-gray-400 hover:text-white'}`}>
-              {d}d
+          {[
+            { value: 1, label: 'Today' },
+            { value: 7, label: '7d' },
+            { value: 30, label: '30d' },
+            { value: 90, label: '90d' },
+          ].map(({ value, label: lbl }) => (
+            <button key={value} onClick={() => setDays(value)}
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${days === value ? 'bg-vd-primary text-white' : 'text-gray-400 hover:text-white'}`}>
+              {lbl}
             </button>
           ))}
         </div>
@@ -101,7 +121,11 @@ export default function AnalyticsPage() {
           className="flex items-center gap-2 px-3 py-2 bg-gray-800 border border-gray-700 rounded-xl text-sm hover:bg-gray-700 disabled:opacity-50">
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
         </button>
-        <p className="text-xs text-gray-500 ml-auto">Last {days} days</p>
+        <p className="text-xs text-gray-500 ml-auto">
+          {isToday && periodDate
+            ? `Today · ${format(new Date(periodDate + 'T12:00:00'), 'dd MMM yyyy')}`
+            : periodLabel}
+        </p>
       </div>
 
       {loading && !data ? (
@@ -110,37 +134,91 @@ export default function AnalyticsPage() {
         <>
           {/* Summary cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <StatCard icon={Eye}       label="Total Page Views"   value={Number(data?.summary?.totalViews || 0).toLocaleString()}    color="text-blue-400"   bg="bg-blue-900/20"   />
-            <StatCard icon={Users}     label="Unique Visitors"    value={Number(data?.summary?.uniqueVisitors || 0).toLocaleString()} color="text-green-400"  bg="bg-green-900/20"  />
-            <StatCard icon={Activity}  label="Today's Views"      value={Number(data?.summary?.todayViews || 0).toLocaleString()}     color="text-yellow-400" bg="bg-yellow-900/20" />
-            <StatCard icon={TrendingUp} label="Avg/Day"           value={trend.length ? Math.round(data.summary.totalViews / trend.length).toLocaleString() : '—'} color="text-vd-primary" bg="bg-vd-accent-soft dark:bg-vd-accent/20" />
+            <StatCard
+              icon={Eye}
+              label={isToday ? "Today's Page Views" : 'Total Page Views'}
+              value={Number(data?.summary?.totalViews || 0).toLocaleString()}
+              color="text-blue-400"
+              bg="bg-blue-900/20"
+            />
+            <StatCard
+              icon={Users}
+              label={isToday ? "Today's Unique Visitors" : 'Unique Visitors'}
+              value={Number(data?.summary?.uniqueVisitors || 0).toLocaleString()}
+              color="text-green-400"
+              bg="bg-green-900/20"
+            />
+            <StatCard
+              icon={Activity}
+              label={isToday ? 'Pages visited' : "Today's Views"}
+              value={
+                isToday
+                  ? Number(data?.summary?.uniquePages || 0).toLocaleString()
+                  : Number(data?.summary?.todayViews || 0).toLocaleString()
+              }
+              sub={!isToday ? `${Number(data?.summary?.todayUniqueVisitors || 0).toLocaleString()} unique today` : 'distinct URLs today'}
+              color="text-yellow-400"
+              bg="bg-yellow-900/20"
+            />
+            <StatCard
+              icon={TrendingUp}
+              label={isToday ? 'Peak hour today' : 'Avg / day'}
+              value={
+                isToday
+                  ? (data?.summary?.peakHour != null ? formatHour(data.summary.peakHour) : '—')
+                  : (avgPerDay != null ? avgPerDay.toLocaleString() : '—')
+              }
+              sub={isToday && data?.summary?.peakHourViews
+                ? `${Number(data.summary.peakHourViews).toLocaleString()} views`
+                : undefined}
+              color="text-vd-primary"
+              bg="bg-vd-accent-soft dark:bg-vd-accent/20"
+            />
           </div>
 
-          <CookieConsentAdmin days={days} />
+          <CookieConsentAdmin days={days} label={periodLabel} />
 
           {/* Daily trend sparkline */}
           {trend.length > 0 && (
             <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
               <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-vd-primary" /> Daily Traffic Trend
+                <Calendar className="w-4 h-4 text-vd-primary" />
+                {isToday ? 'Hourly Traffic (Today)' : 'Daily Traffic Trend'}
               </h3>
-              <div className="flex items-end gap-1 h-24">
+              <div className="flex items-end gap-1 h-24 overflow-x-auto pb-1">
                 {trend.map((t, i) => {
-                  const h = Math.max(4, Math.round((Number(t.views) / maxTrend) * 96));
+                  const views = Number(t.views ?? t.cnt ?? 0);
+                  const h = Math.max(4, Math.round((views / maxTrend) * 96));
+                  const tip = isToday
+                    ? `${formatHour(t.hour)}: ${views.toLocaleString()} views`
+                    : `${t.date ? format(new Date(t.date), 'dd MMM') : ''}: ${views.toLocaleString()} views`;
                   return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
+                    <div key={i} className={`flex flex-col items-center gap-1 group relative ${isToday ? 'min-w-[2rem]' : 'flex-1'}`}>
                       <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
-                        {t.date ? format(new Date(t.date), 'dd MMM') : ''}: {Number(t.views).toLocaleString()} views
+                        {tip}
                       </div>
                       <div className="w-full bg-vd-primary/80 hover:bg-vd-primary rounded-t-sm transition-colors" style={{ height: `${h}px` }} />
+                      {isToday && (
+                        <span className="text-[9px] text-gray-500 mt-1">{Number(t.hour) % 3 === 0 ? formatHour(t.hour).replace(' ', '') : ''}</span>
+                      )}
                     </div>
                   );
                 })}
               </div>
-              <div className="flex justify-between text-xs text-gray-500 mt-2">
-                <span>{trend[0]?.date ? format(new Date(trend[0].date), 'dd MMM') : ''}</span>
-                <span>{trend[trend.length - 1]?.date ? format(new Date(trend[trend.length - 1].date), 'dd MMM') : ''}</span>
-              </div>
+              {!isToday && (
+                <div className="flex justify-between text-xs text-gray-500 mt-2">
+                  <span>{trend[0]?.date ? format(new Date(trend[0].date), 'dd MMM') : ''}</span>
+                  <span>{trend[trend.length - 1]?.date ? format(new Date(trend[trend.length - 1].date), 'dd MMM') : ''}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {isToday && trend.length === 0 && !loading && (
+            <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700 text-center">
+              <Activity className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+              <p className="text-white font-medium">No analytics for today yet</p>
+              <p className="text-gray-500 text-sm mt-1">Page views will appear here as visitors browse the site today.</p>
             </div>
           )}
 
@@ -299,7 +377,7 @@ export default function AnalyticsPage() {
           {activeTab === 'visitors' && (
             <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
               <div className="px-5 py-3 bg-gray-700/50 flex items-center justify-between">
-                <p className="font-semibold text-white">Recent Visitors (last 50)</p>
+                <p className="font-semibold text-white">Recent Visitors {isToday ? '(today)' : `(last ${days}d)`}</p>
                 <p className="text-xs text-gray-500">Real-time log</p>
               </div>
               <div className="overflow-x-auto">
