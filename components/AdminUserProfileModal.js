@@ -178,7 +178,7 @@ function UserHeader({ data, onPhotoClick }) {
         {u.phoneVerified && <Badge color="blue" icon={Phone}>Phone Verified</Badge>}
         {u.isPremium && <Badge color="yellow" icon={Star}>Premium</Badge>}
         {!u.isActive && <Badge color="red" icon={Ban}>Blocked</Badge>}
-        {u.verificationBadge && <Badge color="purple" icon={CheckCircle}>Badge</Badge>}
+        {!!u.verificationBadge && <Badge color="purple" icon={CheckCircle}>Badge</Badge>}
       </div>
     </div>
   );

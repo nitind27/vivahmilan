@@ -72,6 +72,7 @@ model user {
   profileCorrectionFields   String?   @db.Text
   profileCorrectionRequestedAt DateTime?
   profileCorrectionToken    String?
+  isSeedProfile         Boolean   @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

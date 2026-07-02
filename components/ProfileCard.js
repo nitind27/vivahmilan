@@ -104,7 +104,7 @@ function ProfileCard({ user, index = 0, onShortlistChange }) {
             <div className="flex items-center justify-between mb-1">
               <h3 className="font-semibold text-gray-900 dark:text-white truncate flex items-center gap-1.5">
                 {user.name}
-                {user.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
+                {!!user.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
               </h3>
               {age && <span className="text-sm text-gray-500">{age} yrs</span>}
             </div>

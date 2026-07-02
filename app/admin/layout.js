@@ -9,7 +9,7 @@ import {
   BarChart2,   UserCheck, Users, Sparkles, UserPlus, Crown, UserX,
   Bell, Activity, Shield, Flag, Star, Settings, Heart,
   FileText, Edit2, Lock, MessageCircle, LogOut, Eye, RefreshCw, BookOpen,
-  TrendingUp, HandCoins, IndianRupee, UserCog, HeartHandshake,
+  TrendingUp, HandCoins, IndianRupee, UserCog, HeartHandshake, Database,
 } from 'lucide-react';
 import AdminNotifications from '@/components/AdminNotifications';
 
@@ -27,6 +27,7 @@ export const ADMIN_TABS = [
   { id: 'coupons',       label: 'Coupon Codes',      icon: Star,          badge: null },
   { id: 'matchmaker',    label: 'Match Maker',       icon: Sparkles,      badge: null },
   { id: 'createprofile', label: 'Create Profile',    icon: UserPlus,      badge: null },
+  { id: 'seed-profiles', label: 'Dummy Profiles',   icon: Database,      badge: null },
   { id: 'premium',       label: 'Premium Manager',   icon: Crown,         badge: null },
   { id: 'broadcast',     label: 'Broadcast',         icon: Bell,          badge: null },
   { id: 'affiliates',    label: 'Affiliate Agents',  icon: Users,         badge: null },

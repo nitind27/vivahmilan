@@ -994,7 +994,7 @@ function ChatInner() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <p className={`font-semibold truncate ${other?.isBlocked ? 'text-gray-500 dark:text-gray-400 italic' : 'text-gray-900 dark:text-white'}`}>{other?.name}</p>
-                        {!other?.isBlocked && other?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
+                        {!other?.isBlocked && !!other?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
                         {!other?.isBlocked && other?.isPremium && <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />}
                       </div>
                       <p className={`text-xs ${other?.isBlocked ? 'text-gray-400' : online ? 'text-green-500' : 'text-gray-400'}`}>

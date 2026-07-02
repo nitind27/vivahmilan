@@ -200,7 +200,7 @@ export default function InterestsPage() {
                         )}
                         {/* Badges */}
                         <div className="absolute top-2 left-2 flex flex-col gap-1">
-                          {person?.verificationBadge && <VerifiedBadge size="sm" />}
+                          {!!person?.verificationBadge && <VerifiedBadge size="sm" />}
                           {person?.isPremium && (
                             <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
                               <Star className="w-3 h-3 fill-white" />
@@ -216,7 +216,7 @@ export default function InterestsPage() {
                             <Link href={`/profile/${person?.id}`}
                               className="font-bold text-lg hover:text-vd-primary transition-colors flex items-center gap-2">
                               {person?.name}
-                              {person?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
+                              {!!person?.verificationBadge && <VerifiedBadge size="sm" variant="icon" />}
                             </Link>
                             <div className="flex items-center gap-3 text-sm text-gray-500 flex-wrap mt-0.5">
                               {age && <span>{age} yrs</span>}
