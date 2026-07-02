@@ -101,6 +101,7 @@ export default function AdminSeedProfiles() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [statsLoading, setStatsLoading] = useState(false);
 
   const [filterState, setFilterState] = useState('');
   const [filterCaste, setFilterCaste] = useState('');
@@ -131,7 +132,20 @@ export default function AdminSeedProfiles() {
     }
   }, [genCastes, genCaste]);
 
-  const load = useCallback(async () => {
+  const loadStats = useCallback(async () => {
+    setStatsLoading(true);
+    try {
+      const statsRes = await fetch('/api/admin/seed-profiles/stats');
+      const statsData = await statsRes.json();
+      if (statsRes.ok) setSummary(statsData);
+    } catch {
+      toast.error('Failed to load dummy stats');
+    } finally {
+      setStatsLoading(false);
+    }
+  }, []);
+
+  const loadList = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -143,19 +157,14 @@ export default function AdminSeedProfiles() {
       if (filterGender) params.set('gender', filterGender);
       if (search.trim()) params.set('search', search.trim());
 
-      const [listRes, statsRes] = await Promise.all([
-        fetch(`/api/admin/seed-profiles?${params}`),
-        fetch('/api/admin/seed-profiles/stats'),
-      ]);
+      const listRes = await fetch(`/api/admin/seed-profiles?${params}`);
       const listData = await listRes.json();
-      const statsData = await statsRes.json();
 
       if (listRes.ok) {
         setProfiles(listData.profiles || []);
         setTotal(listData.total || 0);
         setTotalPages(listData.totalPages || 1);
       }
-      if (statsRes.ok) setSummary(statsData);
     } catch {
       toast.error('Failed to load dummy profiles');
     } finally {
@@ -163,7 +172,8 @@ export default function AdminSeedProfiles() {
     }
   }, [page, filterState, filterCaste, filterGender, search]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { loadList(); }, [loadList]);
+  useEffect(() => { loadStats(); }, [loadStats]);
 
   const generate = async () => {
     if (!genState || !genCaste) { toast.error('Select state and caste'); return; }
@@ -184,7 +194,7 @@ export default function AdminSeedProfiles() {
       if (!res.ok) { toast.error(data.error || 'Generation failed'); return; }
       toast.success(data.message || 'Profiles generated');
       setPage(1);
-      await load();
+      await Promise.all([loadList(), loadStats()]);
     } finally {
       setGenerating(false);
     }
@@ -196,7 +206,7 @@ export default function AdminSeedProfiles() {
     const data = await res.json();
     if (!res.ok) { toast.error(data.error || 'Delete failed'); return; }
     toast.success('Deleted');
-    load();
+    await Promise.all([loadList(), loadStats()]);
   };
 
   const bulkDelete = async () => {
@@ -226,7 +236,7 @@ export default function AdminSeedProfiles() {
       toast.success(data.message);
       setDeleteConfirm('');
       setPage(1);
-      await load();
+      await Promise.all([loadList(), loadStats()]);
     } finally {
       setDeleting(false);
     }
@@ -301,6 +311,7 @@ export default function AdminSeedProfiles() {
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
           <h2 className="font-bold text-white mb-3 flex items-center gap-2">
             <MapPin className="w-4 h-4 text-vd-primary" /> Caste-wise Count (top 500)
+            {statsLoading ? <span className="text-[10px] text-gray-500">(updating...)</span> : null}
           </h2>
           <div className="overflow-x-auto max-h-48 overflow-y-auto">
             <table className="w-full text-sm">
@@ -390,9 +401,9 @@ export default function AdminSeedProfiles() {
           <div className="flex-1 min-w-[180px]">
             <label className={lbl}><Search className="w-3 h-3 inline mr-1" />Search</label>
             <input className={inp} value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Name, email, city…" onKeyDown={(e) => e.key === 'Enter' && load()} />
+              placeholder="Name, email, city…" onKeyDown={(e) => e.key === 'Enter' && loadList()} />
           </div>
-          <button type="button" onClick={() => { setPage(1); load(); }}
+          <button type="button" onClick={() => { setPage(1); loadList(); }}
             className="px-4 py-2.5 rounded-xl text-sm bg-gray-800 hover:bg-gray-700 text-white flex items-center gap-2">
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
           </button>
@@ -475,7 +486,7 @@ export default function AdminSeedProfiles() {
         <EditModal
           profile={editProfile}
           onClose={() => setEditProfile(null)}
-          onSaved={load}
+          onSaved={async () => { await Promise.all([loadList(), loadStats()]); }}
         />
       )}
     </div>
