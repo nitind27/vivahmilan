@@ -106,6 +106,7 @@ export function AllMembersTab() {
   const [newPassword, setNewPassword] = useState('');
   const [sendPasswordEmail, setSendPasswordEmail] = useState(true);
   const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordEmailLoading, setPasswordEmailLoading] = useState(false);
   const [reminderTargets, setReminderTargets] = useState(null);
   const abortRef = useRef(null);
 
@@ -183,6 +184,32 @@ export function AllMembersTab() {
     load({ cursor, direction: 'back', skipTotal: true });
   };
 
+  useEffect(() => {
+    if (!passwordUser?.id || passwordUser.email) return;
+    let cancelled = false;
+    setPasswordEmailLoading(true);
+    fetch(`/api/admin/create-profile?userId=${encodeURIComponent(passwordUser.id)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (cancelled) return;
+        const email = data?.user?.email?.trim();
+        if (email) setPasswordUser(prev => (prev ? { ...prev, email } : prev));
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setPasswordEmailLoading(false); });
+    return () => { cancelled = true; };
+  }, [passwordUser?.id, passwordUser?.email]);
+
+  const openPasswordModal = (member) => {
+    setNewPassword('');
+    setSendPasswordEmail(true);
+    setPasswordUser({
+      id: member.id,
+      name: member.name,
+      email: (member.email || '').trim(),
+    });
+  };
+
   const reload = () => load({ direction: 'reset' });
 
   const calcAge = (dob) => dob ? Math.floor((Date.now() - new Date(dob)) / 31557600000) : null;
@@ -215,7 +242,9 @@ export function AllMembersTab() {
     if (!generatePassword && (!newPassword || newPassword.length < 8)) {
       return toast.error('Password must be at least 8 characters, or use Generate & Email');
     }
-    if (!passwordUser?.email) return toast.error('User has no email — cannot send password');
+    if (sendPasswordEmail && !passwordUser?.email) {
+      return toast.error('User has no email — uncheck "Email new password" or add email first');
+    }
     setPasswordSaving(true);
     try {
       const body = generatePassword
@@ -372,7 +401,7 @@ export function AllMembersTab() {
                       >
                         <Mail className="w-4 h-4" />
                       </button>
-                      <button onClick={() => setPasswordUser({ id: m.id, name: m.name })} className="p-1.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Change Password">
+                      <button onClick={() => openPasswordModal(m)} className="p-1.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Change Password">
                         <Key className="w-4 h-4" />
                       </button>
                       <button onClick={() => deleteUser(m.id, m.name, m.email)} className="p-1.5 bg-red-900/30 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Delete Account">
@@ -402,8 +431,15 @@ export function AllMembersTab() {
             <p className="text-sm text-gray-400 mb-1">
               Reset password for <span className="text-white font-semibold">{passwordUser.name}</span>
             </p>
-            <p className="text-xs text-gray-500 mb-4 flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5" /> {passwordUser.email || 'No email on file'}
+            <p className="text-xs mb-4 flex items-center gap-1.5 min-h-[18px]">
+              <Mail className="w-3.5 h-3.5 shrink-0 text-gray-500" />
+              {passwordEmailLoading ? (
+                <span className="text-gray-500">Loading email…</span>
+              ) : passwordUser.email ? (
+                <span className="text-emerald-400 truncate" title={passwordUser.email}>{passwordUser.email}</span>
+              ) : (
+                <span className="text-amber-400">No email on file — password can be set but not emailed</span>
+              )}
             </p>
             <div className="flex gap-2 mb-3">
               <input type="text" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New password (min 8 chars)"
@@ -413,13 +449,22 @@ export function AllMembersTab() {
                 Preview
               </button>
             </div>
-            <label className="flex items-center gap-2 text-sm text-gray-400 mb-4 cursor-pointer">
-              <input type="checkbox" checked={sendPasswordEmail} onChange={e => setSendPasswordEmail(e.target.checked)} className="rounded" />
+            <label className={`flex items-center gap-2 text-sm mb-4 cursor-pointer ${!passwordUser.email && !passwordEmailLoading ? 'text-gray-600' : 'text-gray-400'}`}>
+              <input
+                type="checkbox"
+                checked={sendPasswordEmail}
+                onChange={e => setSendPasswordEmail(e.target.checked)}
+                disabled={!passwordUser.email && !passwordEmailLoading}
+                className="rounded disabled:opacity-40"
+              />
               Email new password to user
             </label>
             <div className="flex flex-col gap-2">
-              <button onClick={() => handlePasswordChange(true)} disabled={passwordSaving || !passwordUser.email}
-                className="w-full py-2.5 bg-vd-primary hover:opacity-90 text-white rounded-xl text-sm font-semibold transition-opacity disabled:opacity-50">
+              <button
+                onClick={() => handlePasswordChange(true)}
+                disabled={passwordSaving || passwordEmailLoading || (sendPasswordEmail && !passwordUser.email)}
+                className="w-full py-2.5 bg-vd-primary hover:opacity-90 text-white rounded-xl text-sm font-semibold transition-opacity disabled:opacity-50"
+              >
                 {passwordSaving ? 'Saving…' : 'Generate & Email Password'}
               </button>
               <div className="flex gap-2">
