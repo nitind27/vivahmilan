@@ -53,7 +53,13 @@ function MatchesPage() {
   };
 
   const updateLocation = (patch) => {
-    applyFiltersNow({ ...filters, ...patch });
+    setFilters(prev => {
+      const next = { ...prev, ...patch };
+      clearTimeout(debounceRef.current);
+      setDebouncedFilters(next);
+      setPage(1);
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -119,7 +125,7 @@ function MatchesPage() {
         {/* Filters panel */}
         {showFilters && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 mb-6 border border-vd-border shadow-sm">
+            className="bg-vd-bg-section dark:bg-vd-bg-card rounded-2xl p-6 mb-6 border border-vd-border shadow-sm overflow-visible">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">Filter Matches</h3>
               {activeFilters > 0 && (
@@ -128,8 +134,8 @@ function MatchesPage() {
                 </button>
               )}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="col-span-2 md:col-span-4 rounded-xl border border-vd-border bg-vd-bg p-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 overflow-visible">
+              <div className="col-span-2 md:col-span-4 rounded-xl border border-vd-border bg-vd-bg p-4 overflow-visible relative z-10">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-vd-primary" /> Location
                 </p>

@@ -23,22 +23,30 @@ export default function LocationPicker({
   const [loadingStates, setLoadingStates]   = useState(false);
   const [loadingCities, setLoadingCities]   = useState(false);
 
+  const [loadingCountries, setLoadingCountries] = useState(true);
+
   // Load countries once
   useEffect(() => {
+    setLoadingCountries(true);
     fetch('/api/location/countries')
       .then(r => r.json())
-      .then(data => setCountries(data));
+      .then(data => setCountries(Array.isArray(data) ? data : []))
+      .catch(() => setCountries([]))
+      .finally(() => setLoadingCountries(false));
   }, []);
 
   // When country name changes from outside, find its ISO
   useEffect(() => {
-    if (country && countries.length > 0) {
-      const found = countries.find(c => c.name === country);
-      if (found && found.isoCode !== countryIso) {
-        setCountryIso(found.isoCode);
-      }
+    if (!countries.length) return;
+    if (!country) {
+      if (countryIso) setCountryIso('');
+      return;
     }
-  }, [country, countries]);
+    const found = countries.find(c => c.name === country);
+    if (found && found.isoCode !== countryIso) {
+      setCountryIso(found.isoCode);
+    }
+  }, [country, countries, countryIso]);
 
   // Load states when countryIso changes
   useEffect(() => {
@@ -114,7 +122,8 @@ export default function LocationPicker({
         value={country}
         onChange={handleCountry}
         options={countryOptions}
-        placeholder="Select country…"
+        placeholder={loadingCountries ? 'Loading countries…' : 'Select country…'}
+        disabled={loadingCountries || countryOptions.length === 0}
       />
 
       {/* State */}
