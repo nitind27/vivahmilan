@@ -8,7 +8,7 @@ import EarlyBirdGuestPopup from '@/components/EarlyBirdGuestPopup';
 
 export default function Providers({ children }) {
   return (
-    <SessionProvider>
+    <SessionProvider refetchOnWindowFocus>
       <ThemeProvider>
         <LoginGeoTracker />
         <PortalAccessGuard />

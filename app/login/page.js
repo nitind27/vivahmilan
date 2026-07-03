@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
-import { signIn, getSession, useSession } from 'next-auth/react';
+import { signIn, getSession, useSession, signOut } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,7 +49,10 @@ async function resolvePostLoginPath(user) {
     return `/onboarding?email=${encodeURIComponent(user.email)}&correction=1`;
   }
   try {
-    const res = await fetch('/api/portal-access', { cache: 'no-store' });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch('/api/portal-access', { cache: 'no-store', signal: controller.signal });
+    clearTimeout(timer);
     if (res.ok) {
       const data = await res.json();
       if (data.needsProfileCorrection && data.correctionUrl) return data.correctionUrl;
@@ -59,6 +62,11 @@ async function resolvePostLoginPath(user) {
   } catch { /* fallback below */ }
   if (!user.adminVerified) return '/profile-launch';
   return user.portalAccessGranted === false ? '/profile-launch' : '/dashboard';
+}
+
+function safeCallbackPath(raw) {
+  if (!raw || !raw.startsWith('/') || raw.startsWith('//')) return null;
+  return raw;
 }
 
 function QRLoginPanel({ onBack, onBackHome }) {
@@ -290,6 +298,9 @@ function LoginInner() {
   const [loginMode, setLoginMode] = useState('member');
   const [loginOptions, setLoginOptions] = useState(DEFAULT_LOGIN_OPTIONS);
   const [optionsLoaded, setOptionsLoaded] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [sessionWaitExpired, setSessionWaitExpired] = useState(false);
+  const redirectStarted = useRef(false);
 
   useEffect(() => {
     fetch('/api/login-options', { cache: 'no-store' })
@@ -338,23 +349,49 @@ function LoginInner() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (status !== 'authenticated' || !session?.user) return;
-    if (session.user.isNewUser) {
-      const email = encodeURIComponent(session.user.email || '');
-      const name = encodeURIComponent(session.user.name || '');
-      router.replace(`/onboarding?email=${email}&name=${name}`);
+    if (status !== 'loading') {
+      setSessionWaitExpired(false);
       return;
     }
+    const t = setTimeout(() => setSessionWaitExpired(true), 3000);
+    return () => clearTimeout(t);
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== 'authenticated' || !session?.user || redirectStarted.current) return;
+    redirectStarted.current = true;
+    setIsRedirecting(true);
+
+    const failSafe = setTimeout(async () => {
+      redirectStarted.current = false;
+      setIsRedirecting(false);
+      await signOut({ redirect: false });
+      toast.error('Session expired. Please sign in again.');
+    }, 8000);
+
     (async () => {
-      const defaultPath = await resolvePostLoginPath(session.user);
-      const callbackUrl = searchParams?.get('callbackUrl');
-      if (callbackUrl && callbackUrl.startsWith('/') && defaultPath !== '/profile-launch') {
-        router.replace(callbackUrl);
-      } else {
-        router.replace(defaultPath);
+      try {
+        if (session.user.isNewUser) {
+          clearTimeout(failSafe);
+          const email = encodeURIComponent(session.user.email || '');
+          const name = encodeURIComponent(session.user.name || '');
+          window.location.replace(`/onboarding?email=${email}&name=${name}`);
+          return;
+        }
+        const callbackUrl = safeCallbackPath(searchParams?.get('callbackUrl'));
+        const defaultPath = await resolvePostLoginPath(session.user);
+        const dest = callbackUrl && defaultPath !== '/profile-launch' ? callbackUrl : defaultPath;
+        clearTimeout(failSafe);
+        window.location.replace(dest);
+      } catch {
+        clearTimeout(failSafe);
+        redirectStarted.current = false;
+        setIsRedirecting(false);
       }
     })();
-  }, [status, session, router, searchParams]);
+
+    return () => clearTimeout(failSafe);
+  }, [status, session, searchParams]);
 
   const validate = (f) => {
     const e = {};
@@ -405,13 +442,10 @@ function LoginInner() {
       toast.success(rememberMe ? 'Welcome back! You will stay signed in for 30 days.' : loginMode === 'family' ? 'Family login successful' : 'Welcome back!');
       logWebLogin();
       const s = await getSession();
-      const callbackUrl = searchParams?.get('callbackUrl');
+      const callbackUrl = safeCallbackPath(searchParams?.get('callbackUrl'));
       const defaultPath = await resolvePostLoginPath(s?.user);
-      if (callbackUrl && callbackUrl.startsWith('/') && defaultPath !== '/profile-launch') {
-        router.push(callbackUrl);
-      } else {
-        router.push(defaultPath);
-      }
+      const dest = callbackUrl && defaultPath !== '/profile-launch' ? callbackUrl : defaultPath;
+      window.location.replace(dest);
     }
   };
 
@@ -420,8 +454,12 @@ function LoginInner() {
       touched[field] && errors[field] ? 'border-red-400 focus:ring-red-200' : 'border-vd-border'
     }`;
 
-  if (status === 'loading' || status === 'authenticated') {
+  if (isRedirecting) {
     return <SiteLoader message="Signing you in…" size="lg" />;
+  }
+
+  if (status === 'loading' && !sessionWaitExpired) {
+    return <SiteLoader message="Loading…" size="lg" />;
   }
 
   const goHome = () => router.push('/');
@@ -548,12 +586,9 @@ function LoginInner() {
                   type="button"
                   onClick={() => {
                     setGoogleLoading(true);
-                    const callbackUrl = searchParams?.get('callbackUrl');
+                    const callbackUrl = safeCallbackPath(searchParams?.get('callbackUrl'));
                     signIn('google', {
-                      callbackUrl:
-                        callbackUrl && callbackUrl.startsWith('/')
-                          ? callbackUrl
-                          : '/dashboard',
+                      callbackUrl: callbackUrl || '/dashboard',
                     });
                   }}
                   disabled={googleLoading}

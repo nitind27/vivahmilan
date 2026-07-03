@@ -63,8 +63,19 @@ function MatchesPage() {
   };
 
   useEffect(() => {
-    if (status === 'unauthenticated') router.push('/login');
+    if (status === 'unauthenticated') {
+      router.replace(`/login?callbackUrl=${encodeURIComponent('/matches')}`);
+    }
   }, [status, router]);
+
+  if (status === 'loading' || status === 'unauthenticated') {
+    return (
+      <div className="min-h-screen bg-vd-bg">
+        <Navbar />
+        <SiteLoader message="Loading matches…" size="lg" />
+      </div>
+    );
+  }
 
   const fetchMatches = useCallback(async () => {
     setLoading(true);

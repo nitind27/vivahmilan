@@ -104,15 +104,32 @@ export async function middleware(req) {
     }
   }
 
-  // After Google OAuth: logged-in verified user should not stay stuck on /login
-  if (
-    pathname.startsWith('/login') &&
-    token &&
-    (token.role === 'USER' || token.role === 'FAMILY') &&
-    token.adminVerified === true &&
-    (await isPortalBlockedForToken(token, req))
-  ) {
-    return NextResponse.redirect(new URL('/profile-launch', req.url));
+  // Logged-in users should not stay on /login (fixes stuck "Signing you in…" on callback URLs)
+  if (pathname.startsWith('/login') && token) {
+    if (token.role === 'ADMIN') {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+
+    if (token.profileCorrectionRequired) {
+      const email = encodeURIComponent(token.email || '');
+      return NextResponse.redirect(new URL(`/onboarding?email=${email}&correction=1`, req.url));
+    }
+
+    const portalBlocked =
+      (token.role === 'USER' || token.role === 'FAMILY') &&
+      (await isPortalBlockedForToken(token, req));
+
+    if (portalBlocked) {
+      return NextResponse.redirect(new URL('/profile-launch', req.url));
+    }
+
+    const callbackUrl = req.nextUrl.searchParams.get('callbackUrl');
+    const safeCallback =
+      callbackUrl && callbackUrl.startsWith('/') && !callbackUrl.startsWith('//')
+        ? callbackUrl
+        : null;
+
+    return NextResponse.redirect(new URL(safeCallback || '/dashboard', req.url));
   }
 
   if (pathname.startsWith('/api/admin')) {
