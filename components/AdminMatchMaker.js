@@ -104,6 +104,8 @@ export function AllMembersTab() {
   const [viewUserId, setViewUserId] = useState(null);
   const [passwordUser, setPasswordUser] = useState(null);
   const [newPassword, setNewPassword] = useState('');
+  const [sendPasswordEmail, setSendPasswordEmail] = useState(true);
+  const [passwordSaving, setPasswordSaving] = useState(false);
   const [reminderTargets, setReminderTargets] = useState(null);
   const abortRef = useRef(null);
 
@@ -209,13 +211,43 @@ export function AllMembersTab() {
     toast.success('Account deleted — see Admin → Deleted Users'); reload();
   };
 
-  const handlePasswordChange = async () => {
-    if (!newPassword || newPassword.length < 6) return toast.error('Password must be at least 6 characters');
-    const res = await fetch(`/api/admin/users/${passwordUser.id}`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: newPassword }),
-    });
-    if (res.ok) { toast.success(`Password changed for ${passwordUser.name}`); setPasswordUser(null); setNewPassword(''); }
-    else toast.error('Failed to change password');
+  const handlePasswordChange = async (generatePassword = false) => {
+    if (!generatePassword && (!newPassword || newPassword.length < 8)) {
+      return toast.error('Password must be at least 8 characters, or use Generate & Email');
+    }
+    if (!passwordUser?.email) return toast.error('User has no email — cannot send password');
+    setPasswordSaving(true);
+    try {
+      const body = generatePassword
+        ? { generatePassword: true, sendPasswordEmail }
+        : { password: newPassword, sendPasswordEmail };
+      const res = await fetch(`/api/admin/users/${passwordUser.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return toast.error(data.error || 'Failed to change password');
+      const pwd = data.generatedPassword || newPassword;
+      if (sendPasswordEmail && data.passwordEmailSent) {
+        toast.success(`Password updated & emailed to ${passwordUser.email}`);
+      } else if (sendPasswordEmail && !data.passwordEmailSent) {
+        toast.success(`Password updated but email failed. New password: ${pwd}`, { duration: 8000 });
+      } else {
+        toast.success(`Password updated: ${pwd}`, { duration: 6000 });
+      }
+      setPasswordUser(null);
+      setNewPassword('');
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
+  const handleGeneratePasswordPreview = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    let suffix = '';
+    for (let i = 0; i < 8; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
+    setNewPassword(`Vivah@${suffix}`);
   };
 
   return (
@@ -367,12 +399,36 @@ export function AllMembersTab() {
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
           <div className="bg-gray-900 rounded-3xl w-full max-w-sm p-6 border border-gray-700 shadow-2xl">
             <h3 className="text-lg font-bold text-white mb-2">Change Password</h3>
-            <p className="text-sm text-gray-400 mb-4">Set a new password for <span className="text-white font-semibold">{passwordUser.name}</span>.</p>
-            <input type="text" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New Password (min 6 chars)"
-              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white mb-4 focus:outline-none focus:border-vd-primary" />
-            <div className="flex gap-2">
-              <button onClick={() => { setPasswordUser(null); setNewPassword(''); }} className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors">Cancel</button>
-              <button onClick={handlePasswordChange} className="flex-1 py-2.5 bg-vd-primary hover:opacity-90 text-white rounded-xl text-sm font-semibold transition-opacity">Update</button>
+            <p className="text-sm text-gray-400 mb-1">
+              Reset password for <span className="text-white font-semibold">{passwordUser.name}</span>
+            </p>
+            <p className="text-xs text-gray-500 mb-4 flex items-center gap-1">
+              <Mail className="w-3.5 h-3.5" /> {passwordUser.email || 'No email on file'}
+            </p>
+            <div className="flex gap-2 mb-3">
+              <input type="text" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New password (min 8 chars)"
+                className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-vd-primary" />
+              <button type="button" onClick={handleGeneratePasswordPreview}
+                className="px-3 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl text-xs text-gray-300 whitespace-nowrap">
+                Preview
+              </button>
+            </div>
+            <label className="flex items-center gap-2 text-sm text-gray-400 mb-4 cursor-pointer">
+              <input type="checkbox" checked={sendPasswordEmail} onChange={e => setSendPasswordEmail(e.target.checked)} className="rounded" />
+              Email new password to user
+            </label>
+            <div className="flex flex-col gap-2">
+              <button onClick={() => handlePasswordChange(true)} disabled={passwordSaving || !passwordUser.email}
+                className="w-full py-2.5 bg-vd-primary hover:opacity-90 text-white rounded-xl text-sm font-semibold transition-opacity disabled:opacity-50">
+                {passwordSaving ? 'Saving…' : 'Generate & Email Password'}
+              </button>
+              <div className="flex gap-2">
+                <button onClick={() => { setPasswordUser(null); setNewPassword(''); }} className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+                <button onClick={() => handlePasswordChange(false)} disabled={passwordSaving || !newPassword}
+                  className="flex-1 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm font-semibold transition-colors disabled:opacity-50">
+                  Set Custom Password
+                </button>
+              </div>
             </div>
           </div>
         </div>

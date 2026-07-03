@@ -3,6 +3,7 @@ import { queryOne, query, execute } from '@/lib/db';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { getPremiumPlanDetails } from '@/lib/premiumPlanDetails';
 import { assertProfileViewAccess } from '@/lib/profileMatchRules';
+import { getProfileContactVisibility } from '@/lib/seedContactPrivacy.js';
 import { randomUUID } from 'crypto';
 
 export async function GET(req, { params }) {
@@ -19,7 +20,7 @@ export async function GET(req, { params }) {
 
     const user = await queryOne(
       `SELECT u.id, u.name, u.email, u.phone, u.isPremium, u.premiumPlan, u.premiumExpiry,
-              u.isVerified, u.verificationBadge, u.adminVerified, u.isActive,
+              u.isVerified, u.verificationBadge, u.adminVerified, u.isActive, u.isSeedProfile,
               u.profileBoost, u.boostExpiry, u.freeTrialExpiry, u.lastLoginAt, u.createdAt,
               p.gender, p.dob, p.height, p.weight, p.religion, p.caste, p.subCaste,
               p.sect, p.gotra, p.motherTongue, p.education, p.profession, p.income,
@@ -108,13 +109,18 @@ export async function GET(req, { params }) {
     }
 
     const isPremiumViewer = !!decoded.isPremium;
-    const showPhone = isSelf || (isPremiumViewer && !user.hidePhone);
+    const contact = getProfileContactVisibility(user, {
+      viewerId: decoded.id,
+      hidePhone: !!user.hidePhone,
+      isPremiumViewer,
+      profile: user,
+    });
 
     return NextResponse.json({
       id:                user.id,
       name:              user.name,
-      email:             isSelf ? user.email : null,
-      phone:             showPhone ? user.phone : null,
+      email:             contact.email ? user.email : null,
+      phone:             contact.phone ? user.phone : null,
       isPremium:         !!user.isPremium,
       premiumPlan:       user.premiumPlan   || null,
       premiumExpiry:     user.premiumExpiry || null,

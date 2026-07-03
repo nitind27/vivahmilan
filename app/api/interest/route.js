@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { randomUUID } from 'crypto';
+import { isSeedProfileUser } from '@/lib/seedContactPrivacy.js';
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -95,9 +96,10 @@ export async function GET(req) {
   const rows = await query(
     `SELECT
        i.id, i.senderId, i.receiverId, i.message, i.status, i.createdAt, i.updatedAt,
-       u.id AS u_id, u.name AS u_name, u.email AS u_email,
+       u.id AS u_id, u.name AS u_name, u.email AS u_email, u.isSeedProfile AS u_isSeedProfile,
        u.image AS u_image, u.isPremium AS u_isPremium, u.isVerified AS u_isVerified,
        p.gender, p.dob, p.religion, p.city, p.country, p.education, p.profession, p.profileComplete,
+       p.hidePhoto,
        ph.url AS photo_url
      FROM interest i
      JOIN \`user\` u ON u.id = ${col}
@@ -111,7 +113,11 @@ export async function GET(req) {
 
   const enriched = rows.map((r) => {
     const user = {
-      id: r.u_id, name: r.u_name, email: r.u_email,
+      id: r.u_id, name: r.u_name,
+      email: isSeedProfileUser(
+        { email: r.u_email, isSeedProfile: r.u_isSeedProfile },
+        { hidePhoto: r.hidePhoto, profileComplete: r.profileComplete }
+      ) ? null : r.u_email,
       image: r.u_image, isPremium: r.u_isPremium, isVerified: r.u_isVerified,
       profile: { gender: r.gender, dob: r.dob, religion: r.religion, city: r.city, country: r.country, education: r.education, profession: r.profession, profileComplete: r.profileComplete },
       photos: r.photo_url ? [{ url: r.photo_url }] : [],

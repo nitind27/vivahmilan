@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne, execute } from '@/lib/db';
 import { assertProfileViewAccess } from '@/lib/profileMatchRules';
+import { sanitizeUserContactFields } from '@/lib/seedContactPrivacy.js';
 import { randomUUID } from 'crypto';
 
 export async function GET(req, { params }) {
@@ -72,10 +73,16 @@ export async function GET(req, { params }) {
     [session.user.id, id]
   );
 
-  // Hide sensitive data (owner always sees own photos)
-  const safeUser = { ...user };
+  // Hide sensitive contact data for other viewers
   const viewingSelf = session.user.id === id;
-  if (profile?.hidePhone && !viewingSelf) safeUser.phone = null;
+  const isPremiumViewer = !!session.user.isPremium;
+  const safeUser = sanitizeUserContactFields(user, {
+    viewerId: session.user.id,
+    viewerRole: session.user.role,
+    hidePhone: !!profile?.hidePhone,
+    isPremiumViewer,
+    profile,
+  });
   if (
     profile?.hidePhoto &&
     !session.user.isPremium &&

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken, getTokenFromRequest } from '@/lib/flutter-jwt';
 import { queryOne, execute } from '@/lib/db';
 import { clearInterestReceivedNotifications, emitNotificationRefresh } from '@/lib/interestNotifications';
+import { isSeedProfileUser } from '@/lib/seedContactPrivacy.js';
 import { randomUUID } from 'crypto';
 import { differenceInYears } from 'date-fns';
 
@@ -16,8 +17,8 @@ function buildProfileMessage(user, profile, isPremium) {
     profile?.education ? `🎓 Education: ${profile.education}` : null,
     profile?.profession ? `💼 Profession: ${profile.profession}` : null,
     profile?.maritalStatus ? `💍 Marital Status: ${profile.maritalStatus.replace(/_/g, ' ')}` : null,
-    isPremium && user.phone && !profile?.hidePhone ? `\n📞 Phone: ${user.phone}` : null,
-    isPremium && user.email ? `📧 Email: ${user.email}` : null,
+    isPremium && user.phone && !profile?.hidePhone && !isSeedProfileUser(user, profile) ? `\n📞 Phone: ${user.phone}` : null,
+    isPremium && user.email && !isSeedProfileUser(user, profile) ? `📧 Email: ${user.email}` : null,
   ].filter(Boolean);
 
   const header = isPremium ? '🌟 *Premium Profile Details*\n━━━━━━━━━━━━━━━━━━━━' : '✨ *Profile Details*\n━━━━━━━━━━━━━━━━━━━━';

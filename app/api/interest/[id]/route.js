@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { queryOne, execute } from '@/lib/db';
 import { clearInterestReceivedNotifications, emitNotificationRefresh } from '@/lib/interestNotifications';
+import { isSeedProfileUser } from '@/lib/seedContactPrivacy.js';
 import { randomUUID } from 'crypto';
 import { differenceInYears } from 'date-fns';
 
@@ -23,8 +24,8 @@ function buildProfileMessage(user, profile, isPremium) {
     profile?.diet ? `🍽 Diet: ${profile.diet}` : null,
     profile?.familyType ? `👨‍👩‍👧 Family: ${profile.familyType}${profile.familyStatus ? ` · ${profile.familyStatus}` : ''}` : null,
     profile?.aboutMe ? `\n💬 About: ${profile.aboutMe}` : null,
-    isPremium && user.phone && !profile?.hidePhone ? `\n📞 Phone: ${user.phone}` : null,
-    isPremium && user.email ? `📧 Email: ${user.email}` : null,
+    isPremium && user.phone && !profile?.hidePhone && !isSeedProfileUser(user, profile) ? `\n📞 Phone: ${user.phone}` : null,
+    isPremium && user.email && !isSeedProfileUser(user, profile) ? `📧 Email: ${user.email}` : null,
   ].filter(Boolean);
 
   const header = isPremium

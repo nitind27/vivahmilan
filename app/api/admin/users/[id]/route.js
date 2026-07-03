@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma';
-import { sendAdminVerificationEmail, sendProfileRejectionEmail } from '@/lib/email';
+import { sendAdminVerificationEmail, sendProfileRejectionEmail, sendAdminPasswordChangeEmail } from '@/lib/email';
 import { getSiteConfig } from '@/lib/siteconfig';
 import { hash } from 'bcryptjs';
+import { generateUserPassword } from '@/lib/generatePassword';
 import { validateAdminApproval } from '@/lib/profileVerification';
 import { ensureFeatureTables } from '@/lib/ensureFeatureTables.js';
 import { permanentlyDeleteUserAccount } from '@/lib/deleteUserAccount.js';
@@ -119,6 +120,30 @@ export async function PATCH(req, { params }) {
 
   // When approving, also activate free trial if not already used
   let updateData = { ...data };
+  delete updateData.profileCorrectionRequest;
+  delete updateData.profileRejection;
+  delete updateData.generatePassword;
+  delete updateData.sendPasswordEmail;
+
+  let plainPassword = null;
+  const sendPasswordEmail = data.sendPasswordEmail !== false;
+
+  if (data.generatePassword === true) {
+    plainPassword = generateUserPassword();
+    updateData.password = await hash(plainPassword, 12);
+    updateData.needsPassword = 0;
+  } else if (data.password) {
+    const pwd = String(data.password);
+    if (pwd.length < 8) {
+      return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
+    }
+    plainPassword = pwd;
+    updateData.password = await hash(pwd, 12);
+    updateData.needsPassword = 0;
+  } else {
+    delete updateData.password;
+  }
+
   if (data.adminVerified === true) {
     updateData.profileCorrectionRequired = false;
     updateData.profileCorrectionNote = null;
@@ -135,12 +160,36 @@ export async function PATCH(req, { params }) {
     }
   }
 
-  // Hash password if admin is changing it
-  if (data.password) {
-    updateData.password = await hash(data.password, 10);
+  const updated = await prisma.user.update({ where: { id }, data: updateData });
+
+  let passwordEmailSent = false;
+  if (plainPassword && sendPasswordEmail && user?.email) {
+    try {
+      await sendAdminPasswordChangeEmail(user.email, user.name || 'User', {
+        loginEmail: user.email,
+        newPassword: plainPassword,
+      });
+      passwordEmailSent = true;
+    } catch (e) {
+      console.error('Password email error:', e.message);
+    }
   }
 
-  const updated = await prisma.user.update({ where: { id }, data: updateData });
+  if (plainPassword) {
+    try {
+      await prisma.notification.create({
+        data: {
+          userId: id,
+          type: 'PASSWORD_RESET',
+          title: 'Password updated',
+          message: 'Your login password was reset by admin. Check your email for the new password.',
+          link: '/login',
+        },
+      });
+    } catch (e) {
+      console.error('Password notification error:', e.message);
+    }
+  }
 
   if (data.adminVerified === true && !user?.adminVerified) {
     try {
@@ -190,7 +239,11 @@ export async function PATCH(req, { params }) {
     }
   }
 
-  return NextResponse.json(updated);
+  return NextResponse.json({
+    ...updated,
+    passwordEmailSent,
+    generatedPassword: data.generatePassword ? plainPassword : undefined,
+  });
 }
 
 export async function DELETE(req, { params }) {
