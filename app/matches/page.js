@@ -7,11 +7,16 @@ import Navbar from '@/components/Navbar';
 import SiteLoader from '@/components/SiteLoader';
 import ProfileCard from '@/components/ProfileCard';
 import SkeletonCard from '@/components/SkeletonCard';
-import { SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import LocationPicker from '@/components/LocationPicker';
+import { SlidersHorizontal, X, MapPin } from 'lucide-react';
 
 const religions = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Jewish', 'Other'];
 const educations = ['High School', 'Diploma', "Bachelor's", "Master's", 'PhD', 'MBBS', 'CA', 'Other'];
-const countries = ['India', 'USA', 'UK', 'Canada', 'Australia', 'UAE', 'Singapore', 'Germany', 'Other'];
+
+const EMPTY_FILTERS = {
+  ageMin: '', ageMax: '', religion: '', country: '', state: '', city: '',
+  education: '', heightMin: '', heightMax: '', maritalStatus: '',
+};
 
 function MatchesPage() {
   const { status } = useSession();
@@ -24,14 +29,18 @@ function MatchesPage() {
   const [isLimited, setIsLimited] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({
-    ageMin: '', ageMax: '', religion: '', country: '', education: '',
-    heightMin: '', heightMax: '', maritalStatus: '',
-  });
+  const [filters, setFilters] = useState({ ...EMPTY_FILTERS });
 
   const [debouncedFilters, setDebouncedFilters] = useState(filters);
   const debounceRef = useRef(null);
   const loaderRef = useRef(null);
+
+  const applyFiltersNow = (next) => {
+    setFilters(next);
+    clearTimeout(debounceRef.current);
+    setDebouncedFilters(next);
+    setPage(1);
+  };
 
   const updateFilter = (key, value) => {
     const next = { ...filters, [key]: value };
@@ -41,6 +50,10 @@ function MatchesPage() {
       setDebouncedFilters(next);
       setPage(1);
     }, 500);
+  };
+
+  const updateLocation = (patch) => {
+    applyFiltersNow({ ...filters, ...patch });
   };
 
   useEffect(() => {
@@ -80,10 +93,7 @@ function MatchesPage() {
   }, [handleObserver]);
 
   const clearFilters = () => {
-    const empty = { ageMin: '', ageMax: '', religion: '', country: '', education: '', heightMin: '', heightMax: '', maritalStatus: '' };
-    setFilters(empty);
-    setDebouncedFilters(empty);
-    setPage(1);
+    applyFiltersNow({ ...EMPTY_FILTERS });
   };
 
   const activeFilters = Object.values(filters).filter(Boolean).length;
@@ -119,15 +129,18 @@ function MatchesPage() {
               )}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Age Min</label>
-                <input type="number" min="18" max="70" value={filters.ageMin} onChange={e => updateFilter('ageMin', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="18" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Age Max</label>
-                <input type="number" min="18" max="70" value={filters.ageMax} onChange={e => updateFilter('ageMax', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="40" />
+              <div className="col-span-2 md:col-span-4 rounded-xl border border-vd-border bg-vd-bg p-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-vd-primary" /> Location
+                </p>
+                <LocationPicker
+                  country={filters.country}
+                  state={filters.state}
+                  city={filters.city}
+                  onCountryChange={(name) => updateLocation({ country: name, state: '', city: '' })}
+                  onStateChange={(name) => updateLocation({ state: name, city: '' })}
+                  onCityChange={(name) => updateLocation({ city: name })}
+                />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Religion</label>
@@ -135,14 +148,6 @@ function MatchesPage() {
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus">
                   <option value="">Any</option>
                   {religions.map(r => <option key={r} value={r}>{r}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Country</label>
-                <select value={filters.country} onChange={e => updateFilter('country', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus">
-                  <option value="">Any</option>
-                  {countries.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
@@ -162,6 +167,16 @@ function MatchesPage() {
                 <label className="block text-xs font-medium text-gray-500 mb-1">Height Max (cm)</label>
                 <input type="number" value={filters.heightMax} onChange={e => updateFilter('heightMax', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="190" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Age Min</label>
+                <input type="number" min="18" max="70" value={filters.ageMin} onChange={e => updateFilter('ageMin', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="18" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Age Max</label>
+                <input type="number" min="18" max="70" value={filters.ageMax} onChange={e => updateFilter('ageMax', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm input-focus" placeholder="40" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Marital Status</label>

@@ -88,8 +88,8 @@ export async function GET(req) {
   }
 
   if (country)      { conditions.push('p.country = ?'); params.push(country); }
-  if (state)        { conditions.push('p.state = ?'); params.push(state); }
-  if (city)         { conditions.push('p.city = ?'); params.push(city); }
+  if (state)        { conditions.push('p.state LIKE ?'); params.push(`%${state}%`); }
+  if (city)         { conditions.push('p.city LIKE ?'); params.push(`%${city}%`); }
   if (education)    { conditions.push('p.education = ?'); params.push(education); }
   if (profession)   { conditions.push('p.profession = ?'); params.push(profession); }
   if (maritalStatus){ conditions.push('p.maritalStatus = ?'); params.push(maritalStatus); }
