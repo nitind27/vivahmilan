@@ -106,13 +106,13 @@ export default function HelpPage() {
         <div className="vd-gradient-gold py-16 px-4 text-center">
           <h1 className="text-3xl font-bold text-white mb-2">How can we help you?</h1>
           <p className="text-white/80 mb-8">Search our help center or browse categories below</p>
-          <div className="relative max-w-xl mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <div className="relative mx-auto max-w-xl">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8F6B2E]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for answers…"
-              className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-gray-900 text-sm focus:outline-none shadow-lg"
+              className="w-full rounded-full border border-white bg-white py-3.5 pl-12 pr-5 text-sm text-[#2C2416] shadow-[0_8px_24px_rgba(44,36,22,0.12)] placeholder:text-[#8A7A68] focus:outline-none focus:ring-2 focus:ring-white"
             />
           </div>
         </div>

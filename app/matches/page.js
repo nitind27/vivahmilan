@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import SiteLoader from '@/components/SiteLoader';
 import ProfileCard from '@/components/ProfileCard';
+import GuestProfileBrowse from '@/components/GuestProfileBrowse';
 import SkeletonCard from '@/components/SkeletonCard';
 import LocationPicker from '@/components/LocationPicker';
 import { SlidersHorizontal, X, MapPin } from 'lucide-react';
@@ -20,7 +20,6 @@ const EMPTY_FILTERS = {
 
 function MatchesPage() {
   const { status } = useSession();
-  const router = useRouter();
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -62,21 +61,6 @@ function MatchesPage() {
     });
   };
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace(`/login?callbackUrl=${encodeURIComponent('/matches')}`);
-    }
-  }, [status, router]);
-
-  if (status === 'loading' || status === 'unauthenticated') {
-    return (
-      <div className="min-h-screen bg-vd-bg">
-        <Navbar />
-        <SiteLoader message="Loading matches…" size="lg" />
-      </div>
-    );
-  }
-
   const fetchMatches = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams({ page, limit: 12 });
@@ -114,6 +98,19 @@ function MatchesPage() {
   };
 
   const activeFilters = Object.values(filters).filter(Boolean).length;
+
+  if (status === 'unauthenticated') {
+    return <GuestProfileBrowse />;
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-vd-bg">
+        <Navbar />
+        <SiteLoader message="Loading matches…" size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-vd-bg">

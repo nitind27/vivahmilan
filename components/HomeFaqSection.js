@@ -104,11 +104,11 @@ export default function HomeFaqSection({ items = [] }) {
             <Sparkles className="w-3.5 h-3.5" />
             General FAQs
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-vd-text-heading mb-3">
-            Questions? <span className="vd-gradient-text">We&apos;ve Got Answers</span>
+          <h2 className="font-display text-3xl font-semibold text-[#2C2416] sm:text-4xl mb-3">
+            Questions families ask first
           </h2>
-          <p className="text-vd-text-sub text-sm sm:text-base max-w-2xl mx-auto">
-            Everything you need to know about profiles, matching, premium plans, and staying safe on Vivah Dwar.
+          <p className="text-[#6E6254] text-sm sm:text-base max-w-2xl mx-auto">
+            Profiles, matching, plans, and how we keep conversations private.
           </p>
         </motion.div>
 

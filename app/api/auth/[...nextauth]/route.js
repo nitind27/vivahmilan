@@ -435,10 +435,18 @@ export const authOptions = {
           const portalAccess = await getPortalAccessForUser({ email: token.email, role: token.role });
           token.portalAccessGranted = portalAccess.granted;
           const row = await queryOne(
-            'SELECT profileCorrectionRequired FROM `user` WHERE email = ?',
+            'SELECT profileCorrectionRequired, isPremium, premiumPlan, premiumExpiry, freeTrialExpiry FROM `user` WHERE email = ?',
             [token.email]
           );
           token.profileCorrectionRequired = !!row?.profileCorrectionRequired;
+          if (row) {
+            const premiumStillValid = row.isPremium && (!row.premiumExpiry || new Date(row.premiumExpiry) > new Date());
+            token.isPremium = !!premiumStillValid;
+            token.premiumPlan = premiumStillValid ? row.premiumPlan : null;
+            const trialOn = row.freeTrialExpiry && new Date(row.freeTrialExpiry) > new Date();
+            token.freeTrialActive = !!trialOn;
+            token.freeTrialExpiry = row.freeTrialExpiry || null;
+          }
         } catch (e) {
           console.error('jwt portal refresh error:', e.message);
         }

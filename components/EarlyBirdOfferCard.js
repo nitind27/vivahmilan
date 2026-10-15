@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Gift, Crown, CheckCircle, Loader2, Sparkles } from 'lucide-react';
+import { Crown, CheckCircle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function EarlyBirdOfferCard({ className = '' }) {
@@ -41,7 +41,7 @@ export default function EarlyBirdOfferCard({ className = '' }) {
         return;
       }
       toast.success(data.message || 'Free access activated!');
-      await update?.();
+      await update?.({ isPremium: true });
       loadOffer();
       setTimeout(() => window.location.reload(), 800);
     } catch {
@@ -63,25 +63,21 @@ export default function EarlyBirdOfferCard({ className = '' }) {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`rounded-2xl border-2 border-emerald-400/50 bg-vd-bg-card p-5 sm:p-6 ${className}`}
+        className={`rounded-3xl border border-[#E8DCC8] bg-white p-5 sm:p-6 ${className}`}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex items-center gap-3 flex-1">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0">
-              <CheckCircle className="w-6 h-6 text-white" />
-            </div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex flex-1 items-center gap-3">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F8F1E3] text-[#8F6B2E]">
+              <CheckCircle className="h-6 w-6" />
+            </span>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">Early Bird Active</p>
-              <h3 className="text-lg font-bold text-vd-text-heading">
-                Early Bird — Full Free Access
-              </h3>
-              <p className="text-sm text-vd-text-sub">
-                {offer.daysLeft} days left · Valid until {expiryStr}
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#A67C3D]">Free access is on</p>
+              <h3 className="font-display text-xl font-semibold text-[#2C2416]">{offer.planDisplayName || 'Early Bird'}</h3>
+              <p className="text-sm text-[#6E6254]">{offer.daysLeft} days left · until {expiryStr}. No payment.</p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-emerald-500 text-white text-sm font-bold shrink-0">
-            <Crown className="w-4 h-4" /> Full Access ON
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#F8F1E3] px-4 py-2 text-sm font-semibold text-[#8F6B2E]">
+            <Crown className="h-4 w-4" /> Premium active
           </span>
         </div>
       </motion.div>
@@ -96,47 +92,37 @@ export default function EarlyBirdOfferCard({ className = '' }) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border-2 border-amber-400/60 bg-vd-bg-card p-5 sm:p-6 shadow-lg ${className}`}
+      className={`rounded-3xl border border-[#E8DCC8] bg-white p-5 shadow-sm sm:p-6 ${className}`}
     >
-      <div className="flex flex-col lg:flex-row lg:items-center gap-5">
-        <div className="flex items-start gap-4 flex-1">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 shadow-md">
-            <Gift className="w-7 h-7 text-white" />
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2 mb-1">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span className="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wide">
-                Limited Offer · {offer.slotsLeft} slots left
-              </span>
-            </div>
-            <h3 className="text-xl font-black text-vd-text-heading mb-1">
-              {offer.title || 'Early Bird Offer'}
-            </h3>
-            <p className="text-sm text-vd-text-sub leading-relaxed">
-              {offer.subtitle || offer.message || (
-                <>Get <strong>{offer.planDisplayName}</strong> plan <strong>FREE</strong> for <strong>{offer.durationLabel}</strong> — first {offer.limit} users only!</>
-              )}
-            </p>
-            <p className="text-xs text-amber-800/80 dark:text-amber-200/80 mt-2 font-medium">
-              {offer.claimedCount} / {offer.limit} members already claimed
-            </p>
-          </div>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#A67C3D]">
+            No payment · {offer.slotsLeft} of {offer.limit} left
+          </p>
+          <h3 className="mt-1 font-display text-2xl font-semibold text-[#2C2416]">
+            {offer.title || 'Free premium access'}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#6E6254]">
+            {offer.subtitle || offer.message || `Get ${offer.planDisplayName} free for ${offer.durationLabel}.`}
+          </p>
+          <p className="mt-2 text-xs text-[#8A7A68]">
+            {offer.planDisplayName} · {offer.durationLabel} · {offer.claimedCount} claimed
+          </p>
         </div>
         <button
           type="button"
           onClick={handleClaim}
           disabled={claiming}
-          className="shrink-0 w-full lg:w-auto px-8 py-4 rounded-2xl font-bold text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg hover:opacity-95 disabled:opacity-70 flex items-center justify-center gap-2"
+          className="vd-gradient-gold inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white disabled:opacity-70 lg:w-auto"
         >
           {claiming ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" /> Activating…
+              <Loader2 className="h-4 w-4 animate-spin" /> Activating…
             </>
           ) : (
             <>
-              <Crown className="w-5 h-5" />
-              {session ? 'Get Your Free Access' : 'Login & Get Free Access'}
+              <Crown className="h-4 w-4" />
+              {session ? 'Activate free access' : 'Login and activate'}
             </>
           )}
         </button>

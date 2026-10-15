@@ -98,7 +98,7 @@ export default function AdminLayout({ children }) {
     }
   }, [status, session, refreshStats]);
 
-  if (status === 'loading') return <SiteLoader message="Loading admin…" size="lg" className="bg-gray-950" />;
+  if (status === 'loading') return <SiteLoader message="Loading admin…" size="lg" className="bg-[#FBF7EF]" />;
   if (status !== 'authenticated' || session?.user?.role !== 'ADMIN') return null;
 
   const isKycCall = /^\/admin\/kyc\/[^/]+$/.test(pathname || '');
@@ -128,7 +128,7 @@ export default function AdminLayout({ children }) {
           setMobileOpen(false);
         }}
         onMouseDown={saveSidebarScroll}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'vd-gradient-gold text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'vd-gradient-gold text-white' : 'text-[#6E6254] hover:bg-[#F8F1E3] hover:text-[#2C2416]'}`}
       >
         <tab.icon className="w-4 h-4 flex-shrink-0" />
         <span className="flex-1 text-left">{tab.label}</span>
@@ -142,16 +142,16 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex">
+    <div className="admin-app flex min-h-screen bg-[#FBF7EF] text-[#2C2416]">
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4 h-14">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex h-14 items-center justify-between border-b border-[#E8DCC8] bg-[#FFFCF7] px-4">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 vd-gradient-gold rounded-full flex items-center justify-center">
-            <Heart className="w-3.5 h-3.5 text-white fill-white" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-full vd-gradient-gold">
+            <Heart className="h-3.5 w-3.5 fill-white text-white" />
           </div>
-          <span className="font-bold">Milan Admin</span>
+          <span className="font-semibold text-[#2C2416]">Admin</span>
         </div>
-        <button onClick={() => setMobileOpen(o => !o)} className="p-2 text-gray-400 hover:text-white">
+        <button onClick={() => setMobileOpen(o => !o)} className="p-2 text-[#6E6254]">
           <Settings className="w-5 h-5" />
         </button>
       </div>
@@ -159,9 +159,9 @@ export default function AdminLayout({ children }) {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-20 bg-black/60" onClick={() => setMobileOpen(false)}>
-          <div className="w-64 h-full bg-gray-900 border-r border-gray-800 flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="p-4 border-b border-gray-800">
-              <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
+          <div className="flex h-full w-64 flex-col border-r border-[#E8DCC8] bg-[#FFFCF7]" onClick={e => e.stopPropagation()}>
+            <div className="border-b border-[#E8DCC8] p-4">
+              <p className="truncate text-xs text-[#8A7A68]">{session?.user?.email}</p>
             </div>
             <nav
               ref={mobileNavRef}
@@ -171,11 +171,11 @@ export default function AdminLayout({ children }) {
             >
               {ADMIN_TABS.map(t => <NavItem key={t.id} tab={t} />)}
             </nav>
-            <div className="p-3 border-t border-gray-800 space-y-1">
-              <Link href="/dashboard" scroll={false} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
+            <div className="space-y-1 border-t border-[#E8DCC8] p-3">
+              <Link href="/dashboard" scroll={false} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#6E6254] transition-all hover:bg-[#F8F1E3] hover:text-[#2C2416]">
                 <Eye className="w-4 h-4" /> View Site
               </Link>
-              <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-900/20 transition-all">
+              <button onClick={() => signOut({ callbackUrl: '/login' })} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#9B3D32] transition-all hover:bg-[#F8E8E4]">
                 <LogOut className="w-4 h-4" /> Sign Out
               </button>
             </div>
@@ -184,15 +184,15 @@ export default function AdminLayout({ children }) {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 bg-gray-900 border-r border-gray-800 flex-col fixed inset-y-0 left-0 z-20 overflow-hidden">
-        <div className="p-5 border-b border-gray-800">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 vd-gradient-gold rounded-full flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white fill-white" />
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col overflow-hidden border-r border-[#E8DCC8] bg-[#FFFCF7] md:flex">
+        <div className="border-b border-[#E8DCC8] p-5">
+          <div className="mb-1 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full vd-gradient-gold">
+              <Heart className="h-4 w-4 fill-white text-white" />
             </div>
-            <span className="font-bold text-lg">Milan Admin</span>
+            <span className="font-display text-lg font-semibold text-[#2C2416]">Admin</span>
           </div>
-          <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
+          <p className="truncate text-xs text-[#8A7A68]">{session?.user?.email}</p>
         </div>
         <nav
           ref={desktopNavRef}
@@ -202,11 +202,11 @@ export default function AdminLayout({ children }) {
         >
           {ADMIN_TABS.map(t => <NavItem key={t.id} tab={t} />)}
         </nav>
-        <div className="p-3 border-t border-gray-800 space-y-1 shrink-0">
-          <Link href="/dashboard" scroll={false} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
+        <div className="shrink-0 space-y-1 border-t border-[#E8DCC8] p-3">
+          <Link href="/dashboard" scroll={false} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#6E6254] transition-all hover:bg-[#F8F1E3] hover:text-[#2C2416]">
             <Eye className="w-4 h-4" /> View Site
           </Link>
-          <button onClick={() => signOut({ callbackUrl: '/login' })} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-900/20 transition-all">
+          <button onClick={() => signOut({ callbackUrl: '/login' })} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#9B3D32] transition-all hover:bg-[#F8E8E4]">
             <LogOut className="w-4 h-4" /> Sign Out
           </button>
         </div>
@@ -217,15 +217,15 @@ export default function AdminLayout({ children }) {
         <div className={`px-4 md:px-6 py-6 ${isSupportPage ? 'h-full flex flex-col overflow-hidden min-h-0' : ''}`}>
           <div className={`flex items-center justify-between shrink-0 ${isSupportPage ? 'mb-4' : 'mb-6'}`}>
             <div>
-              <h1 className="text-xl md:text-2xl font-bold">{activeTab?.label || 'Admin'}</h1>
-              <p className="text-gray-500 text-xs mt-0.5 hidden sm:block">
+              <h1 className="font-display text-xl font-semibold text-[#2C2416] md:text-2xl">{activeTab?.label || 'Admin'}</h1>
+              <p className="mt-0.5 hidden text-xs text-[#8A7A68] sm:block">
                 {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
             </div>
             <div className="flex items-center gap-2">
               <AdminNotifications onStatsRefresh={refreshStats} />
               <button onClick={() => window.location.reload()}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-xl text-sm hover:bg-gray-700 transition-colors">
+                className="flex items-center gap-2 rounded-xl border border-[#E8DCC8] bg-white px-3 py-2 text-sm text-[#6E6254] transition-colors hover:border-[#C4A35A]">
                 <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">Refresh</span>
               </button>
             </div>

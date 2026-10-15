@@ -3,13 +3,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Sun, Moon, Ban, Bookmark, Smartphone, Lock, Eye, Gift } from 'lucide-react';
+import { Heart, Bell, MessageCircle, User, Menu, X, ChevronDown, Shield, LogOut, Settings, Ban, Bookmark, Smartphone, Lock, Eye, Gift } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
-import { useTheme } from '@/components/ThemeProvider';
 
 export default function Navbar() {
   const { data: session } = useSession();
-  const { theme, toggle, mounted } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -102,29 +100,29 @@ export default function Navbar() {
   }, [session]);
 
   return (
-    <nav suppressHydrationWarning className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-vd-bg-section dark:bg-vd-bg-card backdrop-blur-md shadow-sm`}>
+    <nav suppressHydrationWarning className="fixed top-0 left-0 right-0 z-50 bg-[#FFFCF7] border-b border-[#E8DCC8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center">
               <img
                 src="/logo/logo.png"
                 alt="Vivah Dwar Logo"
-                className="h-25 w-auto object-contain"
+                className="h-12 w-auto object-contain"
               />
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/matches" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Find Matches</Link>
-            <Link href="/search" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Search</Link>
-            <Link href="/premium" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors">Premium</Link>
+          <div className="hidden lg:flex items-center gap-7">
+            <Link href="/matches" className="text-sm font-medium text-[#5C4A32] hover:text-[#8F6B2E] transition-colors">Find Matches</Link>
+            <Link href="/stories" className="text-sm font-medium text-[#5C4A32] hover:text-[#8F6B2E] transition-colors">Success Stories</Link>
+            <Link href="/premium" className="text-sm font-medium text-[#5C4A32] hover:text-[#8F6B2E] transition-colors">Premium</Link>
+            <Link href="/help" className="text-sm font-medium text-[#5C4A32] hover:text-[#8F6B2E] transition-colors">How It Works</Link>
+            <Link href="/blog" className="text-sm font-medium text-[#5C4A32] hover:text-[#8F6B2E] transition-colors">Blog</Link>
             {donationEnabled && (
-              <Link href="/donate" className="text-sm font-medium text-vd-text-sub dark:text-white hover:text-vd-primary dark:hover:text-white/70 transition-colors flex items-center gap-1">
-                <Gift className="w-3.5 h-3.5" /> Donate
-              </Link>
+              <Link href="/donate" className="text-sm font-medium text-[#5C4A32] hover:text-[#8F6B2E] transition-colors">Donate</Link>
             )}
           </div>
 
@@ -251,26 +249,14 @@ export default function Navbar() {
                     <Smartphone className="w-5 h-5" />
                   </button>
                 )}
-                <Link href="/login" className="vd-gradient-gold text-white text-sm font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Sign in</Link>
+                <Link href="/login" className="hidden sm:inline-flex text-sm font-semibold px-4 py-2 rounded-full border border-[#C4A35A] text-[#8F6B2E] hover:bg-[#F8F1E3] transition-colors">Login</Link>
+                <Link href="/register" className="vd-gradient-gold text-white text-sm font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Sign Up</Link>
               </div>
             ) : null}
 
             {/* Mobile menu button */}
-            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-vd-text-sub hover:text-vd-primary dark:text-white dark:hover:text-white/70 transition-colors">
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-vd-text-sub hover:text-vd-primary transition-colors">
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-
-            {/* Dark/Light toggle */}
-            <button
-              onClick={toggle}
-              className="p-2 rounded-xl text-vd-text-sub hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {mounted && (theme === 'dark'
-                ? <Sun className="w-5 h-5 text-yellow-400" />
-                : <Moon className="w-5 h-5" />
-              )}
-              {!mounted && <Moon className="w-5 h-5 opacity-0" />}
             </button>
           </div>
         </div>
@@ -288,8 +274,10 @@ export default function Navbar() {
                 className="md:hidden bg-vd-bg-section dark:bg-vd-bg border-t border-vd-border"
               >
                 <div className="px-4 py-3 space-y-1">
-                  <Link href="/matches" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Find Matches</Link>
-                  <Link href="/search" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">Search</Link>
+                  <Link href="/matches" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm text-[#5C4A32] hover:bg-[#F8F1E3]">Find Matches</Link>
+                  <Link href="/stories" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm text-[#5C4A32] hover:bg-[#F8F1E3]">Success Stories</Link>
+                  <Link href="/help" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm text-[#5C4A32] hover:bg-[#F8F1E3]">How It Works</Link>
+                  <Link href="/blog" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm text-[#5C4A32] hover:bg-[#F8F1E3]">Blog</Link>
                   {session && (
                     <Link href="/shortlist" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800">My Shortlist</Link>
                   )}

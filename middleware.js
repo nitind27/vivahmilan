@@ -28,10 +28,13 @@ const PUBLIC_PREFIXES = [
 ];
 
 const USER_PREFIXES = [
-  '/dashboard', '/search', '/matches', '/chat', '/interests', '/shortlist',
+  '/dashboard', '/chat', '/interests', '/shortlist',
   '/compare', '/views', '/settings', '/refer', '/premium', '/notifications',
   '/profile/edit', '/blocked', '/share-story',
 ];
+
+/** Browse grids are public. Opening a full profile still requires login. */
+const GUEST_BROWSE_PREFIXES = ['/search', '/matches'];
 
 function isPublic(pathname) {
   if (pathname === '/' || pathname.startsWith('/_next') || pathname.startsWith('/uploads')) return true;
@@ -39,7 +42,12 @@ function isPublic(pathname) {
   return PUBLIC_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
 }
 
+function isGuestBrowse(pathname) {
+  return GUEST_BROWSE_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
+}
+
 function needsAuth(pathname) {
+  if (isGuestBrowse(pathname)) return false;
   if (pathname.startsWith('/profile/') && !pathname.startsWith('/profile/edit')) return true;
   return USER_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
 }
@@ -71,11 +79,14 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
-  if (needsAuth(pathname)) {
+  if (needsAuth(pathname) || isGuestBrowse(pathname)) {
     if (!token) {
-      const url = new URL('/login', req.url);
-      url.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(url);
+      if (needsAuth(pathname)) {
+        const url = new URL('/login', req.url);
+        url.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(url);
+      }
+      return NextResponse.next();
     }
     if (token.role === 'FAMILY' && (pathname.startsWith('/profile/edit') || pathname.startsWith('/premium') || pathname.startsWith('/settings') || pathname.startsWith('/refer') || pathname.startsWith('/share-story'))) {
       return NextResponse.redirect(new URL('/dashboard', req.url));

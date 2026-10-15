@@ -72,19 +72,19 @@ function ProfileSection({ title, icon: Icon, children, delay = 0 }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl border border-vd-border shadow-sm overflow-hidden"
+      className="overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-sm"
     >
-      <div className="px-6 py-4 border-b border-vd-border bg-gradient-to-r from-vd-accent-soft/80 to-transparent dark:from-vd-accent/10">
-        <h2 className="font-bold text-lg text-vd-text-heading flex items-center gap-2.5">
+      <div className="border-b border-[#F3E6C8] px-5 py-4">
+        <h2 className="flex items-center gap-2.5 font-display text-xl font-semibold text-[#2C2416]">
           {Icon && (
-            <span className="w-9 h-9 rounded-xl vd-gradient-gold flex items-center justify-center shadow-sm">
-              <Icon className="w-[18px] h-[18px] text-white" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F8F1E3] text-[#8F6B2E]">
+              <Icon className="h-4 w-4" />
             </span>
           )}
           {title}
         </h2>
       </div>
-      <div className="p-6">{children}</div>
+      <div className="p-5">{children}</div>
     </motion.section>
   );
 }
@@ -93,15 +93,15 @@ function DetailItem({ label, value, icon: Icon }) {
   const display = formatValue(value);
   if (!display) return null;
   return (
-    <div className="group flex gap-3 p-4 rounded-2xl bg-vd-bg dark:bg-vd-bg/50 border border-vd-border/80 hover:border-vd-primary/30 transition-colors">
+    <div className="flex gap-3 rounded-2xl border border-[#F3E6C8] bg-[#FFFCF7] p-3.5">
       {Icon && (
-        <div className="w-10 h-10 rounded-xl bg-vd-accent-soft dark:bg-vd-accent/20 flex items-center justify-center flex-shrink-0">
-          <Icon className="w-4 h-4 text-vd-primary" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#8F6B2E]">
+          <Icon className="h-4 w-4" />
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-vd-text-light mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-vd-text-heading break-words">{display}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-[#A89880]">{label}</p>
+        <p className="mt-0.5 break-words text-sm font-medium text-[#2C2416]">{display}</p>
       </div>
     </div>
   );
@@ -138,7 +138,7 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
 
   if (!photos.length) {
     return (
-      <div className="relative aspect-[4/5] max-h-[520px] bg-gradient-to-br from-vd-accent-soft to-vd-bg flex items-center justify-center">
+      <div className="relative flex h-[420px] items-center justify-center bg-[#F8F1E3]">
         <div className="w-28 h-28 vd-gradient-gold rounded-full flex items-center justify-center shadow-xl">
           <span className="text-white text-5xl font-bold">{name?.[0]?.toUpperCase()}</span>
         </div>
@@ -150,7 +150,7 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
     <>
       <div className="relative bg-black/5 dark:bg-black/30">
         <div
-          className="relative aspect-[4/5] max-h-[520px] w-full overflow-hidden cursor-zoom-in group"
+          className="group relative h-[420px] w-full cursor-zoom-in overflow-hidden bg-[#F8F1E3]"
           role="button"
           tabIndex={0}
           onClick={() => openLightbox(activePhoto)}
@@ -161,10 +161,10 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
             src={photos[activePhoto]?.url}
             alt={name}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            className="object-contain"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
 
           {multi && (
             <>
@@ -215,9 +215,9 @@ function PhotoGallery({ photos, name, activePhoto, setActivePhoto }) {
           )}
         </div>
 
-        <div className="p-4 border-t border-vd-border bg-vd-bg-section/80 dark:bg-vd-bg-card/80">
-          <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-3 flex items-center gap-1.5">
-            <ImageIcon className="w-3.5 h-3.5" /> {multi ? `All Photos (${photos.length})` : 'Your photo'}
+        <div className="border-t border-[#F3E6C8] bg-white p-3">
+          <p className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-[#A89880]">
+            <ImageIcon className="h-3.5 w-3.5" /> {multi ? `${photos.length} photos` : 'Photo'}
           </p>
           <div className={`grid gap-2 ${multi ? 'grid-cols-4 sm:grid-cols-5 md:grid-cols-6' : 'grid-cols-1 max-w-[120px]'}`}>
             {photos.map((p, i) => (
@@ -831,120 +831,106 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-vd-bg">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      <div className="mx-auto max-w-6xl px-4 pb-16 pt-24 sm:px-6 lg:px-8">
 
         <button
           type="button"
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-vd-text-sub hover:text-vd-primary mb-5 transition-colors text-sm font-medium"
+          className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[#6E6254] hover:text-[#8F6B2E]"
         >
-          <ChevronLeft className="w-4 h-4" /> Back to browsing
+          <ChevronLeft className="h-4 w-4" /> Back
         </button>
 
-        {/* Photo + identity hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card shadow-lg overflow-hidden mb-8"
-        >
-          <PhotoGallery
-            photos={allPhotos}
-            name={user.name}
-            activePhoto={activePhoto}
-            setActivePhoto={setActivePhoto}
-          />
-
-          {profile.introVideoUrl && (
-            <div className="px-6 sm:px-8 py-4 border-t border-vd-border bg-vd-bg-alt/50">
-              <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-2">Intro Video</p>
-              <video src={profile.introVideoUrl} controls className="w-full max-w-lg rounded-xl border border-vd-border bg-black" />
-            </div>
-          )}
-
-          <div className="p-6 sm:p-8 border-t border-vd-border">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  {!!user.isPremium && (
-                    <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 font-semibold shadow-sm">
-                      <Star className="w-3 h-3 fill-white" /> Premium Member
-                    </span>
-                  )}
-                  {!!user.verificationBadge && <VerifiedBadge size="md" variant="badge" />}
-                  {profile.religion && (
-                    <span className="bg-vd-accent-soft text-vd-primary text-xs px-3 py-1 rounded-full font-semibold">
-                      {profile.religion}
-                    </span>
-                  )}
-                  {profile.gender && (
-                    <span className="bg-vd-bg text-vd-text-sub text-xs px-3 py-1 rounded-full font-medium border border-vd-border capitalize">
-                      {formatValue(profile.gender)}
-                    </span>
-                  )}
-                </div>
-
-                <h1 className="text-3xl sm:text-4xl font-black text-vd-text-heading flex items-center gap-2 flex-wrap leading-tight">
-                  {user.name}
-                  {!!user.verificationBadge && <VerifiedBadge size="lg" variant="icon" />}
-                </h1>
-                {!isOwnProfile && (
-                  <div className="mt-2">
-                    <MatchScoreBadge userId={id} />
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-vd-text-sub">
-                  {age != null && <span>{age} years</span>}
-                  {profile.height && <span>{profile.height} cm</span>}
-                  {profile.maritalStatus && <span>{formatValue(profile.maritalStatus)}</span>}
-                  {locationLine && (
-                    <span className="flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-vd-primary" /> {locationLine}
-                    </span>
-                  )}
-                </div>
-
-                {(profile.education || profile.profession) && (
-                  <div className="flex flex-wrap gap-4 mt-4">
-                    {profile.education && (
-                      <div className="flex items-center gap-2 text-sm text-vd-text-sub">
-                        <GraduationCap className="w-4 h-4 text-vd-primary" />
-                        <span>{profile.education}</span>
-                      </div>
-                    )}
-                    {profile.profession && (
-                      <div className="flex items-center gap-2 text-sm text-vd-text-sub">
-                        <Briefcase className="w-4 h-4 text-vd-primary" />
-                        <span>{profile.profession}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {profileComplete > 0 && (
-                <div className="lg:w-44 flex-shrink-0 rounded-2xl border border-vd-border p-4 bg-vd-bg">
-                  <p className="text-xs font-semibold text-vd-text-light uppercase tracking-wide mb-2">Profile strength</p>
-                  <div className="flex items-end gap-2 mb-2">
-                    <span className="text-2xl font-black text-vd-primary">{profileComplete}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-vd-accent-soft overflow-hidden">
-                    <div
-                      className="h-full vd-gradient-gold rounded-full transition-all"
-                      style={{ width: `${Math.min(100, profileComplete)}%` }}
-                    />
-                  </div>
+        <div className="grid items-start gap-6 lg:grid-cols-12">
+          <div className="lg:sticky lg:top-24 lg:col-span-4">
+            <div className="overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-sm">
+              <PhotoGallery
+                photos={allPhotos}
+                name={user.name}
+                activePhoto={activePhoto}
+                setActivePhoto={setActivePhoto}
+              />
+              {profile.introVideoUrl && (
+                <div className="border-t border-[#F3E6C8] px-4 py-4">
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[#A89880]">Intro video</p>
+                  <video src={profile.introVideoUrl} controls className="w-full rounded-xl border border-[#E8DCC8] bg-black" />
                 </div>
               )}
             </div>
           </div>
-        </motion.div>
 
-        <div className="grid lg:grid-cols-12 gap-8 items-start">
-          {/* Sidebar — actions */}
-          <aside className="lg:col-span-4 space-y-4 lg:sticky lg:top-24">
-            <div className="rounded-3xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card p-5 shadow-sm space-y-3">
-              <h2 className="text-sm font-bold text-vd-text-heading uppercase tracking-wide">Connect</h2>
+          <div className="space-y-5 lg:col-span-8">
+            <div className="rounded-3xl border border-[#E8DCC8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                {!!user.isPremium && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F8F1E3] px-2.5 py-1 text-xs font-semibold text-[#8F6B2E]">
+                    <Star className="h-3 w-3 fill-[#C4A35A] text-[#C4A35A]" /> Premium
+                  </span>
+                )}
+                {!!user.verificationBadge && <VerifiedBadge size="md" variant="badge" />}
+                {profile.religion && (
+                  <span className="rounded-full bg-[#F8F1E3] px-3 py-1 text-xs font-semibold text-[#8F6B2E]">
+                    {profile.religion}
+                  </span>
+                )}
+                {profile.gender && (
+                  <span className="rounded-full border border-[#E8DCC8] px-3 py-1 text-xs font-medium text-[#6E6254]">
+                    {formatValue(profile.gender)}
+                  </span>
+                )}
+              </div>
+
+              <h1 className="flex flex-wrap items-center gap-2 font-display text-3xl font-semibold leading-tight text-[#2C2416] sm:text-4xl">
+                {user.name}
+                {!!user.verificationBadge && <VerifiedBadge size="lg" variant="icon" />}
+              </h1>
+              {!isOwnProfile && (
+                <div className="mt-2">
+                  <MatchScoreBadge userId={id} />
+                </div>
+              )}
+
+              <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-[#6E6254]">
+                {age != null && <span>{age} years</span>}
+                {profile.height && <span>{profile.height} cm</span>}
+                {profile.maritalStatus && <span>{formatValue(profile.maritalStatus)}</span>}
+                {locationLine && (
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5 text-[#C4A35A]" /> {locationLine}
+                  </span>
+                )}
+              </p>
+
+              {(profile.education || profile.profession) && (
+                <div className="mt-3 flex flex-wrap gap-4 text-sm text-[#5C4A32]">
+                  {profile.education && (
+                    <span className="inline-flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4 text-[#8F6B2E]" /> {profile.education}
+                    </span>
+                  )}
+                  {profile.profession && (
+                    <span className="inline-flex items-center gap-2">
+                      <Briefcase className="h-4 w-4 text-[#8F6B2E]" /> {profile.profession}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {profileComplete > 0 && (
+                <div className="mt-5">
+                  <div className="mb-1.5 flex items-center justify-between text-xs">
+                    <span className="font-semibold uppercase tracking-wide text-[#A89880]">Profile</span>
+                    <span className="font-semibold text-[#8F6B2E]">{profileComplete}%</span>
+                  </div>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-[#F3E6C8]">
+                    <div className="h-full rounded-full bg-[#C4A35A]" style={{ width: `${Math.min(100, profileComplete)}%` }} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3 rounded-3xl border border-[#E8DCC8] bg-white p-5 shadow-sm">
+              <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#A67C3D]">Connect</h2>
               <ShareProfileButton
                 profileId={id}
                 profileName={user?.name}
@@ -965,10 +951,10 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={toggleShortlist}
-                    className={`w-full py-3 rounded-2xl font-semibold border-2 flex items-center justify-center gap-2 transition-all text-sm ${
+                    className={`flex w-full items-center justify-center gap-2 rounded-full border py-3 text-sm font-semibold transition-colors ${
                       shortlisted
-                        ? 'border-vd-primary bg-vd-accent-soft text-vd-primary'
-                        : 'border-vd-border hover:border-vd-primary text-vd-text-sub'
+                        ? 'border-[#C4A35A] bg-[#F8F1E3] text-[#8F6B2E]'
+                        : 'border-[#E8DCC8] text-[#6E6254] hover:border-[#C4A35A]'
                     }`}
                   >
                     <Heart className={`w-4 h-4 ${shortlisted ? 'fill-vd-primary text-vd-primary' : ''}`} />
@@ -994,7 +980,7 @@ export default function ProfilePage() {
               ) : (
                 <Link
                   href="/profile/edit"
-                  className="block w-full text-center vd-gradient-gold text-white py-3.5 rounded-2xl font-semibold hover:opacity-90 transition-opacity text-sm"
+                  className="vd-gradient-gold block w-full rounded-full py-3.5 text-center text-sm font-semibold text-white"
                 >
                   Edit My Profile
                 </Link>
@@ -1002,23 +988,20 @@ export default function ProfilePage() {
             </div>
 
             {user.phone && (
-              <div className="rounded-2xl border border-vd-border bg-vd-bg-section dark:bg-vd-bg-card p-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-green-600" />
-                </div>
+              <div className="flex items-center gap-3 rounded-2xl border border-[#E8DCC8] bg-white p-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F8F1E3] text-[#8F6B2E]">
+                  <Phone className="h-4 w-4" />
+                </span>
                 <div>
-                  <p className="text-[11px] uppercase tracking-wide text-vd-text-light font-semibold">Contact</p>
-                  <p className="text-sm font-semibold text-vd-text-heading">{user.phone}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-[#A89880]">Contact</p>
+                  <p className="text-sm font-semibold text-[#2C2416]">{user.phone}</p>
                 </div>
               </div>
             )}
-          </aside>
 
-          {/* Main details */}
-          <main className="lg:col-span-8 space-y-6">
             {profile.aboutMe && (
-              <ProfileSection title="About Me" icon={Eye} delay={0.05}>
-                <p className="text-vd-text-sub text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
+              <ProfileSection title="About" icon={Eye} delay={0.05}>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#5C4A32] sm:text-base">
                   {profile.aboutMe}
                 </p>
               </ProfileSection>
@@ -1077,21 +1060,20 @@ export default function ProfilePage() {
                 {kundali ? (
                   <KundaliChart kundali={kundali} />
                 ) : isOwnProfile ? (
-                  <div className="bg-vd-bg-section dark:bg-vd-bg-card rounded-3xl p-8 border border-vd-border shadow-sm text-center">
-                    <div className="text-4xl mb-2">🪐</div>
-                    <p className="text-sm font-semibold text-vd-text-heading mb-1">No Kundali Generated</p>
-                    <p className="text-xs text-vd-text-light mb-4">Generate your Vedic birth chart to enhance your profile.</p>
+                  <div className="rounded-3xl border border-[#E8DCC8] bg-white p-8 text-center shadow-sm">
+                    <p className="text-sm font-semibold text-[#2C2416]">Kundali is not on this profile yet</p>
+                    <p className="mb-4 mt-1 text-xs text-[#6E6254]">Add a birth chart from your profile editor.</p>
                     <Link
                       href="/profile/edit"
-                      className="inline-block vd-gradient-gold text-white px-5 py-2.5 rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity"
+                      className="vd-gradient-gold inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-white"
                     >
-                      Generate Kundali
+                      Generate kundali
                     </Link>
                   </div>
                 ) : null}
               </motion.div>
             )}
-          </main>
+          </div>
         </div>
       </div>
 

@@ -4,10 +4,64 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { query, queryOne } from '@/lib/db';
 
 const FREE_LIMIT = 5;
+const GUEST_PAGE_SIZE = 12;
+
+/** Logged-out browse: photo for blur only. No name, contact, or profile text. */
+async function publicProfilePreview(searchParams) {
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const gender = (searchParams.get('gender') || '').toUpperCase();
+  const offset = (page - 1) * GUEST_PAGE_SIZE;
+
+  const conditions = ['u.isActive = 1', 'u.adminVerified = 1'];
+  const params = [];
+
+  if (gender === 'MALE' || gender === 'FEMALE') {
+    conditions.push('p.gender = ?');
+    params.push(gender);
+  }
+
+  const where = `WHERE ${conditions.join(' AND ')}`;
+  const baseSQL = `FROM \`user\` u INNER JOIN profile p ON p.userId = u.id ${where}`;
+
+  const countRow = await queryOne(`SELECT COUNT(*) as cnt ${baseSQL}`, params);
+  const total = Number(countRow?.cnt ?? 0);
+
+  const users = await query(
+    `SELECT u.id, u.isPremium, u.verificationBadge
+     ${baseSQL}
+     ORDER BY u.isPremium DESC, u.profileBoost DESC, p.profileComplete DESC, u.createdAt DESC
+     LIMIT ? OFFSET ?`,
+    [...params, GUEST_PAGE_SIZE, offset]
+  );
+
+  const userIds = users.map(u => u.id);
+  let photos = [];
+  if (userIds.length) {
+    photos = await query(
+      `SELECT userId, url FROM photo WHERE userId IN (${userIds.map(() => '?').join(',')}) AND isMain = 1`,
+      userIds
+    );
+  }
+  const photoMap = Object.fromEntries(photos.map(p => [p.userId, p.url]));
+
+  return NextResponse.json({
+    guest: true,
+    users: users.map(u => ({
+      id: u.id,
+      guestLocked: true,
+      isPremium: !!u.isPremium,
+      verificationBadge: !!u.verificationBadge,
+      photos: photoMap[u.id] ? [{ url: photoMap[u.id] }] : [],
+    })),
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / GUEST_PAGE_SIZE)),
+  });
+}
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!session) return publicProfilePreview(new URL(req.url).searchParams);
 
   const { searchParams } = new URL(req.url);
   const page          = parseInt(searchParams.get('page')  || '1');

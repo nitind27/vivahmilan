@@ -7,36 +7,21 @@ body {
 }
 
 /* ── Design Tokens ─────────────────────────────────────────────────────────── */
-:root {
-  --vd-bg: #FFF8F3;
-  --vd-bg-section: #FFFFFF;
-  --vd-bg-alt: #F9EFE6;
-  --vd-bg-card: #FFFFFF;
-  --vd-primary: #C8A45C;
-  --vd-primary-dark: #A67C3D;
-  --vd-primary-light: #E5C88B;
-  --vd-accent: #E8B4B8;
-  --vd-accent-soft: #F3D6D8;
-  --vd-text-heading: #2B1E1E;
-  --vd-text-sub: #6B5B5B;
-  --vd-text-light: #A89A9A;
-  --vd-border: #EADFD6;
-}
-
+:root,
 .dark {
-  --vd-bg: #0D0A0A;
-  --vd-bg-section: #161010;
-  --vd-bg-card: #1C1515;
-  --vd-bg-alt: #120D0D;
-  --vd-primary: #D4AF37;
-  --vd-primary-dark: #C8A45C;
-  --vd-primary-light: #E6C97A;
-  --vd-accent: #B76E79;
-  --vd-accent-soft: #2A1A1A;
-  --vd-text-heading: #F5E6D3;
-  --vd-text-sub: #C8B8B8;
-  --vd-text-light: #8A7A7A;
-  --vd-border: #2E2020;
+  --vd-bg: #FBF7EF;
+  --vd-bg-section: #FFFFFF;
+  --vd-bg-alt: #F7F1E6;
+  --vd-bg-card: #FFFFFF;
+  --vd-primary: #C4A35A;
+  --vd-primary-dark: #8F6B2E;
+  --vd-primary-light: #E8D5A3;
+  --vd-accent: #C4A35A;
+  --vd-accent-soft: #F8F1E3;
+  --vd-text-heading: #2C2416;
+  --vd-text-sub: #6E6254;
+  --vd-text-light: #A89880;
+  --vd-border: #E8DCC8;
 }
 
 /* ── Tailwind v4 theme ─────────────────────────────────────────────────────── */
@@ -67,7 +52,8 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 { color: var(--vd-text-heading); }
+h1, h2, h3, h4, h5, h6 { color: var(--vd-text-heading); font-family: 'Playfair Display', Georgia, serif; }
+.font-display { font-family: 'Playfair Display', Georgia, serif; }
 p { color: var(--vd-text-sub); }
 label { color: var(--vd-text-sub); }
 
@@ -90,7 +76,33 @@ label { color: var(--vd-text-sub); }
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Homepage hero + CTA — always cinematic text (light site theme does not override) */
+/* Homepage hero — white page, gold accents (stays light in dark mode) */
+.home-hero,
+.dark .home-hero {
+  background: #FBF7EF;
+  color: #2C2416;
+}
+.home-hero h1,
+.home-hero h2,
+.dark .home-hero h1,
+.dark .home-hero h2 {
+  color: #2C2416 !important;
+}
+.home-hero h2 span,
+.dark .home-hero h2 span {
+  color: #C4A35A !important;
+}
+.home-hero p,
+.dark .home-hero p {
+  color: #6B5344 !important;
+}
+.home-hero .home-hero-kicker {
+  color: #A67C3D !important;
+  background: #FBF6EC;
+  border: 1px solid #E5C88B;
+}
+
+/* Homepage CTA — always cinematic text (light site theme does not override) */
 .hero-section {
   color: rgba(255, 255, 255, 0.9);
 }
@@ -375,3 +387,180 @@ label { color: var(--vd-text-sub); }
 .dark .hover\:bg-gray-50:hover  { background-color: var(--vd-bg-card) !important; }
 .dark .hover\:bg-gray-700:hover { background-color: #221818 !important; }
 .dark .hover\:bg-gray-800:hover { background-color: #221818 !important; }
+
+/* Admin — one cream / gold palette for every page that still uses dark gray utilities */
+.admin-app .bg-gray-950,
+.admin-app .bg-gray-950\/30,
+.admin-app .bg-gray-950\/50 { background-color: #FBF7EF !important; }
+.admin-app .bg-gray-900,
+.admin-app .bg-gray-900\/40,
+.admin-app .bg-gray-900\/50,
+.admin-app .bg-gray-900\/60,
+.admin-app .bg-gray-900\/80 { background-color: #FFFFFF !important; }
+.admin-app .bg-gray-800,
+.admin-app .bg-gray-800\/40,
+.admin-app .bg-gray-800\/50,
+.admin-app .bg-gray-800\/60,
+.admin-app .bg-gray-800\/80,
+.admin-app .bg-gray-50,
+.admin-app .bg-gray-100 { background-color: #F7F1E6 !important; }
+.admin-app .bg-gray-700,
+.admin-app .bg-gray-700\/30,
+.admin-app .bg-gray-700\/40,
+.admin-app .bg-gray-700\/50,
+.admin-app .bg-gray-700\/80 { background-color: #FFFCF7 !important; }
+.admin-app .bg-gray-600 { background-color: #D9CBB4 !important; }
+.admin-app :is(.from-gray-800, .from-gray-900, .via-gray-800, .to-gray-800, .to-gray-900).bg-gradient-to-r,
+.admin-app :is(.from-gray-800, .from-gray-900).bg-gradient-to-t {
+  background-image: none !important;
+  background-color: #FFFCF7 !important;
+}
+.admin-app .hover\:bg-gray-900:hover,
+.admin-app .hover\:bg-gray-800:hover,
+.admin-app .hover\:bg-gray-800\/40:hover,
+.admin-app .hover\:bg-gray-800\/50:hover,
+.admin-app .hover\:bg-gray-800\/80:hover,
+.admin-app .hover\:bg-gray-700:hover,
+.admin-app .hover\:bg-gray-700\/20:hover,
+.admin-app .hover\:bg-gray-700\/30:hover,
+.admin-app .hover\:bg-gray-600:hover,
+.admin-app .hover\:bg-gray-500:hover { background-color: #F3E6C8 !important; }
+.admin-app .border-gray-800,
+.admin-app .border-gray-800\/50,
+.admin-app .border-gray-800\/80,
+.admin-app .border-gray-700,
+.admin-app .border-gray-700\/50,
+.admin-app .border-gray-700\/60,
+.admin-app .border-gray-600,
+.admin-app .border-gray-500,
+.admin-app .border-gray-200,
+.admin-app .border-gray-100,
+.admin-app .hover\:border-gray-600:hover { border-color: #E8DCC8 !important; }
+.admin-app :is(.divide-gray-700, .divide-gray-700\/30, .divide-gray-700\/50) > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E8DCC8 !important;
+}
+.admin-app .text-white,
+.admin-app .text-gray-100,
+.admin-app .text-gray-200 { color: #2C2416 !important; }
+.admin-app .text-white\/50,
+.admin-app .text-white\/60,
+.admin-app .text-gray-300,
+.admin-app .text-gray-400 { color: #6E6254 !important; }
+.admin-app .text-gray-500,
+.admin-app .text-gray-600 { color: #8A7A68 !important; }
+.admin-app .hover\:text-white:hover,
+.admin-app .hover\:text-gray-300:hover { color: #2C2416 !important; }
+.admin-app .placeholder\:text-gray-500::placeholder,
+.admin-app .placeholder\:text-gray-600::placeholder,
+.admin-app .placeholder-gray-500::placeholder,
+.admin-app .placeholder-gray-600::placeholder { color: #A89880 !important; }
+.admin-app .text-green-300,
+.admin-app .text-green-400,
+.admin-app .text-emerald-400 { color: #2F6B45 !important; }
+.admin-app .text-red-200\/90,
+.admin-app .text-red-300,
+.admin-app .text-red-300\/90,
+.admin-app .text-red-400,
+.admin-app .hover\:text-red-300:hover,
+.admin-app .hover\:text-red-400:hover { color: #9B3D32 !important; }
+.admin-app .text-amber-100\/90,
+.admin-app .text-amber-200,
+.admin-app .text-amber-200\/90,
+.admin-app .text-amber-300,
+.admin-app .text-amber-300\/90,
+.admin-app .text-amber-400,
+.admin-app .text-amber-400\/80,
+.admin-app .text-amber-400\/90,
+.admin-app .text-yellow-400,
+.admin-app .text-orange-300,
+.admin-app .text-orange-400,
+.admin-app .text-orange-400\/80,
+.admin-app .text-pink-200,
+.admin-app .text-pink-300,
+.admin-app .text-pink-400,
+.admin-app .text-pink-400\/80,
+.admin-app .hover\:text-amber-300:hover,
+.admin-app .hover\:text-yellow-300:hover { color: #8F6B2E !important; }
+.admin-app .text-blue-300,
+.admin-app .text-blue-400,
+.admin-app .text-cyan-400 { color: #3D5A80 !important; }
+.admin-app .text-purple-400 { color: #6B4C7A !important; }
+.admin-app .bg-green-900\/10,
+.admin-app .bg-green-900\/20,
+.admin-app .bg-green-900\/30,
+.admin-app .bg-green-900\/40,
+.admin-app .bg-emerald-900\/20,
+.admin-app .hover\:bg-green-900\/50:hover,
+.admin-app .hover\:bg-green-900\/60:hover { background-color: #E7F3EA !important; }
+.admin-app .bg-red-900\/10,
+.admin-app .bg-red-900\/20,
+.admin-app .bg-red-900\/30,
+.admin-app .bg-red-900\/40,
+.admin-app .bg-red-950\/30,
+.admin-app .bg-red-950\/60,
+.admin-app .bg-red-600\/30,
+.admin-app .hover\:bg-red-900\/50:hover,
+.admin-app .hover\:bg-red-900\/60:hover,
+.admin-app .hover\:bg-red-900\/80:hover,
+.admin-app .hover\:bg-red-800\/50:hover,
+.admin-app .hover\:bg-red-600\/50:hover { background-color: #F8E8E4 !important; }
+.admin-app .bg-amber-900\/10,
+.admin-app .bg-amber-900\/30,
+.admin-app .bg-amber-900\/40,
+.admin-app .bg-yellow-900\/20,
+.admin-app .bg-yellow-900\/30,
+.admin-app .bg-orange-900\/20,
+.admin-app .bg-orange-900\/30,
+.admin-app .bg-orange-600\/30,
+.admin-app .hover\:bg-orange-600\/50:hover { background-color: #F8F1E3 !important; }
+.admin-app .bg-blue-900\/20,
+.admin-app .bg-blue-900\/30,
+.admin-app .bg-blue-900\/40,
+.admin-app .bg-blue-700\/30,
+.admin-app .bg-cyan-900\/20,
+.admin-app .bg-cyan-900\/30,
+.admin-app .hover\:bg-blue-700\/50:hover,
+.admin-app .hover\:bg-blue-900\/50:hover { background-color: #E8EEF4 !important; }
+.admin-app .bg-pink-900\/20,
+.admin-app .bg-pink-900\/40,
+.admin-app .bg-pink-700\/30,
+.admin-app .bg-purple-900\/20,
+.admin-app .bg-purple-900\/30,
+.admin-app .hover\:bg-pink-700\/50:hover { background-color: #F8F1E3 !important; }
+.admin-app :is(input, textarea, select) {
+  color: #2C2416;
+}
+.admin-app :is(input, textarea, select):focus {
+  border-color: #C4A35A !important;
+  outline: none;
+}
+.admin-app :is(
+  .vd-gradient-gold,
+  .bg-vd-primary,
+  .from-vd-primary,
+  .from-pink-600,
+  .bg-red-500, .bg-red-600, .bg-red-700, .bg-red-800,
+  .bg-green-500, .bg-green-600,
+  .bg-emerald-600, .bg-emerald-700,
+  .bg-blue-500, .bg-blue-600, .bg-blue-700,
+  .bg-amber-600, .bg-orange-600,
+  .bg-yellow-500, .bg-yellow-600, .bg-yellow-700,
+  .bg-pink-500, .bg-pink-600,
+  .bg-purple-500
+),
+.admin-app :is(.vd-gradient-gold, .bg-vd-primary, .from-vd-primary, .bg-red-500, .bg-red-600, .bg-green-600, .bg-blue-600) :is(.text-white, .text-white\/50, .text-white\/60) {
+  color: #ffffff !important;
+}
+.admin-app :is(
+  .hover\:bg-vd-primary,
+  .hover\:bg-green-500,
+  .hover\:bg-emerald-500,
+  .hover\:bg-red-500,
+  .hover\:bg-red-600,
+  .hover\:bg-red-700,
+  .hover\:bg-blue-500,
+  .hover\:bg-amber-500,
+  .hover\:bg-yellow-500
+):hover {
+  color: #ffffff !important;
+}

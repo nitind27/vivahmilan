@@ -6,8 +6,22 @@ import Navbar from '@/components/Navbar';
 import SiteFooter from '@/components/SiteFooter';
 import {
   Heart, Shield, Users, Star, Globe, Award, Sparkles, CheckCircle,
-  ArrowRight, Target, Eye,
+  ArrowRight, Target, Eye, Phone,
 } from 'lucide-react';
+
+function personInitials(name) {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '';
+  return parts.slice(0, 2).map((part) => part[0]?.toUpperCase() || '').join('');
+}
+
+function phoneHref(raw) {
+  const digits = String(raw || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.length === 11 && digits.startsWith('0')) return `tel:+91${digits.slice(1)}`;
+  if (digits.length === 10) return `tel:+91${digits}`;
+  return `tel:+${digits}`;
+}
 
 const ICON_MAP = { Heart, Shield, Users, Star, Globe, Award, Sparkles, CheckCircle };
 
@@ -34,6 +48,15 @@ export default function AboutPage() {
   const values = data?.values || [];
   const milestones = data?.milestones || [];
   const stats = data?.stats || [];
+  const ownerName = s.owner_name || 'Nitin Dube';
+  const ownerRole = s.owner_role || 'Owner';
+  const techLeadName = s.tech_lead_name || 'Jayraj Kalsariya';
+  const techLeadRole = s.tech_lead_role || 'Tech Lead';
+  const contactPhone = s.contact_phone || '087359 95467';
+  const leaders = [
+    { name: ownerName, role: ownerRole },
+    { name: techLeadName, role: techLeadRole },
+  ].filter((person) => person.name.trim());
 
   return (
     <div className="min-h-screen bg-vd-bg flex flex-col">
@@ -147,6 +170,48 @@ export default function AboutPage() {
             </div>
           </div>
         </motion.section>
+
+        {leaders.length > 0 && (
+          <motion.section {...fadeUp}>
+            <div className="text-center mb-8">
+              <span className="text-xs font-bold uppercase tracking-widest text-vd-primary">Leadership</span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-vd-text-heading mt-2">People behind Vivah Dwar</h2>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
+              {leaders.map((person) => (
+                <div
+                  key={person.role + person.name}
+                  className="flex items-center gap-4 rounded-2xl border border-vd-border bg-vd-bg-section p-5 sm:p-6"
+                >
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl vd-gradient-gold text-lg font-bold text-white">
+                    {personInitials(person.name)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-vd-primary">{person.role}</p>
+                    <h3 className="mt-1 truncate text-xl font-bold text-vd-text-heading">{person.name}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {contactPhone.trim() && (
+              <a
+                href={phoneHref(contactPhone)}
+                className="mt-4 flex items-center justify-between gap-4 rounded-2xl border border-vd-border bg-vd-bg-section px-5 py-4 transition-colors hover:border-vd-primary/40"
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl vd-gradient-gold">
+                    <Phone className="h-5 w-5 text-white" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[11px] font-bold uppercase tracking-widest text-vd-primary">Contact</span>
+                    <span className="block text-lg font-bold tabular-nums text-vd-text-heading">{contactPhone}</span>
+                  </span>
+                </span>
+                <span className="shrink-0 text-sm font-semibold text-vd-primary">Call</span>
+              </a>
+            )}
+          </motion.section>
+        )}
 
         {/* Core Values */}
         {values.length > 0 && (

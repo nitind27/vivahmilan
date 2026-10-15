@@ -105,7 +105,8 @@ export default function EarlyBirdLoginPopup() {
       }
       toast.success(data.message || 'Free access activated!');
       await markClaimedPermanent();
-      await update?.();
+      await update?.({ isPremium: true });
+      window.location.reload();
     } catch {
       toast.error('Something went wrong');
     } finally {
@@ -128,71 +129,69 @@ export default function EarlyBirdLoginPopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', damping: 22, stiffness: 280 }}
-            className="relative w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-amber-400/40"
+            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-2xl"
             onClick={e => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 px-6 pt-8 pb-6 text-center text-white relative">
+            <div className="relative bg-[#F8F1E3] px-6 pb-5 pt-7 text-center">
               <button
                 type="button"
                 onClick={markDismissedThisSession}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-colors"
+                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#E8DCC8] bg-white text-[#6E6254]"
                 aria-label="Close"
               >
-                <X className="w-4 h-4" />
+                <X className="h-4 w-4" />
               </button>
-              <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4">
-                <Gift className="w-8 h-8 text-white" />
-              </div>
-              <div className="flex items-center justify-center gap-1.5 mb-2">
-                <Sparkles className="w-4 h-4" />
-                <span className="text-xs font-bold uppercase tracking-widest opacity-90">Limited Offer</span>
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <h2 className="text-2xl font-black leading-tight mb-1">
-                {offer.title || 'Early Bird Offer'}
+              <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#A67C3D]">
+                <Sparkles className="h-3.5 w-3.5" />
+                No payment
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-semibold leading-tight text-[#2C2416]">
+                {offer.title || 'Free premium access'}
               </h2>
-              <p className="text-sm text-white/90 leading-relaxed max-w-xs mx-auto">
-                {offer.subtitle || (
-                  <>You&apos;re eligible for <strong>FREE {offer.planDisplayName}</strong> access!</>
-                )}
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[#6E6254]">
+                {offer.subtitle || offer.message}
               </p>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 px-6 py-5 space-y-4">
-              <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 p-4 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Plan</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{offer.planDisplayName}</span>
+            <div className="space-y-4 px-6 py-5">
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-2xl border border-[#E8DCC8] bg-[#FFFCF7] px-2 py-3">
+                  <Crown className="mx-auto h-4 w-4 text-[#8F6B2E]" />
+                  <p className="mt-1 text-xs font-semibold leading-tight text-[#2C2416]">{offer.planDisplayName}</p>
+                  <p className="mt-0.5 text-[10px] uppercase tracking-wide text-[#8A7A68]">Plan</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Duration</span>
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">FREE · {offer.durationLabel}</span>
+                <div className="rounded-2xl border border-[#E8DCC8] bg-[#FFFCF7] px-2 py-3">
+                  <Gift className="mx-auto h-4 w-4 text-[#8F6B2E]" />
+                  <p className="mt-1 text-xs font-semibold text-[#2C2416]">{offer.durationLabel}</p>
+                  <p className="mt-0.5 text-[10px] uppercase tracking-wide text-[#8A7A68]">Free</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Slots left</span>
-                  <span className="font-bold text-amber-600">{offer.slotsLeft} / {offer.limit}</span>
+                <div className="rounded-2xl border border-[#E8DCC8] bg-[#FFFCF7] px-2 py-3">
+                  <Sparkles className="mx-auto h-4 w-4 text-[#8F6B2E]" />
+                  <p className="mt-1 text-xs font-semibold text-[#2C2416]">{offer.slotsLeft} left</p>
+                  <p className="mt-0.5 text-[10px] uppercase tracking-wide text-[#8A7A68]">of {offer.limit}</p>
                 </div>
               </div>
 
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                Tap below to activate free access. After claiming, this popup will not appear again.
-                &quot;Maybe later&quot; hides it until you open a new browser session.
-              </p>
+              <ul className="space-y-1.5 text-sm text-[#5C4A32]">
+                <li>Chat, contacts, and interests open without paying.</li>
+                <li>Access stays on for {offer.durationLabel}, managed from your account.</li>
+                <li>{offer.claimedCount} of {offer.limit} places are already taken.</li>
+              </ul>
 
               <button
                 type="button"
                 onClick={handleClaim}
                 disabled={claiming}
-                className="w-full py-4 rounded-2xl font-bold text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg hover:opacity-95 disabled:opacity-70 flex items-center justify-center gap-2"
+                className="vd-gradient-gold flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-semibold text-white disabled:opacity-70"
               >
                 {claiming ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> Activating…
+                    <Loader2 className="h-4 w-4 animate-spin" /> Activating…
                   </>
                 ) : (
                   <>
-                    <Crown className="w-5 h-5" />
-                    Get Your Free Access
+                    <Crown className="h-4 w-4" />
+                    Activate free access
                   </>
                 )}
               </button>
@@ -200,7 +199,7 @@ export default function EarlyBirdLoginPopup() {
               <button
                 type="button"
                 onClick={markDismissedThisSession}
-                className="w-full py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                className="w-full py-1 text-sm text-[#8A7A68]"
               >
                 Maybe later
               </button>

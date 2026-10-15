@@ -1,6 +1,5 @@
-// ✅ LOAD ENV (MOST IMPORTANT)
-import { config } from 'dotenv';
-config({ path: '.env.production' });
+// Must be first import — loads .env.production before db / next
+import './load-env.mjs';
 
 // Custom Next.js server with Socket.io integrated
 import { createServer } from 'http';

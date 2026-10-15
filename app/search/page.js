@@ -1,10 +1,11 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
+import GuestProfileBrowse from '@/components/GuestProfileBrowse';
 import SkeletonCard from '@/components/SkeletonCard';
 import SearchableSelect from '@/components/SearchableSelect';
 import LocationPicker from '@/components/LocationPicker';
@@ -98,7 +99,6 @@ function RangeInput({ label, minVal, maxVal, onMinChange, onMaxChange, minPlaceh
 // ── Main Search Inner ─────────────────────────────────────────────────────────
 function SearchInner() {
   const { status } = useSession();
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [filters, setFilters] = useState({ ...DEFAULT_FILTERS, q: searchParams.get('q') || '' });
@@ -168,10 +168,6 @@ function SearchInner() {
     }
   };
 
-  useEffect(() => {
-    if (status === 'unauthenticated') router.push('/login');
-  }, [status, router]);
-
   const set = (key, val) => setFilters(prev => ({ ...prev, [key]: val }));
 
   const activeFilters = Object.entries(filters).filter(([k, v]) => v && k !== 'q').map(([k, v]) => {
@@ -203,6 +199,23 @@ function SearchInner() {
 
   const reset = () => { setFilters(DEFAULT_FILTERS); setResults([]); setSearched(false); setTotal(0); };
   const handleKeyDown = (e) => { if (e.key === 'Enter') doSearch(1); };
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-vd-bg">
+        <Navbar />
+        <div className="max-w-6xl mx-auto px-4 pt-24">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'unauthenticated') {
+    return <GuestProfileBrowse />;
+  }
 
   return (
     <div className="min-h-screen bg-vd-bg">

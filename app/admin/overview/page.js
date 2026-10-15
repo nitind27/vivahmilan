@@ -368,10 +368,10 @@ function UserSearchBar() {
   const calcAge = (dob) => dob ? Math.floor((Date.now() - new Date(dob)) / 31557600000) : null;
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-700 bg-gradient-to-r from-gray-800 to-gray-800/50">
-        <p className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-          <Zap className="w-4 h-4 text-yellow-400" /> Quick User Search
+    <div className="overflow-hidden rounded-2xl border border-[#E8DCC8] bg-white">
+      <div className="border-b border-[#F3E6C8] bg-[#FFFCF7] px-5 py-4">
+        <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#2C2416]">
+          <Zap className="h-4 w-4 text-[#C4A35A]" /> Quick User Search
         </p>
         <div className="flex gap-2">
           <div className="relative flex-1">
@@ -382,7 +382,7 @@ function UserSearchBar() {
               onChange={e => setQ(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && search()}
               placeholder="Search by phone, name or email…"
-              className="w-full pl-9 pr-8 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-sm text-white focus:outline-none focus:border-vd-primary placeholder:text-gray-500"
+              className="w-full rounded-xl border border-[#E8DCC8] bg-white py-2.5 pl-9 pr-8 text-sm text-[#2C2416] placeholder:text-[#A89880] focus:border-[#C4A35A] focus:outline-none"
             />
             {q && (
               <button type="button" onClick={clear} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
@@ -394,7 +394,7 @@ function UserSearchBar() {
             type="button"
             onClick={search}
             disabled={loading || !q.trim()}
-            className="px-5 py-2.5 bg-vd-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 flex items-center gap-2 transition-opacity"
+            className="vd-gradient-gold flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
           >
             {loading
               ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -455,7 +455,7 @@ function UserSearchBar() {
       })()}
 
       {!result && !notFound && !loading && (
-        <div className="px-5 py-3 text-xs text-gray-600 text-center">
+        <div className="px-5 py-3 text-center text-xs text-[#8A7A68]">
           Enter phone number, name or email to find a user instantly
         </div>
       )}
@@ -504,7 +504,7 @@ function HealthRing({ stats, loading }) {
     <div className="flex flex-col items-center">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#374151" strokeWidth={stroke} />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#E8DCC8" strokeWidth={stroke} />
           <circle
             cx={size / 2} cy={size / 2} r={r} fill="none"
             stroke={ringColor} strokeWidth={stroke} strokeLinecap="round"
@@ -533,28 +533,27 @@ function PlatformCommandCenter({ stats, loading, days }) {
   }, [stats]);
 
   const todayItems = [
-    { icon: UserPlus, label: 'New signups', value: stats?.newUsersToday, color: 'text-green-400', bg: 'bg-green-900/20' },
-    { icon: Heart, label: 'Interests sent', value: stats?.newInterestsToday, color: 'text-pink-400', bg: 'bg-pink-900/20' },
-    { icon: MessageCircle, label: 'Messages', value: stats?.newMessagesToday, color: 'text-blue-400', bg: 'bg-blue-900/20' },
-    { icon: AlertTriangle, label: 'Action queue', value: (stats?.pendingAdminVerify ?? 0) + (stats?.pendingReports ?? 0) + (stats?.pendingVerifications ?? 0), color: 'text-orange-400', bg: 'bg-orange-900/20' },
+    { icon: UserPlus, label: 'New signups', value: stats?.newUsersToday, color: 'text-[#2F6B45]', bg: 'bg-[#E7F3EA]' },
+    { icon: Heart, label: 'Interests sent', value: stats?.newInterestsToday, color: 'text-[#8F6B2E]', bg: 'bg-[#F8F1E3]' },
+    { icon: MessageCircle, label: 'Messages', value: stats?.newMessagesToday, color: 'text-[#3D5A80]', bg: 'bg-[#E8EEF4]' },
+    { icon: AlertTriangle, label: 'Action queue', value: (stats?.pendingAdminVerify ?? 0) + (stats?.pendingReports ?? 0) + (stats?.pendingVerifications ?? 0), color: 'text-[#9B3D32]', bg: 'bg-[#F8E8E4]' },
   ];
 
   const periodGrowth = stats?.newUsersPeriod ?? 0;
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-      <div className="px-4 sm:px-5 py-3 border-b border-gray-700 bg-gradient-to-r from-gray-800 via-gray-800 to-vd-primary/5">
-        <h3 className="font-semibold text-white flex items-center gap-2 text-sm">
-          <Gauge className="w-4 h-4 text-vd-primary" />
+    <div className="overflow-hidden rounded-2xl border border-[#E8DCC8] bg-white">
+      <div className="border-b border-[#F3E6C8] bg-[#FFFCF7] px-4 py-3 sm:px-5">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-[#2C2416]">
+          <Gauge className="h-4 w-4 text-[#C4A35A]" />
           Platform Command Center
-          <span className="text-[10px] text-gray-500 font-normal ml-auto">Last {days} days · live snapshot</span>
+          <span className="ml-auto text-[10px] font-normal text-[#8A7A68]">Last {days} days · live snapshot</span>
         </h3>
       </div>
 
-      <div className="p-4 sm:p-5 grid grid-cols-1 lg:grid-cols-3 gap-5 min-w-0">
-        {/* Health */}
-        <div className="flex flex-col items-center justify-center p-4 bg-gray-900/40 rounded-xl border border-gray-700/50 min-w-0">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 self-start">Platform Health</p>
+      <div className="grid min-w-0 grid-cols-1 gap-5 p-4 sm:p-5 lg:grid-cols-3">
+        <div className="flex min-w-0 flex-col items-center justify-center rounded-xl border border-[#E8DCC8] bg-[#FFFCF7] p-4">
+          <p className="mb-3 self-start text-xs font-semibold uppercase tracking-wider text-[#8A7A68]">Platform Health</p>
           <HealthRing stats={stats} loading={loading} />
           {!loading && (
             <div className="mt-3 w-full space-y-1.5 text-[11px] text-gray-500">
@@ -566,13 +565,13 @@ function PlatformCommandCenter({ stats, loading, days }) {
         </div>
 
         {/* Today's pulse */}
-        <div className="p-4 bg-gray-900/40 rounded-xl border border-gray-700/50 min-w-0">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-            <Activity className="w-3.5 h-3.5 text-vd-primary" /> Today&apos;s Pulse
+        <div className="min-w-0 rounded-xl border border-[#E8DCC8] bg-[#FFFCF7] p-4">
+          <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#8A7A68]">
+            <Activity className="h-3.5 w-3.5 text-[#C4A35A]" /> Today&apos;s Pulse
           </p>
           <div className="grid grid-cols-2 gap-2">
             {todayItems.map(item => (
-              <div key={item.label} className="flex items-center gap-2.5 p-2.5 bg-gray-800/60 rounded-lg min-w-0">
+              <div key={item.label} className="flex min-w-0 items-center gap-2.5 rounded-lg border border-[#E8DCC8] bg-white p-2.5">
                 <div className={`w-8 h-8 ${item.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
                   <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
                 </div>
@@ -593,9 +592,9 @@ function PlatformCommandCenter({ stats, loading, days }) {
         </div>
 
         {/* Member funnel */}
-        <div className="p-4 bg-gray-900/40 rounded-xl border border-gray-700/50 min-w-0">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-            <TrendingUp className="w-3.5 h-3.5 text-green-400" /> Member Journey
+        <div className="min-w-0 rounded-xl border border-[#E8DCC8] bg-[#FFFCF7] p-4">
+          <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#8A7A68]">
+            <TrendingUp className="h-3.5 w-3.5 text-[#2F6B45]" /> Member Journey
           </p>
           {loading ? (
             <div className="space-y-4">
@@ -609,20 +608,20 @@ function PlatformCommandCenter({ stats, loading, days }) {
                     <span className="text-gray-400 truncate">{step.label}</span>
                     <span className="text-white font-semibold tabular-nums flex-shrink-0">{fmt(step.value)}</span>
                   </div>
-                  <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-2 overflow-hidden rounded-full bg-[#E8DCC8]">
                     <div className={`h-2 ${step.color} rounded-full transition-all duration-500`} style={{ width: `${step.pct}%` }} />
                   </div>
                   <p className="text-[10px] text-gray-600 mt-0.5 tabular-nums">{step.pct}% of registered</p>
                 </div>
               ))}
               <div className="pt-2 border-t border-gray-700/50 grid grid-cols-2 gap-2 text-[10px]">
-                <div className="text-center p-2 bg-gray-800/50 rounded-lg">
+                <div className="rounded-lg border border-[#E8DCC8] bg-white p-2 text-center">
                   <p className="text-gray-500">Accept rate</p>
                   <p className="text-green-400 font-bold tabular-nums mt-0.5">
                     {stats?.totalInterests ? Math.round(((stats.interestsAccepted || 0) / stats.totalInterests) * 100) : 0}%
                   </p>
                 </div>
-                <div className="text-center p-2 bg-gray-800/50 rounded-lg">
+                <div className="rounded-lg border border-[#E8DCC8] bg-white p-2 text-center">
                   <p className="text-gray-500">Free members</p>
                   <p className="text-blue-400 font-bold tabular-nums mt-0.5">{fmt(stats?.freeUsers)}</p>
                 </div>

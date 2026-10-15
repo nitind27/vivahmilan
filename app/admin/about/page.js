@@ -18,6 +18,11 @@ const SETTING_FIELDS = [
   { key: 'story_content', label: 'Story Content', type: 'textarea' },
   { key: 'cta_title', label: 'CTA Title' },
   { key: 'cta_subtitle', label: 'CTA Subtitle', type: 'textarea' },
+  { key: 'owner_name', label: 'Owner Name', placeholder: 'Nitin Dube' },
+  { key: 'owner_role', label: 'Owner Role', placeholder: 'Owner' },
+  { key: 'tech_lead_name', label: 'Tech Lead Name', placeholder: 'Jayraj Kalsariya' },
+  { key: 'tech_lead_role', label: 'Tech Lead Role', placeholder: 'Tech Lead' },
+  { key: 'contact_phone', label: 'Contact Number', placeholder: '087359 95467' },
 ];
 
 export default function AdminAboutPage() {
@@ -130,7 +135,7 @@ export default function AdminAboutPage() {
 
       {tab === 'content' && (
         <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700 space-y-4">
-          <h3 className="font-bold text-lg text-white">Hero, Mission, Vision & CTA</h3>
+          <h3 className="font-bold text-lg text-white">Hero, Mission, Vision, Leadership & CTA</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {SETTING_FIELDS.map((f) => (
               <div key={f.key} className={f.type === 'textarea' ? 'sm:col-span-2' : ''}>
