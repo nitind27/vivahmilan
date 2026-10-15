@@ -6,7 +6,18 @@ import { query, queryOne } from '@/lib/db';
 const FREE_LIMIT = 5;
 const GUEST_PAGE_SIZE = 12;
 
-/** Logged-out browse: photo for blur only. No name, contact, or profile text. */
+function ageFromDob(dob) {
+  if (!dob) return null;
+  const born = new Date(dob);
+  if (Number.isNaN(born.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - born.getFullYear();
+  const month = now.getMonth() - born.getMonth();
+  if (month < 0 || (month === 0 && now.getDate() < born.getDate())) age -= 1;
+  return age > 0 && age < 120 ? age : null;
+}
+
+/** Logged-out browse: card details are real. Photo stays blurred in the UI. No phone, email, or about text. */
 async function publicProfilePreview(searchParams) {
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
   const gender = (searchParams.get('gender') || '').toUpperCase();
@@ -27,7 +38,8 @@ async function publicProfilePreview(searchParams) {
   const total = Number(countRow?.cnt ?? 0);
 
   const users = await query(
-    `SELECT u.id, u.isPremium, u.verificationBadge
+    `SELECT u.id, u.name, u.isPremium, u.verificationBadge,
+            p.dob, p.religion, p.education, p.profession, p.city, p.country
      ${baseSQL}
      ORDER BY u.isPremium DESC, u.profileBoost DESC, p.profileComplete DESC, u.createdAt DESC
      LIMIT ? OFFSET ?`,
@@ -48,9 +60,18 @@ async function publicProfilePreview(searchParams) {
     guest: true,
     users: users.map(u => ({
       id: u.id,
+      name: u.name,
       guestLocked: true,
       isPremium: !!u.isPremium,
       verificationBadge: !!u.verificationBadge,
+      profile: {
+        age: ageFromDob(u.dob),
+        religion: u.religion || null,
+        education: u.education || null,
+        profession: u.profession || null,
+        city: u.city || null,
+        country: u.country || null,
+      },
       photos: photoMap[u.id] ? [{ url: photoMap[u.id] }] : [],
     })),
     total,

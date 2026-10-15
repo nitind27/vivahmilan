@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock, ChevronLeft, ChevronRight, UserRound } from 'lucide-react';
+import { Lock, ChevronLeft, ChevronRight, UserRound, MapPin, GraduationCap, Briefcase, Star } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import SmartImage from '@/components/SmartImage';
 import SkeletonCard from '@/components/SkeletonCard';
@@ -34,8 +34,10 @@ function cardWash(id = '') {
 
 function LockedCard({ user }) {
   const router = useRouter();
+  const profile = user.profile || {};
   const photo = user.photos?.[0]?.url;
   const [photoOk, setPhotoOk] = useState(Boolean(photo));
+  const place = [profile.city, profile.country].filter(Boolean).join(', ');
 
   const openLogin = () => router.push(loginHref(user.id));
 
@@ -45,9 +47,9 @@ function LockedCard({ user }) {
         type="button"
         onClick={openLogin}
         className="block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C4A35A]"
-        aria-label="Login to view this profile"
+        aria-label={`Login to view ${user.name || 'this profile'}`}
       >
-        <div className="relative h-64">
+        <div className="relative h-56">
           <div className="absolute inset-0" style={{ background: cardWash(user.id) }} />
           {photo && photoOk && (
             <SmartImage
@@ -59,13 +61,22 @@ function LockedCard({ user }) {
               className="object-cover scale-125 blur-2xl saturate-50 select-none pointer-events-none"
             />
           )}
-          <div className="absolute inset-0 bg-[#FFFCF7]/25" />
-          <span className="absolute inset-0 flex items-center justify-center text-[#8F6B2E]/35">
-            <UserRound className="h-16 w-16" strokeWidth={1.25} />
-          </span>
-          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-[#8F6B2E]">
-            <Lock className="h-3 w-3" />
-            Private
+          <div className="absolute inset-0 bg-[#FFFCF7]/20" />
+          {!(photo && photoOk) && (
+            <span className="absolute inset-0 flex items-center justify-center text-[#8F6B2E]/35">
+              <UserRound className="h-16 w-16" strokeWidth={1.25} />
+            </span>
+          )}
+          <span className="absolute left-3 top-3 flex flex-wrap gap-1">
+            {user.isPremium ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 px-2 py-0.5 text-[11px] font-semibold text-white">
+                <Star className="h-3 w-3 fill-white" /> Premium
+              </span>
+            ) : null}
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-[#8F6B2E]">
+              <Lock className="h-3 w-3" />
+              Photo private
+            </span>
           </span>
           {user.verificationBadge ? (
             <span className="absolute right-3 top-3 rounded-full bg-[#2C2416]/80 px-2.5 py-1 text-[11px] font-semibold text-white">
@@ -74,8 +85,33 @@ function LockedCard({ user }) {
           ) : null}
         </div>
         <div className="px-4 py-4">
-          <p className="text-sm font-semibold text-[#2C2416]">Member profile</p>
-          <p className="mt-1 text-xs leading-relaxed text-[#6E6254]">Name, photo, and family details open after login.</p>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="truncate text-sm font-semibold text-[#2C2416]">{user.name || 'Profile'}</h3>
+            {profile.age ? <span className="shrink-0 text-xs text-[#6E6254]">{profile.age} yrs</span> : null}
+          </div>
+          <div className="mt-2 space-y-1">
+            {place ? (
+              <p className="flex items-center gap-1 text-xs text-[#6E6254]">
+                <MapPin className="h-3 w-3 shrink-0 text-[#C4A35A]" />
+                <span className="truncate">{place}</span>
+              </p>
+            ) : null}
+            {profile.education ? (
+              <p className="flex items-center gap-1 text-xs text-[#6E6254]">
+                <GraduationCap className="h-3 w-3 shrink-0 text-[#C4A35A]" />
+                <span className="truncate">{profile.education}</span>
+              </p>
+            ) : null}
+            {profile.profession ? (
+              <p className="flex items-center gap-1 text-xs text-[#6E6254]">
+                <Briefcase className="h-3 w-3 shrink-0 text-[#C4A35A]" />
+                <span className="truncate">{profile.profession}</span>
+              </p>
+            ) : null}
+          </div>
+          {profile.religion ? (
+            <span className="mt-3 inline-block rounded-full bg-[#F8F1E3] px-2 py-1 text-xs text-[#8F6B2E]">{profile.religion}</span>
+          ) : null}
           <span className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#C4A35A] py-2 text-sm font-semibold text-[#8F6B2E]">
             View profile
           </span>
@@ -126,7 +162,7 @@ export default function GuestProfileBrowse() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A67C3D]">Members</p>
             <h1 className="mt-1 font-display text-3xl font-semibold text-[#2C2416]">Browse verified profiles</h1>
             <p className="mt-2 max-w-xl text-sm text-[#6E6254]">
-              {total > 0 ? `${total.toLocaleString('en-IN')} profiles are live.` : 'Profiles appear here as they are approved.'} Photos and names stay private until you sign in.
+              {total > 0 ? `${total.toLocaleString('en-IN')} profiles are live.` : 'Profiles appear here as they are approved.'} Names and details are real. Photos stay blurred until you sign in.
             </p>
           </div>
           <div className="flex items-center gap-2">
