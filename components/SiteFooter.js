@@ -30,6 +30,7 @@ const FOOTER_LINKS = [
       { label: 'Terms of Service', href: '/terms' },
       { label: 'Refund Policy', href: '/refund' },
       { label: 'Cookie Policy', href: '/cookies' },
+      { label: 'Child Safety', href: '/child-safety' },
     ],
     manageCookies: true,
   },

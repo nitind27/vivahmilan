@@ -23,7 +23,7 @@ const PUBLIC_PREFIXES = [
   '/onboarding', '/register/complete', '/api/auth', '/api/register', '/api/public',
   '/api/stories', '/api/kyc', '/kyc', '/maintenance', '/terms', '/privacy',
   '/api/plans', '/profile-launch', '/api/portal-access', '/api/early-bird',
-  '/refund', '/cookies', '/safety', '/help', '/contact', '/report-abuse',
+  '/refund', '/cookies', '/safety', '/child-safety', '/help', '/contact', '/report-abuse',
   '/stories', '/share-story', '/blog', '/api/blog', '/payment/status', '/api/chatbot',
 ];
 

@@ -17,6 +17,7 @@ const SKIP_PREFIXES = [
   '/kyc',
   '/terms',
   '/privacy',
+  '/child-safety',
   '/contact',
   '/help',
 ];
